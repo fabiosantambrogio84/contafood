@@ -14,13 +14,13 @@ public class Fornitore {
     @Column(name = "codice")
     private String codice;
 
-    @Column(name = "codice")
+    @Column(name = "ragione_sociale")
     private String ragioneSociale;
 
-    @Column(name = "codice")
+    @Column(name = "ragione_sociale_2")
     private String ragioneSociale2;
 
-    @Column(name = "codice")
+    @Column(name = "fl_ditta_individuale")
     private boolean dittaIndividuale;
 
     @Column(name = "nome")
@@ -50,7 +50,7 @@ public class Fornitore {
     @Column(name = "codice_fiscale")
     private String codiceFiscale;
 
-    @Column(name = "codice")
+    @Column(name = "telefono")
     private String telefono;
 
     @Column(name = "telefono_2")

@@ -3,17 +3,15 @@ package com.contafood.controller;
 import com.contafood.model.Fornitore;
 import com.contafood.service.FornitoreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
-@Controller    // This means that this class is a Controller
+@RestController
 @RequestMapping(path="/fornitori") // This means URL's start with /demo (after Application path)
 public class FornitoreController {
 
@@ -29,9 +27,20 @@ public class FornitoreController {
         return fornitoreService.getAll();
     }
 
+    @RequestMapping(method = GET, path = "/{fornitoreId}")
+    public Fornitore getOne(@PathVariable final Long fornitoreId) {
+        return fornitoreService.getOne(fornitoreId);
+    }
+
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
-    public void create(Fornitore fornitore){
-        fornitoreService.create(fornitore);
+    public Fornitore create(@RequestBody Fornitore fornitore){
+        return fornitoreService.create(fornitore);
+    }
+
+    @RequestMapping(method = DELETE, path = "/{fornitoreId}")
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable final Long fornitoreId){
+        fornitoreService.delete(fornitoreId);
     }
 }

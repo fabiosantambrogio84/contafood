@@ -53,7 +53,7 @@
     </dependencies>
 
     <build>
-        <finalName>contafood</finalName>
+        <finalName>contafood-be</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
