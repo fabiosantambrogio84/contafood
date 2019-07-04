@@ -32,6 +32,11 @@ public class FornitoreService {
         return createdFornitore;
     }
 
+    public Fornitore update(Fornitore fornitore){
+        Fornitore updatedFornitore = fornitoreRepository.save(fornitore);
+        return updatedFornitore;
+    }
+
     public void delete(Long fornitoreId){
         fornitoreRepository.deleteById(fornitoreId);
     }

@@ -1,10 +1,12 @@
 package com.contafood.controller;
 
+import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Fornitore;
 import com.contafood.service.FornitoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
 import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -34,8 +36,16 @@ public class FornitoreController {
 
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
-    public Fornitore create(@RequestBody Fornitore fornitore){
+    public Fornitore create(@RequestBody final Fornitore fornitore){
         return fornitoreService.create(fornitore);
+    }
+
+    @RequestMapping(method = PUT, path = "/{fornitoreId}")
+    public Fornitore update(@PathVariable final Long fornitoreId, @RequestBody final Fornitore fornitore){
+        if (!Objects.equals(fornitoreId, fornitore.getId())) {
+            throw new CannotChangeResourceIdException();
+        }
+        return fornitoreService.update(fornitore);
     }
 
     @RequestMapping(method = DELETE, path = "/{fornitoreId}")
