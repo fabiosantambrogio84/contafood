@@ -12,7 +12,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.6.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/> <!-- lookup parent from com.contafood.repository -->
     </parent>
 
     <packaging>war</packaging>
@@ -21,7 +21,9 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <start-class>com.contafood.Application</start-class>
     </properties>
+
 
     <dependencies>
         <dependency>
@@ -51,6 +53,7 @@
     </dependencies>
 
     <build>
+        <finalName>contafood</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

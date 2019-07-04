@@ -1,4 +1,4 @@
-package util;
+package com.contafood.util;
 
 public enum Provincia {
 
