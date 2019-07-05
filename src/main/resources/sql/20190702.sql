@@ -1,7 +1,7 @@
 --
-"docker run --name mysql01 -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:5.6.44 "
+-- "docker run --name mysql01 -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:5.6.44 "
 --
---mysql -u root -p
+-- mysql -u root -p
 -- -> chiede password. Inserire root
 
 -- mysql> create user 'contafood'@'%' identified by 'contafood';
@@ -43,7 +43,7 @@ DROP TABLE IF EXISTS `categoria_articolo`;
 CREATE TABLE `categoria_articolo` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	nome varchar(100),
-	ordine varchar(100),
+	ordine int(11),
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 

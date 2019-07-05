@@ -252,7 +252,7 @@ public class Fornitore {
 
     @Override
     public int hashCode() {
-        return Objects.hash(codice, ragioneSociale, ragioneSociale2, dittaIndividuale, nome, cognome, indirizzo, citta, provincia, cap, nazione, partitaIva, codiceFiscale, telefono, telefono2, telefono3, email, emailPec, codiceUnivocoSdi, iban, pagamento);
+        return Objects.hash(id, codice, ragioneSociale, ragioneSociale2, dittaIndividuale, nome, cognome, indirizzo, citta, provincia, cap, nazione, partitaIva, codiceFiscale, telefono, telefono2, telefono3, email, emailPec, codiceUnivocoSdi, iban, pagamento);
     }
 
     @Override
@@ -264,7 +264,8 @@ public class Fornitore {
             return false;
         }
         final Fornitore that = (Fornitore) obj;
-        return Objects.equals(codice, that.codice) &&
+        return Objects.equals(id, that.id) &&
+                Objects.equals(codice, that.codice) &&
                 Objects.equals(ragioneSociale, that.ragioneSociale) &&
                 Objects.equals(ragioneSociale2, that.ragioneSociale2) &&
                 Objects.equals(dittaIndividuale, that.dittaIndividuale) &&
@@ -292,7 +293,8 @@ public class Fornitore {
         StringBuilder result = new StringBuilder();
 
         result.append("{");
-        result.append("codice: " + codice);
+        result.append("id: " + id);
+        result.append(", codice: " + codice);
         result.append(", ragioneSociale: " + ragioneSociale);
         result.append(", ragioneSociale2: " + ragioneSociale2);
         result.append(", dittaIndividuale: " + dittaIndividuale);
