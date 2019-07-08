@@ -35,6 +35,7 @@ CREATE TABLE `fornitore` (
 	codice_univoco_sdi varchar(100),
 	iban varchar(100),
 	pagamento varchar(100),
+	note text,
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 

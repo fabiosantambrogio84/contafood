@@ -74,6 +74,9 @@ public class Fornitore {
     @Column(name = "pagamento")
     private String pagamento;
 
+    @Column(name = "note")
+    private String note;
+
     public Long getId() {
         return id;
     }
@@ -250,9 +253,17 @@ public class Fornitore {
         this.pagamento = pagamento;
     }
 
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(id, codice, ragioneSociale, ragioneSociale2, dittaIndividuale, nome, cognome, indirizzo, citta, provincia, cap, nazione, partitaIva, codiceFiscale, telefono, telefono2, telefono3, email, emailPec, codiceUnivocoSdi, iban, pagamento);
+        return Objects.hash(id, codice, ragioneSociale, ragioneSociale2, dittaIndividuale, nome, cognome, indirizzo, citta, provincia, cap, nazione, partitaIva, codiceFiscale, telefono, telefono2, telefono3, email, emailPec, codiceUnivocoSdi, iban, pagamento, note);
     }
 
     @Override
@@ -285,7 +296,8 @@ public class Fornitore {
                 Objects.equals(emailPec, that.emailPec) &&
                 Objects.equals(codiceUnivocoSdi, that.codiceUnivocoSdi) &&
                 Objects.equals(iban, that.iban) &&
-                Objects.equals(pagamento, that.pagamento);
+                Objects.equals(pagamento, that.pagamento) &&
+                Objects.equals(note, that.note);
     }
 
     @Override
@@ -315,6 +327,7 @@ public class Fornitore {
         result.append(", codiceUnivocoSdi: " + codiceUnivocoSdi);
         result.append(", iban: " + iban);
         result.append(", pagamento: " + pagamento);
+        result.append(", note: " + note);
         result.append("}");
 
         return result.toString();
