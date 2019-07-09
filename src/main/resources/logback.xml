@@ -15,7 +15,7 @@
         </layout>
     </appender>
 
-
+    <!--
     <appender name="RollingFile"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>./contafood.log</file>
@@ -32,7 +32,7 @@
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
     </appender>
-
+    -->
     <!--
     <appender name="File" class="ch.qos.logback.core.FileAppender">
         <file>ricetta-dem.log</file>
@@ -45,7 +45,7 @@
 
     <!-- LOG everything at INFO level -->
     <root level="info">
-        <appender-ref ref="RollingFile" />
+        <!--<appender-ref ref="RollingFile" />-->
         <appender-ref ref="Console" />
     </root>
 
