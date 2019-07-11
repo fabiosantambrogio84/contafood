@@ -1,5 +1,9 @@
 package com.contafood.util;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public enum Provincia {
 
     AGRIGENTO("Agrigento"),
@@ -121,5 +125,9 @@ public enum Provincia {
 
     public String getLabel() {
         return label;
+    }
+
+    public static List<String> labels(){
+        return Arrays.asList(Provincia.values()).stream().map(p -> p.getLabel()).collect(Collectors.toList());
     }
 }
