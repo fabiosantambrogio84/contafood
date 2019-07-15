@@ -26,22 +26,26 @@ public class CategoriaArticoloController {
     }
 
     @RequestMapping(method = GET)
+    @CrossOrigin
     public Set<CategoriaArticolo> getAll() {
         return categoriaArticoloService.getAll();
     }
 
     @RequestMapping(method = GET, path = "/{categoriaArticoloId}")
+    @CrossOrigin
     public CategoriaArticolo getOne(@PathVariable final Long categoriaArticoloId) {
         return categoriaArticoloService.getOne(categoriaArticoloId);
     }
 
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
+    @CrossOrigin
     public CategoriaArticolo create(@RequestBody final CategoriaArticolo categoriaArticolo){
         return categoriaArticoloService.create(categoriaArticolo);
     }
 
     @RequestMapping(method = PUT, path = "/{categoriaArticoloId}")
+    @CrossOrigin
     public CategoriaArticolo update(@PathVariable final Long categoriaArticoloId, @RequestBody final CategoriaArticolo categoriaArticolo){
         if (!Objects.equals(categoriaArticoloId, categoriaArticolo.getId())) {
             throw new CannotChangeResourceIdException();
@@ -51,6 +55,7 @@ public class CategoriaArticoloController {
 
     @RequestMapping(method = DELETE, path = "/{categoriaArticoloId}")
     @ResponseStatus(NO_CONTENT)
+    @CrossOrigin
     public void delete(@PathVariable final Long categoriaArticoloId){
         categoriaArticoloService.delete(categoriaArticoloId);
     }

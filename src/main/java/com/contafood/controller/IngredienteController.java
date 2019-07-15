@@ -25,22 +25,26 @@ public class IngredienteController {
     }
 
     @RequestMapping(method = GET)
+    @CrossOrigin
     public Set<Ingrediente> getAll() {
         return ingredienteService.getAll();
     }
 
     @RequestMapping(method = GET, path = "/{ingredienteId}")
+    @CrossOrigin
     public Ingrediente getOne(@PathVariable final Long ingredienteId) {
         return ingredienteService.getOne(ingredienteId);
     }
 
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
+    @CrossOrigin
     public Ingrediente create(@RequestBody final Ingrediente ingrediente){
         return ingredienteService.create(ingrediente);
     }
 
     @RequestMapping(method = PUT, path = "/{ingredienteId}")
+    @CrossOrigin
     public Ingrediente update(@PathVariable final Long ingredienteId, @RequestBody final Ingrediente ingrediente){
         if (!Objects.equals(ingredienteId, ingrediente.getId())) {
             throw new CannotChangeResourceIdException();
@@ -50,6 +54,7 @@ public class IngredienteController {
 
     @RequestMapping(method = DELETE, path = "/{ingredienteId}")
     @ResponseStatus(NO_CONTENT)
+    @CrossOrigin
     public void delete(@PathVariable final Long ingredienteId){
         ingredienteService.delete(ingredienteId);
     }
