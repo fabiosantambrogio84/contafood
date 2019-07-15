@@ -48,3 +48,13 @@ CREATE TABLE `categoria_articolo` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS `ingrediente`;
+
+CREATE TABLE `ingrediente` (
+	id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	codice varchar(100),
+	descrizione text,
+	prezzo numeric,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
