@@ -54,7 +54,83 @@ CREATE TABLE `ingrediente` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	codice varchar(100),
 	descrizione text,
-	prezzo numeric,
+	prezzo decimal(10,3),
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
+
+DROP TABLE IF EXISTS `ricetta`;
+
+CREATE TABLE `ricetta` (
+	id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	codice varchar(100),
+	nome varchar(100),
+	categoria varchar(100),
+	tempo_preparazione varchar(100),
+	numero_porzioni numeric,
+	costo_ingredienti decimal(10,3),
+	costo_preparazione decimal(10,3),
+	costo_totale decimal(10,3),
+	preparazione text,
+	allergeni text,
+	valori_nutrizionali text,
+	note text,
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS `ricetta_ingrediente`;
+
+CREATE TABLE `ricetta_ingrediente` (
+	id_ricetta int(10) unsigned NOT NULL,
+	id_ingrediente int(10) unsigned NOT NULL,
+	quantita decimal(10,3),
+	PRIMARY KEY (`id_ricetta`, id_ingrediente)
+) ENGINE=InnoDB;
+
+/*
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Objects;
+
+@Getter
+@Setter
+@NoArgsConstructor
+
+@Entity
+public class BookPublisher implements Serializable {
+    @Id
+    @ManyToOne
+    @JoinColumn
+    private Book book;
+
+    @Id
+    @ManyToOne
+    @JoinColumn
+    private Publisher publisher;
+
+    private Date publishedDate;
+
+    public BookPublisher(Publisher publisher, Date publishedDate) {
+        this.publisher = publisher;
+        this.publishedDate = publishedDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BookPublisher)) return false;
+        BookPublisher that = (BookPublisher) o;
+        return Objects.equals(book.getName(), that.book.getName()) &&
+                Objects.equals(publisher.getName(), that.publisher.getName()) &&
+                Objects.equals(publishedDate, that.publishedDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(book.getName(), publisher.getName(), publishedDate);
+    }
+}
+
+ */
