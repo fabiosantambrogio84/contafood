@@ -1,9 +1,15 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.HashSet;
 import java.util.Set;
 
+//@Data
+@EqualsAndHashCode(exclude = "ricettaIngredienti")
 @Entity
 @Table(name = "ingrediente")
 public class Ingrediente {
@@ -21,8 +27,9 @@ public class Ingrediente {
     @Column(name = "prezzo")
     private Float prezzo;
 
-    @OneToMany(mappedBy = "ingrediente", cascade = CascadeType.ALL)
-    private Set<RicettaIngrediente> ricettaIngredienti;
+    @OneToMany(mappedBy = "ingrediente")
+    @JsonIgnore
+    Set<RicettaIngrediente> ricettaIngredienti = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -65,27 +72,6 @@ public class Ingrediente {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, codice, descrizione, prezzo, ricettaIngredienti);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final Ingrediente that = (Ingrediente) obj;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(codice, that.codice) &&
-                Objects.equals(descrizione, that.descrizione) &&
-                Objects.equals(prezzo, that.prezzo) &&
-                Objects.equals(ricettaIngredienti, that.ricettaIngredienti);
-    }
-
-    @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
 
@@ -94,7 +80,7 @@ public class Ingrediente {
         result.append(", codice: " + codice);
         result.append(", descrizione: " + descrizione);
         result.append(", prezzo: " + prezzo);
-        result.append(", ricettaIngredienti: [");
+        result.append(", ricette: [");
         for(RicettaIngrediente ricettaIngrediente: ricettaIngredienti){
             result.append("{");
             result.append(ricettaIngrediente.toString());

@@ -1,9 +1,8 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.CategoriaArticolo;
-import com.contafood.model.Fornitore;
-import com.contafood.service.CategoriaArticoloService;
+import com.contafood.model.CategoriaRicetta;
+import com.contafood.service.CategoriaRicettaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,45 +17,45 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/categorie-articoli")
 public class CategoriaArticoloController {
 
-    private final CategoriaArticoloService categoriaArticoloService;
+    private final CategoriaRicettaService categoriaRicettaService;
 
     @Autowired
-    public CategoriaArticoloController(final CategoriaArticoloService categoriaArticoloService){
-        this.categoriaArticoloService = categoriaArticoloService;
+    public CategoriaArticoloController(final CategoriaRicettaService categoriaRicettaService){
+        this.categoriaRicettaService = categoriaRicettaService;
     }
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<CategoriaArticolo> getAll() {
-        return categoriaArticoloService.getAll();
+    public Set<CategoriaRicetta> getAll() {
+        return categoriaRicettaService.getAll();
     }
 
     @RequestMapping(method = GET, path = "/{categoriaArticoloId}")
     @CrossOrigin
-    public CategoriaArticolo getOne(@PathVariable final Long categoriaArticoloId) {
-        return categoriaArticoloService.getOne(categoriaArticoloId);
+    public CategoriaRicetta getOne(@PathVariable final Long categoriaArticoloId) {
+        return categoriaRicettaService.getOne(categoriaArticoloId);
     }
 
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin
-    public CategoriaArticolo create(@RequestBody final CategoriaArticolo categoriaArticolo){
-        return categoriaArticoloService.create(categoriaArticolo);
+    public CategoriaRicetta create(@RequestBody final CategoriaRicetta categoriaRicetta){
+        return categoriaRicettaService.create(categoriaRicetta);
     }
 
     @RequestMapping(method = PUT, path = "/{categoriaArticoloId}")
     @CrossOrigin
-    public CategoriaArticolo update(@PathVariable final Long categoriaArticoloId, @RequestBody final CategoriaArticolo categoriaArticolo){
-        if (!Objects.equals(categoriaArticoloId, categoriaArticolo.getId())) {
+    public CategoriaRicetta update(@PathVariable final Long categoriaArticoloId, @RequestBody final CategoriaRicetta categoriaRicetta){
+        if (!Objects.equals(categoriaArticoloId, categoriaRicetta.getId())) {
             throw new CannotChangeResourceIdException();
         }
-        return categoriaArticoloService.update(categoriaArticolo);
+        return categoriaRicettaService.update(categoriaRicetta);
     }
 
     @RequestMapping(method = DELETE, path = "/{categoriaArticoloId}")
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
     public void delete(@PathVariable final Long categoriaArticoloId){
-        categoriaArticoloService.delete(categoriaArticoloId);
+        categoriaRicettaService.delete(categoriaArticoloId);
     }
 }

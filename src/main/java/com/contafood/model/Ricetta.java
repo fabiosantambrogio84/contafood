@@ -1,9 +1,15 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.HashSet;
 import java.util.Set;
 
+//@Data
+@EqualsAndHashCode(exclude = {"ricettaIngredienti"})
 @Entity
 @Table(name = "ricetta")
 public class Ricetta {
@@ -18,8 +24,9 @@ public class Ricetta {
     @Column(name = "nome")
     private String nome;
 
-    @Column(name = "categoria")
-    private String categoria;
+    @ManyToOne
+    @JoinColumn(name="categoria_id")
+    private CategoriaRicetta categoria;
 
     @Column(name = "tempo_preparazione")
     private String tempoPreparazione;
@@ -48,8 +55,9 @@ public class Ricetta {
     @Column(name = "note")
     private String note;
 
-    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL)
-    private Set<RicettaIngrediente> ricettaIngredienti;
+    @OneToMany(mappedBy = "ricetta")
+    @JsonIgnoreProperties("ricetta")
+    private Set<RicettaIngrediente> ricettaIngredienti = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -75,11 +83,11 @@ public class Ricetta {
         this.nome = nome;
     }
 
-    public String getCategoria() {
+    public CategoriaRicetta getCategoria() {
         return categoria;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(CategoriaRicetta categoria) {
         this.categoria = categoria;
     }
 
@@ -164,36 +172,6 @@ public class Ricetta {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, codice, nome, categoria, tempoPreparazione, numeroPorzioni, costoIngredienti, costoPreparazione, costoTotale, preparazione, allergeni, valoriNutrizionali, note, ricettaIngredienti);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final Ricetta that = (Ricetta) obj;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(codice, that.codice) &&
-                Objects.equals(nome, that.nome) &&
-                Objects.equals(categoria, that.categoria) &&
-                Objects.equals(tempoPreparazione, that.tempoPreparazione) &&
-                Objects.equals(numeroPorzioni, that.numeroPorzioni) &&
-                Objects.equals(costoIngredienti, that.costoIngredienti) &&
-                Objects.equals(costoPreparazione, that.costoPreparazione) &&
-                Objects.equals(costoTotale, that.costoTotale) &&
-                Objects.equals(preparazione, that.preparazione) &&
-                Objects.equals(allergeni, that.allergeni) &&
-                Objects.equals(valoriNutrizionali, that.valoriNutrizionali) &&
-                Objects.equals(note, that.note) &&
-                Objects.equals(ricettaIngredienti, that.ricettaIngredienti);
-    }
-
-    @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
 
@@ -211,7 +189,7 @@ public class Ricetta {
         result.append(", allergeni: " + allergeni);
         result.append(", valoriNutrizionali: " + valoriNutrizionali);
         result.append(", note: " + note);
-        result.append(", ricettaIngredienti: [");
+        result.append(", ingredienti: [");
         for(RicettaIngrediente ricettaIngrediente: ricettaIngredienti){
             result.append("{");
             result.append(ricettaIngrediente.toString());

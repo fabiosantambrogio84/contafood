@@ -39,9 +39,9 @@ CREATE TABLE `fornitore` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS `categoria_articolo`;
+DROP TABLE IF EXISTS `categoria_ricetta`;
 
-CREATE TABLE `categoria_articolo` (
+CREATE TABLE `categoria_ricetta` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	nome varchar(100),
 	ordine int(11),
@@ -65,7 +65,7 @@ CREATE TABLE `ricetta` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	codice varchar(100),
 	nome varchar(100),
-	categoria varchar(100),
+	categoria_id int(10),
 	tempo_preparazione varchar(100),
 	numero_porzioni numeric,
 	costo_ingredienti decimal(10,3),

@@ -1,11 +1,14 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "categoria_articolo")
-public class CategoriaArticolo {
+@Table(name = "categoria_ricetta")
+public class CategoriaRicetta {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -16,6 +19,10 @@ public class CategoriaArticolo {
 
     @Column(name = "ordine")
     private Integer ordine;
+
+    @OneToMany(mappedBy = "categoria")
+    @JsonIgnore
+    private List<Ricetta> ricette;
 
     public Long getId() {
         return id;
@@ -41,6 +48,14 @@ public class CategoriaArticolo {
         this.ordine = ordine;
     }
 
+    public List<Ricetta> getRicette() {
+        return ricette;
+    }
+
+    public void setRicette(List<Ricetta> ricette) {
+        this.ricette = ricette;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, nome, ordine);
@@ -54,7 +69,7 @@ public class CategoriaArticolo {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final CategoriaArticolo that = (CategoriaArticolo) obj;
+        final CategoriaRicetta that = (CategoriaRicetta) obj;
         return Objects.equals(id, that.id) &&
                 Objects.equals(nome, that.nome) &&
                 Objects.equals(ordine, that.ordine);
