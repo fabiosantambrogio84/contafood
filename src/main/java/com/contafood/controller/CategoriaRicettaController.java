@@ -14,13 +14,13 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(path="/categorie-articoli")
-public class CategoriaArticoloController {
+@RequestMapping(path="/categorie-ricette")
+public class CategoriaRicettaController {
 
     private final CategoriaRicettaService categoriaRicettaService;
 
     @Autowired
-    public CategoriaArticoloController(final CategoriaRicettaService categoriaRicettaService){
+    public CategoriaRicettaController(final CategoriaRicettaService categoriaRicettaService){
         this.categoriaRicettaService = categoriaRicettaService;
     }
 
@@ -30,10 +30,10 @@ public class CategoriaArticoloController {
         return categoriaRicettaService.getAll();
     }
 
-    @RequestMapping(method = GET, path = "/{categoriaArticoloId}")
+    @RequestMapping(method = GET, path = "/{categoriaRicettaId}")
     @CrossOrigin
-    public CategoriaRicetta getOne(@PathVariable final Long categoriaArticoloId) {
-        return categoriaRicettaService.getOne(categoriaArticoloId);
+    public CategoriaRicetta getOne(@PathVariable final Long categoriaRicettaId) {
+        return categoriaRicettaService.getOne(categoriaRicettaId);
     }
 
     @RequestMapping(method = POST)
@@ -43,19 +43,19 @@ public class CategoriaArticoloController {
         return categoriaRicettaService.create(categoriaRicetta);
     }
 
-    @RequestMapping(method = PUT, path = "/{categoriaArticoloId}")
+    @RequestMapping(method = PUT, path = "/{categoriaRicettaId}")
     @CrossOrigin
-    public CategoriaRicetta update(@PathVariable final Long categoriaArticoloId, @RequestBody final CategoriaRicetta categoriaRicetta){
-        if (!Objects.equals(categoriaArticoloId, categoriaRicetta.getId())) {
+    public CategoriaRicetta update(@PathVariable final Long categoriaRicettaId, @RequestBody final CategoriaRicetta categoriaRicetta){
+        if (!Objects.equals(categoriaRicettaId, categoriaRicetta.getId())) {
             throw new CannotChangeResourceIdException();
         }
         return categoriaRicettaService.update(categoriaRicetta);
     }
 
-    @RequestMapping(method = DELETE, path = "/{categoriaArticoloId}")
+    @RequestMapping(method = DELETE, path = "/{categoriaRicettaId}")
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
-    public void delete(@PathVariable final Long categoriaArticoloId){
-        categoriaRicettaService.delete(categoriaArticoloId);
+    public void delete(@PathVariable final Long categoriaRicettaId){
+        categoriaRicettaService.delete(categoriaRicettaId);
     }
 }
