@@ -1,8 +1,10 @@
 package com.contafood.model;
 
-import javax.persistence.*;
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
+import javax.persistence.*;
+
+@EqualsAndHashCode
 @Entity
 @Table(name = "fornitore")
 public class Fornitore {
@@ -20,7 +22,7 @@ public class Fornitore {
     @Column(name = "ragione_sociale_2")
     private String ragioneSociale2;
 
-    @Column(name = "fl_ditta_individuale")
+    @Column(name = "ditta_individuale")
     private boolean dittaIndividuale;
 
     @Column(name = "nome")
@@ -73,6 +75,26 @@ public class Fornitore {
 
     @Column(name = "pagamento")
     private String pagamento;
+
+    @ManyToOne
+    @JoinColumn(name="id_autista")
+    private Autista autista;
+
+    @ManyToOne
+    @JoinColumn(name="id_agente")
+    private Agente agente;
+
+    @Column(name = "blocca_ddt")
+    private boolean bloccaDdt;
+
+    @Column(name = "nascondi_prezzi")
+    private boolean nascondiPrezzi;
+
+    @Column(name = "raggruppa_riba")
+    private boolean raggruppaRiba;
+
+    @Column(name = "nome_gruppo_riba")
+    private String nomeGruppoRiba;
 
     @Column(name = "note")
     private String note;
@@ -253,6 +275,54 @@ public class Fornitore {
         this.pagamento = pagamento;
     }
 
+    public Autista getAutista() {
+        return autista;
+    }
+
+    public void setAutista(Autista autista) {
+        this.autista = autista;
+    }
+
+    public Agente getAgente() {
+        return agente;
+    }
+
+    public void setAgente(Agente agente) {
+        this.agente = agente;
+    }
+
+    public boolean isBloccaDdt() {
+        return bloccaDdt;
+    }
+
+    public void setBloccaDdt(boolean bloccaDdt) {
+        this.bloccaDdt = bloccaDdt;
+    }
+
+    public boolean isNascondiPrezzi() {
+        return nascondiPrezzi;
+    }
+
+    public void setNascondiPrezzi(boolean nascondiPrezzi) {
+        this.nascondiPrezzi = nascondiPrezzi;
+    }
+
+    public boolean isRaggruppaRiba() {
+        return raggruppaRiba;
+    }
+
+    public void setRaggruppaRiba(boolean raggruppaRiba) {
+        this.raggruppaRiba = raggruppaRiba;
+    }
+
+    public String getNomeGruppoRiba() {
+        return nomeGruppoRiba;
+    }
+
+    public void setNomeGruppoRiba(String nomeGruppoRiba) {
+        this.nomeGruppoRiba = nomeGruppoRiba;
+    }
+
     public String getNote() {
         return note;
     }
@@ -261,6 +331,7 @@ public class Fornitore {
         this.note = note;
     }
 
+    /*
     @Override
     public int hashCode() {
         return Objects.hash(id, codice, ragioneSociale, ragioneSociale2, dittaIndividuale, nome, cognome, indirizzo, citta, provincia, cap, nazione, partitaIva, codiceFiscale, telefono, telefono2, telefono3, email, emailPec, codiceUnivocoSdi, iban, pagamento, note);
@@ -299,6 +370,7 @@ public class Fornitore {
                 Objects.equals(pagamento, that.pagamento) &&
                 Objects.equals(note, that.note);
     }
+    */
 
     @Override
     public String toString() {
@@ -327,6 +399,12 @@ public class Fornitore {
         result.append(", codiceUnivocoSdi: " + codiceUnivocoSdi);
         result.append(", iban: " + iban);
         result.append(", pagamento: " + pagamento);
+        result.append(", autista: " + autista);
+        result.append(", agente: " + agente);
+        result.append(", bloccaDdt: " + bloccaDdt);
+        result.append(", nascondiPrezzi: " + nascondiPrezzi);
+        result.append(", raggruppaRiba: " + raggruppaRiba);
+        result.append(", nomeGruppoRiba: " + nomeGruppoRiba);
         result.append(", note: " + note);
         result.append("}");
 

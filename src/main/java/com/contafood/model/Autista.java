@@ -5,12 +5,11 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
-@EqualsAndHashCode(exclude = {"ricette"})
+@EqualsAndHashCode(exclude = {"fornitori"})
 @Entity
-@Table(name = "categoria_ricetta")
-public class CategoriaRicetta {
+@Table(name = "autista")
+public class Autista {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -19,12 +18,15 @@ public class CategoriaRicetta {
     @Column(name = "nome")
     private String nome;
 
-    @Column(name = "ordine")
-    private Integer ordine;
+    @Column(name = "cognome")
+    private String cognome;
 
-    @OneToMany(mappedBy = "categoria")
+    @Column(name = "telefono")
+    private String telefono;
+
+    @OneToMany(mappedBy = "autista")
     @JsonIgnore
-    private List<Ricetta> ricette;
+    private List<Fornitore> fornitori;
 
     public Long getId() {
         return id;
@@ -42,20 +44,28 @@ public class CategoriaRicetta {
         this.nome = nome;
     }
 
-    public Integer getOrdine() {
-        return ordine;
+    public String getCognome() {
+        return cognome;
     }
 
-    public void setOrdine(Integer ordine) {
-        this.ordine = ordine;
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
     }
 
-    public List<Ricetta> getRicette() {
-        return ricette;
+    public String getTelefono() {
+        return telefono;
     }
 
-    public void setRicette(List<Ricetta> ricette) {
-        this.ricette = ricette;
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public List<Fornitore> getFornitori() {
+        return fornitori;
+    }
+
+    public void setFornitori(List<Fornitore> fornitori) {
+        this.fornitori = fornitori;
     }
 
     @Override
@@ -65,7 +75,8 @@ public class CategoriaRicetta {
         result.append("{");
         result.append("id: " + id);
         result.append(", nome: " + nome);
-        result.append(", ordine: " + ordine);
+        result.append(", cognome: " + cognome);
+        result.append(", telefono: " + telefono);
         result.append("}");
 
         return result.toString();

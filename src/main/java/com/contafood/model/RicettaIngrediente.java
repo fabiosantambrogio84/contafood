@@ -1,12 +1,10 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-//@Data
 @Entity
 @Table(name = "ricetta_ingrediente")
 public class RicettaIngrediente implements Serializable {

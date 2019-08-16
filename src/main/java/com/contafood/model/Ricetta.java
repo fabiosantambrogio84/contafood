@@ -1,14 +1,12 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Data
 @EqualsAndHashCode(exclude = {"ricettaIngredienti"})
 @Entity
 @Table(name = "ricetta")
@@ -25,7 +23,7 @@ public class Ricetta {
     private String nome;
 
     @ManyToOne
-    @JoinColumn(name="categoria_id")
+    @JoinColumn(name="id_categoria")
     private CategoriaRicetta categoria;
 
     @Column(name = "tempo_preparazione")
