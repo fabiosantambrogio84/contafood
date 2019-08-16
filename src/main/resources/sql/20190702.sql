@@ -17,7 +17,7 @@ CREATE TABLE `fornitore` (
 	codice varchar(100),
 	ragione_sociale varchar(100),
 	ragione_sociale_2 varchar(100),
-	fl_ditta_individuale bit(1) NOT NULL DEFAULT b'0',
+	ditta_individuale bit(1) NOT NULL DEFAULT b'0',
 	nome varchar(100),
 	cognome varchar(100),
 	indirizzo varchar(100),
@@ -65,7 +65,7 @@ CREATE TABLE `ricetta` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	codice varchar(100),
 	nome varchar(100),
-	categoria_id int(10),
+	id_categoria int(10),
 	tempo_preparazione varchar(100),
 	numero_porzioni numeric,
 	costo_ingredienti decimal(10,3),
@@ -87,50 +87,3 @@ CREATE TABLE `ricetta_ingrediente` (
 	PRIMARY KEY (`id_ricetta`, id_ingrediente)
 ) ENGINE=InnoDB;
 
-/*
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Objects;
-
-@Getter
-@Setter
-@NoArgsConstructor
-
-@Entity
-public class BookPublisher implements Serializable {
-    @Id
-    @ManyToOne
-    @JoinColumn
-    private Book book;
-
-    @Id
-    @ManyToOne
-    @JoinColumn
-    private Publisher publisher;
-
-    private Date publishedDate;
-
-    public BookPublisher(Publisher publisher, Date publishedDate) {
-        this.publisher = publisher;
-        this.publishedDate = publishedDate;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BookPublisher)) return false;
-        BookPublisher that = (BookPublisher) o;
-        return Objects.equals(book.getName(), that.book.getName()) &&
-                Objects.equals(publisher.getName(), that.publisher.getName()) &&
-                Objects.equals(publishedDate, that.publishedDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(book.getName(), publisher.getName(), publishedDate);
-    }
-}
-
- */
