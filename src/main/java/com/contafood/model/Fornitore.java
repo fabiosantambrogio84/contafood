@@ -76,26 +76,6 @@ public class Fornitore {
     @Column(name = "pagamento")
     private String pagamento;
 
-    @ManyToOne
-    @JoinColumn(name="id_autista")
-    private Autista autista;
-
-    @ManyToOne
-    @JoinColumn(name="id_agente")
-    private Agente agente;
-
-    @Column(name = "blocca_ddt")
-    private boolean bloccaDdt;
-
-    @Column(name = "nascondi_prezzi")
-    private boolean nascondiPrezzi;
-
-    @Column(name = "raggruppa_riba")
-    private boolean raggruppaRiba;
-
-    @Column(name = "nome_gruppo_riba")
-    private String nomeGruppoRiba;
-
     @Column(name = "note")
     private String note;
 
@@ -275,54 +255,6 @@ public class Fornitore {
         this.pagamento = pagamento;
     }
 
-    public Autista getAutista() {
-        return autista;
-    }
-
-    public void setAutista(Autista autista) {
-        this.autista = autista;
-    }
-
-    public Agente getAgente() {
-        return agente;
-    }
-
-    public void setAgente(Agente agente) {
-        this.agente = agente;
-    }
-
-    public boolean isBloccaDdt() {
-        return bloccaDdt;
-    }
-
-    public void setBloccaDdt(boolean bloccaDdt) {
-        this.bloccaDdt = bloccaDdt;
-    }
-
-    public boolean isNascondiPrezzi() {
-        return nascondiPrezzi;
-    }
-
-    public void setNascondiPrezzi(boolean nascondiPrezzi) {
-        this.nascondiPrezzi = nascondiPrezzi;
-    }
-
-    public boolean isRaggruppaRiba() {
-        return raggruppaRiba;
-    }
-
-    public void setRaggruppaRiba(boolean raggruppaRiba) {
-        this.raggruppaRiba = raggruppaRiba;
-    }
-
-    public String getNomeGruppoRiba() {
-        return nomeGruppoRiba;
-    }
-
-    public void setNomeGruppoRiba(String nomeGruppoRiba) {
-        this.nomeGruppoRiba = nomeGruppoRiba;
-    }
-
     public String getNote() {
         return note;
     }
@@ -399,12 +331,6 @@ public class Fornitore {
         result.append(", codiceUnivocoSdi: " + codiceUnivocoSdi);
         result.append(", iban: " + iban);
         result.append(", pagamento: " + pagamento);
-        result.append(", autista: " + autista);
-        result.append(", agente: " + agente);
-        result.append(", bloccaDdt: " + bloccaDdt);
-        result.append(", nascondiPrezzi: " + nascondiPrezzi);
-        result.append(", raggruppaRiba: " + raggruppaRiba);
-        result.append(", nomeGruppoRiba: " + nomeGruppoRiba);
         result.append(", note: " + note);
         result.append("}");
 
