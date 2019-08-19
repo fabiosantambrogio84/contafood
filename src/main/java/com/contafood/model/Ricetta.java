@@ -27,7 +27,7 @@ public class Ricetta {
     private CategoriaRicetta categoria;
 
     @Column(name = "tempo_preparazione")
-    private String tempoPreparazione;
+    private Integer tempoPreparazione;
 
     @Column(name = "numero_porzioni")
     private Integer numeroPorzioni;
@@ -89,11 +89,11 @@ public class Ricetta {
         this.categoria = categoria;
     }
 
-    public String getTempoPreparazione() {
+    public Integer getTempoPreparazione() {
         return tempoPreparazione;
     }
 
-    public void setTempoPreparazione(String tempoPreparazione) {
+    public void setTempoPreparazione(Integer tempoPreparazione) {
         this.tempoPreparazione = tempoPreparazione;
     }
 
