@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,19 @@ public class Ingrediente {
 
     @Column(name = "prezzo")
     private Float prezzo;
+
+    @Column(name = "unita_di_misura")
+    private String unitaDiMisura;
+
+    @ManyToOne
+    @JoinColumn(name="id_fornitore")
+    private Fornitore fornitore;
+
+    @Column(name = "data_inserimento")
+    private Timestamp dataInserimento;
+
+    @Column(name = "note")
+    private String note;
 
     @OneToMany(mappedBy = "ingrediente")
     @JsonIgnore
@@ -61,6 +75,38 @@ public class Ingrediente {
         this.prezzo = prezzo;
     }
 
+    public String getUnitaDiMisura() {
+        return unitaDiMisura;
+    }
+
+    public void setUnitaDiMisura(String unitaDiMisura) {
+        this.unitaDiMisura = unitaDiMisura;
+    }
+
+    public Fornitore getFornitore() {
+        return fornitore;
+    }
+
+    public void setFornitore(Fornitore fornitore) {
+        this.fornitore = fornitore;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public Set<RicettaIngrediente> getRicettaIngredienti() {
         return ricettaIngredienti;
     }
@@ -78,13 +124,10 @@ public class Ingrediente {
         result.append(", codice: " + codice);
         result.append(", descrizione: " + descrizione);
         result.append(", prezzo: " + prezzo);
-        result.append(", ricette: [");
-        for(RicettaIngrediente ricettaIngrediente: ricettaIngredienti){
-            result.append("{");
-            result.append(ricettaIngrediente.toString());
-            result.append("}");
-        }
-        result.append("]");
+        result.append(", unitaDiMisura: " + unitaDiMisura);
+        result.append(", fornitore: " + fornitore);
+        result.append(", dataInserimento: " + dataInserimento);
+        result.append(", note: " + note);
         result.append("}");
 
         return result.toString();

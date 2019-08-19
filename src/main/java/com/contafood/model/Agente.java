@@ -1,12 +1,10 @@
 package com.contafood.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.util.List;
 
-@EqualsAndHashCode(exclude = {"fornitori"})
+@EqualsAndHashCode
 @Entity
 @Table(name = "agente")
 public class Agente {
@@ -29,10 +27,6 @@ public class Agente {
 
     @Column(name = "indirizzo")
     private String indirizzo;
-
-    @OneToMany(mappedBy = "agente")
-    @JsonIgnore
-    private List<Fornitore> fornitori;
 
     public Long getId() {
         return id;
@@ -80,14 +74,6 @@ public class Agente {
 
     public void setIndirizzo(String indirizzo) {
         this.indirizzo = indirizzo;
-    }
-
-    public List<Fornitore> getFornitori() {
-        return fornitori;
-    }
-
-    public void setFornitori(List<Fornitore> fornitori) {
-        this.fornitori = fornitori;
     }
 
     @Override
