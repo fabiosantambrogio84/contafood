@@ -46,14 +46,13 @@ public class AgenteService {
     public Agente update(Agente agente){
         LOGGER.info("Updating 'agente'");
         Agente updatedAgente = agenteRepository.save(agente);
-        LOGGER.info("Updated 'agente' '{}'", agente);
+        LOGGER.info("Updated 'agente' '{}'", updatedAgente);
         return updatedAgente;
     }
 
     public void delete(Long agenteId){
-        throw new RuntimeException("SUCA");
-        //LOGGER.info("Deleting 'agente' '{}'", agenteId);
-        //agenteRepository.deleteById(agenteId);
-        //LOGGER.info("Deleted 'agente' '{}'", agenteId);
+        LOGGER.info("Deleting 'agente' '{}'", agenteId);
+        agenteRepository.deleteById(agenteId);
+        LOGGER.info("Deleted 'agente' '{}'", agenteId);
     }
 }
