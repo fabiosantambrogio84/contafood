@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -44,14 +45,14 @@ public class ParametroController {
         return parametroService.getOne(parametroId);
     }
 
-    @RequestMapping(method = PUT, path = "/{parametroId}")
+    @RequestMapping(method = PATCH, path = "/{parametroId}")
     @CrossOrigin
-    public Parametro update(@PathVariable final Long parametroId, @RequestBody final Parametro parametro){
-        LOGGER.info("Performing PUT request for updating 'parametro' '{}'", parametroId);
-        if (!Objects.equals(parametroId, parametro.getId())) {
+    public Parametro update(@PathVariable final Long parametroId, @RequestBody final Map<String, Object> parametro){
+        LOGGER.info("Performing PATCH request for updating 'parametro' '{}'", parametroId);
+        if (!Objects.equals(parametroId, parametro.get("id"))) {
             throw new CannotChangeResourceIdException();
         }
-        return parametroService.update(parametro);
+        return parametroService.updateWithPatch(parametro, parametroId);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 
@@ -56,6 +57,9 @@ public class Ricetta {
     @OneToMany(mappedBy = "ricetta")
     @JsonIgnoreProperties("ricetta")
     private Set<RicettaIngrediente> ricettaIngredienti = new HashSet<>();
+
+    @JsonIgnore
+    private Float costoOrarioPreparazione;
 
     public Long getId() {
         return id;
@@ -169,6 +173,14 @@ public class Ricetta {
         this.ricettaIngredienti = ricettaIngredienti;
     }
 
+    public Float getCostoOrarioPreparazione() {
+        return costoOrarioPreparazione;
+    }
+
+    public void setCostoOrarioPreparazione(Float costoOrarioPreparazione) {
+        this.costoOrarioPreparazione = costoOrarioPreparazione;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -187,6 +199,7 @@ public class Ricetta {
         result.append(", allergeni: " + allergeni);
         result.append(", valoriNutrizionali: " + valoriNutrizionali);
         result.append(", note: " + note);
+        result.append(", costoOrarioPreparazione: " + costoOrarioPreparazione);
         result.append(", ingredienti: [");
         for(RicettaIngrediente ricettaIngrediente: ricettaIngredienti){
             result.append("{");

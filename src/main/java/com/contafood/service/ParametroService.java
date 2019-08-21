@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -36,6 +37,13 @@ public class ParametroService {
         return parametro;
     }
 
+    public Parametro findByNome(String parametroNome){
+        LOGGER.info("Retrieving 'parametro' by name '{}'", parametroNome);
+        Parametro parametro = parametroRepository.findByNome(parametroNome).orElseThrow(ResourceNotFoundException::new);
+        LOGGER.info("Retrieved 'parametro' by name '{}'", parametro);
+        return parametro;
+    }
+
     public Parametro update(Parametro parametro){
         LOGGER.info("Updating 'parametro'");
         Parametro updatedParametro = parametroRepository.save(parametro);
@@ -43,4 +51,11 @@ public class ParametroService {
         return updatedParametro;
     }
 
+    public Parametro updateWithPatch(Map<String,Object> parametro, Long id){
+        LOGGER.info("Patching 'parametro'");
+        parametroRepository.save(parametro, id);
+        Parametro updatedParametro = parametroRepository.findById(id).get();
+        LOGGER.info("Patched 'parametro' '{}'", updatedParametro);
+        return updatedParametro;
+    }
 }

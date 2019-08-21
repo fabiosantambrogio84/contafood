@@ -11,7 +11,7 @@ CREATE TABLE `parametro` (
 
 
 INSERT INTO `parametro`(nome, descrizione, unita_di_misura, valore)
-VALUES ('COSTO_ORARIO_PREPARAZIONE_RICETTA', 'Costo orario di preparazione per ogni ricetta', '&euro;', '15');
+VALUES ('COSTO_ORARIO_PREPARAZIONE_RICETTA', 'Costo orario di preparazione per ogni ricetta', '€', '15');
 
 
 -- https://www.mkyong.com/spring-boot/spring-rest-spring-security-example/

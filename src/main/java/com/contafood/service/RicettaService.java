@@ -1,6 +1,7 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
+import com.contafood.model.Parametro;
 import com.contafood.model.Ricetta;
 import com.contafood.model.RicettaIngrediente;
 import com.contafood.repository.RicettaIngredienteRepository;
@@ -17,11 +18,15 @@ public class RicettaService {
 
     private final RicettaRepository ricettaRepository;
     private final RicettaIngredienteRepository ricettaIngredienteRepository;
+    private final ParametroService parametroService;
+
+    private final static String COSTO_ORARIO = "COSTO_ORARIO_PREPARAZIONE_RICETTA";
 
     @Autowired
-    public RicettaService(final RicettaRepository ricettaRepository, final RicettaIngredienteRepository ricettaIngredienteRepository){
+    public RicettaService(final RicettaRepository ricettaRepository, final RicettaIngredienteRepository ricettaIngredienteRepository, final ParametroService parametroService){
         this.ricettaRepository = ricettaRepository;
         this.ricettaIngredienteRepository = ricettaIngredienteRepository;
+        this.parametroService = parametroService;
     }
 
     public Set<Ricetta> getAll(){
@@ -29,7 +34,10 @@ public class RicettaService {
     }
 
     public Ricetta getOne(Long ricettaId){
-        return ricettaRepository.findById(ricettaId).orElseThrow(ResourceNotFoundException::new);
+        Ricetta ricetta = ricettaRepository.findById(ricettaId).orElseThrow(ResourceNotFoundException::new);
+        Parametro parametro = parametroService.findByNome(COSTO_ORARIO);
+        ricetta.setCostoOrarioPreparazione(Float.parseFloat(parametro.getValore()));
+        return ricetta;
     }
 
     public Ricetta create(Ricetta ricetta){
