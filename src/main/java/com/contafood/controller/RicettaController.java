@@ -3,6 +3,7 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Ingrediente;
 import com.contafood.model.Ricetta;
+import com.contafood.resource.RicettaResource;
 import com.contafood.service.IngredienteService;
 import com.contafood.service.RicettaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class RicettaController {
 
     @RequestMapping(method = GET, path = "/{ricettaId}")
     @CrossOrigin
-    public Ricetta getOne(@PathVariable final Long ricettaId) {
+    public RicettaResource getOne(@PathVariable final Long ricettaId) {
         return ricettaService.getOne(ricettaId);
     }
 

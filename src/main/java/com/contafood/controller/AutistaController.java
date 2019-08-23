@@ -3,6 +3,8 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Autista;
 import com.contafood.service.AutistaService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/autisti")
 public class AutistaController {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(AutistaController.class);
+
     private final AutistaService autistaService;
 
     @Autowired
@@ -27,12 +31,14 @@ public class AutistaController {
     @RequestMapping(method = GET)
     @CrossOrigin
     public Set<Autista> getAll() {
+        LOGGER.info("Performing GET request for retrieving list of 'autisti'");
         return autistaService.getAll();
     }
 
     @RequestMapping(method = GET, path = "/{autistaId}")
     @CrossOrigin
     public Autista getOne(@PathVariable final Long autistaId) {
+        LOGGER.info("Performing GET request for retrieving 'autista' '{}'", autistaId);
         return autistaService.getOne(autistaId);
     }
 
@@ -40,12 +46,14 @@ public class AutistaController {
     @ResponseStatus(CREATED)
     @CrossOrigin
     public Autista create(@RequestBody final Autista autista){
+        LOGGER.info("Performing POST request for creating 'autista'");
         return autistaService.create(autista);
     }
 
     @RequestMapping(method = PUT, path = "/{autistaId}")
     @CrossOrigin
     public Autista update(@PathVariable final Long autistaId, @RequestBody final Autista autista){
+        LOGGER.info("Performing PUT request for updating 'autista' '{}'", autistaId);
         if (!Objects.equals(autistaId, autista.getId())) {
             throw new CannotChangeResourceIdException();
         }
@@ -56,6 +64,7 @@ public class AutistaController {
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
     public void delete(@PathVariable final Long autistaId){
+        LOGGER.info("Performing DELETE request for deleting 'autista' '{}'", autistaId);
         autistaService.delete(autistaId);
     }
 }

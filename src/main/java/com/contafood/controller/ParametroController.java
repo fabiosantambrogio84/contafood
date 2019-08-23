@@ -45,14 +45,20 @@ public class ParametroController {
         return parametroService.getOne(parametroId);
     }
 
-    @RequestMapping(method = PATCH, path = "/{parametroId}")
+    @RequestMapping(method = GET, params = "nome")
     @CrossOrigin
-    public Parametro update(@PathVariable final Long parametroId, @RequestBody final Map<String, Object> parametro){
-        LOGGER.info("Performing PATCH request for updating 'parametro' '{}'", parametroId);
-        if (!Objects.equals(parametroId, parametro.get("id"))) {
-            throw new CannotChangeResourceIdException();
-        }
-        return parametroService.updateWithPatch(parametro, parametroId);
+    public Parametro getOneByName(@RequestParam("nome") String parametroName) {
+        LOGGER.info("Performing GET request for retrieving 'parametro' by name '{}'", parametroName);
+        return parametroService.findByNome(parametroName);
     }
 
+    @RequestMapping(method = PUT, path = "/{parametroId}")
+    @CrossOrigin
+    public Parametro update(@PathVariable final Long parametroId, @RequestBody final Parametro parametro){
+        LOGGER.info("Performing PUT request for updating 'parametro' '{}'", parametroId);
+        if (!Objects.equals(parametroId, parametro.getId())) {
+            throw new CannotChangeResourceIdException();
+        }
+        return parametroService.update(parametro);
+    }
 }

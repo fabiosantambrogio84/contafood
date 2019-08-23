@@ -51,11 +51,4 @@ public class ParametroService {
         return updatedParametro;
     }
 
-    public Parametro updateWithPatch(Map<String,Object> parametro, Long id){
-        LOGGER.info("Patching 'parametro'");
-        parametroRepository.save(parametro, id);
-        Parametro updatedParametro = parametroRepository.findById(id).get();
-        LOGGER.info("Patched 'parametro' '{}'", updatedParametro);
-        return updatedParametro;
-    }
 }
