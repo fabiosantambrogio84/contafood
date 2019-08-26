@@ -3,6 +3,8 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Fornitore;
 import com.contafood.service.FornitoreService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/fornitori")
 public class FornitoreController {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(FornitoreController.class);
+
     private final FornitoreService fornitoreService;
 
     @Autowired
@@ -27,12 +31,14 @@ public class FornitoreController {
     @RequestMapping(method = GET)
     @CrossOrigin
     public Set<Fornitore> getAll() {
+        LOGGER.info("Performing GET request for retrieving list of 'fornitori'");
         return fornitoreService.getAll();
     }
 
     @RequestMapping(method = GET, path = "/{fornitoreId}")
     @CrossOrigin
     public Fornitore getOne(@PathVariable final Long fornitoreId) {
+        LOGGER.info("Performing GET request for retrieving 'fornitore' '{}'", fornitoreId);
         return fornitoreService.getOne(fornitoreId);
     }
 
@@ -40,12 +46,14 @@ public class FornitoreController {
     @ResponseStatus(CREATED)
     @CrossOrigin
     public Fornitore create(@RequestBody final Fornitore fornitore){
+        LOGGER.info("Performing POST request for creating 'fornitore'");
         return fornitoreService.create(fornitore);
     }
 
     @RequestMapping(method = PUT, path = "/{fornitoreId}")
     @CrossOrigin
     public Fornitore update(@PathVariable final Long fornitoreId, @RequestBody final Fornitore fornitore){
+        LOGGER.info("Performing PUT request for updating 'fornitore' '{}'", fornitoreId);
         if (!Objects.equals(fornitoreId, fornitore.getId())) {
             throw new CannotChangeResourceIdException();
         }
@@ -56,6 +64,7 @@ public class FornitoreController {
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
     public void delete(@PathVariable final Long fornitoreId){
+        LOGGER.info("Performing DELETE request for deleting 'fornitore' '{}'", fornitoreId);
         fornitoreService.delete(fornitoreId);
     }
 }

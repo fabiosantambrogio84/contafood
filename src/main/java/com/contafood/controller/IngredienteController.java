@@ -3,6 +3,8 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Ingrediente;
 import com.contafood.service.IngredienteService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +19,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/ingredienti")
 public class IngredienteController {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(IngredienteController.class);
+
     private final IngredienteService ingredienteService;
 
     @Autowired
@@ -27,12 +31,14 @@ public class IngredienteController {
     @RequestMapping(method = GET)
     @CrossOrigin
     public Set<Ingrediente> getAll() {
+        LOGGER.info("Performing GET request for retrieving list of 'ingredienti'");
         return ingredienteService.getAll();
     }
 
     @RequestMapping(method = GET, path = "/{ingredienteId}")
     @CrossOrigin
     public Ingrediente getOne(@PathVariable final Long ingredienteId) {
+        LOGGER.info("Performing GET request for retrieving 'ingrediente' '{}'", ingredienteId);
         return ingredienteService.getOne(ingredienteId);
     }
 
@@ -40,12 +46,14 @@ public class IngredienteController {
     @ResponseStatus(CREATED)
     @CrossOrigin
     public Ingrediente create(@RequestBody final Ingrediente ingrediente){
+        LOGGER.info("Performing POST request for creating 'ingrediente'");
         return ingredienteService.create(ingrediente);
     }
 
     @RequestMapping(method = PUT, path = "/{ingredienteId}")
     @CrossOrigin
     public Ingrediente update(@PathVariable final Long ingredienteId, @RequestBody final Ingrediente ingrediente){
+        LOGGER.info("Performing PUT request for updating 'ingrediente' '{}'", ingredienteId);
         if (!Objects.equals(ingredienteId, ingrediente.getId())) {
             throw new CannotChangeResourceIdException();
         }
@@ -56,6 +64,7 @@ public class IngredienteController {
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
     public void delete(@PathVariable final Long ingredienteId){
+        LOGGER.info("Performing DELETE request for deleting 'ingrediente' '{}'", ingredienteId);
         ingredienteService.delete(ingredienteId);
     }
 }

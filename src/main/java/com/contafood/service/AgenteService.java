@@ -39,7 +39,7 @@ public class AgenteService {
     public Agente create(Agente agente){
         LOGGER.info("Creating 'agente'");
         Agente createdAgente = agenteRepository.save(agente);
-        LOGGER.info("Created 'agente' '{}'", agente);
+        LOGGER.info("Created 'agente' '{}'", createdAgente);
         return createdAgente;
     }
 

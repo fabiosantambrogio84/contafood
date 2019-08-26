@@ -5,6 +5,8 @@ import com.contafood.model.Ricetta;
 import com.contafood.model.RicettaIngrediente;
 import com.contafood.repository.RicettaIngredienteRepository;
 import com.contafood.repository.RicettaRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,51 +17,64 @@ import java.util.Set;
 @Service
 public class RicettaService {
 
+    private static Logger LOGGER = LoggerFactory.getLogger(RicettaService.class);
+
     private final RicettaRepository ricettaRepository;
-    private final RicettaIngredienteRepository ricettaIngredienteRepository;
+    private final RicettaIngredienteService ricettaIngredienteService;
 
     @Autowired
-    public RicettaService(final RicettaRepository ricettaRepository, final RicettaIngredienteRepository ricettaIngredienteRepository){
+    public RicettaService(final RicettaRepository ricettaRepository, final RicettaIngredienteService ricettaIngredienteService){
         this.ricettaRepository = ricettaRepository;
-        this.ricettaIngredienteRepository = ricettaIngredienteRepository;
+        this.ricettaIngredienteService = ricettaIngredienteService;
     }
 
     public Set<Ricetta> getAll(){
-        return ricettaRepository.findAll();
+        LOGGER.info("Retrieving the list of 'ricette'");
+        Set<Ricetta> ricette = ricettaRepository.findAll();
+        LOGGER.info("Retrieved {} 'ricette'", ricette.size());
+        return ricette;
     }
 
     public Ricetta getOne(Long ricettaId){
+        LOGGER.info("Retrieving 'ricetta' '{}'", ricettaId);
         Ricetta ricetta = ricettaRepository.findById(ricettaId).orElseThrow(ResourceNotFoundException::new);
+        LOGGER.info("Retrieved 'ricetta' '{}'", ricetta);
         return ricetta;
     }
 
     public Ricetta create(Ricetta ricetta){
+        LOGGER.info("Creating 'ricetta'");
         Ricetta createdRicetta = ricettaRepository.save(ricetta);
         createdRicetta.getRicettaIngredienti().stream().forEach(ri -> {
             ri.getId().setRicettaId(createdRicetta.getId());
-            ricettaIngredienteRepository.save(ri);
+            ricettaIngredienteService.create(ri);
         });
+        LOGGER.info("Created 'ricetta' '{}'", createdRicetta);
         return createdRicetta;
     }
 
     @Transactional
     public Ricetta update(Ricetta ricetta){
+        LOGGER.info("Updating 'ricetta'");
         Set<RicettaIngrediente> ricettaIngredienti = ricetta.getRicettaIngredienti();
         ricetta.setRicettaIngredienti(new HashSet<>());
-        ricettaIngredienteRepository.deleteByRicettaId(ricetta.getId());
+        ricettaIngredienteService.deleteByRicettaId(ricetta.getId());
 
         Ricetta updatedRicetta = ricettaRepository.save(ricetta);
         ricettaIngredienti.stream().forEach(ri -> {
             ri.getId().setRicettaId(updatedRicetta.getId());
-            ricettaIngredienteRepository.save(ri);
+            ricettaIngredienteService.create(ri);
         });
+        LOGGER.info("Updated 'ricetta' '{}'", updatedRicetta);
         return updatedRicetta;
     }
 
     @Transactional
     public void delete(Long ricettaId){
-        ricettaIngredienteRepository.deleteByRicettaId(ricettaId);
+        LOGGER.info("Deleting 'ricetta' '{}'", ricettaId);
+        ricettaIngredienteService.deleteByRicettaId(ricettaId);
         ricettaRepository.deleteById(ricettaId);
+        LOGGER.info("Deleted 'ricetta' '{}'", ricettaId);
     }
 
 }
