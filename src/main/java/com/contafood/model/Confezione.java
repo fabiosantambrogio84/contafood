@@ -5,28 +5,23 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Objects;
 
-@EqualsAndHashCode(exclude = {"ricette", "produzioni"})
+@EqualsAndHashCode(exclude = {"produzioni"})
 @Entity
-@Table(name = "categoria_ricetta")
-public class CategoriaRicetta {
+@Table(name = "confezione")
+public class Confezione {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "tipo")
+    private String tipo;
 
-    @Column(name = "ordine")
-    private Integer ordine;
+    @Column(name = "peso")
+    private Float peso;
 
-    @OneToMany(mappedBy = "categoria")
-    @JsonIgnore
-    private List<Ricetta> ricette;
-
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(mappedBy = "confezione")
     @JsonIgnore
     private List<Produzione> produzioni;
 
@@ -38,28 +33,20 @@ public class CategoriaRicetta {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
-    public Integer getOrdine() {
-        return ordine;
+    public Float getPeso() {
+        return peso;
     }
 
-    public void setOrdine(Integer ordine) {
-        this.ordine = ordine;
-    }
-
-    public List<Ricetta> getRicette() {
-        return ricette;
-    }
-
-    public void setRicette(List<Ricetta> ricette) {
-        this.ricette = ricette;
+    public void setPeso(Float peso) {
+        this.peso = peso;
     }
 
     public List<Produzione> getProduzioni() {
@@ -76,8 +63,8 @@ public class CategoriaRicetta {
 
         result.append("{");
         result.append("id: " + id);
-        result.append(", nome: " + nome);
-        result.append(", ordine: " + ordine);
+        result.append(", tipo: " + tipo);
+        result.append(", peso: " + peso);
         result.append("}");
 
         return result.toString();

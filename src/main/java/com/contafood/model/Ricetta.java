@@ -1,13 +1,15 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"ricettaIngredienti"})
+@EqualsAndHashCode(exclude = {"ricettaIngredienti", "produzioni"})
 @Entity
 @Table(name = "ricetta")
 public class Ricetta {
@@ -56,6 +58,10 @@ public class Ricetta {
     @OneToMany(mappedBy = "ricetta")
     @JsonIgnoreProperties("ricetta")
     private Set<RicettaIngrediente> ricettaIngredienti = new HashSet<>();
+
+    @OneToMany(mappedBy = "ricetta")
+    @JsonIgnore
+    private List<Produzione> produzioni;
 
     public Long getId() {
         return id;
@@ -167,6 +173,14 @@ public class Ricetta {
 
     public void setRicettaIngredienti(Set<RicettaIngrediente> ricettaIngredienti) {
         this.ricettaIngredienti = ricettaIngredienti;
+    }
+
+    public List<Produzione> getProduzioni() {
+        return produzioni;
+    }
+
+    public void setProduzioni(List<Produzione> produzioni) {
+        this.produzioni = produzioni;
     }
 
     @Override
