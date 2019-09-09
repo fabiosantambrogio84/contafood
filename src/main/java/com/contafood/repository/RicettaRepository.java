@@ -9,4 +9,6 @@ public interface RicettaRepository extends CrudRepository<Ricetta, Long> {
 
     @Override
     Set<Ricetta> findAll();
+
+    Set<Ricetta> findAllOrderByCodice();
 }

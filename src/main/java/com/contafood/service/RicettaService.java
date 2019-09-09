@@ -30,7 +30,7 @@ public class RicettaService {
 
     public Set<Ricetta> getAll(){
         LOGGER.info("Retrieving the list of 'ricette'");
-        Set<Ricetta> ricette = ricettaRepository.findAll();
+        Set<Ricetta> ricette = ricettaRepository.findAllOrderByCodice();
         LOGGER.info("Retrieved {} 'ricette'", ricette.size());
         return ricette;
     }
