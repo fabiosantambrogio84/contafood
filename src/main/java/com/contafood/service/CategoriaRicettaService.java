@@ -24,7 +24,7 @@ public class CategoriaRicettaService {
 
     public Set<CategoriaRicetta> getAll(){
         LOGGER.info("Retrieving the list of 'categorie ricette'");
-        Set<CategoriaRicetta> categorieRicette = categoriaRicettaRepository.findAllOrderByNome();
+        Set<CategoriaRicetta> categorieRicette = categoriaRicettaRepository.findAllByOrderByNome();
         LOGGER.info("Retrieved {} 'categorie ricette'", categorieRicette.size());
         return categorieRicette;
     }

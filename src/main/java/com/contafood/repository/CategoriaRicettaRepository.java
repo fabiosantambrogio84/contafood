@@ -10,5 +10,5 @@ public interface CategoriaRicettaRepository extends CrudRepository<CategoriaRice
     @Override
     Set<CategoriaRicetta> findAll();
 
-    Set<CategoriaRicetta> findAllOrderByNome();
+    Set<CategoriaRicetta> findAllByOrderByNome();
 }
