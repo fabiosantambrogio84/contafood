@@ -4,12 +4,14 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Produzione;
 import com.contafood.model.ProduzioneIngrediente;
 import com.contafood.repository.ProduzioneRepository;
+import com.contafood.util.LottoUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,6 +45,17 @@ public class ProduzioneService {
 
     public Produzione create(Produzione produzione){
         LOGGER.info("Creating 'produzione'");
+        LocalDate today = LocalDate.now();
+        Integer anno = today.getYear();
+        Integer giorno = today.getDayOfYear();
+        Integer numeroProgressivo = produzioneRepository.findNextNumeroProgressivoByLottoAnnoAndLottoGiorno(anno, giorno);
+        String lotto = LottoUtils.createLottoProduzione(anno, giorno, numeroProgressivo);
+
+        produzione.setLottoAnno(anno);
+        produzione.setLottoGiorno(giorno);
+        produzione.setLottoNumeroProgressivo(numeroProgressivo);
+        produzione.setLotto(lotto);
+
         Produzione createdProduzione = produzioneRepository.save(produzione);
         createdProduzione.getProduzioneIngredienti().stream().forEach(pi -> {
             pi.getId().setProduzioneId(createdProduzione.getId());

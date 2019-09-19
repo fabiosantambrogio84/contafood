@@ -34,6 +34,21 @@ public class Produzione {
     @Column(name = "num_confezioni")
     private Integer numConfezioni;
 
+    @Column(name = "lotto")
+    private String lotto;
+
+    @Column(name = "lotto_anno")
+    @JsonIgnoreProperties
+    private Integer lottoAnno;
+
+    @Column(name = "lotto_giorno")
+    @JsonIgnoreProperties
+    private Integer lottoGiorno;
+
+    @Column(name = "lotto_numero_progressivo")
+    @JsonIgnoreProperties
+    private Integer lottoNumeroProgressivo;
+
     @OneToMany(mappedBy = "produzione")
     @JsonIgnoreProperties("produzione")
     private Set<ProduzioneIngrediente> produzioneIngredienti = new HashSet<>();
@@ -86,6 +101,38 @@ public class Produzione {
         this.numConfezioni = numConfezioni;
     }
 
+    public String getLotto() {
+        return lotto;
+    }
+
+    public void setLotto(String lotto) {
+        this.lotto = lotto;
+    }
+
+    public Integer getLottoAnno() {
+        return lottoAnno;
+    }
+
+    public void setLottoAnno(Integer lottoAnno) {
+        this.lottoAnno = lottoAnno;
+    }
+
+    public Integer getLottoGiorno() {
+        return lottoGiorno;
+    }
+
+    public void setLottoGiorno(Integer lottoGiorno) {
+        this.lottoGiorno = lottoGiorno;
+    }
+
+    public Integer getLottoNumeroProgressivo() {
+        return lottoNumeroProgressivo;
+    }
+
+    public void setLottoNumeroProgressivo(Integer lottoNumeroProgressivo) {
+        this.lottoNumeroProgressivo = lottoNumeroProgressivo;
+    }
+
     public Set<ProduzioneIngrediente> getProduzioneIngredienti() {
         return produzioneIngredienti;
     }
@@ -105,6 +152,10 @@ public class Produzione {
         result.append(", categoria: " + categoria);
         result.append(", confezione: " + confezione);
         result.append(", numConfezioni: " + numConfezioni);
+        result.append(", lotto: " + lotto);
+        result.append(", lottoAnno: " + lottoAnno);
+        result.append(", lottoGiorno: " + lottoGiorno);
+        result.append(", lottoNumeroProgressivo: " + lottoNumeroProgressivo);
         result.append(", ingredienti: [");
         for(ProduzioneIngrediente produzioneIngrediente: produzioneIngredienti){
             result.append("{");
