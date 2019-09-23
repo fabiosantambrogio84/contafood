@@ -48,8 +48,10 @@ public class ProduzioneService {
         LocalDate today = LocalDate.now();
         Integer anno = today.getYear();
         Integer giorno = today.getDayOfYear();
-        Integer numeroProgressivo = produzioneRepository.findNextNumeroProgressivoByLottoAnnoAndLottoGiorno(anno, giorno);
+        Integer numeroProgressivo = produzioneRepository.findNextNumeroProgressivoByLottoAnnoAndLottoGiorno(anno, giorno).orElse(1);
         String lotto = LottoUtils.createLottoProduzione(anno, giorno, numeroProgressivo);
+
+        LOGGER.info("Anno {}, giorno {}, numero progressivo {}, lotto {}", anno, giorno, numeroProgressivo, lotto);
 
         produzione.setLottoAnno(anno);
         produzione.setLottoGiorno(giorno);
