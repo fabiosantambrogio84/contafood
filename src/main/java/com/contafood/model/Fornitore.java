@@ -24,15 +24,6 @@ public class Fornitore {
     @Column(name = "ragione_sociale_2")
     private String ragioneSociale2;
 
-    @Column(name = "ditta_individuale")
-    private boolean dittaIndividuale;
-
-    @Column(name = "nome")
-    private String nome;
-
-    @Column(name = "cognome")
-    private String cognome;
-
     @Column(name = "indirizzo")
     private String indirizzo;
 
@@ -115,30 +106,6 @@ public class Fornitore {
 
     public void setRagioneSociale2(String ragioneSociale2) {
         this.ragioneSociale2 = ragioneSociale2;
-    }
-
-    public boolean isDittaIndividuale() {
-        return dittaIndividuale;
-    }
-
-    public void setDittaIndividuale(boolean dittaIndividuale) {
-        this.dittaIndividuale = dittaIndividuale;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
     }
 
     public String getIndirizzo() {
@@ -327,9 +294,6 @@ public class Fornitore {
         result.append(", codice: " + codice);
         result.append(", ragioneSociale: " + ragioneSociale);
         result.append(", ragioneSociale2: " + ragioneSociale2);
-        result.append(", dittaIndividuale: " + dittaIndividuale);
-        result.append(", nome: " + nome);
-        result.append(", cognome: " + cognome);
         result.append(", indirizzo: " + indirizzo);
         result.append(", citta: " + citta);
         result.append(", provincia: " + provincia);
