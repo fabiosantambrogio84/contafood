@@ -31,8 +31,8 @@ public class Ricetta {
     @Column(name = "tempo_preparazione")
     private Integer tempoPreparazione;
 
-    @Column(name = "numero_porzioni")
-    private Integer numeroPorzioni;
+    @Column(name = "peso_totale")
+    private Float pesoTotale;
 
     @Column(name = "costo_ingredienti")
     private Float costoIngredienti;
@@ -103,12 +103,12 @@ public class Ricetta {
         this.tempoPreparazione = tempoPreparazione;
     }
 
-    public Integer getNumeroPorzioni() {
-        return numeroPorzioni;
+    public Float getPesoTotale() {
+        return pesoTotale;
     }
 
-    public void setNumeroPorzioni(Integer numeroPorzioni) {
-        this.numeroPorzioni = numeroPorzioni;
+    public void setPesoTotale(Float pesoTotale) {
+        this.pesoTotale = pesoTotale;
     }
 
     public Float getCostoIngredienti() {
@@ -193,7 +193,7 @@ public class Ricetta {
         result.append(", nome: " + nome);
         result.append(", categoria: " + categoria);
         result.append(", tempoPreparazione: " + tempoPreparazione);
-        result.append(", numeroPorzioni: " + numeroPorzioni);
+        result.append(", pesoTotale: " + pesoTotale);
         result.append(", costoIngredienti: " + costoIngredienti);
         result.append(", costoPreparazione: " + costoPreparazione);
         result.append(", costoTotale: " + costoTotale);
