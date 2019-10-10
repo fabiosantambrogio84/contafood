@@ -16,7 +16,7 @@ public class Fornitore {
     private Long id;
 
     @Column(name = "codice")
-    private String codice;
+    private Integer codice;
 
     @Column(name = "ragione_sociale")
     private String ragioneSociale;
@@ -84,11 +84,11 @@ public class Fornitore {
         this.id = id;
     }
 
-    public String getCodice() {
+    public Integer getCodice() {
         return codice;
     }
 
-    public void setCodice(String codice) {
+    public void setCodice(Integer codice) {
         this.codice = codice;
     }
 

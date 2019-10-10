@@ -34,6 +34,9 @@ public class Ricetta {
     @Column(name = "peso_totale")
     private Float pesoTotale;
 
+    @Column(name = "scadenza_giorni")
+    private Integer scadenzaGiorni;
+
     @Column(name = "costo_ingredienti")
     private Float costoIngredienti;
 
@@ -109,6 +112,12 @@ public class Ricetta {
 
     public void setPesoTotale(Float pesoTotale) {
         this.pesoTotale = pesoTotale;
+    }
+
+    public Integer getScadenzaGiorni(){return scadenzaGiorni;}
+
+    public void setScadenzaGiorni(Integer scadenzaGiorni){
+        this.scadenzaGiorni = scadenzaGiorni;
     }
 
     public Float getCostoIngredienti() {
@@ -194,6 +203,7 @@ public class Ricetta {
         result.append(", categoria: " + categoria);
         result.append(", tempoPreparazione: " + tempoPreparazione);
         result.append(", pesoTotale: " + pesoTotale);
+        result.append(", scadenzaGiorni: " + scadenzaGiorni);
         result.append(", costoIngredienti: " + costoIngredienti);
         result.append(", costoPreparazione: " + costoPreparazione);
         result.append(", costoTotale: " + costoTotale);

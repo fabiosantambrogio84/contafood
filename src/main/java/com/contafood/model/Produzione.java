@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"produzioneIngredienti"})
+@EqualsAndHashCode(exclude = {"produzioneIngredienti", "produzioneConfezioni"})
 @Entity
 @Table(name = "produzione")
 public class Produzione {
@@ -17,7 +18,7 @@ public class Produzione {
     private Long id;
 
     @Column(name = "codice")
-    private String codice;
+    private Integer codice;
 
     @ManyToOne
     @JoinColumn(name="id_ricetta")
@@ -26,13 +27,6 @@ public class Produzione {
     @ManyToOne
     @JoinColumn(name="id_categoria")
     private CategoriaRicetta categoria;
-
-    @ManyToOne
-    @JoinColumn(name="id_confezione")
-    private Confezione confezione;
-
-    @Column(name = "num_confezioni")
-    private Integer numConfezioni;
 
     @Column(name = "lotto")
     private String lotto;
@@ -49,9 +43,22 @@ public class Produzione {
     @JsonIgnoreProperties
     private Integer lottoNumeroProgressivo;
 
+    @Column(name = "scadenza")
+    private Date scadenza;
+
+    @Column(name = "quantita_totale")
+    private Float quantitaTotale;
+
+    @Column(name = "scopo")
+    private String scopo;
+
     @OneToMany(mappedBy = "produzione")
     @JsonIgnoreProperties("produzione")
     private Set<ProduzioneIngrediente> produzioneIngredienti = new HashSet<>();
+
+    @OneToMany(mappedBy = "confezione")
+    @JsonIgnoreProperties("confezione")
+    private Set<ProduzioneConfezione> produzioneConfezioni = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -61,11 +68,11 @@ public class Produzione {
         this.id = id;
     }
 
-    public String getCodice() {
+    public Integer getCodice() {
         return codice;
     }
 
-    public void setCodice(String codice) {
+    public void setCodice(Integer codice) {
         this.codice = codice;
     }
 
@@ -83,22 +90,6 @@ public class Produzione {
 
     public void setCategoria(CategoriaRicetta categoria) {
         this.categoria = categoria;
-    }
-
-    public Confezione getConfezione() {
-        return confezione;
-    }
-
-    public void setConfezione(Confezione confezione) {
-        this.confezione = confezione;
-    }
-
-    public Integer getNumConfezioni() {
-        return numConfezioni;
-    }
-
-    public void setNumConfezioni(Integer numConfezioni) {
-        this.numConfezioni = numConfezioni;
     }
 
     public String getLotto() {
@@ -133,12 +124,40 @@ public class Produzione {
         this.lottoNumeroProgressivo = lottoNumeroProgressivo;
     }
 
+    public Date getScadenza() {
+        return scadenza;
+    }
+
+    public void setScadenza(Date scadenza) {
+        this.scadenza = scadenza;
+    }
+
+    public Float getQuantitaTotale() {
+        return quantitaTotale;
+    }
+
+    public void setQuantitaTotale(Float quantitaTotale) {
+        this.quantitaTotale = quantitaTotale;
+    }
+
+    public String getScopo(){return scopo;}
+
+    public void setScopo(String scopo){this.scopo = scopo;}
+
     public Set<ProduzioneIngrediente> getProduzioneIngredienti() {
         return produzioneIngredienti;
     }
 
     public void setProduzioneIngredienti(Set<ProduzioneIngrediente> produzioneIngredienti) {
         this.produzioneIngredienti = produzioneIngredienti;
+    }
+
+    public Set<ProduzioneConfezione> getProduzioneConfezioni() {
+        return produzioneConfezioni;
+    }
+
+    public void setProduzioneConfezioni(Set<ProduzioneConfezione> produzioneConfezioni) {
+        this.produzioneConfezioni = produzioneConfezioni;
     }
 
     @Override
@@ -150,16 +169,24 @@ public class Produzione {
         result.append(", codice: " + codice);
         result.append(", ricetta: " + ricetta);
         result.append(", categoria: " + categoria);
-        result.append(", confezione: " + confezione);
-        result.append(", numConfezioni: " + numConfezioni);
         result.append(", lotto: " + lotto);
         result.append(", lottoAnno: " + lottoAnno);
         result.append(", lottoGiorno: " + lottoGiorno);
         result.append(", lottoNumeroProgressivo: " + lottoNumeroProgressivo);
+        result.append(", scadenza: " + scadenza);
+        result.append(", quantitaTotale: " + quantitaTotale);
+        result.append(", scopo: " + scopo);
         result.append(", ingredienti: [");
         for(ProduzioneIngrediente produzioneIngrediente: produzioneIngredienti){
             result.append("{");
             result.append(produzioneIngrediente.toString());
+            result.append("}");
+        }
+        result.append("]");
+        result.append(", confezioni: [");
+        for(ProduzioneConfezione produzioneConfezione: produzioneConfezioni){
+            result.append("{");
+            result.append(produzioneConfezione.toString());
             result.append("}");
         }
         result.append("]");

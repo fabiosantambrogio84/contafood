@@ -2,6 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Produzione;
+import com.contafood.model.ProduzioneConfezione;
 import com.contafood.model.ProduzioneIngrediente;
 import com.contafood.repository.ProduzioneRepository;
 import com.contafood.util.LottoUtils;
@@ -22,11 +23,13 @@ public class ProduzioneService {
 
     private final ProduzioneRepository produzioneRepository;
     private final ProduzioneIngredienteService produzioneIngredienteService;
+    private final ProduzioneConfezioneService produzioneConfezioneService;
 
     @Autowired
-    public ProduzioneService(final ProduzioneRepository produzioneRepository, final ProduzioneIngredienteService produzioneIngredienteService){
+    public ProduzioneService(final ProduzioneRepository produzioneRepository, final ProduzioneIngredienteService produzioneIngredienteService, final ProduzioneConfezioneService produzioneConfezioneService){
         this.produzioneRepository = produzioneRepository;
         this.produzioneIngredienteService = produzioneIngredienteService;
+        this.produzioneConfezioneService = produzioneConfezioneService;
     }
 
     public Set<Produzione> getAll(){
@@ -59,10 +62,18 @@ public class ProduzioneService {
         produzione.setLotto(lotto);
 
         Produzione createdProduzione = produzioneRepository.save(produzione);
+        Long produzioneId = createdProduzione.getId();
+        createdProduzione.setCodice(produzioneId.intValue());
+        createdProduzione = produzioneRepository.save(produzione);
         createdProduzione.getProduzioneIngredienti().stream().forEach(pi -> {
-            pi.getId().setProduzioneId(createdProduzione.getId());
+            pi.getId().setProduzioneId(produzioneId);
             produzioneIngredienteService.create(pi);
         });
+        createdProduzione.getProduzioneConfezioni().stream().forEach(pc -> {
+            pc.getId().setProduzioneId(produzioneId);
+            produzioneConfezioneService.create(pc);
+        });
+
         LOGGER.info("Created 'produzione' '{}'", createdProduzione);
         return createdProduzione;
     }
@@ -74,10 +85,18 @@ public class ProduzioneService {
         produzione.setProduzioneIngredienti(new HashSet<>());
         produzioneIngredienteService.deleteByProduzioneId(produzione.getId());
 
+        Set<ProduzioneConfezione> produzioneConfezioni = produzione.getProduzioneConfezioni();
+        produzione.setProduzioneConfezioni(new HashSet<>());
+        produzioneConfezioneService.deleteByProduzioneId(produzione.getId());
+
         Produzione updatedProduzione = produzioneRepository.save(produzione);
         produzioneIngredienti.stream().forEach(pi -> {
             pi.getId().setProduzioneId(updatedProduzione.getId());
             produzioneIngredienteService.create(pi);
+        });
+        produzioneConfezioni.stream().forEach(pc -> {
+            pc.getId().setProduzioneId(updatedProduzione.getId());
+            produzioneConfezioneService.create(pc);
         });
         LOGGER.info("Updated 'produzione' '{}'", updatedProduzione);
         return updatedProduzione;
@@ -87,6 +106,7 @@ public class ProduzioneService {
     public void delete(Long produzioneId){
         LOGGER.info("Deleting 'produzione' '{}'", produzioneId);
         produzioneIngredienteService.deleteByProduzioneId(produzioneId);
+        produzioneConfezioneService.deleteByProduzioneId(produzioneId);
         produzioneRepository.deleteById(produzioneId);
         LOGGER.info("Deleted 'produzione' '{}'", produzioneId);
     }
