@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProduzioneService {
@@ -63,8 +64,7 @@ public class ProduzioneService {
 
         Produzione createdProduzione = produzioneRepository.save(produzione);
         Long produzioneId = createdProduzione.getId();
-        createdProduzione.setCodice(produzioneId.intValue());
-        createdProduzione = produzioneRepository.save(produzione);
+
         createdProduzione.getProduzioneIngredienti().stream().forEach(pi -> {
             pi.getId().setProduzioneId(produzioneId);
             produzioneIngredienteService.create(pi);
@@ -73,6 +73,11 @@ public class ProduzioneService {
             pc.getId().setProduzioneId(produzioneId);
             produzioneConfezioneService.create(pc);
         });
+        Integer numeroConfezioni = createdProduzione.getProduzioneConfezioni().stream().collect(Collectors.summingInt(pc -> pc.getNumConfezioni()));
+
+        createdProduzione.setCodice(produzioneId.intValue());
+        createdProduzione.setNumeroConfezioni(numeroConfezioni);
+        createdProduzione = produzioneRepository.save(produzione);
 
         LOGGER.info("Created 'produzione' '{}'", createdProduzione);
         return createdProduzione;
@@ -90,14 +95,22 @@ public class ProduzioneService {
         produzioneConfezioneService.deleteByProduzioneId(produzione.getId());
 
         Produzione updatedProduzione = produzioneRepository.save(produzione);
+        Long produzioneId = updatedProduzione.getId();
+
         produzioneIngredienti.stream().forEach(pi -> {
-            pi.getId().setProduzioneId(updatedProduzione.getId());
+            pi.getId().setProduzioneId(produzioneId);
             produzioneIngredienteService.create(pi);
         });
         produzioneConfezioni.stream().forEach(pc -> {
-            pc.getId().setProduzioneId(updatedProduzione.getId());
+            pc.getId().setProduzioneId(produzioneId);
             produzioneConfezioneService.create(pc);
         });
+        Integer numeroConfezioni = updatedProduzione.getProduzioneConfezioni().stream().collect(Collectors.summingInt(pc -> pc.getNumConfezioni()));
+
+        updatedProduzione.setCodice(produzioneId.intValue());
+        updatedProduzione.setNumeroConfezioni(numeroConfezioni);
+        updatedProduzione = produzioneRepository.save(produzione);
+
         LOGGER.info("Updated 'produzione' '{}'", updatedProduzione);
         return updatedProduzione;
     }

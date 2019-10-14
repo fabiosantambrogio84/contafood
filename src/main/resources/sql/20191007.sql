@@ -12,6 +12,7 @@ ALTER TABLE `produzione` CHANGE COLUMN `codice` `codice` INT(10);
 ALTER TABLE `produzione` ADD COLUMN scadenza DATE;
 ALTER TABLE `produzione` ADD COLUMN quantita_totale DECIMAL(10,3);
 ALTER TABLE `produzione` ADD COLUMN scopo varchar(100) DEFAULT 'vendita';
+ALTER TABLE `produzione` ADD COLUMN numero_confezioni int(10) DEFAULT NULL AFTER quantita_totale;
 ALTER TABLE `produzione` DROP COLUMN id_confezione;
 ALTER TABLE `produzione` DROP COLUMN num_confezioni;
 

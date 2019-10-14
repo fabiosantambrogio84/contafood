@@ -49,6 +49,9 @@ public class Produzione {
     @Column(name = "quantita_totale")
     private Float quantitaTotale;
 
+    @Column(name = "numero_confezioni")
+    private Integer numeroConfezioni;
+
     @Column(name = "scopo")
     private String scopo;
 
@@ -56,8 +59,8 @@ public class Produzione {
     @JsonIgnoreProperties("produzione")
     private Set<ProduzioneIngrediente> produzioneIngredienti = new HashSet<>();
 
-    @OneToMany(mappedBy = "confezione")
-    @JsonIgnoreProperties("confezione")
+    @OneToMany(mappedBy = "produzione")
+    @JsonIgnoreProperties("produzione")
     private Set<ProduzioneConfezione> produzioneConfezioni = new HashSet<>();
 
     public Long getId() {
@@ -140,6 +143,12 @@ public class Produzione {
         this.quantitaTotale = quantitaTotale;
     }
 
+    public Integer getNumeroConfezioni(){return numeroConfezioni;}
+
+    public void setNumeroConfezioni(Integer numeroConfezioni){
+        this.numeroConfezioni = numeroConfezioni;
+    }
+
     public String getScopo(){return scopo;}
 
     public void setScopo(String scopo){this.scopo = scopo;}
@@ -175,6 +184,7 @@ public class Produzione {
         result.append(", lottoNumeroProgressivo: " + lottoNumeroProgressivo);
         result.append(", scadenza: " + scadenza);
         result.append(", quantitaTotale: " + quantitaTotale);
+        result.append(", numeroConfezioni: " + numeroConfezioni);
         result.append(", scopo: " + scopo);
         result.append(", ingredienti: [");
         for(ProduzioneIngrediente produzioneIngrediente: produzioneIngredienti){

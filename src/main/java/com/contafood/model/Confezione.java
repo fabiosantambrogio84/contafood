@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"produzioni"})
+@EqualsAndHashCode
 @Entity
 @Table(name = "confezione")
 public class Confezione {
@@ -20,10 +20,6 @@ public class Confezione {
 
     @Column(name = "peso")
     private Float peso;
-
-    @OneToMany(mappedBy = "confezione")
-    @JsonIgnore
-    private List<Produzione> produzioni;
 
     public Long getId() {
         return id;
@@ -47,14 +43,6 @@ public class Confezione {
 
     public void setPeso(Float peso) {
         this.peso = peso;
-    }
-
-    public List<Produzione> getProduzioni() {
-        return produzioni;
-    }
-
-    public void setProduzioni(List<Produzione> produzioni) {
-        this.produzioni = produzioni;
     }
 
     @Override
