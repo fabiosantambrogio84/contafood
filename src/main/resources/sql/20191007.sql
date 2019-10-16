@@ -24,3 +24,6 @@ CREATE TABLE `produzione_confezione` (
 	num_confezioni int(10),
 	PRIMARY KEY (`id_produzione`, id_confezione)
 ) ENGINE=InnoDB;
+
+
+ALTER TABLE `ricetta_ingrediente` ADD COLUMN percentuale DECIMAL(10,3);

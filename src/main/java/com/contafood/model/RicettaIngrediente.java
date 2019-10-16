@@ -27,6 +27,9 @@ public class RicettaIngrediente implements Serializable {
     @Column(name = "quantita")
     private Float quantita;
 
+    @Column(name = "percentuale")
+    private Float percentuale;
+
     public RicettaIngredienteKey getId() {
         return id;
     }
@@ -59,6 +62,14 @@ public class RicettaIngrediente implements Serializable {
         this.quantita = quantita;
     }
 
+    public Float getPercentuale() {
+        return percentuale;
+    }
+
+    public void setPercentuale(Float percentuale) {
+        this.percentuale = percentuale;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -67,6 +78,7 @@ public class RicettaIngrediente implements Serializable {
         result.append("ricettaId: " + id.ricettaId);
         result.append(", ingredienteId: " + id.ingredienteId);
         result.append(", quantita: " + quantita);
+        result.append(", percentuale: " + percentuale);
         result.append("}");
 
         return result.toString();

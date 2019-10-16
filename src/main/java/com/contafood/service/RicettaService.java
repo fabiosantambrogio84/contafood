@@ -45,7 +45,11 @@ public class RicettaService {
     public Ricetta create(Ricetta ricetta){
         LOGGER.info("Creating 'ricetta'");
         Ricetta createdRicetta = ricettaRepository.save(ricetta);
+        Float pesoTotale = ricetta.getPesoTotale();
         createdRicetta.getRicettaIngredienti().stream().forEach(ri -> {
+            Float percentualeNotRounded = (ri.getQuantita()*100)/pesoTotale;
+            float percentuale = (float)Math.round(percentualeNotRounded*100)/100;
+            ri.setPercentuale(percentuale);
             ri.getId().setRicettaId(createdRicetta.getId());
             ricettaIngredienteService.create(ri);
         });
