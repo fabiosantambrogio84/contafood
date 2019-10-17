@@ -47,6 +47,7 @@ public class ProduzioneService {
         return produzione;
     }
 
+    @Transactional
     public Produzione create(Produzione produzione){
         LOGGER.info("Creating 'produzione'");
         LocalDate today = LocalDate.now();
@@ -122,6 +123,13 @@ public class ProduzioneService {
         produzioneConfezioneService.deleteByProduzioneId(produzioneId);
         produzioneRepository.deleteById(produzioneId);
         LOGGER.info("Deleted 'produzione' '{}'", produzioneId);
+    }
+
+    public Set<ProduzioneConfezione> getProduzioneConfezioni(Long produzioneId){
+        LOGGER.info("Retrieving 'produzioneConfezioni' for produzione '{}'", produzioneId);
+        Set<ProduzioneConfezione> produzioneConfezioni = produzioneConfezioneService.findByProduzioneId(produzioneId);
+        LOGGER.info("Retrieved {} 'produzioneConfezioni'", produzioneConfezioni.size());
+        return produzioneConfezioni;
     }
 
 }

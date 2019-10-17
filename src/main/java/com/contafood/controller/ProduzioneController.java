@@ -2,6 +2,7 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Produzione;
+import com.contafood.model.ProduzioneConfezione;
 import com.contafood.service.ProduzioneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,5 +67,12 @@ public class ProduzioneController {
     public void delete(@PathVariable final Long produzioneId){
         LOGGER.info("Performing DELETE request for deleting 'produzione' '{}'", produzioneId);
         produzioneService.delete(produzioneId);
+    }
+
+    @RequestMapping(method = GET, path = "/{produzioneId}/confezioni")
+    @CrossOrigin
+    public Set<ProduzioneConfezione> getConfezioni(@PathVariable final Long produzioneId) {
+        LOGGER.info("Performing GET request for retrieving 'produzioneConfezioni' for produzione '{}'", produzioneId);
+        return produzioneService.getProduzioneConfezioni(produzioneId);
     }
 }

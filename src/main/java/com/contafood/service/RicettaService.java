@@ -42,6 +42,7 @@ public class RicettaService {
         return ricetta;
     }
 
+    @Transactional
     public Ricetta create(Ricetta ricetta){
         LOGGER.info("Creating 'ricetta'");
         Ricetta createdRicetta = ricettaRepository.save(ricetta);
