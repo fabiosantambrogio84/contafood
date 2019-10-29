@@ -90,6 +90,7 @@ public class Listino {
         result.append("{");
         result.append("id: " + id);
         result.append(", nome: " + nome);
+        result.append(", listinoRiferimento: " + listinoRiferimento);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
 
