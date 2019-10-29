@@ -10,8 +10,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @EqualsAndHashCode(exclude = {"clienti"})
-@Getter
-@Setter
 @Entity
 @Table(name = "tipo_pagamento")
 public class TipoPagamento {
@@ -32,6 +30,46 @@ public class TipoPagamento {
     @OneToMany(mappedBy = "tipoPagamento")
     @JsonIgnore
     private List<Cliente> clienti;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public Integer getScadenzaGiorni() {
+        return scadenzaGiorni;
+    }
+
+    public void setScadenzaGiorni(Integer scadenzaGiorni) {
+        this.scadenzaGiorni = scadenzaGiorni;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
+    public List<Cliente> getClienti() {
+        return clienti;
+    }
+
+    public void setClienti(List<Cliente> clienti) {
+        this.clienti = clienti;
+    }
 
     @Override
     public String toString() {

@@ -10,8 +10,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @EqualsAndHashCode(exclude = {"clienti"})
-@Getter
-@Setter
 @Entity
 @Table(name = "banca")
 public class Banca {
@@ -35,6 +33,54 @@ public class Banca {
     @OneToMany(mappedBy = "banca")
     @JsonIgnore
     private List<Cliente> clienti;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getAbi() {
+        return abi;
+    }
+
+    public void setAbi(String abi) {
+        this.abi = abi;
+    }
+
+    public String getCab() {
+        return cab;
+    }
+
+    public void setCab(String cab) {
+        this.cab = cab;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
+    public List<Cliente> getClienti() {
+        return clienti;
+    }
+
+    public void setClienti(List<Cliente> clienti) {
+        this.clienti = clienti;
+    }
 
     @Override
     public String toString() {

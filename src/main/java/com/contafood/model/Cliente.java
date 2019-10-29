@@ -80,14 +80,14 @@ public class Cliente {
     @JoinColumn(name="id_agente")
     private Agente agente;
 
+    @Column(name = "estrazione_conad")
+    private String estrazioneConad;
+
     @Column(name = "blocca_ddt")
     private Boolean bloccaDdt;
 
     @Column(name = "nascondi_prezzi")
     private Boolean nascondiPrezzi;
-
-    @Column(name = "estrazione_conad")
-    private Boolean estrazioneConad;
 
     @Column(name = "raggruppa_riba")
     private Boolean raggruppaRiba;
@@ -133,9 +133,9 @@ public class Cliente {
         result.append(", contoCorrente: " + contoCorrente);
         result.append(", tipoPagamento: " + tipoPagamento);
         result.append(", agente: " + agente);
+        result.append(", estrazioneConad: " + estrazioneConad);
         result.append(", bloccaDdt: " + bloccaDdt);
         result.append(", nascondiPrezzi: " + nascondiPrezzi);
-        result.append(", estrazioneConad: " + estrazioneConad);
         result.append(", raggruppaRiba: " + raggruppaRiba);
         result.append(", nomeGruppoRiba: " + nomeGruppoRiba);
         result.append(", codiceUnivocoSdi: " + codiceUnivocoSdi);

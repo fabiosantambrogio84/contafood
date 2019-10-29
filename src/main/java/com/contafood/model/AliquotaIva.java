@@ -8,8 +8,6 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @EqualsAndHashCode
-@Getter
-@Setter
 @Entity
 @Table(name = "aliquota_iva")
 public class AliquotaIva {
@@ -27,10 +25,41 @@ public class AliquotaIva {
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Float getValore() {
+        return valore;
+    }
+
+    public void setValore(Float valore) {
+        this.valore = valore;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
-
         result.append("{");
         result.append("id: " + id);
         result.append(", valore: " + valore);
