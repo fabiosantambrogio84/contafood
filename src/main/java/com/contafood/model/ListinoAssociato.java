@@ -1,46 +1,84 @@
 package com.contafood.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @EqualsAndHashCode
-@Getter
-@Setter
 @Entity
-//@Table(name = "listino_associato")
+@Table(name = "listino_associato")
 public class ListinoAssociato implements Serializable {
 
-    @EmbeddedId
-    ListinoAssociatoKey id;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Long id;
 
-    //@ManyToOne
-    //@MapsId("id_cliente")
-    //@JoinColumn(name = "id_cliente")
-    //@JsonIgnoreProperties("produzioneConfezioni")
-    //private Cliente cliente;
+    @ManyToOne
+    @JoinColumn(name="id_cliente")
+    private Cliente cliente;
 
-    //@ManyToOne
-    //@MapsId("id_fornitore")
-    //@JoinColumn(name = "id_fornitore")
-    //@JsonIgnoreProperties("produzioneConfezioni")
-    //private Fornitore fornitore;
+    @ManyToOne
+    @JoinColumn(name="id_fornitore")
+    private Fornitore fornitore;
 
-    //@Column(name = "data_inserimento")
+    @ManyToOne
+    @JoinColumn(name="id_listino")
+    private Listino listino;
+
+    @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Fornitore getFornitore() {
+        return fornitore;
+    }
+
+    public void setFornitore(Fornitore fornitore) {
+        this.fornitore = fornitore;
+    }
+
+    public Listino getListino() {
+        return listino;
+    }
+
+    public void setListino(Listino listino) {
+        this.listino = listino;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
 
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
 
         result.append("{");
-        result.append("clienteId: " + id.clienteId);
-        result.append(", fornitoreId: " + id.fornitoreId);
+        result.append("id: " + id);
+        result.append(", cliente: " + cliente);
+        result.append(", fornitore: " + fornitore);
+        result.append(", listino: " + listino);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
 

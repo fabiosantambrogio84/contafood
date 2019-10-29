@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"ingredienti"})
+@EqualsAndHashCode(exclude = {"ingredienti", "listiniAssociati"})
 @Entity
 @Table(name = "fornitore")
 public class Fornitore {
@@ -75,6 +75,10 @@ public class Fornitore {
     @OneToMany(mappedBy = "fornitore")
     @JsonIgnore
     private List<Ingrediente> ingredienti;
+
+    @OneToMany(mappedBy = "fornitore")
+    @JsonIgnore
+    private List<ListinoAssociato> listiniAssociati;
 
     public Long getId() {
         return id;
@@ -244,46 +248,13 @@ public class Fornitore {
         this.ingredienti = ingredienti;
     }
 
-    /*
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, codice, ragioneSociale, ragioneSociale2, dittaIndividuale, nome, cognome, indirizzo, citta, provincia, cap, nazione, partitaIva, codiceFiscale, telefono, telefono2, telefono3, email, emailPec, codiceUnivocoSdi, iban, pagamento, note);
+    public List<ListinoAssociato> getListiniAssociati() {
+        return listiniAssociati;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        final Fornitore that = (Fornitore) obj;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(codice, that.codice) &&
-                Objects.equals(ragioneSociale, that.ragioneSociale) &&
-                Objects.equals(ragioneSociale2, that.ragioneSociale2) &&
-                Objects.equals(dittaIndividuale, that.dittaIndividuale) &&
-                Objects.equals(nome, that.nome) &&
-                Objects.equals(cognome, that.cognome) &&
-                Objects.equals(indirizzo, that.indirizzo) &&
-                Objects.equals(citta, that.citta) &&
-                Objects.equals(provincia, that.provincia) &&
-                Objects.equals(cap, that.cap) &&
-                Objects.equals(nazione, that.nazione) &&
-                Objects.equals(partitaIva, that.partitaIva) &&
-                Objects.equals(codiceFiscale, that.codiceFiscale) &&
-                Objects.equals(telefono, that.telefono) &&
-                Objects.equals(telefono2, that.telefono2) &&
-                Objects.equals(telefono3, that.telefono3) &&
-                Objects.equals(email, that.email) &&
-                Objects.equals(emailPec, that.emailPec) &&
-                Objects.equals(codiceUnivocoSdi, that.codiceUnivocoSdi) &&
-                Objects.equals(iban, that.iban) &&
-                Objects.equals(pagamento, that.pagamento) &&
-                Objects.equals(note, that.note);
+    public void setListiniAssociati(List<ListinoAssociato> listiniAssociati) {
+        this.listiniAssociati = listiniAssociati;
     }
-    */
 
     @Override
     public String toString() {

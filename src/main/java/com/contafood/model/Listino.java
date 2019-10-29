@@ -1,5 +1,6 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,9 +9,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"listini"})
-@Getter
-@Setter
+@EqualsAndHashCode(exclude = {"listini", "listiniAssociati"})
 @Entity
 @Table(name = "listino")
 public class Listino {
@@ -31,6 +30,58 @@ public class Listino {
 
     @OneToMany(mappedBy="listinoRiferimento")
     private List<Listino> listini;
+
+    @OneToMany(mappedBy = "listino")
+    @JsonIgnore
+    private List<ListinoAssociato> listiniAssociati;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
+    public Listino getListinoRiferimento() {
+        return listinoRiferimento;
+    }
+
+    public void setListinoRiferimento(Listino listinoRiferimento) {
+        this.listinoRiferimento = listinoRiferimento;
+    }
+
+    public List<Listino> getListini() {
+        return listini;
+    }
+
+    public void setListini(List<Listino> listini) {
+        this.listini = listini;
+    }
+
+    public List<ListinoAssociato> getListiniAssociati() {
+        return listiniAssociati;
+    }
+
+    public void setListiniAssociati(List<ListinoAssociato> listiniAssociati) {
+        this.listiniAssociati = listiniAssociati;
+    }
 
     @Override
     public String toString() {

@@ -9,9 +9,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"puntiConsegna"})
-@Getter
-@Setter
+@EqualsAndHashCode(exclude = {"puntiConsegna", "listiniAssociati"})
 @Entity
 @Table(name = "cliente")
 public class Cliente {
@@ -107,6 +105,250 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente")
     @JsonIgnore
     private List<PuntoConsegna> puntiConsegna;
+
+    @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
+    private List<ListinoAssociato> listiniAssociati;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getCodice() {
+        return codice;
+    }
+
+    public void setCodice(Integer codice) {
+        this.codice = codice;
+    }
+
+    public String getRagioneSociale() {
+        return ragioneSociale;
+    }
+
+    public void setRagioneSociale(String ragioneSociale) {
+        this.ragioneSociale = ragioneSociale;
+    }
+
+    public String getRagioneSociale2() {
+        return ragioneSociale2;
+    }
+
+    public void setRagioneSociale2(String ragioneSociale2) {
+        this.ragioneSociale2 = ragioneSociale2;
+    }
+
+    public Boolean getDittaIndividuale() {
+        return dittaIndividuale;
+    }
+
+    public void setDittaIndividuale(Boolean dittaIndividuale) {
+        this.dittaIndividuale = dittaIndividuale;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCognome() {
+        return cognome;
+    }
+
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
+    }
+
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+
+    public void setIndirizzo(String indirizzo) {
+        this.indirizzo = indirizzo;
+    }
+
+    public String getCitta() {
+        return citta;
+    }
+
+    public void setCitta(String citta) {
+        this.citta = citta;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    public String getCap() {
+        return cap;
+    }
+
+    public void setCap(String cap) {
+        this.cap = cap;
+    }
+
+    public String getPartitaIva() {
+        return partitaIva;
+    }
+
+    public void setPartitaIva(String partitaIva) {
+        this.partitaIva = partitaIva;
+    }
+
+    public String getCodiceFiscale() {
+        return codiceFiscale;
+    }
+
+    public void setCodiceFiscale(String codiceFiscale) {
+        this.codiceFiscale = codiceFiscale;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmailPec() {
+        return emailPec;
+    }
+
+    public void setEmailPec(String emailPec) {
+        this.emailPec = emailPec;
+    }
+
+    public Banca getBanca() {
+        return banca;
+    }
+
+    public void setBanca(Banca banca) {
+        this.banca = banca;
+    }
+
+    public String getContoCorrente() {
+        return contoCorrente;
+    }
+
+    public void setContoCorrente(String contoCorrente) {
+        this.contoCorrente = contoCorrente;
+    }
+
+    public TipoPagamento getTipoPagamento() {
+        return tipoPagamento;
+    }
+
+    public void setTipoPagamento(TipoPagamento tipoPagamento) {
+        this.tipoPagamento = tipoPagamento;
+    }
+
+    public Agente getAgente() {
+        return agente;
+    }
+
+    public void setAgente(Agente agente) {
+        this.agente = agente;
+    }
+
+    public String getEstrazioneConad() {
+        return estrazioneConad;
+    }
+
+    public void setEstrazioneConad(String estrazioneConad) {
+        this.estrazioneConad = estrazioneConad;
+    }
+
+    public Boolean getBloccaDdt() {
+        return bloccaDdt;
+    }
+
+    public void setBloccaDdt(Boolean bloccaDdt) {
+        this.bloccaDdt = bloccaDdt;
+    }
+
+    public Boolean getNascondiPrezzi() {
+        return nascondiPrezzi;
+    }
+
+    public void setNascondiPrezzi(Boolean nascondiPrezzi) {
+        this.nascondiPrezzi = nascondiPrezzi;
+    }
+
+    public Boolean getRaggruppaRiba() {
+        return raggruppaRiba;
+    }
+
+    public void setRaggruppaRiba(Boolean raggruppaRiba) {
+        this.raggruppaRiba = raggruppaRiba;
+    }
+
+    public String getNomeGruppoRiba() {
+        return nomeGruppoRiba;
+    }
+
+    public void setNomeGruppoRiba(String nomeGruppoRiba) {
+        this.nomeGruppoRiba = nomeGruppoRiba;
+    }
+
+    public String getCodiceUnivocoSdi() {
+        return codiceUnivocoSdi;
+    }
+
+    public void setCodiceUnivocoSdi(String codiceUnivocoSdi) {
+        this.codiceUnivocoSdi = codiceUnivocoSdi;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
+    public List<PuntoConsegna> getPuntiConsegna() {
+        return puntiConsegna;
+    }
+
+    public void setPuntiConsegna(List<PuntoConsegna> puntiConsegna) {
+        this.puntiConsegna = puntiConsegna;
+    }
+
+    public List<ListinoAssociato> getListiniAssociati() {
+        return listiniAssociati;
+    }
+
+    public void setListiniAssociati(List<ListinoAssociato> listiniAssociati) {
+        this.listiniAssociati = listiniAssociati;
+    }
 
     @Override
     public String toString() {

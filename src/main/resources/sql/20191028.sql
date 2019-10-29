@@ -76,11 +76,12 @@ CREATE TABLE `cliente` (
 ) ENGINE=InnoDB;
 
 CREATE TABLE `listino_associato` (
+	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	`id_cliente` int(10) unsigned NOT NULL,
 	`id_fornitore` int(10) unsigned NOT NULL,
 	`id_listino` int(10) unsigned NOT NULL,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id_cliente`,`id_fornitore`),
+	PRIMARY KEY (id),
 	CONSTRAINT `fk_listino_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
 	CONSTRAINT `fk_listino_fornitore` FOREIGN KEY (`id_fornitore`) REFERENCES `fornitore` (`id`),
 	CONSTRAINT `fk_listino_listino` FOREIGN KEY (`id_listino`) REFERENCES `listino` (`id`)

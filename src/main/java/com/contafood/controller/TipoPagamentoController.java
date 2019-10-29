@@ -18,7 +18,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(path="/banche")
+@RequestMapping(path="/tipi-pagamento")
 public class TipoPagamentoController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(TipoPagamentoController.class);
