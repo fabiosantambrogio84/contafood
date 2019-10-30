@@ -29,6 +29,7 @@ public class Listino {
     private Listino listinoRiferimento;
 
     @OneToMany(mappedBy="listinoRiferimento")
+    @JsonIgnore
     private List<Listino> listini;
 
     @OneToMany(mappedBy = "listino")
