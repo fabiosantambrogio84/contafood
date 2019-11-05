@@ -19,9 +19,6 @@ public class AliquotaIva {
     @Column(name = "valore")
     private Float valore;
 
-    @Column(name = "cognome")
-    private String cognome;
-
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -39,14 +36,6 @@ public class AliquotaIva {
 
     public void setValore(Float valore) {
         this.valore = valore;
-    }
-
-    public String getCognome() {
-        return cognome;
-    }
-
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
     }
 
     public Timestamp getDataInserimento() {
