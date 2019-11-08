@@ -40,7 +40,7 @@ public class FornitoreService {
         LOGGER.info("Creating 'fornitore'");
         Fornitore createdFornitore = fornitoreRepository.save(fornitore);
         createdFornitore.setCodice(createdFornitore.getId().intValue());
-        fornitoreRepository.save(fornitore);
+        fornitoreRepository.save(createdFornitore);
         LOGGER.info("Created 'fornitore' '{}'", createdFornitore);
         return createdFornitore;
     }

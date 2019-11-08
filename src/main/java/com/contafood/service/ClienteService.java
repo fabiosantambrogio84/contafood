@@ -2,6 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Cliente;
+import com.contafood.model.Fornitore;
 import com.contafood.model.ListinoAssociato;
 import com.contafood.model.PuntoConsegna;
 import com.contafood.repository.ClienteRepository;
@@ -48,6 +49,8 @@ public class ClienteService {
     public Cliente create(Cliente cliente){
         LOGGER.info("Creating 'cliente'");
         Cliente createdCliente = clienteRepository.save(cliente);
+        createdCliente.setCodice(createdCliente.getId().intValue());
+        clienteRepository.save(createdCliente);
         LOGGER.info("Created 'cliente' '{}'", createdCliente);
         return createdCliente;
     }

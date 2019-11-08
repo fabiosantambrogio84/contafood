@@ -8,8 +8,6 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @EqualsAndHashCode
-@Getter
-@Setter
 @Entity
 @Table(name = "punto_consegna")
 public class PuntoConsegna {
@@ -42,6 +40,78 @@ public class PuntoConsegna {
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+
+    public void setIndirizzo(String indirizzo) {
+        this.indirizzo = indirizzo;
+    }
+
+    public String getLocalita() {
+        return localita;
+    }
+
+    public void setLocalita(String localita) {
+        this.localita = localita;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    public String getCap() {
+        return cap;
+    }
+
+    public void setCap(String cap) {
+        this.cap = cap;
+    }
+
+    public String getCodiceConad() {
+        return codiceConad;
+    }
+
+    public void setCodiceConad(String codiceConad) {
+        this.codiceConad = codiceConad;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
 
     @Override
     public String toString() {
