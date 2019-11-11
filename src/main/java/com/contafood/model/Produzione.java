@@ -20,6 +20,9 @@ public class Produzione {
     @Column(name = "codice")
     private Integer codice;
 
+    @Column(name = "data_produzione")
+    private Date dataProduzione;
+
     @ManyToOne
     @JoinColumn(name="id_ricetta")
     private Ricetta ricetta;
@@ -77,6 +80,14 @@ public class Produzione {
 
     public void setCodice(Integer codice) {
         this.codice = codice;
+    }
+
+    public Date getDataProduzione() {
+        return dataProduzione;
+    }
+
+    public void setDataProduzione(Date dataProduzione) {
+        this.dataProduzione = dataProduzione;
     }
 
     public Ricetta getRicetta() {
@@ -176,6 +187,7 @@ public class Produzione {
         result.append("{");
         result.append("id: " + id);
         result.append(", codice: " + codice);
+        result.append(", dataProduzione: " + dataProduzione);
         result.append(", ricetta: " + ricetta);
         result.append(", categoria: " + categoria);
         result.append(", lotto: " + lotto);

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,18 +51,23 @@ public class ProduzioneService {
     @Transactional
     public Produzione create(Produzione produzione){
         LOGGER.info("Creating 'produzione'");
-        LocalDate today = LocalDate.now();
-        Integer anno = today.getYear();
-        Integer giorno = today.getDayOfYear();
-        Integer numeroProgressivo = produzioneRepository.findNextNumeroProgressivoByLottoAnnoAndLottoGiorno(anno, giorno).orElse(1);
-        String lotto = LottoUtils.createLottoProduzione(anno, giorno, numeroProgressivo);
 
-        LOGGER.info("Anno {}, giorno {}, numero progressivo {}, lotto {}", anno, giorno, numeroProgressivo, lotto);
+        if(produzione.getScopo().equalsIgnoreCase("vendita")){
+            LocalDate today = LocalDate.now();
+            Integer anno = today.getYear();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uu");
+            String yearTwoDigits = dateTimeFormatter.format(today);
+            Integer giorno = today.getDayOfYear();
+            Integer numeroProgressivo = produzioneRepository.findNextNumeroProgressivoByLottoAnnoAndLottoGiorno(anno, giorno).orElse(1);
+            String lotto = LottoUtils.createLottoProduzione(yearTwoDigits, giorno, numeroProgressivo);
 
-        produzione.setLottoAnno(anno);
-        produzione.setLottoGiorno(giorno);
-        produzione.setLottoNumeroProgressivo(numeroProgressivo);
-        produzione.setLotto(lotto);
+            LOGGER.info("Anno {}, giorno {}, numero progressivo {}, lotto {}", anno, giorno, numeroProgressivo, lotto);
+
+            produzione.setLottoAnno(anno);
+            produzione.setLottoGiorno(giorno);
+            produzione.setLottoNumeroProgressivo(numeroProgressivo);
+            produzione.setLotto(lotto);
+        }
 
         Produzione createdProduzione = produzioneRepository.save(produzione);
         Long produzioneId = createdProduzione.getId();
