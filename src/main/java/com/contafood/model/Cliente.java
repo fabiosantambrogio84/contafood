@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"puntiConsegna", "listiniAssociati"})
+@EqualsAndHashCode(exclude = {"puntiConsegna", "listiniAssociati", "sconti"})
 @Entity
 @Table(name = "cliente")
 public class Cliente {
@@ -109,6 +109,10 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente")
     @JsonIgnore
     private List<ListinoAssociato> listiniAssociati;
+
+    @OneToMany(mappedBy = "cliente")
+    @JsonIgnore
+    private List<Sconto> sconti;
 
     public Long getId() {
         return id;
@@ -348,6 +352,14 @@ public class Cliente {
 
     public void setListiniAssociati(List<ListinoAssociato> listiniAssociati) {
         this.listiniAssociati = listiniAssociati;
+    }
+
+    public List<Sconto> getSconti() {
+        return sconti;
+    }
+
+    public void setSconti(List<Sconto> sconti) {
+        this.sconti = sconti;
     }
 
     @Override

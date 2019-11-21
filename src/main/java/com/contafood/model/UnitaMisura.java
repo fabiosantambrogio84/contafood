@@ -1,11 +1,13 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"articoli"})
 @Entity
 @Table(name = "unita_misura")
 public class UnitaMisura {
@@ -22,6 +24,10 @@ public class UnitaMisura {
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
+
+    @OneToMany(mappedBy = "unitaMisura")
+    @JsonIgnore
+    private List<Articolo> articoli;
 
     public Long getId() {
         return id;
@@ -53,6 +59,14 @@ public class UnitaMisura {
 
     public void setDataInserimento(Timestamp dataInserimento) {
         this.dataInserimento = dataInserimento;
+    }
+
+    public List<Articolo> getArticoli() {
+        return articoli;
+    }
+
+    public void setArticoli(List<Articolo> articoli) {
+        this.articoli = articoli;
     }
 
     @Override

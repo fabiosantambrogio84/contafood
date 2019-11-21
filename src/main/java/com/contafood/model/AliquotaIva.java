@@ -1,13 +1,15 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"articoli"})
 @Entity
 @Table(name = "aliquota_iva")
 public class AliquotaIva {
@@ -21,6 +23,10 @@ public class AliquotaIva {
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
+
+    @OneToMany(mappedBy = "aliquotaIva")
+    @JsonIgnore
+    private List<Articolo> articoli;
 
     public Long getId() {
         return id;
@@ -44,6 +50,14 @@ public class AliquotaIva {
 
     public void setDataInserimento(Timestamp dataInserimento) {
         this.dataInserimento = dataInserimento;
+    }
+
+    public List<Articolo> getArticoli() {
+        return articoli;
+    }
+
+    public void setArticoli(List<Articolo> articoli) {
+        this.articoli = articoli;
     }
 
     @Override

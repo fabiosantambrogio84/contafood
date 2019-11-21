@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.*;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"ingredienti", "listiniAssociati"})
+@EqualsAndHashCode(exclude = {"ingredienti", "listiniAssociati", "articoli", "sconti"})
 @Entity
 @Table(name = "fornitore")
 public class Fornitore {
@@ -79,6 +79,14 @@ public class Fornitore {
     @OneToMany(mappedBy = "fornitore")
     @JsonIgnore
     private List<ListinoAssociato> listiniAssociati;
+
+    @OneToMany(mappedBy = "fornitore")
+    @JsonIgnore
+    private List<Articolo> articoli;
+
+    @OneToMany(mappedBy = "fornitore")
+    @JsonIgnore
+    private List<Sconto> sconti;
 
     public Long getId() {
         return id;
@@ -254,6 +262,22 @@ public class Fornitore {
 
     public void setListiniAssociati(List<ListinoAssociato> listiniAssociati) {
         this.listiniAssociati = listiniAssociati;
+    }
+
+    public List<Articolo> getArticoli() {
+        return articoli;
+    }
+
+    public void setArticoli(List<Articolo> articoli) {
+        this.articoli = articoli;
+    }
+
+    public List<Sconto> getSconti() {
+        return sconti;
+    }
+
+    public void setSconti(List<Sconto> sconti) {
+        this.sconti = sconti;
     }
 
     @Override
