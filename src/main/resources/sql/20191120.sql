@@ -49,6 +49,7 @@ CREATE TABLE `articolo_immagine` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	id_articolo int(10) unsigned,
 	file_name varchar(1000),
+	file_path varchar(1000),
 	file_complete_path varchar(1000),
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id`),

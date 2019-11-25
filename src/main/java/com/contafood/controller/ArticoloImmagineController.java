@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -58,12 +59,13 @@ public class ArticoloImmagineController {
     @CrossOrigin
     public ArticoloImmagine create(@RequestParam("articoloId") Long articoloId, @RequestParam("file") MultipartFile file){
         LOGGER.info("Performing POST request for creating 'articoloImmagine'");
-        ImmutablePair<String,String> imagePair = fileStorageService.storeFile(articoloId, file);
+        Map<String,String> imageMap = fileStorageService.storeArticoloImmagine(articoloId, file);
         Articolo articolo = articoloService.getOne(articoloId);
         ArticoloImmagine articoloImmagine = new ArticoloImmagine();
         articoloImmagine.setArticolo(articolo);
-        articoloImmagine.setFileName(imagePair.getValue());
-        articoloImmagine.setFileCompletePath(imagePair.getKey());
+        articoloImmagine.setFileName(imageMap.get("fileName"));
+        articoloImmagine.setFilePath(imageMap.get("filePath"));
+        articoloImmagine.setFileCompletePath(imageMap.get("fileCompletePath"));
         return articoloImmagineService.create(articoloImmagine);
     }
 

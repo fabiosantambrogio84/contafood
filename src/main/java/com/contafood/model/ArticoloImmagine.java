@@ -22,6 +22,9 @@ public class ArticoloImmagine implements Serializable {
     @Column(name = "file_name")
     private String fileName;
 
+    @Column(name = "file_path")
+    private String filePath;
+
     @Column(name = "file_complete_path")
     private String fileCompletePath;
 
@@ -52,6 +55,14 @@ public class ArticoloImmagine implements Serializable {
         this.fileName = fileName;
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
     public String getFileCompletePath() {
         return fileCompletePath;
     }
@@ -76,6 +87,7 @@ public class ArticoloImmagine implements Serializable {
         result.append("id: " + id);
         result.append(", articolo: " + articolo);
         result.append(", fileName: " + fileName);
+        result.append(", filePath: " + filePath);
         result.append(", fileCompletePath: " + fileCompletePath);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");

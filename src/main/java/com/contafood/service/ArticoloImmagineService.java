@@ -20,9 +20,12 @@ public class ArticoloImmagineService {
 
     private final ArticoloImmagineRepository articoloImmagineRepository;
 
+    private final FileStorageService fileStorageService;
+
     @Autowired
-    public ArticoloImmagineService(final ArticoloImmagineRepository articoloImmagineRepository){
+    public ArticoloImmagineService(final ArticoloImmagineRepository articoloImmagineRepository, final FileStorageService fileStorageService){
         this.articoloImmagineRepository = articoloImmagineRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     public Set<ArticoloImmagine> getAll(){
@@ -58,6 +61,8 @@ public class ArticoloImmagineService {
 
     public void delete(Long articoloImmagineId){
         LOGGER.info("Deleting 'articoloImmagine' '{}'", articoloImmagineId);
+        ArticoloImmagine articoloImmagine = articoloImmagineRepository.findById(articoloImmagineId).orElseThrow(ResourceNotFoundException::new);
+        fileStorageService.deleteFile(articoloImmagine.getFileCompletePath());
         articoloImmagineRepository.deleteById(articoloImmagineId);
         LOGGER.info("Deleted 'articoloImmagine' '{}'", articoloImmagineId);
     }
