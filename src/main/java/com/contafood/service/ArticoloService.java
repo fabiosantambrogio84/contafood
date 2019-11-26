@@ -63,6 +63,7 @@ public class ArticoloService {
 
     public void delete(Long articoloId){
         LOGGER.info("Deleting 'articolo' '{}'", articoloId);
+        articoloImmagineService.deleteByArticoloId(articoloId);
         articoloRepository.deleteById(articoloId);
         LOGGER.info("Deleted 'articolo' '{}'", articoloId);
     }

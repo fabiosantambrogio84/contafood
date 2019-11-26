@@ -1,16 +1,14 @@
 package com.contafood.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
 
-@EqualsAndHashCode(exclude = {"articoloImmagini"})
+@EqualsAndHashCode
 @Entity
-@Table(name = "articolo")
+@Table(name = "sconto")
 public class Sconto {
 
     @Id

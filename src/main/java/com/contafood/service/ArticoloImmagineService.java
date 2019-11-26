@@ -67,6 +67,15 @@ public class ArticoloImmagineService {
         LOGGER.info("Deleted 'articoloImmagine' '{}'", articoloImmagineId);
     }
 
+    public void deleteByArticoloId(Long articoloId){
+        LOGGER.info("Deleting all 'articoliImmagine' of articoloId '{}'", articoloId);
+        List<ArticoloImmagine> articoloImmagini = articoloImmagineRepository.findByArticoloId(articoloId);
+        articoloImmagini.stream().forEach(ai -> {
+            delete(ai.getId());
+        });
+        LOGGER.info("Deleted all 'articoliImmagine' '{}'", articoloId);
+    }
+
     public List<ArticoloImmagine> getByArticoloId(Long articoloId){
         LOGGER.info("Retrieving the list of 'articoloImmagini' for 'articolo' '{}'", articoloId);
         List<ArticoloImmagine> articoloImmagini = articoloImmagineRepository.findByArticoloId(articoloId);

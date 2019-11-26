@@ -90,9 +90,10 @@ public class FileStorageService {
 
     private int countFilesInDirectory(Path directoryPath) throws IOException {
         List<String> fileNames = new ArrayList<>();
-        DirectoryStream<Path> directoryStream = Files.newDirectoryStream(directoryPath);
-        for (Path path : directoryStream) {
-            fileNames.add(path.toString());
+        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(directoryPath)){
+            for (Path path : directoryStream) {
+                fileNames.add(path.toString());
+            }
         }
         return fileNames.size();
     }
