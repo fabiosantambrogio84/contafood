@@ -27,6 +27,8 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
 
+    private static final String ARTICOLI_DIRECTORY = "articoli";
+
     @Autowired
     public FileStorageService(final FileStorageProperties fileStorageProperties){
         this.baseDirectory = fileStorageProperties.getBaseDirectory();
@@ -44,9 +46,9 @@ public class FileStorageService {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         LOGGER.info("Storing file '{}'", fileName);
 
-        String filePath = Paths.get(this.uploadDirectory, "articoli", String.valueOf(articoloId)).toString();
+        String filePath = Paths.get(this.uploadDirectory, ARTICOLI_DIRECTORY, String.valueOf(articoloId), fileName).toString();
 
-        Path finalFileStorageLocation = Paths.get(this.fileStorageLocation.toString(),filePath);
+        Path finalFileStorageLocation = Paths.get(this.fileStorageLocation.toString(),ARTICOLI_DIRECTORY, String.valueOf(articoloId));
 
         try{
             Files.createDirectories(finalFileStorageLocation);
