@@ -44,7 +44,7 @@ public class FileStorageService {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         LOGGER.info("Storing file '{}'", fileName);
 
-        String filePath = Paths.get(this.uploadDirectory, "articoli", uploadDirectory).toString();
+        String filePath = Paths.get(this.uploadDirectory, "articoli", String.valueOf(articoloId)).toString();
 
         Path finalFileStorageLocation = Paths.get(this.fileStorageLocation.toString(),filePath);
 
