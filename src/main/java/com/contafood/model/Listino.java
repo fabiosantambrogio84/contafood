@@ -21,6 +21,9 @@ public class Listino {
     @Column(name = "nome")
     private String nome;
 
+    @Column(name = "tipologia")
+    private String tipologia;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -50,6 +53,14 @@ public class Listino {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getTipologia() {
+        return tipologia;
+    }
+
+    public void setTipologia(String tipologia) {
+        this.tipologia = tipologia;
     }
 
     public Timestamp getDataInserimento() {
@@ -91,6 +102,7 @@ public class Listino {
         result.append("{");
         result.append("id: " + id);
         result.append(", nome: " + nome);
+        result.append(", tipologia: " + tipologia);
         result.append(", listinoRiferimento: " + listinoRiferimento);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");

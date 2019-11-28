@@ -45,9 +45,10 @@ public class ArticoloService {
 
     public Articolo create(Articolo articolo){
         LOGGER.info("Creating 'articolo'");
+        String codice = articolo.getCodice().toUpperCase();
+        articolo.setCodice(codice);
+        articolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Articolo createdArticolo = articoloRepository.save(articolo);
-        createdArticolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-        articoloRepository.save(createdArticolo);
         LOGGER.info("Created 'articolo' '{}'", createdArticolo);
         return createdArticolo;
     }
@@ -56,6 +57,8 @@ public class ArticoloService {
         LOGGER.info("Updating 'articolo'");
         Articolo articoloCurrent = articoloRepository.findById(articolo.getId()).orElseThrow(ResourceNotFoundException::new);
         articolo.setDataInserimento(articoloCurrent.getDataInserimento());
+        String codice = articolo.getCodice().toUpperCase();
+        articolo.setCodice(codice);
         Articolo updatedArticolo = articoloRepository.save(articolo);
         LOGGER.info("Updated 'articolo' '{}'", updatedArticolo);
         return updatedArticolo;
@@ -74,4 +77,5 @@ public class ArticoloService {
         LOGGER.info("Retrieved {} 'articoloImmagini'", articoloImmagini.size());
         return articoloImmagini;
     }
+
 }

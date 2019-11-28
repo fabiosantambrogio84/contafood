@@ -48,6 +48,9 @@ public class Articolo {
     @Column(name = "prezzo_acquisto")
     private Float prezzoAcquisto;
 
+    @Column(name = "prezzo_listino_base")
+    private Float prezzoListinoBase;
+
     @Column(name = "scadenza_giorni")
     private Integer scadenzaGiorni;
 
@@ -157,6 +160,14 @@ public class Articolo {
         this.prezzoAcquisto = prezzoAcquisto;
     }
 
+    public Float getPrezzoListinoBase() {
+        return prezzoListinoBase;
+    }
+
+    public void setPrezzoListinoBase(Float prezzoListinoBase) {
+        this.prezzoListinoBase = prezzoListinoBase;
+    }
+
     public Integer getScadenzaGiorni() {
         return scadenzaGiorni;
     }
@@ -244,6 +255,7 @@ public class Articolo {
         result.append(", data: " + data);
         result.append(", quantitaPredefinita: " + quantitaPredefinita);
         result.append(", prezzoAcquisto: " + prezzoAcquisto);
+        result.append(", prezzoListinoBase: " + prezzoListinoBase);
         result.append(", scadenzaGiorni: " + scadenzaGiorni);
         result.append(", barcode: " + barcode);
         result.append(", completeBarcode: " + completeBarcode);
