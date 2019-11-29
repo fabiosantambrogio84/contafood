@@ -30,8 +30,10 @@ public class ListinoController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Listino> getAll() {
+    public Set<Listino> getAll(@RequestParam(name = "search[value]", required = false) String searchValue) throws Exception{
         LOGGER.info("Performing GET request for retrieving list of 'listini'");
+        LOGGER.info("Query parameter 'search[value]' equal to '{}'", searchValue);
+        Thread.sleep(5000);
         return listinoService.getAll();
     }
 
