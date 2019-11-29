@@ -10,5 +10,5 @@ public interface ClienteRepository extends CrudRepository<Cliente, Long> {
     @Override
     Set<Cliente> findAll();
 
-    Set<Cliente> findByBloccaDdtFalse();
+    Set<Cliente> findByBloccaDdt(Boolean bloccaDdt);
 }

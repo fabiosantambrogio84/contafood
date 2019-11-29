@@ -35,9 +35,9 @@ public class ClienteController {
     @CrossOrigin
     public Set<Cliente> getAll(@RequestParam(required = false) Boolean bloccaDdt) {
         LOGGER.info("Performing GET request for retrieving list of 'clienti'");
-        if(Boolean.FALSE.equals(bloccaDdt)){
-            LOGGER.info("Filtering 'clienti' by bloccaDdt false");
-            return clienteService.getAllWithBloccaDdtFalse();
+        if(bloccaDdt != null){
+            LOGGER.info("Filtering 'clienti' by bloccaDdt {}", bloccaDdt);
+            return clienteService.getAllWithBloccaDdt(bloccaDdt);
         }
         return clienteService.getAll();
     }

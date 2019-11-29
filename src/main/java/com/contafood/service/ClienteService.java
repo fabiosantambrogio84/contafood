@@ -39,9 +39,9 @@ public class ClienteService {
         return clienti;
     }
 
-    public Set<Cliente> getAllWithBloccaDdtFalse(){
-        LOGGER.info("Retrieving the list of 'clienti' with bloccaDdt false");
-        Set<Cliente> clienti = clienteRepository.findByBloccaDdtFalse();
+    public Set<Cliente> getAllWithBloccaDdt(Boolean bloccaDdt){
+        LOGGER.info("Retrieving the list of 'clienti' with bloccaDdt {}", bloccaDdt);
+        Set<Cliente> clienti = clienteRepository.findByBloccaDdt(bloccaDdt);
         LOGGER.info("Retrieved {} 'clienti'", clienti.size());
         return clienti;
     }
