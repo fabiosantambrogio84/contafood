@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Service
 public class ScontoService {
@@ -24,9 +24,9 @@ public class ScontoService {
         this.scontoRepository = scontoRepository;
     }
 
-    public Set<Sconto> getAll(){
+    public List<Sconto> getAll(){
         LOGGER.info("Retrieving the list of 'sconti'");
-        Set<Sconto> sconti = scontoRepository.findAll();
+        List<Sconto> sconti = scontoRepository.findAll();
         LOGGER.info("Retrieved {} 'sconti'", sconti.size());
         return sconti;
     }
@@ -38,12 +38,14 @@ public class ScontoService {
         return sconto;
     }
 
-    public Sconto create(Sconto sconto){
+    public List<Sconto> create(List<Sconto> sconti){
         LOGGER.info("Creating 'sconto'");
-        sconto.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-        Sconto createdSconto = scontoRepository.save(sconto);
-        LOGGER.info("Created 'sconto' '{}'", createdSconto);
-        return createdSconto;
+        sconti.stream().forEach( s -> {
+            s.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+            Sconto createdSconto = scontoRepository.save(s);
+            LOGGER.info("Created 'sconto' '{}'", createdSconto);
+        });
+        return sconti;
     }
 
     public Sconto update(Sconto sconto){
@@ -59,5 +61,12 @@ public class ScontoService {
         LOGGER.info("Deleting 'sconto' '{}'", scontoId);
         scontoRepository.deleteById(scontoId);
         LOGGER.info("Deleted 'sconto' '{}'", scontoId);
+    }
+
+    public List<Sconto> getAllByTipologia(String tipologia){
+        LOGGER.info("Retrieving the list of 'sconti' filtered by tipologia '{}'", tipologia);
+        List<Sconto> sconti = scontoRepository.findByTipologia(tipologia);
+        LOGGER.info("Retrieved {} 'sconti'", sconti.size());
+        return sconti;
     }
 }

@@ -1,6 +1,7 @@
 package com.contafood.controller;
 
 import com.contafood.util.Provincia;
+import com.contafood.util.TipologiaSconto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,4 +26,10 @@ public class UtilsController {
         return Provincia.labels();
     }
 
+    @RequestMapping(method = GET, path = "/tipologie-sconti")
+    @CrossOrigin
+    public List<TipologiaSconto> getTipologieSconto() {
+        LOGGER.info("Performing GET request for retrieving list of 'tipologie-sconti'");
+        return Arrays.asList(TipologiaSconto.values());
+    }
 }

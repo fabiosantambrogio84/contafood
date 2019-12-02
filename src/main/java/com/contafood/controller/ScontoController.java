@@ -2,13 +2,14 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Sconto;
-import com.contafood.model.UnitaMisura;
 import com.contafood.service.ScontoService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,9 +32,14 @@ public class ScontoController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Sconto> getAll() {
-        LOGGER.info("Performing GET request for retrieving list of 'sconti'");
-        return scontoService.getAll();
+    public List<Sconto> getAll(@RequestParam(required = false) String tipologia) {
+        if(StringUtils.isEmpty(tipologia)){
+            LOGGER.info("Performing GET request for retrieving list of 'sconti'");
+            return scontoService.getAll();
+        } else {
+            LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by tipologia '{}'", tipologia);
+            return scontoService.getAllByTipologia(tipologia);
+        }
     }
 
     @RequestMapping(method = GET, path = "/{scontoId}")
@@ -46,9 +52,9 @@ public class ScontoController {
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin
-    public Sconto create(@RequestBody final Sconto sconto){
+    public List<Sconto> create(@RequestBody final List<Sconto> sconti){
         LOGGER.info("Performing POST request for creating 'sconto'");
-        return scontoService.create(sconto);
+        return scontoService.create(sconti);
     }
 
     @RequestMapping(method = PUT, path = "/{scontoId}")

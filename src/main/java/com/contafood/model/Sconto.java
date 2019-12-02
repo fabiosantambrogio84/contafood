@@ -19,6 +19,9 @@ public class Sconto {
     @JoinColumn(name="id_cliente")
     private Cliente cliente;
 
+    @JoinColumn(name="tipologia")
+    private String tipologia;
+
     @ManyToOne
     @JoinColumn(name="id_fornitore")
     private Fornitore fornitore;
@@ -53,6 +56,14 @@ public class Sconto {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public String getTipologia() {
+        return tipologia;
+    }
+
+    public void setTipologia(String tipologia) {
+        this.tipologia = tipologia;
     }
 
     public Fornitore getFornitore() {
@@ -110,6 +121,7 @@ public class Sconto {
         result.append("{");
         result.append("id: " + id);
         result.append(", cliente: " + cliente);
+        result.append(", tipologia: " + tipologia);
         result.append(", fornitore: " + fornitore);
         result.append(", articolo: " + articolo);
         result.append(", valore: " + valore);
