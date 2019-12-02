@@ -39,6 +39,13 @@ public class ClienteService {
         return clienti;
     }
 
+    public Set<Cliente> getAllWithBloccaDdt(Boolean bloccaDdt){
+        LOGGER.info("Retrieving the list of 'clienti' with bloccaDdt {}", bloccaDdt);
+        Set<Cliente> clienti = clienteRepository.findByBloccaDdt(bloccaDdt);
+        LOGGER.info("Retrieved {} 'clienti'", clienti.size());
+        return clienti;
+    }
+
     public Cliente getOne(Long clienteId){
         LOGGER.info("Retrieving 'cliente' '{}'", clienteId);
         Cliente cliente = clienteRepository.findById(clienteId).orElseThrow(ResourceNotFoundException::new);

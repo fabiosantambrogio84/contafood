@@ -33,8 +33,12 @@ public class ClienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Cliente> getAll() {
+    public Set<Cliente> getAll(@RequestParam(required = false) Boolean bloccaDdt) {
         LOGGER.info("Performing GET request for retrieving list of 'clienti'");
+        if(bloccaDdt != null){
+            LOGGER.info("Filtering 'clienti' by bloccaDdt {}", bloccaDdt);
+            return clienteService.getAllWithBloccaDdt(bloccaDdt);
+        }
         return clienteService.getAll();
     }
 
