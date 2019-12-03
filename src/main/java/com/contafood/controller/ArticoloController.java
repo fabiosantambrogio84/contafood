@@ -75,4 +75,11 @@ public class ArticoloController {
         LOGGER.info("Performing GET request for retrieving 'articoloImmagini' of 'articolo' '{}'", articoloId);
         return articoloService.getArticoloImmagini(articoloId);
     }
+
+    @RequestMapping(method = GET, path = "/{articoloId}/listini-prezzi")
+    @CrossOrigin
+    public List<ListinoPrezzo> getArticoloListiniPrezzi(@PathVariable final Long articoloId) {
+        LOGGER.info("Performing GET request for retrieving 'listiniPrezzi' of 'articolo' '{}'", articoloId);
+        return articoloService.getArticoloListiniPrezzi(articoloId);
+    }
 }

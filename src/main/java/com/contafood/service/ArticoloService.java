@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
 import com.contafood.model.ArticoloImmagine;
+import com.contafood.model.ListinoPrezzo;
 import com.contafood.repository.ArticoloRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,13 @@ public class ArticoloService {
 
     private final ArticoloImmagineService articoloImmagineService;
 
+    private final ListinoPrezzoService listinoPrezzoService;
+
     @Autowired
-    public ArticoloService(final ArticoloRepository articoloRepository, final ArticoloImmagineService articoloImmagineService){
+    public ArticoloService(final ArticoloRepository articoloRepository, final ArticoloImmagineService articoloImmagineService, final ListinoPrezzoService listinoPrezzoService){
         this.articoloRepository = articoloRepository;
         this.articoloImmagineService = articoloImmagineService;
+        this.listinoPrezzoService = listinoPrezzoService;
     }
 
     public Set<Articolo> getAll(){
@@ -78,4 +82,16 @@ public class ArticoloService {
         return articoloImmagini;
     }
 
+    public List<ListinoPrezzo> getArticoloListiniPrezzi(Long articoloId){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of the 'articolo' '{}'", articoloId);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoService.getByArticoloId(articoloId);
+        LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
+        return listiniPrezzi;
+    }
+
+    public void deleteArticoloListiniPrezzi(Long articoloId){
+        LOGGER.info("Deleting the list of 'listiniPrezzi' of the 'articolo' '{}'", articoloId);
+        listinoPrezzoService.deleteByArticoloId(articoloId);
+        LOGGER.info("Deleted 'listiniPrezzi' of the articolo '{}'", articoloId);
+    }
 }

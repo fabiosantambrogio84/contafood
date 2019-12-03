@@ -1,6 +1,7 @@
 package com.contafood.controller;
 
 import com.contafood.util.Provincia;
+import com.contafood.util.TipologiaListinoPrezzoVariazione;
 import com.contafood.util.TipologiaSconto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,5 +32,12 @@ public class UtilsController {
     public List<TipologiaSconto> getTipologieSconto() {
         LOGGER.info("Performing GET request for retrieving list of 'tipologie-sconti'");
         return Arrays.asList(TipologiaSconto.values());
+    }
+
+    @RequestMapping(method = GET, path = "/tipologie-listini-prezzi-variazioni")
+    @CrossOrigin
+    public List<TipologiaListinoPrezzoVariazione> getTipologieListinoPrezzoVariazione() {
+        LOGGER.info("Performing GET request for retrieving list of 'tipologie-listini-prezzi-variazioni'");
+        return Arrays.asList(TipologiaListinoPrezzoVariazione.values());
     }
 }
