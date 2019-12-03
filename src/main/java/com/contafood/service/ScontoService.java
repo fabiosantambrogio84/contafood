@@ -40,11 +40,12 @@ public class ScontoService {
 
     public List<Sconto> create(List<Sconto> sconti){
         LOGGER.info("Creating 'sconto'");
-        sconti.stream().forEach( s -> {
+        sconti.forEach(s -> {
             s.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
             Sconto createdSconto = scontoRepository.save(s);
             LOGGER.info("Created 'sconto' '{}'", createdSconto);
         });
+
         return sconti;
     }
 
