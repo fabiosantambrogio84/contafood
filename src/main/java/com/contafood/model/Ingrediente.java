@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,7 +25,7 @@ public class Ingrediente {
     private String descrizione;
 
     @Column(name = "prezzo")
-    private Float prezzo;
+    private BigDecimal prezzo;
 
     @Column(name = "unita_di_misura")
     private String unitaDiMisura;
@@ -67,11 +68,11 @@ public class Ingrediente {
         this.descrizione = descrizione;
     }
 
-    public Float getPrezzo() {
+    public BigDecimal getPrezzo() {
         return prezzo;
     }
 
-    public void setPrezzo(Float prezzo) {
+    public void setPrezzo(BigDecimal prezzo) {
         this.prezzo = prezzo;
     }
 

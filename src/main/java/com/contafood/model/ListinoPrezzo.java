@@ -1,13 +1,10 @@
 package com.contafood.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
 
 @EqualsAndHashCode
 @Entity
@@ -28,12 +25,6 @@ public class ListinoPrezzo {
 
     @Column(name = "prezzo")
     private BigDecimal prezzo;
-
-    @Column(name = "tipologia_variazione_prezzo")
-    private String tipologiaVariazionePrezzo;
-
-    @Column(name = "variazione_prezzo")
-    private Float variazionePrezzo;
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
@@ -70,22 +61,6 @@ public class ListinoPrezzo {
         this.prezzo = prezzo;
     }
 
-    public String getTipologiaVariazionePrezzo() {
-        return tipologiaVariazionePrezzo;
-    }
-
-    public void setTipologiaVariazionePrezzo(String tipologiaVariazionePrezzo) {
-        this.tipologiaVariazionePrezzo = tipologiaVariazionePrezzo;
-    }
-
-    public Float getVariazionePrezzo() {
-        return variazionePrezzo;
-    }
-
-    public void setVariazionePrezzo(Float variazionePrezzo) {
-        this.variazionePrezzo = variazionePrezzo;
-    }
-
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -103,8 +78,6 @@ public class ListinoPrezzo {
         result.append(", listino: " + listino);
         result.append(", articolo: " + articolo);
         result.append(", prezzo: " + prezzo);
-        result.append(", tipologiaVariazionePrezzo: " + tipologiaVariazionePrezzo);
-        result.append(", variazionePrezzo: " + variazionePrezzo);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
 

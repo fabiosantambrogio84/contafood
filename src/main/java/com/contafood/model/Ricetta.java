@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,13 +39,13 @@ public class Ricetta {
     private Integer scadenzaGiorni;
 
     @Column(name = "costo_ingredienti")
-    private Float costoIngredienti;
+    private BigDecimal costoIngredienti;
 
     @Column(name = "costo_preparazione")
-    private Float costoPreparazione;
+    private BigDecimal costoPreparazione;
 
     @Column(name = "costo_totale")
-    private Float costoTotale;
+    private BigDecimal costoTotale;
 
     @Column(name = "preparazione")
     private String preparazione;
@@ -120,27 +121,27 @@ public class Ricetta {
         this.scadenzaGiorni = scadenzaGiorni;
     }
 
-    public Float getCostoIngredienti() {
+    public BigDecimal getCostoIngredienti() {
         return costoIngredienti;
     }
 
-    public void setCostoIngredienti(Float costoIngredienti) {
+    public void setCostoIngredienti(BigDecimal costoIngredienti) {
         this.costoIngredienti = costoIngredienti;
     }
 
-    public Float getCostoPreparazione() {
+    public BigDecimal getCostoPreparazione() {
         return costoPreparazione;
     }
 
-    public void setCostoPreparazione(Float costoPreparazione) {
+    public void setCostoPreparazione(BigDecimal costoPreparazione) {
         this.costoPreparazione = costoPreparazione;
     }
 
-    public Float getCostoTotale() {
+    public BigDecimal getCostoTotale() {
         return costoTotale;
     }
 
-    public void setCostoTotale(Float costoTotale) {
+    public void setCostoTotale(BigDecimal costoTotale) {
         this.costoTotale = costoTotale;
     }
 

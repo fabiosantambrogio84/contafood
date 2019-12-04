@@ -24,6 +24,12 @@ public class Listino {
     @Column(name = "tipologia")
     private String tipologia;
 
+    @Column(name = "tipologia_variazione_prezzo")
+    private String tipologiaVariazionePrezzo;
+
+    @Column(name = "variazione_prezzo")
+    private Float variazionePrezzo;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -65,6 +71,22 @@ public class Listino {
 
     public void setTipologia(String tipologia) {
         this.tipologia = tipologia;
+    }
+
+    public String getTipologiaVariazionePrezzo() {
+        return tipologiaVariazionePrezzo;
+    }
+
+    public void setTipologiaVariazionePrezzo(String tipologiaVariazionePrezzo) {
+        this.tipologiaVariazionePrezzo = tipologiaVariazionePrezzo;
+    }
+
+    public Float getVariazionePrezzo() {
+        return variazionePrezzo;
+    }
+
+    public void setVariazionePrezzo(Float variazionePrezzo) {
+        this.variazionePrezzo = variazionePrezzo;
     }
 
     public Timestamp getDataInserimento() {
@@ -115,6 +137,8 @@ public class Listino {
         result.append("id: " + id);
         result.append(", nome: " + nome);
         result.append(", tipologia: " + tipologia);
+        result.append(", tipologiaVariazionePrezzo: " + tipologiaVariazionePrezzo);
+        result.append(", variazionePrezzo: " + variazionePrezzo);
         result.append(", listinoRiferimento: " + listinoRiferimento);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");

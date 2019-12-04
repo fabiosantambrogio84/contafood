@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -46,10 +47,10 @@ public class Articolo {
     private Float quantitaPredefinita;
 
     @Column(name = "prezzo_acquisto")
-    private Float prezzoAcquisto;
+    private BigDecimal prezzoAcquisto;
 
     @Column(name = "prezzo_listino_base")
-    private Float prezzoListinoBase;
+    private BigDecimal prezzoListinoBase;
 
     @Column(name = "scadenza_giorni")
     private Integer scadenzaGiorni;
@@ -156,19 +157,19 @@ public class Articolo {
         this.quantitaPredefinita = quantitaPredefinita;
     }
 
-    public Float getPrezzoAcquisto() {
+    public BigDecimal getPrezzoAcquisto() {
         return prezzoAcquisto;
     }
 
-    public void setPrezzoAcquisto(Float prezzoAcquisto) {
+    public void setPrezzoAcquisto(BigDecimal prezzoAcquisto) {
         this.prezzoAcquisto = prezzoAcquisto;
     }
 
-    public Float getPrezzoListinoBase() {
+    public BigDecimal getPrezzoListinoBase() {
         return prezzoListinoBase;
     }
 
-    public void setPrezzoListinoBase(Float prezzoListinoBase) {
+    public void setPrezzoListinoBase(BigDecimal prezzoListinoBase) {
         this.prezzoListinoBase = prezzoListinoBase;
     }
 

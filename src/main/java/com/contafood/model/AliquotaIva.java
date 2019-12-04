@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class AliquotaIva {
     private Long id;
 
     @Column(name = "valore")
-    private Float valore;
+    private BigDecimal valore;
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
@@ -36,11 +37,11 @@ public class AliquotaIva {
         this.id = id;
     }
 
-    public Float getValore() {
+    public BigDecimal getValore() {
         return valore;
     }
 
-    public void setValore(Float valore) {
+    public void setValore(BigDecimal valore) {
         this.valore = valore;
     }
 
