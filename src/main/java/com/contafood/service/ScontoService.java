@@ -39,7 +39,7 @@ public class ScontoService {
     }
 
     public List<Sconto> create(List<Sconto> sconti){
-        LOGGER.info("Creating 'sconto'");
+        LOGGER.info("Creating 'sconti'");
         sconti.forEach(s -> {
             s.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
             Sconto createdSconto = scontoRepository.save(s);

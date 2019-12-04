@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -39,9 +40,9 @@ public class ListinoPrezzoController {
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin
-    public ListinoPrezzo create(@RequestBody final ListinoPrezzo listinoPrezzo){
-        LOGGER.info("Performing POST request for creating 'listinoPrezzo'");
-        return listinoPrezzoService.create(listinoPrezzo);
+    public List<ListinoPrezzo> create(@RequestBody final List<ListinoPrezzo> listiniPrezzi){
+        LOGGER.info("Performing POST request for creating 'listiniPrezzi'");
+        return listinoPrezzoService.create(listiniPrezzi);
     }
 
     @RequestMapping(method = PUT, path = "/{listinoPrezzoId}")

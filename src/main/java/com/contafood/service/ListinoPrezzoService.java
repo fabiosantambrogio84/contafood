@@ -48,12 +48,15 @@ public class ListinoPrezzoService {
         return listinoPrezzo;
     }
 
-    public ListinoPrezzo create(ListinoPrezzo listinoPrezzo){
-        LOGGER.info("Creating 'listinoPrezzo'");
-        listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-        ListinoPrezzo createdListinoPrezzo = listinoPrezzoRepository.save(listinoPrezzo);
-        LOGGER.info("Created 'listinoPrezzo' '{}'", createdListinoPrezzo);
-        return createdListinoPrezzo;
+    public List<ListinoPrezzo> create(List<ListinoPrezzo> listiniPrezzi){
+        LOGGER.info("Creating 'listiniPrezzi'");
+        listiniPrezzi.forEach(lp -> {
+            lp.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+            ListinoPrezzo createdListinoPrezzo = listinoPrezzoRepository.save(lp);
+            LOGGER.info("Created 'listinoPrezzo' '{}'", createdListinoPrezzo);
+        });
+        return listiniPrezzi;
+
     }
 
     public ListinoPrezzo update(ListinoPrezzo listinoPrezzo){
