@@ -17,7 +17,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(path="/listini-associati")
+@RequestMapping(path="/listini-prezzi")
 public class ListinoPrezzoController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ListinoPrezzoController.class);
