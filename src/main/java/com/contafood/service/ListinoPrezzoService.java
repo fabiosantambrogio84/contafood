@@ -68,6 +68,13 @@ public class ListinoPrezzoService {
         return updatedListinoPrezzo;
     }
 
+    public List<ListinoPrezzo> bulkInsertOrUpdate(List<ListinoPrezzo> listiniPrezzi){
+        LOGGER.info("Inserting/updating 'listiniPrezzi'");
+        listinoPrezzoRepository.saveAll(listiniPrezzi);
+        LOGGER.info("Inserted/updated 'listiniPrezzi' '{}'", listiniPrezzi);
+        return listiniPrezzi;
+    }
+
     public void delete(Long listinoPrezzoId){
         LOGGER.info("Deleting 'listinoPrezzo' '{}'", listinoPrezzoId);
         listinoPrezzoRepository.deleteById(listinoPrezzoId);

@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -68,6 +69,7 @@ public class ArticoloService {
         return updatedArticolo;
     }
 
+    @Transactional
     public void delete(Long articoloId){
         LOGGER.info("Deleting 'articolo' '{}'", articoloId);
         articoloImmagineService.deleteByArticoloId(articoloId);
