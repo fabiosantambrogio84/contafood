@@ -1,6 +1,5 @@
 package com.contafood.repository;
 
-import com.contafood.model.ListinoAssociato;
 import com.contafood.model.ListinoPrezzo;
 import org.springframework.data.repository.CrudRepository;
 
@@ -16,11 +15,11 @@ public interface ListinoPrezzoRepository extends CrudRepository<ListinoPrezzo, L
 
     List<ListinoPrezzo> findByArticoloId(Long idArticolo);
 
-    List<ListinoPrezzo> findByArticoloCategoriaId(Long idCategoriaArticolo);
+    List<ListinoPrezzo> findByListinoIdAndArticoloCategoriaId(Long idListino, Long idCategoriaArticolo);
 
-    List<ListinoPrezzo> findByArticoloFornitoreId(Long idFornitore);
+    List<ListinoPrezzo> findByListinoIdAndArticoloFornitoreId(Long idListino, Long idFornitore);
 
-    List<ListinoPrezzo> findByArticoloCategoriaIdAndArticoloFornitoreId(Long idCategoriaArticolo, Long idFornitore);
+    List<ListinoPrezzo> findByListinoIdAndArticoloCategoriaIdAndArticoloFornitoreId(Long idListino, Long idCategoriaArticolo, Long idFornitore);
 
     void deleteByListinoId(Long idListino);
 

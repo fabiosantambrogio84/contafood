@@ -41,23 +41,23 @@ public class ListinoPrezzoService {
         return listiniPrezzi;
     }
 
-    public List<ListinoPrezzo> getByArticoloCategoriaArticoloId(Long idCategoriaArticolo){
-        LOGGER.info("Retrieving the list of 'listiniPrezzi' of articoli with categoria '{}'", idCategoriaArticolo);
-        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloCategoriaId(idCategoriaArticolo);
+    public List<ListinoPrezzo> getByListinoIdAndArticoloCategoriaId(Long idListino, Long idCategoriaArticolo){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of listino '{}' of articoli with categoria '{}'", idListino, idCategoriaArticolo);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByListinoIdAndArticoloCategoriaId(idListino, idCategoriaArticolo);
         LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
         return listiniPrezzi;
     }
 
-    public List<ListinoPrezzo> getByArticoloFornitoreId(Long idFornitore){
-        LOGGER.info("Retrieving the list of 'listiniPrezzi' of articoli with fornitore '{}'", idFornitore);
-        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloFornitoreId(idFornitore);
+    public List<ListinoPrezzo> getByListinoIdAndArticoloFornitoreId(Long idListino, Long idFornitore){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of listino '{}' of articoli with fornitore '{}'", idListino, idFornitore);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByListinoIdAndArticoloFornitoreId(idListino, idFornitore);
         LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
         return listiniPrezzi;
     }
 
-    public List<ListinoPrezzo> getByArticoloCategoriaArticoloIdAndFornitoreId(Long idCategoriaArticolo, Long idFornitore){
-        LOGGER.info("Retrieving the list of 'listiniPrezzi' of articoli with categoria '{}' and fornitore '{}'", idCategoriaArticolo, idFornitore);
-        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloCategoriaIdAndArticoloFornitoreId(idCategoriaArticolo, idFornitore);
+    public List<ListinoPrezzo> getByListinoIdAndArticoloCategoriaIdAndFornitoreId(Long idListino, Long idCategoriaArticolo, Long idFornitore){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of listino '{}' of articoli with categoria '{}' and fornitore '{}'", idListino, idCategoriaArticolo, idFornitore);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByListinoIdAndArticoloCategoriaIdAndArticoloFornitoreId(idListino, idCategoriaArticolo, idFornitore);
         LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
         return listiniPrezzi;
     }

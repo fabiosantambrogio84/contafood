@@ -1,6 +1,9 @@
 package com.contafood.service;
 
-import com.contafood.exception.*;
+import com.contafood.exception.ListinoBaseAlreadyExistingException;
+import com.contafood.exception.ListinoBaseCannotHaveVariazionePrezzoException;
+import com.contafood.exception.ListinoTipologiaNotAllowedException;
+import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.ListinoRepository;
 import com.contafood.util.TipologiaListino;
@@ -15,7 +18,10 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ListinoService {
@@ -144,11 +150,11 @@ public class ListinoService {
 
         List<ListinoPrezzo> listiniPrezziToUpdate = new ArrayList<>();
         if(categoriaArticoloVariazione != null && fornitoreVariazione != null){
-            listiniPrezziToUpdate = listinoPrezzoService.getByArticoloCategoriaArticoloIdAndFornitoreId(categoriaArticoloVariazione.getId(), fornitoreVariazione.getId());
+            listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloCategoriaIdAndFornitoreId(listino.getId(), categoriaArticoloVariazione.getId(), fornitoreVariazione.getId());
         } else if(categoriaArticoloVariazione != null && fornitoreVariazione == null){
-            listiniPrezziToUpdate = listinoPrezzoService.getByArticoloCategoriaArticoloId(categoriaArticoloVariazione.getId());
+            listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloCategoriaId(listino.getId(), categoriaArticoloVariazione.getId());
         } else if(categoriaArticoloVariazione == null && fornitoreVariazione != null){
-            listiniPrezziToUpdate = listinoPrezzoService.getByArticoloFornitoreId(fornitoreVariazione.getId());
+            listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloFornitoreId(listino.getId(), fornitoreVariazione.getId());
         } else {
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoId(listino.getId());
         }
