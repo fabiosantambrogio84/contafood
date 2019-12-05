@@ -41,6 +41,28 @@ public class ListinoPrezzoService {
         return listiniPrezzi;
     }
 
+    public List<ListinoPrezzo> getByArticoloCategoriaArticoloId(Long idCategoriaArticolo){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of articoli with categoria '{}'", idCategoriaArticolo);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloCategoriaId(idCategoriaArticolo);
+        LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
+        return listiniPrezzi;
+    }
+
+    public List<ListinoPrezzo> getByArticoloFornitoreId(Long idFornitore){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of articoli with fornitore '{}'", idFornitore);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloFornitoreId(idFornitore);
+        LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
+        return listiniPrezzi;
+    }
+
+    public List<ListinoPrezzo> getByArticoloCategoriaArticoloIdAndFornitoreId(Long idCategoriaArticolo, Long idFornitore){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of articoli with categoria '{}' and fornitore '{}'", idCategoriaArticolo, idFornitore);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloCategoriaIdAndArticoloFornitoreId(idCategoriaArticolo, idFornitore);
+        LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
+        return listiniPrezzi;
+    }
+
+
     public ListinoPrezzo getOne(Long listinoPrezzoId){
         LOGGER.info("Retrieving 'listinoPrezzo' '{}'", listinoPrezzoId);
         ListinoPrezzo listinoPrezzo = listinoPrezzoRepository.findById(listinoPrezzoId).orElseThrow(ResourceNotFoundException::new);

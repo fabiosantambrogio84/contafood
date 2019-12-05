@@ -5,6 +5,9 @@ ALTER TABLE `sconto` ADD COLUMN tipologia varchar(255) default null AFTER id_cli
 ALTER TABLE `listino` ADD COLUMN tipologia varchar(255) default 'STANDARD' AFTER id_listino;
 ALTER TABLE `listino` ADD COLUMN tipologia_variazione_prezzo varchar(100) AFTER tipologia;
 ALTER TABLE `listino` ADD COLUMN variazione_prezzo decimal(10,2) AFTER tipologia_variazione_prezzo;
+ALTER TABLE `listino` ADD COLUMN id_categoria_articolo_variazione int(10) AFTER variazione_prezzo;
+ALTER TABLE `listino` ADD COLUMN id_fornitore_variazione int(10) AFTER id_categoria_articolo_variazione;
+ALTER TABLE `listino` DROP COLUMN id_listino;
 
 DROP TABLE IF EXISTS `listino_prezzo`;
 

@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"articoli"})
+@EqualsAndHashCode(exclude = {"articoli", "listini"})
 @Entity
 @Table(name = "categoria_articolo")
 public class CategoriaArticolo {
@@ -25,6 +25,10 @@ public class CategoriaArticolo {
     @OneToMany(mappedBy = "categoria")
     @JsonIgnore
     private List<Articolo> articoli;
+
+    @OneToMany(mappedBy = "categoriaArticoloVariazione")
+    @JsonIgnore
+    private List<Listino> listini;
 
     public Long getId() {
         return id;
@@ -56,6 +60,14 @@ public class CategoriaArticolo {
 
     public void setArticoli(List<Articolo> articoli) {
         this.articoli = articoli;
+    }
+
+    public List<Listino> getListini() {
+        return listini;
+    }
+
+    public void setListiniPrezzi(List<Listino> listini) {
+        this.listini = listini;
     }
 
     @Override

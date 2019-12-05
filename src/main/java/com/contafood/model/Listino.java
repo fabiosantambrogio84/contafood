@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"listini", "listiniAssociati", "listiniPrezzi"})
+@EqualsAndHashCode(exclude = {"listiniAssociati", "listiniPrezzi"})
 @Entity
 @Table(name = "listino")
 public class Listino {
@@ -34,12 +34,22 @@ public class Listino {
     private Timestamp dataInserimento;
 
     @ManyToOne
+    @JoinColumn(name="id_categoria_articolo_variazione")
+    private CategoriaArticolo categoriaArticoloVariazione;
+
+    @ManyToOne
+    @JoinColumn(name="id_fornitore_variazione")
+    private Fornitore fornitoreVariazione;
+
+    /*
+    @ManyToOne
     @JoinColumn(name="id_listino")
     private Listino listinoRiferimento;
 
     @OneToMany(mappedBy="listinoRiferimento")
     @JsonIgnore
     private List<Listino> listini;
+    */
 
     @OneToMany(mappedBy = "listino")
     @JsonIgnore
@@ -97,6 +107,23 @@ public class Listino {
         this.dataInserimento = dataInserimento;
     }
 
+    public CategoriaArticolo getCategoriaArticoloVariazione() {
+        return categoriaArticoloVariazione;
+    }
+
+    public void setCategoriaArticoloVariazione(CategoriaArticolo categoriaArticoloVariazione) {
+        this.categoriaArticoloVariazione = categoriaArticoloVariazione;
+    }
+
+    public Fornitore getFornitoreVariazione() {
+        return fornitoreVariazione;
+    }
+
+    public void setFornitoreVariazione(Fornitore fornitoreVariazione) {
+        this.fornitoreVariazione = fornitoreVariazione;
+    }
+
+    /*
     public Listino getListinoRiferimento() {
         return listinoRiferimento;
     }
@@ -112,6 +139,7 @@ public class Listino {
     public void setListini(List<Listino> listini) {
         this.listini = listini;
     }
+     */
 
     public List<ListinoAssociato> getListiniAssociati() {
         return listiniAssociati;
@@ -139,7 +167,7 @@ public class Listino {
         result.append(", tipologia: " + tipologia);
         result.append(", tipologiaVariazionePrezzo: " + tipologiaVariazionePrezzo);
         result.append(", variazionePrezzo: " + variazionePrezzo);
-        result.append(", listinoRiferimento: " + listinoRiferimento);
+        //result.append(", listinoRiferimento: " + listinoRiferimento);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
 

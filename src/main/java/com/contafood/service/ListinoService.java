@@ -1,9 +1,7 @@
 package com.contafood.service;
 
 import com.contafood.exception.*;
-import com.contafood.model.Articolo;
-import com.contafood.model.Listino;
-import com.contafood.model.ListinoPrezzo;
+import com.contafood.model.*;
 import com.contafood.repository.ListinoRepository;
 import com.contafood.util.TipologiaListino;
 import com.contafood.util.TipologiaListinoPrezzoVariazione;
@@ -64,9 +62,6 @@ public class ListinoService {
             if(!StringUtils.isEmpty(listino.getTipologiaVariazionePrezzo()) || listino.getVariazionePrezzo() != null){
                 throw new ListinoBaseCannotHaveVariazionePrezzoException();
             }
-            if(listino.getListinoRiferimento() != null){
-                throw new ListinoBaseCannotHaveListinoRiferimentoException();
-            }
         }
         listino.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Listino createdListino = listinoRepository.save(listino);
@@ -76,23 +71,28 @@ public class ListinoService {
         String tipologiaVariazionePrezzo = createdListino.getTipologiaVariazionePrezzo();
         Float variazionePrezzo = createdListino.getVariazionePrezzo();
 
-        if(createdListino.getListinoRiferimento() != null){
-            List<ListinoPrezzo> listiniPrezzi = createListiniPrezziFromListinoRiferimento(createdListino);
+        List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
+        Set<Articolo> articoli = articoloService.getAll();
+        articoli.forEach(a -> {
+            ListinoPrezzo listinoPrezzo = new ListinoPrezzo();
+            listinoPrezzo.setArticolo(a);
+            listinoPrezzo.setListino(createdListino);
+            listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+            BigDecimal newPrezzo = a.getPrezzoListinoBase();
 
-            if(!listiniPrezzi.isEmpty()) {
-                insertOrUpdateListiniPrezzi(listiniPrezzi, tipologiaVariazionePrezzo, variazionePrezzo, true);
-            }
-
-        } else {
-            List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
-            Set<Articolo> articoli = articoloService.getAll();
-            articoli.forEach(a -> {
-                ListinoPrezzo listinoPrezzo = new ListinoPrezzo();
-                listinoPrezzo.setArticolo(a);
-                listinoPrezzo.setListino(createdListino);
-                listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-                BigDecimal newPrezzo = a.getPrezzoListinoBase();
-                if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
+            if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
+                boolean applyVariazione = true;
+                CategoriaArticolo categoriaArticoloVariazione = createdListino.getCategoriaArticoloVariazione();
+                Fornitore fornitoreVariazione = createdListino.getFornitoreVariazione();
+                if(categoriaArticoloVariazione != null || fornitoreVariazione != null){
+                    if(categoriaArticoloVariazione != null && !a.getCategoria().getId().equals(categoriaArticoloVariazione.getId())){
+                        applyVariazione = false;
+                    }
+                    if(fornitoreVariazione != null && !a.getFornitore().getId().equals(fornitoreVariazione.getId())){
+                        applyVariazione = false;
+                    }
+                }
+                if(applyVariazione){
                     TipologiaListinoPrezzoVariazione tipologiaListinoPrezzoVariazione = TipologiaListinoPrezzoVariazione.valueOf(tipologiaVariazionePrezzo);
                     if(TipologiaListinoPrezzoVariazione.PERCENTUALE.equals(tipologiaListinoPrezzoVariazione)){
                         BigDecimal variazione = newPrezzo.multiply(BigDecimal.valueOf(variazionePrezzo/100));
@@ -101,13 +101,14 @@ public class ListinoService {
                         newPrezzo = newPrezzo.add(BigDecimal.valueOf(variazionePrezzo));
                     }
                 }
-                listinoPrezzo.setPrezzo(newPrezzo);
-
-                listiniPrezzi.add(listinoPrezzo);
-            });
-            if(!listiniPrezzi.isEmpty()){
-                listinoPrezzoService.create(listiniPrezzi);
             }
+
+            listinoPrezzo.setPrezzo(newPrezzo);
+
+            listiniPrezzi.add(listinoPrezzo);
+        });
+        if(!listiniPrezzi.isEmpty()){
+            listinoPrezzoService.create(listiniPrezzi);
         }
         LOGGER.info("Successfully populated 'listiniPrezzi' for listino '{}'", createdListino.getId());
 
@@ -125,9 +126,10 @@ public class ListinoService {
             if(!StringUtils.isEmpty(listino.getTipologiaVariazionePrezzo()) || listino.getVariazionePrezzo() != null){
                 throw new ListinoBaseCannotHaveVariazionePrezzoException();
             }
-            if(listino.getListinoRiferimento() != null){
-                throw new ListinoBaseCannotHaveListinoRiferimentoException();
-            }
+            listino.setTipologiaVariazionePrezzo(null);
+            listino.setVariazionePrezzo(null);
+            listino.setCategoriaArticoloVariazione(null);
+            listino.setFornitoreVariazione(null);
         }
         Listino listinoCurrent = listinoRepository.findById(listino.getId()).orElseThrow(ResourceNotFoundException::new);
         listino.setDataInserimento(listinoCurrent.getDataInserimento());
@@ -137,22 +139,25 @@ public class ListinoService {
         LOGGER.info("Populating 'listiniPrezzi' for listino '{}'", updatedListino.getId());
         String tipologiaVariazionePrezzo = updatedListino.getTipologiaVariazionePrezzo();
         Float variazionePrezzo = updatedListino.getVariazionePrezzo();
+        CategoriaArticolo categoriaArticoloVariazione = updatedListino.getCategoriaArticoloVariazione();
+        Fornitore fornitoreVariazione = updatedListino.getFornitoreVariazione();
 
-        if(updatedListino.getListinoRiferimento() != null){
-            List<ListinoPrezzo> listiniPrezzi = createListiniPrezziFromListinoRiferimento(updatedListino);
-
-            if(!listiniPrezzi.isEmpty()) {
-                listinoPrezzoService.deleteByListinoId(updatedListino.getId());
-                insertOrUpdateListiniPrezzi(listiniPrezzi, tipologiaVariazionePrezzo, variazionePrezzo, true);
-            }
+        List<ListinoPrezzo> listiniPrezziToUpdate = new ArrayList<>();
+        if(categoriaArticoloVariazione != null && fornitoreVariazione != null){
+            listiniPrezziToUpdate = listinoPrezzoService.getByArticoloCategoriaArticoloIdAndFornitoreId(categoriaArticoloVariazione.getId(), fornitoreVariazione.getId());
+        } else if(categoriaArticoloVariazione != null && fornitoreVariazione == null){
+            listiniPrezziToUpdate = listinoPrezzoService.getByArticoloCategoriaArticoloId(categoriaArticoloVariazione.getId());
+        } else if(categoriaArticoloVariazione == null && fornitoreVariazione != null){
+            listiniPrezziToUpdate = listinoPrezzoService.getByArticoloFornitoreId(fornitoreVariazione.getId());
         } else {
-            List<ListinoPrezzo> listiniPrezziToUpdate = listinoPrezzoService.getByListinoId(listino.getId());
-            insertOrUpdateListiniPrezzi(listiniPrezziToUpdate, tipologiaVariazionePrezzo, variazionePrezzo, false);
+            listiniPrezziToUpdate = listinoPrezzoService.getByListinoId(listino.getId());
+        }
+
+        if(!listiniPrezziToUpdate.isEmpty()){
+            insertOrUpdateListiniPrezzi(listiniPrezziToUpdate, tipologiaVariazionePrezzo, variazionePrezzo);
         }
         LOGGER.info("Populated 'listiniPrezzi' for listino '{}'", updatedListino.getId());
 
-        // update all the listini referred by the updatedListino
-        // considering all the chain
 
         return updatedListino;
     }
@@ -162,13 +167,6 @@ public class ListinoService {
         LOGGER.info("Deleting 'listiniPrezzi' of listino '{}'", listinoId);
         listinoPrezzoService.deleteByListinoId(listinoId);
         LOGGER.info("Deleted 'listiniPrezzi' of listino '{}'", listinoId);
-
-        LOGGER.info("Updating 'listini' referred by listino '{}'", listinoId);
-        listinoRepository.findByListinoRiferimentoId(listinoId).forEach(l -> {
-            l.setListinoRiferimento(null);
-            listinoRepository.save(l);
-        });
-        LOGGER.info("Updated 'listini' referred by listino '{}'", listinoId);
 
         LOGGER.info("Deleting 'listino' '{}'", listinoId);
         listinoRepository.deleteById(listinoId);
@@ -188,15 +186,11 @@ public class ListinoService {
         }
     }
 
-    private void insertOrUpdateListiniPrezzi(List<ListinoPrezzo> listiniPrezzi, String tipologiaVariazionePrezzo, Float variazionePrezzo, boolean isFromListinoAssociato){
+    private void insertOrUpdateListiniPrezzi(List<ListinoPrezzo> listiniPrezzi, String tipologiaVariazionePrezzo, Float variazionePrezzo){
         listiniPrezzi.forEach(lptu -> {
-            BigDecimal newPrezzo = null;
-            if(isFromListinoAssociato){
-                newPrezzo = lptu.getPrezzo();
-            } else {
-                Articolo articolo = lptu.getArticolo();
-                newPrezzo = articolo.getPrezzoListinoBase();
-            }
+            Articolo articolo = lptu.getArticolo();
+            BigDecimal newPrezzo = articolo.getPrezzoListinoBase();
+
             if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
                 TipologiaListinoPrezzoVariazione tipologiaListinoPrezzoVariazione = TipologiaListinoPrezzoVariazione.valueOf(tipologiaVariazionePrezzo);
                 if(TipologiaListinoPrezzoVariazione.PERCENTUALE.equals(tipologiaListinoPrezzoVariazione)){
@@ -211,18 +205,4 @@ public class ListinoService {
         listinoPrezzoService.bulkInsertOrUpdate(listiniPrezzi);
     }
 
-    private List<ListinoPrezzo> createListiniPrezziFromListinoRiferimento(Listino listino){
-        List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
-        List<ListinoPrezzo> listiniPrezziListinoRiferimento = listinoPrezzoService.getByListinoId(listino.getListinoRiferimento().getId());
-        listiniPrezziListinoRiferimento.forEach(lp -> {
-            ListinoPrezzo listinoPrezzo = new ListinoPrezzo();
-            listinoPrezzo.setId(null);
-            listinoPrezzo.setListino(listino);
-            listinoPrezzo.setArticolo(lp.getArticolo());
-            listinoPrezzo.setPrezzo(lp.getPrezzo());
-            listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-            listiniPrezzi.add(listinoPrezzo);
-        });
-        return listiniPrezzi;
-    }
 }

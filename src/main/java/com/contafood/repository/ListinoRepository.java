@@ -16,5 +16,4 @@ public interface ListinoRepository extends CrudRepository<Listino, Long> {
 
     Optional<Listino> findFirstByTipologia(String tipologia);
 
-    List<Listino> findByListinoRiferimentoId(Long listinoRiferimentoId);
 }
