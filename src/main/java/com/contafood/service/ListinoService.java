@@ -57,6 +57,13 @@ public class ListinoService {
         return listino;
     }
 
+    public List<ListinoPrezzo> getListiniPrezziByListinoId(Long listinoId){
+        LOGGER.info("Retrieving 'listiniPrezzi' of 'listino' '{}'", listinoId);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoService.getByListinoId(listinoId);
+        LOGGER.info("Retrieved '{}' 'listiniPrezzi'", listiniPrezzi.size());
+        return listiniPrezzi;
+    }
+
     @Transactional
     public Listino create(Listino listino){
         LOGGER.info("Creating 'listino'");
@@ -64,7 +71,7 @@ public class ListinoService {
         if(listino.getTipologia().equals(TipologiaListino.BASE.name())){
             if(checkIfListinoBaseExists()){
                 throw new ListinoBaseAlreadyExistingException();
-            };
+            }
             if(!StringUtils.isEmpty(listino.getTipologiaVariazionePrezzo()) || listino.getVariazionePrezzo() != null){
                 throw new ListinoBaseCannotHaveVariazionePrezzoException();
             }
@@ -128,7 +135,7 @@ public class ListinoService {
         if(listino.getTipologia().equals(TipologiaListino.BASE.name())){
             if(checkIfListinoBaseExists()){
                 throw new ListinoBaseAlreadyExistingException();
-            };
+            }
             if(!StringUtils.isEmpty(listino.getTipologiaVariazionePrezzo()) || listino.getVariazionePrezzo() != null){
                 throw new ListinoBaseCannotHaveVariazionePrezzoException();
             }
@@ -148,12 +155,12 @@ public class ListinoService {
         CategoriaArticolo categoriaArticoloVariazione = updatedListino.getCategoriaArticoloVariazione();
         Fornitore fornitoreVariazione = updatedListino.getFornitoreVariazione();
 
-        List<ListinoPrezzo> listiniPrezziToUpdate = new ArrayList<>();
+        List<ListinoPrezzo> listiniPrezziToUpdate;
         if(categoriaArticoloVariazione != null && fornitoreVariazione != null){
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloCategoriaIdAndFornitoreId(listino.getId(), categoriaArticoloVariazione.getId(), fornitoreVariazione.getId());
-        } else if(categoriaArticoloVariazione != null && fornitoreVariazione == null){
+        } else if(categoriaArticoloVariazione != null){
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloCategoriaId(listino.getId(), categoriaArticoloVariazione.getId());
-        } else if(categoriaArticoloVariazione == null && fornitoreVariazione != null){
+        } else if(fornitoreVariazione != null){
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloFornitoreId(listino.getId(), fornitoreVariazione.getId());
         } else {
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoId(listino.getId());

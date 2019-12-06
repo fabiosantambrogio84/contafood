@@ -2,12 +2,14 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Listino;
+import com.contafood.model.ListinoPrezzo;
 import com.contafood.service.ListinoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -42,6 +44,13 @@ public class ListinoController {
     public Listino getOne(@PathVariable final Long listinoId) {
         LOGGER.info("Performing GET request for retrieving 'listino' '{}'", listinoId);
         return listinoService.getOne(listinoId);
+    }
+
+    @RequestMapping(method = GET, path = "/{listinoId}/listini-prezzi")
+    @CrossOrigin
+    public List<ListinoPrezzo> getListiniPrezzi(@PathVariable final Long listinoId) {
+        LOGGER.info("Performing GET request for retrieving 'listiniPrezzi' of 'listino' '{}'", listinoId);
+        return listinoService.getListiniPrezziByListinoId(listinoId);
     }
 
     @RequestMapping(method = POST)
