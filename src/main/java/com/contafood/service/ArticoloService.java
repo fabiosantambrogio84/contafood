@@ -86,11 +86,13 @@ public class ArticoloService {
     public Articolo update(Articolo articolo){
         LOGGER.info("Updating 'articolo'");
         Articolo articoloCurrent = articoloRepository.findById(articolo.getId()).orElseThrow(ResourceNotFoundException::new);
+        BigDecimal prezzoListinoBaseCurrent = articoloCurrent.getPrezzoListinoBase();
         articolo.setDataInserimento(articoloCurrent.getDataInserimento());
         String codice = articolo.getCodice().toUpperCase();
         articolo.setCodice(codice);
         Articolo updatedArticolo = articoloRepository.save(articolo);
-        if(updatedArticolo.getPrezzoListinoBase() != articoloCurrent.getPrezzoListinoBase()){
+
+        if(updatedArticolo.getPrezzoListinoBase() != prezzoListinoBaseCurrent){
             // compute 'listini prezzi'
             listinoPrezzoService.computeListiniPrezziForArticolo(updatedArticolo);
         }
