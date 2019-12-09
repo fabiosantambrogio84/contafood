@@ -9,7 +9,7 @@ import java.util.Set;
 public interface ListinoPrezzoRepository extends CrudRepository<ListinoPrezzo, Long> {
 
     @Override
-    Set<ListinoPrezzo> findAll();
+    List<ListinoPrezzo> findAll();
 
     List<ListinoPrezzo> findByListinoId(Long idListino);
 

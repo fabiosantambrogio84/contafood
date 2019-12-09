@@ -1,15 +1,16 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.ListinoAssociato;
-import com.contafood.model.ListinoPrezzo;
-import com.contafood.model.Sconto;
+import com.contafood.model.*;
 import com.contafood.repository.ListinoPrezzoRepository;
+import com.contafood.util.TipologiaListinoPrezzoVariazione;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -25,6 +26,13 @@ public class ListinoPrezzoService {
     @Autowired
     public ListinoPrezzoService(final ListinoPrezzoRepository listinoPrezzoRepository){
         this.listinoPrezzoRepository = listinoPrezzoRepository;
+    }
+
+    public List<ListinoPrezzo> getAll(){
+        LOGGER.info("Retrieving the list of all 'listiniPrezzi'");
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findAll();
+        LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
+        return listiniPrezzi;
     }
 
     public List<ListinoPrezzo> getByListinoId(Long idListino){
@@ -113,5 +121,57 @@ public class ListinoPrezzoService {
         LOGGER.info("Deleting 'listiniPrezzi' of articolo '{}'", idArticolo);
         listinoPrezzoRepository.deleteByArticoloId(idArticolo);
         LOGGER.info("Deleted 'listiniPrezzi' of articolo '{}'", idArticolo);
+    }
+
+    public BigDecimal computePrezzo(Articolo articolo, String tipologiaVariazionePrezzo, Float variazionePrezzo){
+        BigDecimal newPrezzo = articolo.getPrezzoListinoBase();
+        if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
+            TipologiaListinoPrezzoVariazione tipologiaListinoPrezzoVariazione = TipologiaListinoPrezzoVariazione.valueOf(tipologiaVariazionePrezzo);
+            if(TipologiaListinoPrezzoVariazione.PERCENTUALE.equals(tipologiaListinoPrezzoVariazione)){
+                BigDecimal variazione = newPrezzo.multiply(BigDecimal.valueOf(variazionePrezzo/100));
+                newPrezzo = newPrezzo.add(variazione);
+            } else {
+                newPrezzo = newPrezzo.add(BigDecimal.valueOf(variazionePrezzo));
+            }
+        }
+        return newPrezzo;
+    }
+
+    public BigDecimal computePrezzoInListinoCreation(Listino listino, Articolo articolo, String tipologiaVariazionePrezzo, Float variazionePrezzo){
+        BigDecimal newPrezzo = articolo.getPrezzoListinoBase();
+        if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
+            boolean applyVariazione = true;
+            CategoriaArticolo categoriaArticoloVariazione = listino.getCategoriaArticoloVariazione();
+            Fornitore fornitoreVariazione = listino.getFornitoreVariazione();
+            if(categoriaArticoloVariazione != null || fornitoreVariazione != null){
+                if(categoriaArticoloVariazione != null && !articolo.getCategoria().getId().equals(categoriaArticoloVariazione.getId())){
+                    applyVariazione = false;
+                }
+                if(fornitoreVariazione != null && !articolo.getFornitore().getId().equals(fornitoreVariazione.getId())){
+                    applyVariazione = false;
+                }
+            }
+            if(applyVariazione){
+                TipologiaListinoPrezzoVariazione tipologiaListinoPrezzoVariazione = TipologiaListinoPrezzoVariazione.valueOf(tipologiaVariazionePrezzo);
+                if(TipologiaListinoPrezzoVariazione.PERCENTUALE.equals(tipologiaListinoPrezzoVariazione)){
+                    BigDecimal variazione = newPrezzo.multiply(BigDecimal.valueOf(variazionePrezzo/100));
+                    newPrezzo = newPrezzo.add(variazione);
+                } else {
+                    newPrezzo = newPrezzo.add(BigDecimal.valueOf(variazionePrezzo));
+                }
+            }
+        }
+        return newPrezzo;
+    }
+
+    public void computeListiniPrezziForArticolo(Articolo articolo){
+        LOGGER.info("Recomputing 'listiniPrezzi' of articolo '{}'", articolo.getId());
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloId(articolo.getId());
+        listiniPrezzi.forEach(lp -> {
+            Listino listino = lp.getListino();
+            lp.setPrezzo(computePrezzo(articolo, listino.getTipologiaVariazionePrezzo(), listino.getVariazionePrezzo()));
+        });
+        bulkInsertOrUpdate(listiniPrezzi);
+        LOGGER.info("Recomputed 'listiniPrezzi' of articolo '{}'", articolo.getId());
     }
 }

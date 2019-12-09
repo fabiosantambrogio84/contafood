@@ -91,30 +91,7 @@ public class ListinoService {
             listinoPrezzo.setArticolo(a);
             listinoPrezzo.setListino(createdListino);
             listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-            BigDecimal newPrezzo = a.getPrezzoListinoBase();
-
-            if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
-                boolean applyVariazione = true;
-                CategoriaArticolo categoriaArticoloVariazione = createdListino.getCategoriaArticoloVariazione();
-                Fornitore fornitoreVariazione = createdListino.getFornitoreVariazione();
-                if(categoriaArticoloVariazione != null || fornitoreVariazione != null){
-                    if(categoriaArticoloVariazione != null && !a.getCategoria().getId().equals(categoriaArticoloVariazione.getId())){
-                        applyVariazione = false;
-                    }
-                    if(fornitoreVariazione != null && !a.getFornitore().getId().equals(fornitoreVariazione.getId())){
-                        applyVariazione = false;
-                    }
-                }
-                if(applyVariazione){
-                    TipologiaListinoPrezzoVariazione tipologiaListinoPrezzoVariazione = TipologiaListinoPrezzoVariazione.valueOf(tipologiaVariazionePrezzo);
-                    if(TipologiaListinoPrezzoVariazione.PERCENTUALE.equals(tipologiaListinoPrezzoVariazione)){
-                        BigDecimal variazione = newPrezzo.multiply(BigDecimal.valueOf(variazionePrezzo/100));
-                        newPrezzo = newPrezzo.add(variazione);
-                    } else {
-                        newPrezzo = newPrezzo.add(BigDecimal.valueOf(variazionePrezzo));
-                    }
-                }
-            }
+            BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(createdListino, a, tipologiaVariazionePrezzo, variazionePrezzo);
 
             listinoPrezzo.setPrezzo(newPrezzo);
 
@@ -200,22 +177,11 @@ public class ListinoService {
     }
 
     private void insertOrUpdateListiniPrezzi(List<ListinoPrezzo> listiniPrezzi, String tipologiaVariazionePrezzo, Float variazionePrezzo){
-        listiniPrezzi.forEach(lptu -> {
-            Articolo articolo = lptu.getArticolo();
-            BigDecimal newPrezzo = articolo.getPrezzoListinoBase();
-
-            if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
-                TipologiaListinoPrezzoVariazione tipologiaListinoPrezzoVariazione = TipologiaListinoPrezzoVariazione.valueOf(tipologiaVariazionePrezzo);
-                if(TipologiaListinoPrezzoVariazione.PERCENTUALE.equals(tipologiaListinoPrezzoVariazione)){
-                    BigDecimal variazione = newPrezzo.multiply(BigDecimal.valueOf(variazionePrezzo/100));
-                    newPrezzo = newPrezzo.add(variazione);
-                } else {
-                    newPrezzo = newPrezzo.add(BigDecimal.valueOf(variazionePrezzo));
-                }
-            }
-            lptu.setPrezzo(newPrezzo);
+        listiniPrezzi.forEach(lp -> {
+            lp.setPrezzo(listinoPrezzoService.computePrezzo(lp.getArticolo(), tipologiaVariazionePrezzo, variazionePrezzo));
         });
         listinoPrezzoService.bulkInsertOrUpdate(listiniPrezzi);
     }
+
 
 }

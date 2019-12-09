@@ -18,7 +18,7 @@ CREATE TABLE `listino_prezzo` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	id_listino int(10) unsigned,
 	id_articolo int(10) unsigned,
-	prezzo decimal(10,2),
+	prezzo decimal(10,3),
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id`),
 	CONSTRAINT `fk_listino_prezzo_listino` FOREIGN KEY (`id_listino`) REFERENCES `listino` (`id`),

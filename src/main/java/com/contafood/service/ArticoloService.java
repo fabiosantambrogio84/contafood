@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
 import com.contafood.model.ArticoloImmagine;
+import com.contafood.model.Listino;
 import com.contafood.model.ListinoPrezzo;
 import com.contafood.repository.ArticoloRepository;
 import org.slf4j.Logger;
@@ -11,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticoloService {
@@ -54,6 +58,27 @@ public class ArticoloService {
         articolo.setCodice(codice);
         articolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Articolo createdArticolo = articoloRepository.save(articolo);
+
+        // compute 'listini prezzi'
+        LOGGER.info("Computing 'listiniPrezzi' for 'articolo' '{}'", createdArticolo.getId());
+        List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
+        Set<Listino> listini = listinoPrezzoService.getAll().stream().map(lp -> lp.getListino()).distinct().collect(Collectors.toSet());
+        listini.forEach(l -> {
+            ListinoPrezzo listinoPrezzo = new ListinoPrezzo();
+            listinoPrezzo.setListino(l);
+            listinoPrezzo.setArticolo(createdArticolo);
+            listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+
+            BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(l, createdArticolo, l.getTipologiaVariazionePrezzo(), l.getVariazionePrezzo());
+            listinoPrezzo.setPrezzo(newPrezzo);
+
+            listiniPrezzi.add(listinoPrezzo);
+        });
+        if(!listiniPrezzi.isEmpty()){
+            listinoPrezzoService.create(listiniPrezzi);
+        }
+        LOGGER.info("Computed 'listiniPrezzi' for 'articolo' '{}'", createdArticolo.getId());
+
         LOGGER.info("Created 'articolo' '{}'", createdArticolo);
         return createdArticolo;
     }
@@ -65,12 +90,21 @@ public class ArticoloService {
         String codice = articolo.getCodice().toUpperCase();
         articolo.setCodice(codice);
         Articolo updatedArticolo = articoloRepository.save(articolo);
+        if(updatedArticolo.getPrezzoListinoBase() != articoloCurrent.getPrezzoListinoBase()){
+            // compute 'listini prezzi'
+            listinoPrezzoService.computeListiniPrezziForArticolo(updatedArticolo);
+        }
+
         LOGGER.info("Updated 'articolo' '{}'", updatedArticolo);
         return updatedArticolo;
     }
 
     @Transactional
     public void delete(Long articoloId){
+        LOGGER.info("Deleting 'listiniPrezzi' of articolo '{}'", articoloId);
+        listinoPrezzoService.deleteByArticoloId(articoloId);
+        LOGGER.info("Deleted 'listiniPrezzi' of articolo '{}'", articoloId);
+
         LOGGER.info("Deleting 'articolo' '{}'", articoloId);
         articoloImmagineService.deleteByArticoloId(articoloId);
         articoloRepository.deleteById(articoloId);
@@ -91,9 +125,4 @@ public class ArticoloService {
         return listiniPrezzi;
     }
 
-    public void deleteArticoloListiniPrezzi(Long articoloId){
-        LOGGER.info("Deleting the list of 'listiniPrezzi' of the 'articolo' '{}'", articoloId);
-        listinoPrezzoService.deleteByArticoloId(articoloId);
-        LOGGER.info("Deleted 'listiniPrezzi' of the articolo '{}'", articoloId);
-    }
 }
