@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 
@@ -18,9 +19,12 @@ public class PuntoConsegnaService {
 
     private final PuntoConsegnaRepository puntoConsegnaRepository;
 
+    private final TelefonataService telefonataService;
+
     @Autowired
-    public PuntoConsegnaService(final PuntoConsegnaRepository puntoConsegnaRepository){
+    public PuntoConsegnaService(final PuntoConsegnaRepository puntoConsegnaRepository, final TelefonataService telefonataService){
         this.puntoConsegnaRepository = puntoConsegnaRepository;
+        this.telefonataService = telefonataService;
     }
 
     public Set<PuntoConsegna> getAll(){
@@ -51,8 +55,10 @@ public class PuntoConsegnaService {
         return updatedPuntoConsegna;
     }
 
+    @Transactional
     public void delete(Long puntoConsegnaId){
         LOGGER.info("Deleting 'puntoConsegna' '{}'", puntoConsegnaId);
+        telefonataService.updateAfterDeletePuntoConsegna(puntoConsegnaId);
         puntoConsegnaRepository.deleteById(puntoConsegnaId);
         LOGGER.info("Deleted 'puntoConsegna' '{}'", puntoConsegnaId);
     }

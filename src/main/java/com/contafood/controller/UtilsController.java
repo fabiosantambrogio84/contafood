@@ -1,5 +1,6 @@
 package com.contafood.controller;
 
+import com.contafood.util.GiornoSettimana;
 import com.contafood.util.Provincia;
 import com.contafood.util.TipologiaListinoPrezzoVariazione;
 import com.contafood.util.TipologiaSconto;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -39,5 +41,12 @@ public class UtilsController {
     public List<TipologiaListinoPrezzoVariazione> getTipologieListinoPrezzoVariazione() {
         LOGGER.info("Performing GET request for retrieving list of 'tipologie-listini-prezzi-variazioni'");
         return Arrays.asList(TipologiaListinoPrezzoVariazione.values());
+    }
+
+    @RequestMapping(method = GET, path = "/giorni-settimana")
+    @CrossOrigin
+    public List<HashMap> getGiorniSettimana() {
+        LOGGER.info("Performing GET request for retrieving list of 'giorni-settimana'");
+        return GiornoSettimana.giorni();
     }
 }

@@ -24,3 +24,22 @@ CREATE TABLE `listino_prezzo` (
 	CONSTRAINT `fk_listino_prezzo_listino` FOREIGN KEY (`id_listino`) REFERENCES `listino` (`id`),
 	CONSTRAINT `fk_listino_prezzo_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
 ) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS `telefonata`;
+
+CREATE TABLE `telefonata` (
+	id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	id_cliente int(10) unsigned,
+	id_punto_consegna int(10) unsigned,
+	telefono varchar(100),
+	telefono_2 varchar(100),
+	telefono_3 varchar(100),
+	giorno  varchar(100),
+	giorno_ordinale int(10),
+	ora int(10),
+	note text,
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id`),
+	CONSTRAINT `fk_telefonata_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
+	CONSTRAINT `fk_telefonata_punto_consegna` FOREIGN KEY (`id_punto_consegna`) REFERENCES `punto_consegna` (`id`)
+) ENGINE=InnoDB;

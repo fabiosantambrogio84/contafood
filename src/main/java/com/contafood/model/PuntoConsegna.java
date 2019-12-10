@@ -1,13 +1,15 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"telefonate"})
 @Entity
 @Table(name = "punto_consegna")
 public class PuntoConsegna {
@@ -40,6 +42,10 @@ public class PuntoConsegna {
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
+
+    @OneToMany(mappedBy = "puntoConsegna")
+    @JsonIgnore
+    private List<Telefonata> telefonate;
 
     public Long getId() {
         return id;
@@ -111,6 +117,14 @@ public class PuntoConsegna {
 
     public void setDataInserimento(Timestamp dataInserimento) {
         this.dataInserimento = dataInserimento;
+    }
+
+    public List<Telefonata> getTelefonate() {
+        return telefonate;
+    }
+
+    public void setTelefonate(List<Telefonata> telefonate) {
+        this.telefonate = telefonate;
     }
 
     @Override
