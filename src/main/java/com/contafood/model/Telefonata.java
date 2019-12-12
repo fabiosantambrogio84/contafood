@@ -3,6 +3,7 @@ package com.contafood.model;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @EqualsAndHashCode
@@ -38,7 +39,7 @@ public class Telefonata {
     private Integer giornoOrdinale;
 
     @Column(name = "ora")
-    private Integer ora;
+    private Time ora;
 
     @Column(name = "note")
     private String note;
@@ -110,11 +111,11 @@ public class Telefonata {
         this.giornoOrdinale = giornoOrdinale;
     }
 
-    public Integer getOra() {
+    public Time getOra() {
         return ora;
     }
 
-    public void setOra(Integer ora) {
+    public void setOra(Time ora) {
         this.ora = ora;
     }
 

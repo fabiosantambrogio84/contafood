@@ -46,4 +46,8 @@ public enum GiornoSettimana {
         });
         return giorni;
     }
+
+    public static Integer getValueByLabel(String label){
+        return Arrays.stream(GiornoSettimana.values()).filter(gs -> gs.getLabel().equals(label)).map(gsf -> gsf.getValue()).findFirst().get();
+    }
 }

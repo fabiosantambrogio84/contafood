@@ -4,11 +4,13 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Sconto;
 import com.contafood.model.Telefonata;
 import com.contafood.repository.TelefonataRepository;
+import com.contafood.util.GiornoSettimana;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -42,6 +44,9 @@ public class TelefonataService {
     public Telefonata create(Telefonata telefonata){
         LOGGER.info("Creating 'telefonata'");
         telefonata.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        if(telefonata.getGiornoOrdinale() == null){
+            telefonata.setGiornoOrdinale(GiornoSettimana.getValueByLabel(telefonata.getGiorno()));
+        }
         Telefonata createdTelefonata = telefonataRepository.save(telefonata);
         LOGGER.info("Created 'telefonata' '{}'", createdTelefonata);
 
@@ -76,5 +81,12 @@ public class TelefonataService {
         LOGGER.info("Deleting all 'telefonate' of 'cliente' '{}'", clienteId);
         telefonataRepository.deleteByClienteId(clienteId);
         LOGGER.info("Deleted all 'telefonate' of 'cliente' '{}'", clienteId);
+    }
+
+    @Transactional
+    public void bulkDelete(List<Long> telefonateIds){
+        LOGGER.info("Bulk deleting all the specified 'telefonate (number of elements to delete: {})'", telefonateIds.size());
+        telefonataRepository.deleteByIdIn(telefonateIds);
+        LOGGER.info("Bulk deleted all the specified 'telefonate");
     }
 }

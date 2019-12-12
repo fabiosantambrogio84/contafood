@@ -67,4 +67,12 @@ public class TelefonataController {
         LOGGER.info("Performing DELETE request for deleting 'telefonata' '{}'", telefonataId);
         telefonataService.delete(telefonataId);
     }
+
+    @RequestMapping(method = POST, path = "/operations/delete")
+    @ResponseStatus(NO_CONTENT)
+    @CrossOrigin
+    public void bulkDelete(@RequestBody final List<Long> telefonateIds){
+        LOGGER.info("Performing BULK DELETE operation on 'telefonate' (number of elements to delete: {})", telefonateIds.size());
+        telefonataService.bulkDelete(telefonateIds);
+    }
 }

@@ -13,4 +13,6 @@ public interface TelefonataRepository extends CrudRepository<Telefonata, Long> {
     List<Telefonata> findByPuntoConsegnaId(Long idPuntoConsegna);
 
     void deleteByClienteId(Long idCliente);
+
+    void deleteByIdIn(List<Long> ids);
 }

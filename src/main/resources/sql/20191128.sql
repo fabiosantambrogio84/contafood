@@ -36,7 +36,7 @@ CREATE TABLE `telefonata` (
 	telefono_3 varchar(100),
 	giorno  varchar(100),
 	giorno_ordinale int(10),
-	ora int(10),
+	ora time,
 	note text,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id`),
