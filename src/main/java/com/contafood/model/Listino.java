@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"listiniAssociati", "listiniPrezzi"})
+@EqualsAndHashCode(exclude = {"listiniAssociati", "listiniPrezzi", "listiniPrezziVariazioni"})
 @Entity
 @Table(name = "listino")
 public class Listino {
@@ -27,29 +27,8 @@ public class Listino {
     @Column(name = "tipologia_variazione_prezzo")
     private String tipologiaVariazionePrezzo;
 
-    @Column(name = "variazione_prezzo")
-    private Float variazionePrezzo;
-
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
-
-    @ManyToOne
-    @JoinColumn(name="id_categoria_articolo_variazione")
-    private CategoriaArticolo categoriaArticoloVariazione;
-
-    @ManyToOne
-    @JoinColumn(name="id_fornitore_variazione")
-    private Fornitore fornitoreVariazione;
-
-    /*
-    @ManyToOne
-    @JoinColumn(name="id_listino")
-    private Listino listinoRiferimento;
-
-    @OneToMany(mappedBy="listinoRiferimento")
-    @JsonIgnore
-    private List<Listino> listini;
-    */
 
     @OneToMany(mappedBy = "listino")
     @JsonIgnore
@@ -58,6 +37,9 @@ public class Listino {
     @OneToMany(mappedBy = "listino")
     @JsonIgnore
     private List<ListinoPrezzo> listiniPrezzi;
+
+    @OneToMany(mappedBy = "listino")
+    private List<ListinoPrezzoVariazione> listiniPrezziVariazioni;
 
     public Long getId() {
         return id;
@@ -91,14 +73,6 @@ public class Listino {
         this.tipologiaVariazionePrezzo = tipologiaVariazionePrezzo;
     }
 
-    public Float getVariazionePrezzo() {
-        return variazionePrezzo;
-    }
-
-    public void setVariazionePrezzo(Float variazionePrezzo) {
-        this.variazionePrezzo = variazionePrezzo;
-    }
-
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -106,40 +80,6 @@ public class Listino {
     public void setDataInserimento(Timestamp dataInserimento) {
         this.dataInserimento = dataInserimento;
     }
-
-    public CategoriaArticolo getCategoriaArticoloVariazione() {
-        return categoriaArticoloVariazione;
-    }
-
-    public void setCategoriaArticoloVariazione(CategoriaArticolo categoriaArticoloVariazione) {
-        this.categoriaArticoloVariazione = categoriaArticoloVariazione;
-    }
-
-    public Fornitore getFornitoreVariazione() {
-        return fornitoreVariazione;
-    }
-
-    public void setFornitoreVariazione(Fornitore fornitoreVariazione) {
-        this.fornitoreVariazione = fornitoreVariazione;
-    }
-
-    /*
-    public Listino getListinoRiferimento() {
-        return listinoRiferimento;
-    }
-
-    public void setListinoRiferimento(Listino listinoRiferimento) {
-        this.listinoRiferimento = listinoRiferimento;
-    }
-
-    public List<Listino> getListini() {
-        return listini;
-    }
-
-    public void setListini(List<Listino> listini) {
-        this.listini = listini;
-    }
-     */
 
     public List<ListinoAssociato> getListiniAssociati() {
         return listiniAssociati;
@@ -157,6 +97,14 @@ public class Listino {
         this.listiniPrezzi = listiniPrezzi;
     }
 
+    public List<ListinoPrezzoVariazione> getListiniPrezziVariazioni() {
+        return listiniPrezziVariazioni;
+    }
+
+    public void setListiniPrezziVariazioni(List<ListinoPrezzoVariazione> listiniPrezziVariazioni) {
+        this.listiniPrezziVariazioni = listiniPrezziVariazioni;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -166,8 +114,6 @@ public class Listino {
         result.append(", nome: " + nome);
         result.append(", tipologia: " + tipologia);
         result.append(", tipologiaVariazionePrezzo: " + tipologiaVariazionePrezzo);
-        result.append(", variazionePrezzo: " + variazionePrezzo);
-        //result.append(", listinoRiferimento: " + listinoRiferimento);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
 

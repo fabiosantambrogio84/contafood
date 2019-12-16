@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi"})
+@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni"})
 @Entity
 @Table(name = "articolo")
 public class Articolo {
@@ -84,6 +84,10 @@ public class Articolo {
     @OneToMany(mappedBy = "articolo")
     @JsonIgnore
     private List<ListinoPrezzo> listiniPrezzi;
+
+    @OneToMany(mappedBy = "articolo")
+    @JsonIgnore
+    private List<ListinoPrezzoVariazione> listiniPrezziVariazioni;
 
     public Long getId() {
         return id;
@@ -251,6 +255,14 @@ public class Articolo {
 
     public void setListiniPrezzi(List<ListinoPrezzo> listiniPrezzi) {
         this.listiniPrezzi = listiniPrezzi;
+    }
+
+    public List<ListinoPrezzoVariazione> getListiniPrezziVariazioni() {
+        return listiniPrezziVariazioni;
+    }
+
+    public void setListiniPrezziVariazioni(List<ListinoPrezzoVariazione> listiniPrezziVariazioni) {
+        this.listiniPrezziVariazioni = listiniPrezziVariazioni;
     }
 
     @Override

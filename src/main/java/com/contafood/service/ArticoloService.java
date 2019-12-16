@@ -69,7 +69,9 @@ public class ArticoloService {
             listinoPrezzo.setArticolo(createdArticolo);
             listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
-            BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(l, createdArticolo, l.getTipologiaVariazionePrezzo(), l.getVariazionePrezzo());
+            Float variazionePrezzo = l.getListiniPrezziVariazioni().stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
+
+            BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(l, createdArticolo, l.getTipologiaVariazionePrezzo(), variazionePrezzo);
             listinoPrezzo.setPrezzo(newPrezzo);
 
             listiniPrezzi.add(listinoPrezzo);

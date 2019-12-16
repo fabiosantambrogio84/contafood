@@ -17,5 +17,5 @@ CREATE TABLE `listino_prezzo_variazione` (
 	PRIMARY KEY (`id`),
 	CONSTRAINT `fk_listino_prezzo_var_listino` FOREIGN KEY (`id_listino`) REFERENCES `listino` (`id`),
 	CONSTRAINT `fk_listino_prezzo_var_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`),
-	CONSTRAINT `fk_listino_prezzo_var_forn` FOREIGN KEY (`id_articolo`) REFERENCES `fornitore` (`id`)
+	CONSTRAINT `fk_listino_prezzo_var_forn` FOREIGN KEY (`id_fornitore`) REFERENCES `fornitore` (`id`)
 ) ENGINE=InnoDB;

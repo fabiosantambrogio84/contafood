@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ListinoPrezzoService {
@@ -49,9 +49,9 @@ public class ListinoPrezzoService {
         return listiniPrezzi;
     }
 
-    public List<ListinoPrezzo> getByListinoIdAndArticoloCategoriaId(Long idListino, Long idCategoriaArticolo){
-        LOGGER.info("Retrieving the list of 'listiniPrezzi' of listino '{}' of articoli with categoria '{}'", idListino, idCategoriaArticolo);
-        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByListinoIdAndArticoloCategoriaId(idListino, idCategoriaArticolo);
+    public List<ListinoPrezzo> getByListinoIdAndArticoloIdIn(Long idListino, List<Long> idArticoli){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of listino '{}' of articoli with id in list with size '{}'", idListino, idArticoli.size());
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByListinoIdAndArticoloIdIn(idListino, idArticoli);
         LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
         return listiniPrezzi;
     }
@@ -63,13 +63,12 @@ public class ListinoPrezzoService {
         return listiniPrezzi;
     }
 
-    public List<ListinoPrezzo> getByListinoIdAndArticoloCategoriaIdAndFornitoreId(Long idListino, Long idCategoriaArticolo, Long idFornitore){
-        LOGGER.info("Retrieving the list of 'listiniPrezzi' of listino '{}' of articoli with categoria '{}' and fornitore '{}'", idListino, idCategoriaArticolo, idFornitore);
-        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByListinoIdAndArticoloCategoriaIdAndArticoloFornitoreId(idListino, idCategoriaArticolo, idFornitore);
+    public List<ListinoPrezzo> getByListinoIdAndArticoloIdInAndFornitoreId(Long idListino, List<Long> idArticoli, Long idFornitore){
+        LOGGER.info("Retrieving the list of 'listiniPrezzi' of listino '{}' of articoli with id in list with size '{}' and fornitore '{}'", idListino, idArticoli.size(), idFornitore);
+        List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByListinoIdAndArticoloIdInAndArticoloFornitoreId(idListino, idArticoli, idFornitore);
         LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
         return listiniPrezzi;
     }
-
 
     public ListinoPrezzo getOne(Long listinoPrezzoId){
         LOGGER.info("Retrieving 'listinoPrezzo' '{}'", listinoPrezzoId);
@@ -141,13 +140,15 @@ public class ListinoPrezzoService {
         BigDecimal newPrezzo = articolo.getPrezzoListinoBase();
         if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
             boolean applyVariazione = true;
-            CategoriaArticolo categoriaArticoloVariazione = listino.getCategoriaArticoloVariazione();
-            Fornitore fornitoreVariazione = listino.getFornitoreVariazione();
-            if(categoriaArticoloVariazione != null || fornitoreVariazione != null){
-                if(categoriaArticoloVariazione != null && !articolo.getCategoria().getId().equals(categoriaArticoloVariazione.getId())){
+            List<ListinoPrezzoVariazione> listiniPrezziVariazioni = listino.getListiniPrezziVariazioni();
+            List<Articolo> articoli = listiniPrezziVariazioni.stream().map(lpv -> lpv.getArticolo()).collect(Collectors.toList());
+            List<Fornitore> fornitori = listiniPrezziVariazioni.stream().map(lpv -> lpv.getFornitore()).collect(Collectors.toList());
+
+            if(!articoli.isEmpty() || !fornitori.isEmpty()){
+                if(!articoli.isEmpty() && !articoli.contains(articolo.getCategoria().getId())){
                     applyVariazione = false;
                 }
-                if(fornitoreVariazione != null && !articolo.getFornitore().getId().equals(fornitoreVariazione.getId())){
+                if(!fornitori.isEmpty() && !fornitori.contains(articolo.getFornitore().getId())){
                     applyVariazione = false;
                 }
             }
@@ -169,7 +170,8 @@ public class ListinoPrezzoService {
         List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloId(articolo.getId());
         listiniPrezzi.forEach(lp -> {
             Listino listino = lp.getListino();
-            lp.setPrezzo(computePrezzo(articolo, listino.getTipologiaVariazionePrezzo(), listino.getVariazionePrezzo()));
+            Float variazionePrezzo = listino.getListiniPrezziVariazioni().stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
+            lp.setPrezzo(computePrezzo(articolo, listino.getTipologiaVariazionePrezzo(), variazionePrezzo));
         });
         bulkInsertOrUpdate(listiniPrezzi);
         LOGGER.info("Recomputed 'listiniPrezzi' of articolo '{}'", articolo.getId());
