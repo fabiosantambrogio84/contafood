@@ -23,6 +23,10 @@ public class Telefonata {
     @JoinColumn(name="id_punto_consegna")
     private PuntoConsegna puntoConsegna;
 
+    @ManyToOne
+    @JoinColumn(name="id_autista")
+    private Autista autista;
+
     @Column(name = "telefono")
     private String telefono;
 
@@ -69,6 +73,14 @@ public class Telefonata {
 
     public void setPuntoConsegna(PuntoConsegna puntoConsegna) {
         this.puntoConsegna = puntoConsegna;
+    }
+
+    public Autista getAutista() {
+        return autista;
+    }
+
+    public void setAutista(Autista autista) {
+        this.autista = autista;
     }
 
     public String getTelefono() {
@@ -143,6 +155,7 @@ public class Telefonata {
         result.append("id: " + id);
         result.append(", cliente: " + cliente);
         result.append(", puntoConsegna: " + puntoConsegna);
+        result.append(", autista: " + autista);
         result.append(", telefono: " + telefono);
         result.append(", telefono 2: " + telefonoTwo);
         result.append(", telefono 3: " + telefonoThree);
