@@ -1,6 +1,7 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
+import com.contafood.model.Articolo;
 import com.contafood.model.Fornitore;
 import com.contafood.service.FornitoreService;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -40,6 +42,13 @@ public class FornitoreController {
     public Fornitore getOne(@PathVariable final Long fornitoreId) {
         LOGGER.info("Performing GET request for retrieving 'fornitore' '{}'", fornitoreId);
         return fornitoreService.getOne(fornitoreId);
+    }
+
+    @RequestMapping(method = GET, path = "/{fornitoreId}/articoli")
+    @CrossOrigin
+    public List<Articolo> getArticoli(@PathVariable final Long fornitoreId) {
+        LOGGER.info("Performing GET request for retrieving 'articoli' of 'fornitore' '{}'", fornitoreId);
+        return fornitoreService.getOne(fornitoreId).getArticoli();
     }
 
     @RequestMapping(method = POST)
