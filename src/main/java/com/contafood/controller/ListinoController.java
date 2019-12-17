@@ -1,8 +1,10 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
+import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Listino;
 import com.contafood.model.ListinoPrezzo;
+import com.contafood.model.ListinoPrezzoVariazione;
 import com.contafood.service.ListinoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +70,19 @@ public class ListinoController {
             throw new CannotChangeResourceIdException();
         }
         return listinoService.update(listino);
+    }
+
+    @RequestMapping(method = POST, path = "/{listinoId}/listini-prezzi-variazioni")
+    @ResponseStatus(CREATED)
+    @CrossOrigin
+    public void createListinoPrezziAndVariazioni(@PathVariable final Long listinoId, @RequestBody final List<ListinoPrezzoVariazione> listiniPrezziVariazioni){
+        LOGGER.info("Performing POST request for creating 'listiniPrezziVariazioni'");
+        Listino listino = listinoService.getOne(listinoId);
+        if(listino != null){
+            listinoService.createListiniVariazioniPrezzi(listino, listiniPrezziVariazioni);
+            return;
+        }
+        throw new ResourceNotFoundException();
     }
 
     @RequestMapping(method = DELETE, path = "/{listinoId}")

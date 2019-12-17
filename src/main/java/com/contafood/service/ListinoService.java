@@ -71,46 +71,17 @@ public class ListinoService {
     public Listino create(Listino listino){
         LOGGER.info("Creating 'listino'");
         checkListinoTipologia(listino.getTipologia());
-        List<ListinoPrezzoVariazione> listiniPrezziVariazioni = listino.getListiniPrezziVariazioni();
         if(listino.getTipologia().equals(TipologiaListino.BASE.name())){
             if(checkIfListinoBaseExists()){
                 throw new ListinoBaseAlreadyExistingException();
             }
-            if(!StringUtils.isEmpty(listino.getTipologiaVariazionePrezzo()) || !listiniPrezziVariazioni.isEmpty()){
+            if(!StringUtils.isEmpty(listino.getTipologiaVariazionePrezzo())){
                 throw new ListinoBaseCannotHaveVariazionePrezzoException();
             }
         }
         listino.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-        if(!listiniPrezziVariazioni.isEmpty()){
-            listinoPrezzoVariazioneService.create(listiniPrezziVariazioni);
-        }
         Listino createdListino = listinoRepository.save(listino);
         LOGGER.info("Created 'listino' '{}'", createdListino);
-
-        LOGGER.info("Populating 'listiniPrezzi' for listino '{}'", createdListino.getId());
-        String tipologiaVariazionePrezzo = createdListino.getTipologiaVariazionePrezzo();
-        Float variazionePrezzo = null;
-        if(!listiniPrezziVariazioni.isEmpty()){
-            variazionePrezzo = listiniPrezziVariazioni.stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
-        }
-        final Float v  = variazionePrezzo;
-        List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
-        Set<Articolo> articoli = articoloService.getAll();
-        articoli.forEach(a -> {
-            ListinoPrezzo listinoPrezzo = new ListinoPrezzo();
-            listinoPrezzo.setArticolo(a);
-            listinoPrezzo.setListino(createdListino);
-            listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-            BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(createdListino, a, tipologiaVariazionePrezzo, v);
-
-            listinoPrezzo.setPrezzo(newPrezzo);
-
-            listiniPrezzi.add(listinoPrezzo);
-        });
-        if(!listiniPrezzi.isEmpty()){
-            listinoPrezzoService.create(listiniPrezzi);
-        }
-        LOGGER.info("Successfully populated 'listiniPrezzi' for listino '{}'", createdListino.getId());
 
         return createdListino;
     }
@@ -166,8 +137,39 @@ public class ListinoService {
         }
         LOGGER.info("Populated 'listiniPrezzi' for listino '{}'", updatedListino.getId());
 
-
         return updatedListino;
+    }
+
+    @Transactional
+    public void createListiniVariazioniPrezzi(Listino listino, List<ListinoPrezzoVariazione> listiniPrezziVariazioni){
+        listinoPrezzoVariazioneService.create(listiniPrezziVariazioni);
+
+        LOGGER.info("Populating 'listiniPrezzi' for listino '{}'", listino.getId());
+        String tipologiaVariazionePrezzo = listino.getTipologiaVariazionePrezzo();
+        Float variazionePrezzo = null;
+        if(listiniPrezziVariazioni != null && !listiniPrezziVariazioni.isEmpty()){
+            variazionePrezzo = listiniPrezziVariazioni.stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
+        }
+        final Float v  = variazionePrezzo;
+        List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
+
+        Set<Articolo> articoli = articoloService.getAll();
+        articoli.forEach(a -> {
+            ListinoPrezzo listinoPrezzo = new ListinoPrezzo();
+            listinoPrezzo.setArticolo(a);
+            listinoPrezzo.setListino(listino);
+            listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+            BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(listino, a, tipologiaVariazionePrezzo, v);
+
+            listinoPrezzo.setPrezzo(newPrezzo);
+
+            listiniPrezzi.add(listinoPrezzo);
+        });
+
+        if(!listiniPrezzi.isEmpty()){
+            listinoPrezzoService.create(listiniPrezzi);
+        }
+        LOGGER.info("Successfully populated 'listiniPrezzi' for listino '{}'", listino.getId());
     }
 
     @Transactional

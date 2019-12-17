@@ -39,6 +39,7 @@ public class Listino {
     private List<ListinoPrezzo> listiniPrezzi;
 
     @OneToMany(mappedBy = "listino")
+    @JsonIgnore
     private List<ListinoPrezzoVariazione> listiniPrezziVariazioni;
 
     public Long getId() {
