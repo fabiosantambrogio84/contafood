@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -85,7 +86,6 @@ public class ListinoPrezzoService {
             LOGGER.info("Created 'listinoPrezzo' '{}'", createdListinoPrezzo);
         });
         return listiniPrezzi;
-
     }
 
     public ListinoPrezzo update(ListinoPrezzo listinoPrezzo){
@@ -137,18 +137,23 @@ public class ListinoPrezzoService {
     }
 
     public BigDecimal computePrezzoInListinoCreation(Listino listino, Articolo articolo, String tipologiaVariazionePrezzo, Float variazionePrezzo){
+        // retrieve the 'prezzoListinoBase' of the articolo
         BigDecimal newPrezzo = articolo.getPrezzoListinoBase();
+
         if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
             boolean applyVariazione = true;
             List<ListinoPrezzoVariazione> listiniPrezziVariazioni = listino.getListiniPrezziVariazioni();
-            List<Articolo> articoli = listiniPrezziVariazioni.stream().map(lpv -> lpv.getArticolo()).collect(Collectors.toList());
-            List<Fornitore> fornitori = listiniPrezziVariazioni.stream().map(lpv -> lpv.getFornitore()).collect(Collectors.toList());
+            // retrieve the list of articoli ids on which the variation should be applied
+            List<Long> articoliIds = listiniPrezziVariazioni.stream().map(lpv -> lpv.getArticolo().getId()).collect(Collectors.toList());
 
-            if(!articoli.isEmpty() || !fornitori.isEmpty()){
-                if(!articoli.isEmpty() && !articoli.contains(articolo.getCategoria().getId())){
+            // retrieve the fornitore on which the variation should be applied
+            Fornitore fornitore = listiniPrezziVariazioni.stream().map(lpv -> lpv.getFornitore()).findFirst().orElse(null);
+
+            if(!CollectionUtils.isEmpty(articoliIds) || fornitore != null){
+                if(!CollectionUtils.isEmpty(articoliIds) && !articoliIds.contains(articolo.getId())){
                     applyVariazione = false;
                 }
-                if(!fornitori.isEmpty() && !fornitori.contains(articolo.getFornitore().getId())){
+                if(fornitore != null && !fornitore.equals(articolo.getFornitore().getId())){
                     applyVariazione = false;
                 }
             }
