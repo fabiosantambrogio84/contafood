@@ -8,7 +8,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException() {
-        super("Unable to retrieve requested resource");
+        super("Impossibile recuperare la risorsa richiesta");
     }
 
 }

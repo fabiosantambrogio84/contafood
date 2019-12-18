@@ -8,6 +8,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class CannotChangeResourceIdException extends RuntimeException {
 
     public CannotChangeResourceIdException() {
-        super("cannot change the resource id on PUT");
+        super("Non e' possibile modificare l'identificativo della risorsa");
     }
 }

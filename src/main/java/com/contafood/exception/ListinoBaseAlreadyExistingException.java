@@ -8,6 +8,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class ListinoBaseAlreadyExistingException extends RuntimeException {
 
     public ListinoBaseAlreadyExistingException() {
-        super("a listino with type 'BASE' already exists");
+        super("Un listino BASE e' gia' presente nel sistema");
     }
 }
