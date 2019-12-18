@@ -65,6 +65,13 @@ public class ListinoService {
         return listiniPrezzi;
     }
 
+    public List<ListinoPrezzoVariazione> getListiniPrezziVariazioniByListinoId(Long listinoId){
+        LOGGER.info("Retrieving 'listiniPrezziVariazioni' of 'listino' '{}'", listinoId);
+        List<ListinoPrezzoVariazione> listiniPrezziVariazioni = listinoPrezzoVariazioneService.getByListinoId(listinoId);
+        LOGGER.info("Retrieved '{}' 'listiniPrezziVariazioni'", listiniPrezziVariazioni.size());
+        return listiniPrezziVariazioni;
+    }
+
     @Transactional
     public Listino create(Listino listino){
         LOGGER.info("Creating 'listino'");
@@ -103,6 +110,8 @@ public class ListinoService {
         Listino listinoCurrent = listinoRepository.findById(listino.getId()).orElseThrow(ResourceNotFoundException::new);
         listino.setDataInserimento(listinoCurrent.getDataInserimento());
 
+        LOGGER.info("Updated 'listino': {}", listino);
+
         LOGGER.info("Recreating 'listiniPrezziVariazioni' of 'listino' with id '{}'", listino.getId());
         List<ListinoPrezzoVariazione> listiniPrezziVariazioni = listino.getListiniPrezziVariazioni();
         if(!listiniPrezziVariazioni.isEmpty()){
@@ -118,18 +127,18 @@ public class ListinoService {
         List<Long> articoliVariazioni = null;
         Fornitore fornitoreVariazione = null;
         if(!CollectionUtils.isEmpty(listiniPrezziVariazioni)){
-            variazionePrezzo = listiniPrezziVariazioni.stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
+            variazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
             fornitoreVariazione = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getFornitore() != null).map(lpv -> lpv.getFornitore()).findFirst().orElse(null);
             articoliVariazioni = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getArticolo() != null).map(lpv -> lpv.getArticolo().getId()).collect(Collectors.toList());
         }
         LOGGER.info("Retrieved 'variazionePrezzo':'{}', 'fornitore':'{}', 'articoli' size: '{}'", variazionePrezzo, fornitoreVariazione != null ?fornitoreVariazione.getId() : null, articoliVariazioni != null ? articoliVariazioni.size() : null);
 
         List<ListinoPrezzo> listiniPrezziToUpdate;
-        if(!CollectionUtils.isEmpty(articoliVariazioni) && fornitoreVariazione != null){
+        if(variazionePrezzo != null && !CollectionUtils.isEmpty(articoliVariazioni) && fornitoreVariazione != null){
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloIdInAndFornitoreId(listino.getId(), articoliVariazioni, fornitoreVariazione.getId());
-        } else if(!CollectionUtils.isEmpty(articoliVariazioni)){
+        } else if(variazionePrezzo != null && !CollectionUtils.isEmpty(articoliVariazioni)){
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloIdIn(listino.getId(), articoliVariazioni);
-        } else if(fornitoreVariazione != null){
+        } else if(variazionePrezzo != null && fornitoreVariazione != null){
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoIdAndArticoloFornitoreId(listino.getId(), fornitoreVariazione.getId());
         } else {
             listiniPrezziToUpdate = listinoPrezzoService.getByListinoId(listino.getId());
@@ -151,7 +160,7 @@ public class ListinoService {
 
             LOGGER.info("Populating 'listiniPrezzi' for listino '{}'", listino.getId());
             String tipologiaVariazionePrezzo = listino.getTipologiaVariazionePrezzo();
-            final Float variazionePrezzo = listiniPrezziVariazioni.stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
+            final Float variazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
 
             List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
 

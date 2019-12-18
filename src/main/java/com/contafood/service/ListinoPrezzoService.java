@@ -1,7 +1,10 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.*;
+import com.contafood.model.Articolo;
+import com.contafood.model.Listino;
+import com.contafood.model.ListinoPrezzo;
+import com.contafood.model.ListinoPrezzoVariazione;
 import com.contafood.repository.ListinoPrezzoRepository;
 import com.contafood.util.TipologiaListinoPrezzoVariazione;
 import org.apache.commons.lang3.StringUtils;
@@ -146,14 +149,14 @@ public class ListinoPrezzoService {
             // retrieve the list of articoli ids on which the variation should be applied
             List<Long> articoliIds = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getArticolo() != null).map(lpv -> lpv.getArticolo().getId()).collect(Collectors.toList());
 
-            // retrieve the fornitore on which the variation should be applied
-            Fornitore fornitore = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getFornitore() != null).map(lpv -> lpv.getFornitore()).findFirst().orElse(null);
+            // retrieve the fornitore id on which the variation should be applied
+            Long fornitoreId = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getFornitore() != null).map(lpv -> lpv.getFornitore().getId()).findFirst().orElse(null);
 
-            if(!CollectionUtils.isEmpty(articoliIds) || fornitore != null){
+            if(!CollectionUtils.isEmpty(articoliIds) || fornitoreId != null){
                 if(!CollectionUtils.isEmpty(articoliIds) && !articoliIds.contains(articolo.getId())){
                     applyVariazione = false;
                 }
-                if(fornitore != null && !fornitore.equals(articolo.getFornitore().getId())){
+                if(fornitoreId != null && !fornitoreId.equals(articolo.getFornitore().getId())){
                     applyVariazione = false;
                 }
             }

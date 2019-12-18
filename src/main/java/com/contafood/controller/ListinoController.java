@@ -54,6 +54,13 @@ public class ListinoController {
         return listinoService.getListiniPrezziByListinoId(listinoId);
     }
 
+    @RequestMapping(method = GET, path = "/{listinoId}/listini-prezzi-variazioni")
+    @CrossOrigin
+    public List<ListinoPrezzoVariazione> getListiniPrezziVariazioni(@PathVariable final Long listinoId) {
+        LOGGER.info("Performing GET request for retrieving 'listiniPrezziVariazioni' of 'listino' '{}'", listinoId);
+        return listinoService.getListiniPrezziVariazioniByListinoId(listinoId);
+    }
+
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin
