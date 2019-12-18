@@ -179,6 +179,10 @@ public class ListinoService {
 
     @Transactional
     public void delete(Long listinoId){
+        LOGGER.info("Deleting 'listiniPrezziVariazioni' of listino '{}'", listinoId);
+        listinoPrezzoVariazioneService.deleteByListinoId(listinoId);
+        LOGGER.info("Deleted 'listiniPrezziVariazioni' of listino '{}'", listinoId);
+
         LOGGER.info("Deleting 'listiniPrezzi' of listino '{}'", listinoId);
         listinoPrezzoService.deleteByListinoId(listinoId);
         LOGGER.info("Deleted 'listiniPrezzi' of listino '{}'", listinoId);

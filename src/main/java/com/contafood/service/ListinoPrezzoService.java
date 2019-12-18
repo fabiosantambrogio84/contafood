@@ -144,10 +144,10 @@ public class ListinoPrezzoService {
             boolean applyVariazione = true;
             List<ListinoPrezzoVariazione> listiniPrezziVariazioni = listino.getListiniPrezziVariazioni();
             // retrieve the list of articoli ids on which the variation should be applied
-            List<Long> articoliIds = listiniPrezziVariazioni.stream().map(lpv -> lpv.getArticolo().getId()).collect(Collectors.toList());
+            List<Long> articoliIds = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getArticolo() != null).map(lpv -> lpv.getArticolo().getId()).collect(Collectors.toList());
 
             // retrieve the fornitore on which the variation should be applied
-            Fornitore fornitore = listiniPrezziVariazioni.stream().map(lpv -> lpv.getFornitore()).findFirst().orElse(null);
+            Fornitore fornitore = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getFornitore() != null).map(lpv -> lpv.getFornitore()).findFirst().orElse(null);
 
             if(!CollectionUtils.isEmpty(articoliIds) || fornitore != null){
                 if(!CollectionUtils.isEmpty(articoliIds) && !articoliIds.contains(articolo.getId())){
