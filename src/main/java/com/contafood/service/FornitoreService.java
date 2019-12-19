@@ -17,9 +17,12 @@ public class FornitoreService {
 
     private final FornitoreRepository fornitoreRepository;
 
+    private final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService;
+
     @Autowired
-    public FornitoreService(final FornitoreRepository fornitoreRepository){
+    public FornitoreService(final FornitoreRepository fornitoreRepository, final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService){
         this.fornitoreRepository = fornitoreRepository;
+        this.listinoPrezzoVariazioneService = listinoPrezzoVariazioneService;
     }
 
     public Set<Fornitore> getAll(){
@@ -53,6 +56,10 @@ public class FornitoreService {
     }
 
     public void delete(Long fornitoreId){
+        LOGGER.info("Deleting 'listiniPrezziVariazioni' of fornitore '{}'", fornitoreId);
+        listinoPrezzoVariazioneService.deleteByFornitoreId(fornitoreId);
+        LOGGER.info("Deleted 'listiniPrezziVariazioni' of fornitore '{}'", fornitoreId);
+
         LOGGER.info("Deleting 'fornitore' '{}'", fornitoreId);
         fornitoreRepository.deleteById(fornitoreId);
         LOGGER.info("Deleted 'fornitore' '{}'", fornitoreId);

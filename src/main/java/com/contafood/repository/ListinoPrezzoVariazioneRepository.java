@@ -24,4 +24,5 @@ public interface ListinoPrezzoVariazioneRepository extends CrudRepository<Listin
 
     void deleteByArticoloId(Long idArticolo);
 
+    void deleteByFornitoreId(Long idFornitore);
 }
