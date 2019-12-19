@@ -1,10 +1,7 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.Articolo;
-import com.contafood.model.ArticoloImmagine;
-import com.contafood.model.Listino;
-import com.contafood.model.ListinoPrezzo;
+import com.contafood.model.*;
 import com.contafood.repository.ArticoloRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +28,14 @@ public class ArticoloService {
 
     private final ListinoPrezzoService listinoPrezzoService;
 
+    private final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService;
+
     @Autowired
-    public ArticoloService(final ArticoloRepository articoloRepository, final ArticoloImmagineService articoloImmagineService, final ListinoPrezzoService listinoPrezzoService){
+    public ArticoloService(final ArticoloRepository articoloRepository, final ArticoloImmagineService articoloImmagineService, final ListinoPrezzoService listinoPrezzoService, final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService){
         this.articoloRepository = articoloRepository;
         this.articoloImmagineService = articoloImmagineService;
         this.listinoPrezzoService = listinoPrezzoService;
+        this.listinoPrezzoVariazioneService = listinoPrezzoVariazioneService;
     }
 
     public Set<Articolo> getAll(){
@@ -69,9 +69,11 @@ public class ArticoloService {
             listinoPrezzo.setArticolo(createdArticolo);
             listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
-            Float variazionePrezzo = l.getListiniPrezziVariazioni().stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
+            List<ListinoPrezzoVariazione> listiniPrezziVariazioni = l.getListiniPrezziVariazioni();
+            String tipologiaVariazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(lpv -> lpv.getTipologiaVariazionePrezzo()).findFirst().orElse(null);
+            Float variazionePrezzo = listiniPrezziVariazioni.stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
 
-            BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(l, createdArticolo, l.getTipologiaVariazionePrezzo(), variazionePrezzo);
+            BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(l, createdArticolo, tipologiaVariazionePrezzo, variazionePrezzo);
             listinoPrezzo.setPrezzo(newPrezzo);
 
             listiniPrezzi.add(listinoPrezzo);
@@ -105,6 +107,10 @@ public class ArticoloService {
 
     @Transactional
     public void delete(Long articoloId){
+        LOGGER.info("Deleting 'listiniPrezziVariazioni' of articolo '{}'", articoloId);
+        listinoPrezzoVariazioneService.deleteByArticoloId(articoloId);
+        LOGGER.info("Deleted 'listiniPrezziVariazioni' of articolo '{}'", articoloId);
+
         LOGGER.info("Deleting 'listiniPrezzi' of articolo '{}'", articoloId);
         listinoPrezzoService.deleteByArticoloId(articoloId);
         LOGGER.info("Deleted 'listiniPrezzi' of articolo '{}'", articoloId);

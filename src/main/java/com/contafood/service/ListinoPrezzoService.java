@@ -179,7 +179,8 @@ public class ListinoPrezzoService {
         listiniPrezzi.forEach(lp -> {
             Listino listino = lp.getListino();
             Float variazionePrezzo = listino.getListiniPrezziVariazioni().stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
-            lp.setPrezzo(computePrezzo(articolo, listino.getTipologiaVariazionePrezzo(), variazionePrezzo));
+            String tipologiaVariazionePrezzo = listino.getListiniPrezziVariazioni().stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(lpv -> lpv.getTipologiaVariazionePrezzo()).findFirst().orElse(null);
+            lp.setPrezzo(computePrezzo(articolo, tipologiaVariazionePrezzo, variazionePrezzo));
         });
         bulkInsertOrUpdate(listiniPrezzi);
         LOGGER.info("Recomputed 'listiniPrezzi' of articolo '{}'", articolo.getId());

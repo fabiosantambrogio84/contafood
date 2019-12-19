@@ -84,23 +84,6 @@ public class ListinoPrezzoVariazioneService {
             LOGGER.info("Created 'listinoPrezzoVariazione' '{}'", createdListinoPrezzoVariazione);
         });
         return listiniPrezziVariazioni;
-
-    }
-
-    public ListinoPrezzoVariazione update(ListinoPrezzoVariazione listinoPrezzoVariazione){
-        LOGGER.info("Updating 'listinoPrezzoVariazione'");
-        ListinoPrezzoVariazione listinoPrezzoVariazioneCurrent = listinoPrezzoVariazioneRepository.findById(listinoPrezzoVariazione.getId()).orElseThrow(ResourceNotFoundException::new);
-        listinoPrezzoVariazione.setDataInserimento(listinoPrezzoVariazioneCurrent.getDataInserimento());
-        ListinoPrezzoVariazione updatedListinoPrezzoVariazione = listinoPrezzoVariazioneRepository.save(listinoPrezzoVariazione);
-        LOGGER.info("Updated 'listinoPrezzoVariazione' '{}'", updatedListinoPrezzoVariazione);
-        return updatedListinoPrezzoVariazione;
-    }
-
-    public List<ListinoPrezzoVariazione> bulkInsertOrUpdate(List<ListinoPrezzoVariazione> listiniPrezziVariazioni){
-        LOGGER.info("Inserting/updating 'listiniPrezziVariazioni'");
-        listinoPrezzoVariazioneRepository.saveAll(listiniPrezziVariazioni);
-        LOGGER.info("Inserted/updated 'listiniPrezziVariazioni' '{}'", listiniPrezziVariazioni);
-        return listiniPrezziVariazioni;
     }
 
     public void delete(Long listinoPrezzoVariazioneId){

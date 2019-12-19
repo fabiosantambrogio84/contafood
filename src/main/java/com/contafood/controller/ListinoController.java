@@ -92,6 +92,18 @@ public class ListinoController {
         throw new ResourceNotFoundException();
     }
 
+    @RequestMapping(method = PUT, path = "/{listinoId}/listini-prezzi-variazioni")
+    @CrossOrigin
+    public void recreateListinoPrezziAndVariazioni(@PathVariable final Long listinoId, @RequestBody final List<ListinoPrezzoVariazione> listiniPrezziVariazioni){
+        LOGGER.info("Performing PUT request for recreating 'listiniPrezziVariazioni'");
+        Listino listino = listinoService.getOne(listinoId);
+        if(listino != null){
+            listinoService.recreateListiniVariazioniPrezzi(listino, listiniPrezziVariazioni);
+            return;
+        }
+        throw new ResourceNotFoundException();
+    }
+
     @RequestMapping(method = DELETE, path = "/{listinoId}")
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin

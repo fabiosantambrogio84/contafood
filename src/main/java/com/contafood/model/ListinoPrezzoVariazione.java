@@ -14,6 +14,9 @@ public class ListinoPrezzoVariazione {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "tipologia_variazione_prezzo")
+    private String tipologiaVariazionePrezzo;
+
     @Column(name = "variazione_prezzo")
     private Float variazionePrezzo;
 
@@ -38,6 +41,14 @@ public class ListinoPrezzoVariazione {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTipologiaVariazionePrezzo() {
+        return tipologiaVariazionePrezzo;
+    }
+
+    public void setTipologiaVariazionePrezzo(String tipologiaVariazionePrezzo) {
+        this.tipologiaVariazionePrezzo = tipologiaVariazionePrezzo;
     }
 
     public Float getVariazionePrezzo() {
@@ -86,6 +97,7 @@ public class ListinoPrezzoVariazione {
 
         result.append("{");
         result.append("id: " + id);
+        result.append(", tipologiaVariazionePrezzo: " + tipologiaVariazionePrezzo);
         result.append(", variazionePrezzo: " + variazionePrezzo);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");

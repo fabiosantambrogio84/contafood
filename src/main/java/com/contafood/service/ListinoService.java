@@ -80,9 +80,6 @@ public class ListinoService {
             if(checkIfListinoBaseExists()){
                 throw new ListinoBaseAlreadyExistingException();
             }
-            if(!StringUtils.isEmpty(listino.getTipologiaVariazionePrezzo())){
-                throw new ListinoBaseCannotHaveVariazionePrezzoException();
-            }
         }
         listino.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Listino createdListino = listinoRepository.save(listino);
@@ -101,10 +98,6 @@ public class ListinoService {
             if(checkIfListinoBaseExists()){
                 throw new ListinoBaseAlreadyExistingException();
             }
-            if(!StringUtils.isEmpty(listino.getTipologiaVariazionePrezzo())){
-                throw new ListinoBaseCannotHaveVariazionePrezzoException();
-            }
-            listino.setTipologiaVariazionePrezzo(null);
             listino.setListiniPrezziVariazioni(null);
         }
         Listino listinoCurrent = listinoRepository.findById(listino.getId()).orElseThrow(ResourceNotFoundException::new);
@@ -122,11 +115,12 @@ public class ListinoService {
         LOGGER.info("Updated 'listino' '{}'", updatedListino);
 
         LOGGER.info("Updating 'listiniPrezzi' for listino '{}'", updatedListino.getId());
-        String tipologiaVariazionePrezzo = updatedListino.getTipologiaVariazionePrezzo();
+        String tipologiaVariazionePrezzo = null;
         Float variazionePrezzo = null;
         List<Long> articoliVariazioni = null;
         Fornitore fornitoreVariazione = null;
         if(!CollectionUtils.isEmpty(listiniPrezziVariazioni)){
+            tipologiaVariazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(lpv -> lpv.getTipologiaVariazionePrezzo()).findFirst().orElse(null);
             variazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
             fornitoreVariazione = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getFornitore() != null).map(lpv -> lpv.getFornitore()).findFirst().orElse(null);
             articoliVariazioni = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getArticolo() != null).map(lpv -> lpv.getArticolo().getId()).collect(Collectors.toList());
@@ -159,7 +153,7 @@ public class ListinoService {
             listinoPrezzoVariazioneService.create(listiniPrezziVariazioni);
 
             LOGGER.info("Populating 'listiniPrezzi' for listino '{}'", listino.getId());
-            String tipologiaVariazionePrezzo = listino.getTipologiaVariazionePrezzo();
+            final String tipologiaVariazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(lpv -> lpv.getTipologiaVariazionePrezzo()).findFirst().orElse(null);
             final Float variazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
 
             List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
@@ -184,6 +178,13 @@ public class ListinoService {
         } else {
             LOGGER.info("Specified 'listiniPrezziVariazioni' is null or empty");
         }
+    }
+
+    @Transactional
+    public void recreateListiniVariazioniPrezzi(Listino listino, List<ListinoPrezzoVariazione> listiniPrezziVariazioni){
+        LOGGER.info("Recreating 'listiniPrezziVariazioni' for 'listino' with id '{}'", listino.getId());
+        listinoPrezzoVariazioneService.deleteByListinoId(listino.getId());
+        createListiniVariazioniPrezzi(listino, listiniPrezziVariazioni);
     }
 
     @Transactional
