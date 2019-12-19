@@ -50,7 +50,7 @@ public class FornitoreController {
     public List<Articolo> getArticoli(@PathVariable final Long fornitoreId, @RequestParam(name = "attivo", required = false) Boolean active) {
         LOGGER.info("Performing GET request for retrieving 'articoli' of 'fornitore' '{}'", fornitoreId);
         LOGGER.info("Query parameter 'attivo' equal to '{}'", active);
-        if(!active.equals(null)){
+        if(active != null){
             List<Articolo> articoli = fornitoreService.getOne(fornitoreId).getArticoli();
             return articoli.stream().filter(a -> {
                 if(active != null){

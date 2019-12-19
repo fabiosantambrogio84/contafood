@@ -34,7 +34,7 @@ public class ArticoloController {
     public Set<Articolo> getAll(@RequestParam(name = "attivo", required = false) Boolean active) {
         LOGGER.info("Performing GET request for retrieving list of 'articoli'");
         LOGGER.info("Query parameter 'attivo' equal to '{}'", active);
-        if(!active.equals(null)){
+        if(active != null){
             return articoloService.getAllByAttivo(active);
         } else {
             return articoloService.getAll();
