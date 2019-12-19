@@ -26,36 +26,3 @@ CREATE TABLE `listino_prezzo_variazione` (
 
 ALTER TABLE listino ADD COLUMN data_aggiornamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 ALTER TABLE listino_prezzo ADD COLUMN data_aggiornamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-
-ALTER TABLE `sconto` DROP FOREIGN KEY fk_sconto_fornitore;
-ALTER TABLE `sconto` DROP INDEX fk_sconto_fornitore;
-ALTER TABLE sconto DROP COLUMN id_fornitore;
-ALTER TABLE `sconto` DROP FOREIGN KEY fk_sconto_articolo;
-ALTER TABLE `sconto` DROP INDEX fk_sconto_articolo;
-ALTER TABLE sconto DROP COLUMN id_articolo;
-
-DROP TABLE IF EXISTS `sconto_articolo`;
-
-CREATE TABLE `sconto_articolo` (
-	id int(10) unsigned NOT NULL AUTO_INCREMENT,
-	id_sconto int(10) unsigned,
-	id_articolo int(10) unsigned,
-	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	data_aggiornamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`),
-	CONSTRAINT `fk_sconto_articolo_sconto` FOREIGN KEY (`id_sconto`) REFERENCES `sconto` (`id`),
-	CONSTRAINT `fk_sconto_articolo_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
-) ENGINE=InnoDB;
-
-DROP TABLE IF EXISTS `sconto_fornitore`;
-
-CREATE TABLE `sconto_fornitore` (
-	id int(10) unsigned NOT NULL AUTO_INCREMENT,
-	id_sconto int(10) unsigned,
-	id_fornitore int(10) unsigned,
-	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	data_aggiornamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`),
-	CONSTRAINT `fk_sconto_articolo_sconto` FOREIGN KEY (`id_sconto`) REFERENCES `sconto` (`id`),
-	CONSTRAINT `fk_sconto_articolo_forn` FOREIGN KEY (`id_fornitore`) REFERENCES `fornitore` (`id`)
-) ENGINE=InnoDB;
