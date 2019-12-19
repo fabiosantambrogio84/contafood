@@ -27,6 +27,9 @@ public class Listino {
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
+    @Column(name = "data_aggiornamento")
+    private Timestamp dataAggiornamento;
+
     @OneToMany(mappedBy = "listino")
     @JsonIgnore
     private List<ListinoAssociato> listiniAssociati;
@@ -71,6 +74,14 @@ public class Listino {
         this.dataInserimento = dataInserimento;
     }
 
+    public Timestamp getDataAggiornamento() {
+        return dataAggiornamento;
+    }
+
+    public void setDataAggiornamento(Timestamp dataAggiornamento) {
+        this.dataAggiornamento = dataAggiornamento;
+    }
+
     public List<ListinoAssociato> getListiniAssociati() {
         return listiniAssociati;
     }
@@ -104,6 +115,7 @@ public class Listino {
         result.append(", nome: " + nome);
         result.append(", tipologia: " + tipologia);
         result.append(", dataInserimento: " + dataInserimento);
+        result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");
 
         return result.toString();

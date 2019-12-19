@@ -29,6 +29,9 @@ public class ListinoPrezzo {
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
+    @Column(name = "data_aggiornamento")
+    private Timestamp dataAggiornamento;
+
     public Long getId() {
         return id;
     }
@@ -69,6 +72,14 @@ public class ListinoPrezzo {
         this.dataInserimento = dataInserimento;
     }
 
+    public Timestamp getDataAggiornamento() {
+        return dataAggiornamento;
+    }
+
+    public void setDataAggiornamento(Timestamp dataAggiornamento) {
+        this.dataAggiornamento = dataAggiornamento;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -79,6 +90,7 @@ public class ListinoPrezzo {
         result.append(", articolo: " + articolo);
         result.append(", prezzo: " + prezzo);
         result.append(", dataInserimento: " + dataInserimento);
+        result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");
 
         return result.toString();

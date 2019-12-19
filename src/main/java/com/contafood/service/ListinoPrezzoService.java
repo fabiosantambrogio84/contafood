@@ -85,6 +85,7 @@ public class ListinoPrezzoService {
         LOGGER.info("Creating 'listiniPrezzi'");
         listiniPrezzi.forEach(lp -> {
             lp.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+            lp.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
             ListinoPrezzo createdListinoPrezzo = listinoPrezzoRepository.save(lp);
             LOGGER.info("Created 'listinoPrezzo' '{}'", createdListinoPrezzo);
         });
@@ -95,6 +96,7 @@ public class ListinoPrezzoService {
         LOGGER.info("Updating 'listinoPrezzo'");
         ListinoPrezzo listinoPrezzoCurrent = listinoPrezzoRepository.findById(listinoPrezzo.getId()).orElseThrow(ResourceNotFoundException::new);
         listinoPrezzo.setDataInserimento(listinoPrezzoCurrent.getDataInserimento());
+        listinoPrezzo.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
         ListinoPrezzo updatedListinoPrezzo = listinoPrezzoRepository.save(listinoPrezzo);
         LOGGER.info("Updated 'listinoPrezzo' '{}'", updatedListinoPrezzo);
         return updatedListinoPrezzo;
@@ -177,6 +179,7 @@ public class ListinoPrezzoService {
         LOGGER.info("Recomputing 'listiniPrezzi' of articolo '{}'", articolo.getId());
         List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloId(articolo.getId());
         listiniPrezzi.forEach(lp -> {
+            lp.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
             Listino listino = lp.getListino();
             Float variazionePrezzo = listino.getListiniPrezziVariazioni().stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
             String tipologiaVariazionePrezzo = listino.getListiniPrezziVariazioni().stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(lpv -> lpv.getTipologiaVariazionePrezzo()).findFirst().orElse(null);

@@ -40,7 +40,7 @@ public class ListinoPrezzoVariazioneService {
         LOGGER.info("Retrieved {} 'listiniPrezziVariazioni'", listiniPrezziVariazioni.size());
         return listiniPrezziVariazioni;
     }
-
+    /*
     public List<ListinoPrezzoVariazione> getByArticoloId(Long idArticolo){
         LOGGER.info("Retrieving the list of 'listiniPrezziVariazioni' of articolo '{}'", idArticolo);
         List<ListinoPrezzoVariazione> listiniPrezziVariazioni = listinoPrezzoVariazioneRepository.findByArticoloId(idArticolo);
@@ -68,6 +68,7 @@ public class ListinoPrezzoVariazioneService {
         LOGGER.info("Retrieved {} 'listiniPrezziVariazioni'", listiniPrezziVariazioni.size());
         return listiniPrezziVariazioni;
     }
+    */
 
     public ListinoPrezzoVariazione getOne(Long listinoPrezzoVariazioneId){
         LOGGER.info("Retrieving 'listinoPrezzoVariazione' '{}'", listinoPrezzoVariazioneId);
@@ -80,6 +81,7 @@ public class ListinoPrezzoVariazioneService {
         LOGGER.info("Creating 'listiniPrezziVariazioni'");
         listiniPrezziVariazioni.forEach(lp -> {
             lp.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+            lp.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
             ListinoPrezzoVariazione createdListinoPrezzoVariazione = listinoPrezzoVariazioneRepository.save(lp);
             LOGGER.info("Created 'listinoPrezzoVariazione' '{}'", createdListinoPrezzoVariazione);
         });

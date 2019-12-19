@@ -23,6 +23,9 @@ public class ListinoPrezzoVariazione {
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
+    @Column(name = "data_aggiornamento")
+    private Timestamp dataAggiornamento;
+
     @ManyToOne
     @JoinColumn(name="id_listino")
     private Listino listino;
@@ -67,6 +70,14 @@ public class ListinoPrezzoVariazione {
         this.dataInserimento = dataInserimento;
     }
 
+    public Timestamp getDataAggiornamento() {
+        return dataAggiornamento;
+    }
+
+    public void setDataAggiornamento(Timestamp dataAggiornamento) {
+        this.dataAggiornamento = dataAggiornamento;
+    }
+
     public Listino getListino() {
         return listino;
     }
@@ -100,9 +111,9 @@ public class ListinoPrezzoVariazione {
         result.append(", tipologiaVariazionePrezzo: " + tipologiaVariazionePrezzo);
         result.append(", variazionePrezzo: " + variazionePrezzo);
         result.append(", dataInserimento: " + dataInserimento);
+        result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");
 
         return result.toString();
-
     }
 }
