@@ -31,9 +31,14 @@ public class ArticoloController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Articolo> getAll() {
+    public Set<Articolo> getAll(@RequestParam(name = "attivo", required = false) Boolean active) {
         LOGGER.info("Performing GET request for retrieving list of 'articoli'");
-        return articoloService.getAll();
+        LOGGER.info("Query parameter 'attivo' equal to '{}'", active);
+        if(!active.equals(null)){
+            return articoloService.getAllByAttivo(active);
+        } else {
+            return articoloService.getAll();
+        }
     }
 
     @RequestMapping(method = GET, path = "/{articoloId}")

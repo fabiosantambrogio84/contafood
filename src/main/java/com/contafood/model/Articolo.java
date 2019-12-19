@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni"})
+@EqualsAndHashCode(exclude = {"articoloImmagini", "listiniPrezzi", "listiniPrezziVariazioni", "scontiArticoli"})
 @Entity
 @Table(name = "articolo")
 public class Articolo {
@@ -79,15 +79,15 @@ public class Articolo {
 
     @OneToMany(mappedBy = "articolo")
     @JsonIgnore
-    private List<Sconto> sconti;
-
-    @OneToMany(mappedBy = "articolo")
-    @JsonIgnore
     private List<ListinoPrezzo> listiniPrezzi;
 
     @OneToMany(mappedBy = "articolo")
     @JsonIgnore
     private List<ListinoPrezzoVariazione> listiniPrezziVariazioni;
+
+    @OneToMany(mappedBy = "articolo")
+    @JsonIgnore
+    private List<ScontoArticolo> scontiArticoli;
 
     public Long getId() {
         return id;
@@ -241,14 +241,6 @@ public class Articolo {
         this.articoloImmagini = articoloImmagini;
     }
 
-    public List<Sconto> getSconti() {
-        return sconti;
-    }
-
-    public void setSconti(List<Sconto> sconti) {
-        this.sconti = sconti;
-    }
-
     public List<ListinoPrezzo> getListiniPrezzi() {
         return listiniPrezzi;
     }
@@ -263,6 +255,14 @@ public class Articolo {
 
     public void setListiniPrezziVariazioni(List<ListinoPrezzoVariazione> listiniPrezziVariazioni) {
         this.listiniPrezziVariazioni = listiniPrezziVariazioni;
+    }
+
+    public List<ScontoArticolo> getScontiArticoli() {
+        return scontiArticoli;
+    }
+
+    public void setScontiArticoli(List<ScontoArticolo> scontiArticoli) {
+        this.scontiArticoli = scontiArticoli;
     }
 
     @Override

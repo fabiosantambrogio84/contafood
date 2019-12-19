@@ -9,4 +9,6 @@ public interface ArticoloRepository extends CrudRepository<Articolo, Long> {
 
     @Override
     Set<Articolo> findAll();
+
+    Set<Articolo> findByAttivo(Boolean attivo);
 }

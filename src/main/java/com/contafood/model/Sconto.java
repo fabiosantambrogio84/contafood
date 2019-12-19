@@ -1,12 +1,14 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"scontiArticoli", "scontiFornitori"})
 @Entity
 @Table(name = "sconto")
 public class Sconto {
@@ -41,6 +43,14 @@ public class Sconto {
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
+
+    @OneToMany(mappedBy = "sconto")
+    @JsonIgnore
+    private List<ScontoArticolo> scontiArticoli;
+
+    @OneToMany(mappedBy = "sconto")
+    @JsonIgnore
+    private List<ScontoFornitore> scontiFornitori;
 
     public Long getId() {
         return id;
@@ -112,6 +122,22 @@ public class Sconto {
 
     public void setDataInserimento(Timestamp dataInserimento) {
         this.dataInserimento = dataInserimento;
+    }
+
+    public List<ScontoArticolo> getScontiArticoli() {
+        return scontiArticoli;
+    }
+
+    public void setScontiArticoli(List<ScontoArticolo> scontiArticoli) {
+        this.scontiArticoli = scontiArticoli;
+    }
+
+    public List<ScontoFornitore> getScontiFornitori() {
+        return scontiFornitori;
+    }
+
+    public void setScontiFornitori(List<ScontoFornitore> scontiFornitori) {
+        this.scontiFornitori = scontiFornitori;
     }
 
     @Override

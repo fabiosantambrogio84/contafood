@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -46,9 +47,20 @@ public class FornitoreController {
 
     @RequestMapping(method = GET, path = "/{fornitoreId}/articoli")
     @CrossOrigin
-    public List<Articolo> getArticoli(@PathVariable final Long fornitoreId) {
+    public List<Articolo> getArticoli(@PathVariable final Long fornitoreId, @RequestParam(name = "attivo", required = false) Boolean active) {
         LOGGER.info("Performing GET request for retrieving 'articoli' of 'fornitore' '{}'", fornitoreId);
-        return fornitoreService.getOne(fornitoreId).getArticoli();
+        LOGGER.info("Query parameter 'attivo' equal to '{}'", active);
+        if(!active.equals(null)){
+            List<Articolo> articoli = fornitoreService.getOne(fornitoreId).getArticoli();
+            return articoli.stream().filter(a -> {
+                if(active != null){
+                    return active.equals(a.getAttivo());
+                }
+                return true;
+            }).collect(Collectors.toList());
+        } else {
+            return fornitoreService.getOne(fornitoreId).getArticoli();
+        }
     }
 
     @RequestMapping(method = POST)
