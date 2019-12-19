@@ -105,4 +105,10 @@ public class ListinoPrezzoVariazioneService {
         listinoPrezzoVariazioneRepository.deleteByArticoloId(idArticolo);
         LOGGER.info("Deleted 'listiniPrezziVariazioni' of articolo '{}'", idArticolo);
     }
+
+    public void deleteByFornitoreId(Long idFornitore){
+        LOGGER.info("Deleting 'listiniPrezziVariazioni' of fornitore '{}'", idFornitore);
+        listinoPrezzoVariazioneRepository.deleteByFornitoreId(idFornitore);
+        LOGGER.info("Deleted 'listiniPrezziVariazioni' of fornitore '{}'", idFornitore);
+    }
 }
