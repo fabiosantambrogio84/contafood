@@ -1,14 +1,12 @@
 package com.contafood.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.List;
 
-@EqualsAndHashCode(exclude = {"scontiArticoli", "scontiFornitori"})
+@EqualsAndHashCode
 @Entity
 @Table(name = "sconto")
 public class Sconto {
@@ -115,7 +113,6 @@ public class Sconto {
     public void setDataInserimento(Timestamp dataInserimento) {
         this.dataInserimento = dataInserimento;
     }
-
 
     @Override
     public String toString() {
