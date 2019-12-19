@@ -44,14 +44,6 @@ public class Sconto {
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
-    @OneToMany(mappedBy = "sconto")
-    @JsonIgnore
-    private List<ScontoArticolo> scontiArticoli;
-
-    @OneToMany(mappedBy = "sconto")
-    @JsonIgnore
-    private List<ScontoFornitore> scontiFornitori;
-
     public Long getId() {
         return id;
     }
@@ -124,21 +116,6 @@ public class Sconto {
         this.dataInserimento = dataInserimento;
     }
 
-    public List<ScontoArticolo> getScontiArticoli() {
-        return scontiArticoli;
-    }
-
-    public void setScontiArticoli(List<ScontoArticolo> scontiArticoli) {
-        this.scontiArticoli = scontiArticoli;
-    }
-
-    public List<ScontoFornitore> getScontiFornitori() {
-        return scontiFornitori;
-    }
-
-    public void setScontiFornitori(List<ScontoFornitore> scontiFornitori) {
-        this.scontiFornitori = scontiFornitori;
-    }
 
     @Override
     public String toString() {
