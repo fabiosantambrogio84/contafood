@@ -16,7 +16,7 @@ CREATE TABLE `listino_prezzo_variazione` (
 	id_articolo int(10) unsigned,
 	id_fornitore int(10) unsigned,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	data_aggiornamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
 	PRIMARY KEY (`id`),
 	CONSTRAINT `fk_listino_prezzo_var_listino` FOREIGN KEY (`id_listino`) REFERENCES `listino` (`id`),
 	CONSTRAINT `fk_listino_prezzo_var_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`),
@@ -24,5 +24,5 @@ CREATE TABLE `listino_prezzo_variazione` (
 ) ENGINE=InnoDB;
 
 
-ALTER TABLE listino ADD COLUMN data_aggiornamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
-ALTER TABLE listino_prezzo ADD COLUMN data_aggiornamento TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE listino ADD COLUMN data_aggiornamento TIMESTAMP;
+ALTER TABLE listino_prezzo ADD COLUMN data_aggiornamento TIMESTAMP;
