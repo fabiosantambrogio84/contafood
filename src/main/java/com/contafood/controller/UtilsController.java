@@ -1,9 +1,6 @@
 package com.contafood.controller;
 
-import com.contafood.util.GiornoSettimana;
-import com.contafood.util.Provincia;
-import com.contafood.util.TipologiaListinoPrezzoVariazione;
-import com.contafood.util.TipologiaSconto;
+import com.contafood.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -48,5 +45,12 @@ public class UtilsController {
     public List<HashMap> getGiorniSettimana() {
         LOGGER.info("Performing GET request for retrieving list of 'giorni-settimana'");
         return GiornoSettimana.giorni();
+    }
+
+    @RequestMapping(method = GET, path = "/tipologie-ordini")
+    @CrossOrigin
+    public List<TipologiaOrdine> getTipologieOrdine() {
+        LOGGER.info("Performing GET request for retrieving list of 'tipologie-ordini'");
+        return Arrays.asList(TipologiaOrdine.values());
     }
 }

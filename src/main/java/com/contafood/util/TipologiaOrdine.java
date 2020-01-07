@@ -1,13 +1,14 @@
 package com.contafood.util;
 
-public enum TipologiaSconto {
+public enum TipologiaOrdine {
 
-    ARTICOLO("Articolo"),
-    FORNITORE("Fornitore");
+    CLIENTI("Clienti"),
+    FORNITORI("Fornitori"),
+    AUTISTI("Autisti");
 
     private String label;
 
-    TipologiaSconto(String label) {
+    TipologiaOrdine(String label) {
         this.label = label;
     }
 
