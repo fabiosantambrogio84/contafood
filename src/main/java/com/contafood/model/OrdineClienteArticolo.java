@@ -1,0 +1,111 @@
+package com.contafood.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.sql.Timestamp;
+
+@Entity
+@Table(name = "ordine_cliente_articolo")
+public class OrdineClienteArticolo implements Serializable {
+
+    @EmbeddedId
+    OrdineClienteArticoloKey id;
+
+    @ManyToOne
+    @MapsId("id_ordine_cliente")
+    @JoinColumn(name = "id_ordine_cliente")
+    @JsonIgnoreProperties("ordineClienteArticoli")
+    private OrdineCliente ordineCliente;
+
+    @ManyToOne
+    @MapsId("id_articolo")
+    @JoinColumn(name = "id_articolo")
+    @JsonIgnoreProperties("ordineClienteArticoli")
+    private Articolo articolo;
+
+    @Column(name = "num_ordinati")
+    private Integer numeroPezziOrdinati;
+
+    @Column(name = "num_da_evadere")
+    private Integer numeroPezziDaEvadere;
+
+    @Column(name = "data_inserimento")
+    private Timestamp dataInserimento;
+
+    @Column(name = "data_aggiornamento")
+    private Timestamp dataAggiornamento;
+
+    public OrdineClienteArticoloKey getId() {
+        return id;
+    }
+
+    public void setId(OrdineClienteArticoloKey id) {
+        this.id = id;
+    }
+
+    public OrdineCliente getOrdineCliente() {
+        return ordineCliente;
+    }
+
+    public void setOrdineCliente(OrdineCliente ordineCliente) {
+        this.ordineCliente = ordineCliente;
+    }
+
+    public Articolo getArticolo() {
+        return articolo;
+    }
+
+    public void setArticolo(Articolo articolo) {
+        this.articolo = articolo;
+    }
+
+    public Integer getNumeroPezziOrdinati() {
+        return numeroPezziOrdinati;
+    }
+
+    public void setNumeroPezziOrdinati(Integer numeroPezziOrdinati) {
+        this.numeroPezziOrdinati = numeroPezziOrdinati;
+    }
+
+    public Integer getNumeroPezziDaEvadere() {
+        return numeroPezziDaEvadere;
+    }
+
+    public void setNumeroPezziDaEvadere(Integer numeroPezziDaEvadere) {
+        this.numeroPezziDaEvadere = numeroPezziDaEvadere;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
+    public Timestamp getDataAggiornamento() {
+        return dataAggiornamento;
+    }
+
+    public void setDataAggiornamento(Timestamp dataAggiornamento) {
+        this.dataAggiornamento = dataAggiornamento;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("{");
+        result.append("ordineClienteId: " + id.ordineClienteId);
+        result.append(", articoloId: " + id.articoloId);
+        result.append(", numeroPezziOrdinati: " + numeroPezziOrdinati);
+        result.append(", numeroPezziDaEvadere: " + numeroPezziDaEvadere);
+        result.append(", dataInserimento: " + dataInserimento);
+        result.append(", dataAggiornamento: " + dataAggiornamento);
+        result.append("}");
+
+        return result.toString();
+    }
+}

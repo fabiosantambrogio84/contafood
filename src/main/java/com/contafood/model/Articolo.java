@@ -7,9 +7,11 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni"})
+@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni", "ordineClienteArticoli"})
 @Entity
 @Table(name = "articolo")
 public class Articolo {
@@ -88,6 +90,10 @@ public class Articolo {
     @OneToMany(mappedBy = "articolo")
     @JsonIgnore
     private List<ListinoPrezzoVariazione> listiniPrezziVariazioni;
+
+    @OneToMany(mappedBy = "articolo")
+    @JsonIgnore
+    private Set<OrdineClienteArticolo> ordineClienteArticoli = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -263,6 +269,14 @@ public class Articolo {
 
     public void setListiniPrezziVariazioni(List<ListinoPrezzoVariazione> listiniPrezziVariazioni) {
         this.listiniPrezziVariazioni = listiniPrezziVariazioni;
+    }
+
+    public Set<OrdineClienteArticolo> getOrdineClienteArticoli() {
+        return ordineClienteArticoli;
+    }
+
+    public void setOrdineClienteArticoli(Set<OrdineClienteArticolo> ordineClienteArticoli) {
+        this.ordineClienteArticoli = ordineClienteArticoli;
     }
 
     @Override
