@@ -50,12 +50,13 @@ public class OrdineClienteService {
         OrdineCliente createdOrdineCliente = ordineClienteRepository.save(ordineCliente);
         String codice = createdOrdineCliente.getId().toString()+"/"+ZonedDateTime.now().getYear();
         createdOrdineCliente.setCodice(codice);
-        ordineClienteRepository.save(createdOrdineCliente);
 
         createdOrdineCliente.getOrdineClienteArticoli().stream().forEach(oca -> {
             oca.getId().setOrdineClienteId(createdOrdineCliente.getId());
             ordineClienteArticoloService.create(oca);
         });
+
+        ordineClienteRepository.save(createdOrdineCliente);
         LOGGER.info("Created 'ordineCliente' '{}'", createdOrdineCliente);
         return createdOrdineCliente;
     }
