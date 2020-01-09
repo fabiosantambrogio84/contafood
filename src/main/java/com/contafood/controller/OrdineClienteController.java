@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,9 +31,17 @@ public class OrdineClienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<OrdineCliente> getAll() {
+    public Set<OrdineCliente> getAll(
+            @RequestParam(name = "idAutista", required = false) Long idAutista,
+            @RequestParam(name = "dataConsegna", required = false) Date dataConsegna) {
         LOGGER.info("Performing GET request for retrieving list of 'ordini-clienti'");
-        return ordineClienteService.getAll();
+        if(idAutista != null || dataConsegna != null){
+            LOGGER.info("Query parameter 'idAutista' equals to {}", idAutista);
+            LOGGER.info("Query parameter 'dataConsegna' equals to {}", dataConsegna);
+            return ordineClienteService.getAllFilteredBy(idAutista, dataConsegna);
+        } else {
+            return ordineClienteService.getAll();
+        }
     }
 
     @RequestMapping(method = GET, path = "/{ordineClienteId}")

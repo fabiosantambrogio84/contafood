@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -32,6 +33,13 @@ public class OrdineClienteService {
     public Set<OrdineCliente> getAll(){
         LOGGER.info("Retrieving the list of 'ordini clienti'");
         Set<OrdineCliente> ordiniClienti = ordineClienteRepository.findAllByOrderByCodice();
+        LOGGER.info("Retrieved {} 'ordini clienti'", ordiniClienti.size());
+        return ordiniClienti;
+    }
+
+    public Set<OrdineCliente> getAllFilteredBy(Long idAutista, Date dataConsegna){
+        LOGGER.info("Retrieving the list of 'ordini clienti' filtered by 'idAutista' {} and 'dataConsegna' {}", idAutista, dataConsegna);
+        Set<OrdineCliente> ordiniClienti = ordineClienteRepository.findByAutistaIdAndDataConsegna(idAutista, dataConsegna);
         LOGGER.info("Retrieved {} 'ordini clienti'", ordiniClienti.size());
         return ordiniClienti;
     }
