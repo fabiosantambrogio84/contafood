@@ -48,6 +48,7 @@ public class OrdineClienteArticoloService {
     public OrdineClienteArticolo create(OrdineClienteArticolo ordineClienteArticolo){
         LOGGER.info("Creating 'ordine cliente articolo'");
         ordineClienteArticolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        ordineClienteArticolo.setNumeroPezziDaEvadere(ordineClienteArticolo.getNumeroPezziOrdinati());
         OrdineClienteArticolo createdOrdineClienteArticolo = ordineClienteArticoloRepository.save(ordineClienteArticolo);
         LOGGER.info("Created 'ordine cliente articolo' '{}'", createdOrdineClienteArticolo);
         return createdOrdineClienteArticolo;
@@ -58,6 +59,7 @@ public class OrdineClienteArticoloService {
         OrdineClienteArticolo ordineClienteArticoloCurrent = ordineClienteArticoloRepository.findById(ordineClienteArticolo.getId()).orElseThrow(ResourceNotFoundException::new);
         ordineClienteArticolo.setDataInserimento(ordineClienteArticoloCurrent.getDataInserimento());
         ordineClienteArticolo.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        ordineClienteArticolo.setNumeroPezziDaEvadere(ordineClienteArticolo.getNumeroPezziOrdinati());
         OrdineClienteArticolo updatedOrdineClienteArticolo = ordineClienteArticoloRepository.save(ordineClienteArticolo);
         LOGGER.info("Updated 'ordine cliente articolo' '{}'", updatedOrdineClienteArticolo);
         return updatedOrdineClienteArticolo;
