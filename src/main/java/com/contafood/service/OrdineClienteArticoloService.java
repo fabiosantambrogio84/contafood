@@ -31,20 +31,6 @@ public class OrdineClienteArticoloService {
         return ordineClienteArticoli;
     }
 
-    public Set<OrdineClienteArticolo> findByOrdineClienteId(Long ordineClienteId){
-        LOGGER.info("Retrieving the list of 'ordine cliente articoli' for 'ordineCliente' '{}'", ordineClienteId);
-        Set<OrdineClienteArticolo> ordineClienteArticoli = ordineClienteArticoloRepository.findByOrdineClienteId(ordineClienteId);
-        LOGGER.info("Retrieved {} 'ordine cliente articoli' for 'ricetta' '{}'", ordineClienteArticoli.size(), ordineClienteId);
-        return ordineClienteArticoli;
-    }
-
-    public Set<OrdineClienteArticolo> findByArticoloId(Long articoloId){
-        LOGGER.info("Retrieving the list of 'ordine cliente articoli' for 'ingrediente' '{}'", articoloId);
-        Set<OrdineClienteArticolo> ordineClienteArticoli = ordineClienteArticoloRepository.findByArticoloId(articoloId);
-        LOGGER.info("Retrieved {} 'ordine cliente articoli' for 'ingrediente' '{}'", ordineClienteArticoli.size(), articoloId);
-        return ordineClienteArticoli;
-    }
-    
     public OrdineClienteArticolo create(OrdineClienteArticolo ordineClienteArticolo){
         LOGGER.info("Creating 'ordine cliente articolo'");
         ordineClienteArticolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
@@ -71,9 +57,4 @@ public class OrdineClienteArticoloService {
         LOGGER.info("Deleted 'ordine cliente articolo' by 'ordineCliente' '{}'", ordineClienteId);
     }
 
-    public void deleteByArticoloId(Long articoloId){
-        LOGGER.info("Deleting 'ordine cliente articolo' by 'articolo' '{}'", articoloId);
-        ordineClienteArticoloRepository.deleteByArticoloId(articoloId);
-        LOGGER.info("Deleted 'ordine cliente articolo' by 'articolo' '{}'", articoloId);
-    }
 }

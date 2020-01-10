@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS `ordine_cliente_articolo`;
 DROP TABLE IF EXISTS `ordine_cliente`;
+DROP TABLE IF EXISTS `ordine_fornitore_articolo`;
+DROP TABLE IF EXISTS `ordine_fornitore`;
 DROP TABLE IF EXISTS `stato_ordine`;
 
 CREATE TABLE `stato_ordine` (
@@ -50,3 +52,26 @@ ALTER TABLE `listino` ADD COLUMN note text AFTER tipologia;
 INSERT INTO `stato_ordine` (id, codice, descrizione, ordine, data_inserimento) VALUES (0, 'DA_EVADERE', 'Da evadere', 1, now());
 INSERT INTO `stato_ordine` (id, codice, descrizione, ordine, data_inserimento) VALUES (1, 'PARZIALMENTE EVASO', 'Parzialmente evaso', 2, now());
 INSERT INTO `stato_ordine` (id, codice, descrizione, ordine, data_inserimento) VALUES (2, 'EVASO', 'Evaso', 3, now());
+
+CREATE TABLE `ordine_fornitore` (
+	id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	progressivo int(11),
+	anno_contabile int(11),
+	id_fornitore int(10) unsigned,
+    note text,
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
+	PRIMARY KEY (`id`),
+	CONSTRAINT `fk_ordine_fornitore_fornitore` FOREIGN KEY (`id_fornitore`) REFERENCES `fornitore` (`id`)
+) ENGINE=InnoDB;
+
+CREATE TABLE `ordine_fornitore_articolo` (
+	id_ordine_fornitore int(10) unsigned NOT NULL AUTO_INCREMENT,
+	id_articolo int(10) unsigned,
+	num_ordinati int(10),
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
+	PRIMARY KEY (`id_ordine_fornitore`, `id_articolo`),
+	CONSTRAINT `fk_ordine_fornitore_art_forn` FOREIGN KEY (`id_ordine_fornitore`) REFERENCES `ordine_fornitore` (`id`),
+	CONSTRAINT `fk_ordine_fornitore_art_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
+) ENGINE=InnoDB;
