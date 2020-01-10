@@ -2,8 +2,6 @@ package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -23,6 +21,9 @@ public class Listino {
 
     @Column(name = "tipologia")
     private String tipologia;
+
+    @Column(name = "note")
+    private String note;
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
@@ -64,6 +65,14 @@ public class Listino {
 
     public void setTipologia(String tipologia) {
         this.tipologia = tipologia;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Timestamp getDataInserimento() {
@@ -114,6 +123,7 @@ public class Listino {
         result.append("id: " + id);
         result.append(", nome: " + nome);
         result.append(", tipologia: " + tipologia);
+        result.append(", note: " + note);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

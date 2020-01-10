@@ -31,3 +31,4 @@ CREATE TABLE `ordine_cliente_articolo` (
 	CONSTRAINT `fk_ordine_cliente_art_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
 ) ENGINE=InnoDB;
 
+ALTER TABLE `listino` ADD COLUMN note text AFTER tipologia;
