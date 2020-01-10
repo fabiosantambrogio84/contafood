@@ -18,8 +18,11 @@ public class OrdineCliente {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "codice")
-    private String codice;
+    @Column(name = "progressivo")
+    private Integer progressivo;
+
+    @Column(name = "anno_contabile")
+    private Integer annoContabile;
 
     @ManyToOne
     @JoinColumn(name="id_cliente")
@@ -39,6 +42,10 @@ public class OrdineCliente {
     @ManyToOne
     @JoinColumn(name="id_agente")
     private Agente agente;
+
+    @ManyToOne
+    @JoinColumn(name="id_stato_ordine")
+    private StatoOrdine statoOrdine;
 
     @Column(name = "note")
     private String note;
@@ -61,12 +68,20 @@ public class OrdineCliente {
         this.id = id;
     }
 
-    public String getCodice() {
-        return codice;
+    public Integer getProgressivo() {
+        return progressivo;
     }
 
-    public void setCodice(String codice) {
-        this.codice = codice;
+    public void setProgressivo(Integer progressivo) {
+        this.progressivo = progressivo;
+    }
+
+    public Integer getAnnoContabile() {
+        return annoContabile;
+    }
+
+    public void setAnnoContabile(Integer annoContabile) {
+        this.annoContabile = annoContabile;
     }
 
     public Cliente getCliente() {
@@ -109,6 +124,14 @@ public class OrdineCliente {
         this.agente = agente;
     }
 
+    public StatoOrdine getStatoOrdine() {
+        return statoOrdine;
+    }
+
+    public void setStatoOrdine(StatoOrdine statoOrdine) {
+        this.statoOrdine = statoOrdine;
+    }
+
     public String getNote() {
         return note;
     }
@@ -147,12 +170,14 @@ public class OrdineCliente {
 
         result.append("{");
         result.append("id: " + id);
-        result.append(", codice: " + codice);
+        result.append(", progressivo: " + progressivo);
+        result.append(", annoContabile: " + annoContabile);
         result.append(", cliente: " + cliente);
         result.append(", puntoConsegna: " + puntoConsegna);
         result.append(", dataConsegna: " + dataConsegna);
         result.append(", autista: " + autista);
         result.append(", agente: " + agente);
+        result.append(", statoOrdine: " + statoOrdine);
         result.append(", note: " + note);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
