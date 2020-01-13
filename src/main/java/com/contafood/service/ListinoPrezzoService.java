@@ -132,6 +132,9 @@ public class ListinoPrezzoService {
         if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
             TipologiaListinoPrezzoVariazione tipologiaListinoPrezzoVariazione = TipologiaListinoPrezzoVariazione.valueOf(tipologiaVariazionePrezzo);
             if(TipologiaListinoPrezzoVariazione.PERCENTUALE.equals(tipologiaListinoPrezzoVariazione)){
+                if(variazionePrezzo == null) {
+                    variazionePrezzo = 0F;
+                }
                 BigDecimal variazione = newPrezzo.multiply(BigDecimal.valueOf(variazionePrezzo/100));
                 newPrezzo = newPrezzo.add(variazione);
             } else {
@@ -181,7 +184,7 @@ public class ListinoPrezzoService {
         listiniPrezzi.forEach(lp -> {
             lp.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
             Listino listino = lp.getListino();
-            Float variazionePrezzo = listino.getListiniPrezziVariazioni().stream().map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
+            Float variazionePrezzo = listino.getListiniPrezziVariazioni().stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
             String tipologiaVariazionePrezzo = listino.getListiniPrezziVariazioni().stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(lpv -> lpv.getTipologiaVariazionePrezzo()).findFirst().orElse(null);
             lp.setPrezzo(computePrezzo(articolo, tipologiaVariazionePrezzo, variazionePrezzo));
         });

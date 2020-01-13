@@ -47,6 +47,9 @@ public class TelefonataService {
         if(telefonata.getGiornoOrdinale() == null){
             telefonata.setGiornoOrdinale(GiornoSettimana.getValueByLabel(telefonata.getGiorno()));
         }
+        if(telefonata.getGiornoConsegnaOrdinale() == null){
+            telefonata.setGiornoConsegnaOrdinale(GiornoSettimana.getValueByLabel(telefonata.getGiornoConsegna()));
+        }
         Telefonata createdTelefonata = telefonataRepository.save(telefonata);
         LOGGER.info("Created 'telefonata' '{}'", createdTelefonata);
 

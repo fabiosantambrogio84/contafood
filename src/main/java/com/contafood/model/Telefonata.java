@@ -42,8 +42,17 @@ public class Telefonata {
     @Column(name = "giorno_ordinale")
     private Integer giornoOrdinale;
 
+    @Column(name = "giorno_consegna")
+    private String giornoConsegna;
+
+    @Column(name = "giorno_consegna_ordinale")
+    private Integer giornoConsegnaOrdinale;
+
     @Column(name = "ora")
     private Time ora;
+
+    @Column(name = "ora_consegna")
+    private Time oraConsegna;
 
     @Column(name = "note")
     private String note;
@@ -123,12 +132,36 @@ public class Telefonata {
         this.giornoOrdinale = giornoOrdinale;
     }
 
+    public String getGiornoConsegna() {
+        return giornoConsegna;
+    }
+
+    public void setGiornoConsegna(String giornoConsegna) {
+        this.giornoConsegna = giornoConsegna;
+    }
+
+    public Integer getGiornoConsegnaOrdinale() {
+        return giornoConsegnaOrdinale;
+    }
+
+    public void setGiornoConsegnaOrdinale(Integer giornoConsegnaOrdinale) {
+        this.giornoConsegnaOrdinale = giornoConsegnaOrdinale;
+    }
+
     public Time getOra() {
         return ora;
     }
 
     public void setOra(Time ora) {
         this.ora = ora;
+    }
+
+    public Time getOraConsegna() {
+        return oraConsegna;
+    }
+
+    public void setOraConsegna(Time oraConsegna) {
+        this.oraConsegna = oraConsegna;
     }
 
     public String getNote() {
@@ -161,7 +194,10 @@ public class Telefonata {
         result.append(", telefono 3: " + telefonoThree);
         result.append(", giorno: " + giorno);
         result.append(", giornoOrdinale: " + giornoOrdinale);
+        result.append(", giornoConsegna: " + giornoConsegna);
+        result.append(", giornoConsegnaOrdinale: " + giornoConsegnaOrdinale);
         result.append(", ora: " + ora);
+        result.append(", oraConsegna: " + oraConsegna);
         result.append(", note: " + note);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
