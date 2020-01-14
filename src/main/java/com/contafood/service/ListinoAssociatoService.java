@@ -2,12 +2,15 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.ListinoAssociato;
+import com.contafood.model.OrdineCliente;
 import com.contafood.repository.ListinoAssociatoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -37,15 +40,20 @@ public class ListinoAssociatoService {
         return listinoAssociato;
     }
 
-    public ListinoAssociato create(ListinoAssociato listinoAssociato){
-        LOGGER.info("Creating 'listinoAssociato'");
-        ListinoAssociato createdListinoAssociato = listinoAssociatoRepository.save(listinoAssociato);
-        LOGGER.info("Created 'listinoAssociato' '{}'", createdListinoAssociato);
-        return createdListinoAssociato;
+    public List<ListinoAssociato> create(List<ListinoAssociato> listiniAssociati){
+        LOGGER.info("Creating a list of 'listinoAssociato'");
+        listiniAssociati.stream().forEach(la -> {
+            la.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+            ListinoAssociato createdListinoAssociato = listinoAssociatoRepository.save(la);
+            LOGGER.info("Created 'listinoAssociato' '{}'", createdListinoAssociato);
+        });
+        return listiniAssociati;
     }
 
     public ListinoAssociato update(ListinoAssociato listinoAssociato){
         LOGGER.info("Updating 'listinoAssociato'");
+        ListinoAssociato listinoAssociatoCurrent = listinoAssociatoRepository.findById(listinoAssociato.getId()).orElseThrow(ResourceNotFoundException::new);
+        listinoAssociato.setDataInserimento(listinoAssociatoCurrent.getDataInserimento());
         ListinoAssociato updatedListinoAssociato = listinoAssociatoRepository.save(listinoAssociato);
         LOGGER.info("Updated 'listinoAssociato' '{}'", updatedListinoAssociato);
         return updatedListinoAssociato;
