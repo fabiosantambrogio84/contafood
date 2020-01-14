@@ -1,6 +1,7 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
+import com.contafood.model.Autista;
 import com.contafood.model.OrdineCliente;
 import com.contafood.model.OrdineClienteArticolo;
 import com.contafood.model.StatoOrdine;
@@ -14,10 +15,7 @@ import javax.transaction.Transactional;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrdineClienteService {
@@ -97,6 +95,29 @@ public class OrdineClienteService {
         });
         LOGGER.info("Updated 'ordineCliente' '{}'", updatedOrdineCliente);
         return updatedOrdineCliente;
+    }
+
+    @Transactional
+    public OrdineCliente patch(Map<String,Object> patchOrdineCliente){
+        LOGGER.info("Patching 'ordineCliente'");
+
+        Long id = Long.valueOf((Integer) patchOrdineCliente.get("id"));
+        OrdineCliente ordineCliente = ordineClienteRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        patchOrdineCliente.forEach((key, value) -> {
+            if(key.equals("id")){
+                ordineCliente.setId(Long.valueOf((Integer)value));
+            } else if(key.equals("dataConsegna")){
+                ordineCliente.setDataConsegna(Date.valueOf((String)value));
+            } else if(key.equals("idAutista")){
+                Autista autista = new Autista();
+                autista.setId(Long.valueOf((Integer)value));
+                ordineCliente.setAutista(autista);
+            }
+        });
+        OrdineCliente patchedOrdineCliente = ordineClienteRepository.save(ordineCliente);
+
+        LOGGER.info("Patched 'ordineCliente' '{}'", patchedOrdineCliente);
+        return patchedOrdineCliente;
     }
 
     @Transactional

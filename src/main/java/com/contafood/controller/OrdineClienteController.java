@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -67,6 +68,17 @@ public class OrdineClienteController {
             throw new CannotChangeResourceIdException();
         }
         return ordineClienteService.update(ordineCliente);
+    }
+
+    @RequestMapping(method = PATCH, path = "/{ordineClienteId}")
+    @CrossOrigin
+    public OrdineCliente patch(@PathVariable final Long ordineClienteId, @RequestBody final Map<String,Object> patchOrdineCliente){
+        LOGGER.info("Performing PATCH request for updating 'ordineCliente' '{}'", ordineClienteId);
+        Long id = Long.valueOf((Integer) patchOrdineCliente.get("id"));
+        if (!Objects.equals(ordineClienteId, id)) {
+            throw new CannotChangeResourceIdException();
+        }
+        return ordineClienteService.patch(patchOrdineCliente);
     }
 
     @RequestMapping(method = DELETE, path = "/{ordineClienteId}")
