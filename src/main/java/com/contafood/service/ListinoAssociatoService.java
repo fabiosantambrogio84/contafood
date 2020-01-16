@@ -1,5 +1,6 @@
 package com.contafood.service;
 
+import com.contafood.exception.ListinoAssociatoAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.ListinoAssociato;
 import com.contafood.model.OrdineCliente;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -21,9 +23,15 @@ public class ListinoAssociatoService {
 
     private final ListinoAssociatoRepository listinoAssociatoRepository;
 
+    private final FornitoreService fornitoreService;
+
+    private final ListinoService listinoService;
+
     @Autowired
-    public ListinoAssociatoService(final ListinoAssociatoRepository listinoAssociatoRepository){
+    public ListinoAssociatoService(final ListinoAssociatoRepository listinoAssociatoRepository, final FornitoreService fornitoreService, final ListinoService listinoService){
         this.listinoAssociatoRepository = listinoAssociatoRepository;
+        this.fornitoreService = fornitoreService;
+        this.listinoService = listinoService;
     }
 
     public Set<ListinoAssociato> getAll(){
@@ -43,9 +51,29 @@ public class ListinoAssociatoService {
     public List<ListinoAssociato> create(List<ListinoAssociato> listiniAssociati){
         LOGGER.info("Creating a list of 'listinoAssociato'");
         listiniAssociati.stream().forEach(la -> {
-            la.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-            ListinoAssociato createdListinoAssociato = listinoAssociatoRepository.save(la);
-            LOGGER.info("Created 'listinoAssociato' '{}'", createdListinoAssociato);
+            // Check if for the Cliente the Fornitore is already associated to the Listino
+            Long idCliente = null;
+            if(la.getCliente() != null){
+                idCliente = la.getCliente().getId();
+            }
+            Long idFornitore = null;
+            if(la.getFornitore() != null){
+                idFornitore = la.getFornitore().getId();
+            }
+            Long idListino = null;
+            if(la.getListino() != null){
+                idListino = la.getListino().getId();
+            }
+            Optional<ListinoAssociato> alreadyListinoAssociato = listinoAssociatoRepository.findByClienteIdAndFornitoreIdAndListinoId(idCliente,idFornitore,idListino);
+            if(alreadyListinoAssociato.isPresent()){
+                String fornitore = fornitoreService.getOne(idFornitore).getRagioneSociale();
+                String listino = listinoService.getOne(idListino).getNome();
+                throw new ListinoAssociatoAlreadyExistingException(fornitore, listino);
+            } else {
+                la.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+                ListinoAssociato createdListinoAssociato = listinoAssociatoRepository.save(la);
+                LOGGER.info("Created 'listinoAssociato' '{}'", createdListinoAssociato);
+            }
         });
         return listiniAssociati;
     }
