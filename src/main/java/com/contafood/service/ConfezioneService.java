@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.Set;
 
 @Service
@@ -38,6 +40,8 @@ public class ConfezioneService {
 
     public Confezione create(Confezione confezione){
         LOGGER.info("Creating 'confezione'");
+        confezione.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        confezione.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Confezione createdConfezione = confezioneRepository.save(confezione);
         LOGGER.info("Created 'confezione' '{}'", confezione);
         return createdConfezione;
@@ -45,6 +49,9 @@ public class ConfezioneService {
 
     public Confezione update(Confezione confezione){
         LOGGER.info("Updating 'confezione'");
+        Confezione confezioneCurrent = confezioneRepository.findById(confezione.getId()).orElseThrow(ResourceNotFoundException::new);
+        confezione.setDataInserimento(confezioneCurrent.getDataInserimento());
+        confezione.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Confezione updatedConfezione = confezioneRepository.save(confezione);
         LOGGER.info("Created 'confezione' '{}'", updatedConfezione);
         return updatedConfezione;
