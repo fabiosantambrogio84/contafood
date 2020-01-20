@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
+@SuppressWarnings("ALL")
 @EqualsAndHashCode(exclude = {"puntiConsegna", "listiniAssociati", "sconti", "telefonate"})
 @Entity
 @Table(name = "cliente")
