@@ -50,9 +50,7 @@ public class RicettaService {
         Ricetta createdRicetta = ricettaRepository.save(ricetta);
         Float pesoTotale = ricetta.getPesoTotale();
         createdRicetta.getRicettaIngredienti().stream().forEach(ri -> {
-            Float percentualeNotRounded = (ri.getQuantita()*100)/pesoTotale;
-            float percentuale = (float)Math.round(percentualeNotRounded*100)/100;
-            ri.setPercentuale(percentuale);
+            ri.setPercentuale(computePercentuale(ri, pesoTotale));
             ri.getId().setRicettaId(createdRicetta.getId());
             ricettaIngredienteService.create(ri);
         });
@@ -68,7 +66,9 @@ public class RicettaService {
         ricettaIngredienteService.deleteByRicettaId(ricetta.getId());
 
         Ricetta updatedRicetta = ricettaRepository.save(ricetta);
+        Float pesoTotale = ricetta.getPesoTotale();
         ricettaIngredienti.stream().forEach(ri -> {
+            ri.setPercentuale(computePercentuale(ri, pesoTotale));
             ri.getId().setRicettaId(updatedRicetta.getId());
             ricettaIngredienteService.create(ri);
         });
@@ -85,4 +85,8 @@ public class RicettaService {
         LOGGER.info("Deleted 'ricetta' '{}'", ricettaId);
     }
 
+    private float computePercentuale(RicettaIngrediente ricettaIngrediente, Float pesoTotale){
+        Float percentualeNotRounded = (ricettaIngrediente.getQuantita()*100)/pesoTotale;
+        return (float)Math.round(percentualeNotRounded*100)/100;
+    }
 }
