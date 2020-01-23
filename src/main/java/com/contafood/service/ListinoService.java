@@ -83,7 +83,7 @@ public class ListinoService {
             }
         }
         listino.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-        listino.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        //listino.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Listino createdListino = listinoRepository.save(listino);
         LOGGER.info("Created 'listino' '{}'", createdListino);
 

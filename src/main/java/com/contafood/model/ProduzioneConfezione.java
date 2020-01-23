@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
 
 @Entity
 @Table(name = "produzione_confezione")
@@ -27,6 +26,9 @@ public class ProduzioneConfezione implements Serializable {
 
     @Column(name = "num_confezioni")
     private Integer numConfezioni;
+
+    @Column(name = "lotto")
+    private String lotto;
 
     public ProduzioneConfezioneKey getId() {
         return id;
@@ -60,6 +62,14 @@ public class ProduzioneConfezione implements Serializable {
         this.numConfezioni = numConfezioni;
     }
 
+    public String getLotto() {
+        return lotto;
+    }
+
+    public void setLotto(String lotto) {
+        this.lotto = lotto;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -68,6 +78,7 @@ public class ProduzioneConfezione implements Serializable {
         result.append("produzioneId: " + id.produzioneId);
         result.append(", confezioneId: " + id.confezioneId);
         result.append(", numConfezioni: " + numConfezioni);
+        result.append(", lotto: " + lotto);
         result.append("}");
 
         return result.toString();

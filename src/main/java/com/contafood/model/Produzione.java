@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,6 +58,18 @@ public class Produzione {
 
     @Column(name = "scopo")
     private String scopo;
+
+    @Column(name = "film_chiusura")
+    private String filmChiusura;
+
+    @Column(name = "lotto_film_chiusura")
+    private String lottoFilmChiusura;
+
+    @Column(name = "data_inserimento")
+    private Timestamp dataInserimento;
+
+    @Column(name = "data_aggiornamento")
+    private Timestamp dataAggiornamento;
 
     @OneToMany(mappedBy = "produzione")
     @JsonIgnoreProperties("produzione")
@@ -180,6 +193,38 @@ public class Produzione {
         this.produzioneConfezioni = produzioneConfezioni;
     }
 
+    public String getFilmChiusura() {
+        return filmChiusura;
+    }
+
+    public void setFilmChiusura(String filmChiusura) {
+        this.filmChiusura = filmChiusura;
+    }
+
+    public String getLottoFilmChiusura() {
+        return lottoFilmChiusura;
+    }
+
+    public void setLottoFilmChiusura(String lottoFilmChiusura) {
+        this.lottoFilmChiusura = lottoFilmChiusura;
+    }
+
+    public Timestamp getDataInserimento() {
+        return dataInserimento;
+    }
+
+    public void setDataInserimento(Timestamp dataInserimento) {
+        this.dataInserimento = dataInserimento;
+    }
+
+    public Timestamp getDataAggiornamento() {
+        return dataAggiornamento;
+    }
+
+    public void setDataAggiornamento(Timestamp dataAggiornamento) {
+        this.dataAggiornamento = dataAggiornamento;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -198,6 +243,10 @@ public class Produzione {
         result.append(", quantitaTotale: " + quantitaTotale);
         result.append(", numeroConfezioni: " + numeroConfezioni);
         result.append(", scopo: " + scopo);
+        result.append(", filmChiusura: " + filmChiusura);
+        result.append(", lottoFilmChiusura: " + lottoFilmChiusura);
+        result.append(", dataInserimento: " + dataInserimento);
+        result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append(", ingredienti: [");
         for(ProduzioneIngrediente produzioneIngrediente: produzioneIngredienti){
             result.append("{");

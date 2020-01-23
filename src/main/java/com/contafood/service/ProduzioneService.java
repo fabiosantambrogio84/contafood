@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
@@ -69,6 +71,7 @@ public class ProduzioneService {
             produzione.setLottoNumeroProgressivo(numeroProgressivo);
             produzione.setLotto(lotto);
         }
+        produzione.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         Produzione createdProduzione = produzioneRepository.save(produzione);
         Long produzioneId = createdProduzione.getId();
@@ -101,6 +104,10 @@ public class ProduzioneService {
         Set<ProduzioneConfezione> produzioneConfezioni = produzione.getProduzioneConfezioni();
         produzione.setProduzioneConfezioni(new HashSet<>());
         produzioneConfezioneService.deleteByProduzioneId(produzione.getId());
+
+        Produzione produzioneCurrente = produzioneRepository.findById(produzione.getId()).orElseThrow(ResourceNotFoundException::new);
+        produzione.setDataInserimento(produzioneCurrente.getDataInserimento());
+        produzione.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         Produzione updatedProduzione = produzioneRepository.save(produzione);
         Long produzioneId = updatedProduzione.getId();
