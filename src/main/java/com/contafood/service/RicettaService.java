@@ -21,11 +21,13 @@ public class RicettaService {
 
     private final RicettaRepository ricettaRepository;
     private final RicettaIngredienteService ricettaIngredienteService;
+    private final ProduzioneService produzioneService;
 
     @Autowired
-    public RicettaService(final RicettaRepository ricettaRepository, final RicettaIngredienteService ricettaIngredienteService){
+    public RicettaService(final RicettaRepository ricettaRepository, final RicettaIngredienteService ricettaIngredienteService, final ProduzioneService produzioneService){
         this.ricettaRepository = ricettaRepository;
         this.ricettaIngredienteService = ricettaIngredienteService;
+        this.produzioneService = produzioneService;
     }
 
     public Set<Ricetta> getAll(){
@@ -77,6 +79,7 @@ public class RicettaService {
     @Transactional
     public void delete(Long ricettaId){
         LOGGER.info("Deleting 'ricetta' '{}'", ricettaId);
+        produzioneService.deleteByRicettaId(ricettaId);
         ricettaIngredienteService.deleteByRicettaId(ricettaId);
         ricettaRepository.deleteById(ricettaId);
         LOGGER.info("Deleted 'ricetta' '{}'", ricettaId);

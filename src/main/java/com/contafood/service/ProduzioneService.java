@@ -15,6 +15,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -129,6 +130,14 @@ public class ProduzioneService {
         produzioneConfezioneService.deleteByProduzioneId(produzioneId);
         produzioneRepository.deleteById(produzioneId);
         LOGGER.info("Deleted 'produzione' '{}'", produzioneId);
+    }
+
+    @Transactional
+    public void deleteByRicettaId(Long idRicetta){
+        LOGGER.info("Deleting 'produzioni' of 'ricetta' '{}'", idRicetta);
+        List<Produzione> produzioniToDelete = produzioneRepository.findByRicettaId(idRicetta);
+        produzioniToDelete.forEach(p -> delete(p.getId()));
+        LOGGER.info("Deleted 'produzioni' of 'ricetta' '{}'", idRicetta);
     }
 
     public Set<ProduzioneConfezione> getProduzioneConfezioni(Long produzioneId){
