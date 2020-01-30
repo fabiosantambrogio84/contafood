@@ -21,7 +21,7 @@ public class UtilsController {
 
     @RequestMapping(method = GET, path = "/province")
     @CrossOrigin
-    public List<String> getAll() {
+    public List<String> getProvince() {
         LOGGER.info("Performing GET request for retrieving list of 'province'");
         return Provincia.labels();
     }
@@ -52,5 +52,12 @@ public class UtilsController {
     public List<TipologiaOrdine> getTipologieOrdine() {
         LOGGER.info("Performing GET request for retrieving list of 'tipologie-ordini'");
         return Arrays.asList(TipologiaOrdine.values());
+    }
+
+    @RequestMapping(method = GET, path = "/tipologie-trasporto-ddt")
+    @CrossOrigin
+    public List<String> getTipologieTrasportoDdt() {
+        LOGGER.info("Performing GET request for retrieving list of 'tipologie-trasporto-ddt'");
+        return TipologiaTrasportoDdt.labels();
     }
 }
