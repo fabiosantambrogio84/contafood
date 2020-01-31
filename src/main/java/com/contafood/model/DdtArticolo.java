@@ -38,6 +38,12 @@ public class DdtArticolo implements Serializable {
     @Column(name = "sconto")
     private BigDecimal sconto;
 
+    @Column(name = "imponibile")
+    private BigDecimal imponibile;
+
+    @Column(name = "costo")
+    private BigDecimal costo;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -100,6 +106,22 @@ public class DdtArticolo implements Serializable {
         this.sconto = sconto;
     }
 
+    public BigDecimal getImponibile() {
+        return imponibile;
+    }
+
+    public void setImponibile(BigDecimal imponibile) {
+        this.imponibile = imponibile;
+    }
+
+    public BigDecimal getCosto() {
+        return costo;
+    }
+
+    public void setCosto(BigDecimal costo) {
+        this.costo = costo;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -127,6 +149,8 @@ public class DdtArticolo implements Serializable {
         result.append(", numeroPezzi: " + numeroPezzi);
         result.append(", prezzo: " + prezzo);
         result.append(", sconto: " + sconto);
+        result.append(", imponibile: " + imponibile);
+        result.append(", costo: " + costo);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

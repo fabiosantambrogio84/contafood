@@ -43,6 +43,13 @@ public class DdtController {
         return ddtService.getOne(ddtId);
     }
 
+    @RequestMapping(method = GET, path = "/progressivo")
+    @CrossOrigin
+    public Map<String, Integer> getAnnoContabileAndProgressivo() {
+        LOGGER.info("Performing GET request for retrieving 'annoContabile' and 'progressivo' for a new ddt");
+        return ddtService.getAnnoContabileAndProgressivo();
+    }
+
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin

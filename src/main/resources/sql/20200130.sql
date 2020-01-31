@@ -1,7 +1,6 @@
 DROP TABLE IF EXISTS `ddt_articolo`;
 DROP TABLE IF EXISTS `ddt`;
 
-
 CREATE TABLE `ddt` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
 	progressivo int(11),
@@ -29,6 +28,8 @@ CREATE TABLE `ddt_articolo` (
 	numero_pezzi int(10),
 	prezzo decimal(10,3),
     sconto decimal(10,3),
+    imponibile decimal(10,3),
+    costo decimal(10,3),
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
 	PRIMARY KEY (`id_ddt`, `id_articolo`),

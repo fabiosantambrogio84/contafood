@@ -1,5 +1,6 @@
 package com.contafood.service;
 
+import com.contafood.exception.DdtAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Ddt;
 import com.contafood.model.DdtArticolo;
@@ -42,13 +43,30 @@ public class DdtService {
         return ddt;
     }
 
+    public Map<String, Integer> getAnnoContabileAndProgressivo(){
+        Integer annoContabile = ZonedDateTime.now().getYear();
+        Integer progressivo = 1;
+        List<Ddt> ddts = ddtRepository.findByAnnoContabileOrderByProgressivoDesc(annoContabile);
+        if(ddts != null && !ddts.isEmpty()){
+            Optional<Ddt> lastDdt = ddts.stream().findFirst();
+            if(lastDdt.isPresent()){
+                progressivo = lastDdt.get().getProgressivo() + 1;
+            }
+        }
+        HashMap<String, Integer> result = new HashMap<>();
+        result.put("annoContabile", annoContabile);
+        result.put("progressivo", progressivo);
+
+        return result;
+    }
+
     @Transactional
     public Ddt create(Ddt ddt){
         LOGGER.info("Creating 'ddt'");
+
+        checkExistsByAnnoContabileAndProgressivo(ddt.getAnnoContabile(),ddt.getProgressivo());
+
         ddt.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-        Integer annoContabile = ZonedDateTime.now().getYear();
-        ddt.setAnnoContabile(annoContabile);
-        ddt.setProgressivo(computeProgressivo(annoContabile));
 
         Ddt createdDdt = ddtRepository.save(ddt);
 
@@ -65,6 +83,8 @@ public class DdtService {
     @Transactional
     public Ddt update(Ddt ddt){
         LOGGER.info("Updating 'ddt'");
+        checkExistsByAnnoContabileAndProgressivo(ddt.getAnnoContabile(),ddt.getProgressivo());
+
         Set<DdtArticolo> ddtArticoli = ddt.getDdtArticoli();
         ddt.setDdtArticoli(new HashSet<>());
         ddtArticoloService.deleteByDdtId(ddt.getId());
@@ -109,15 +129,11 @@ public class DdtService {
         LOGGER.info("Deleted 'ddt' '{}'", ddtId);
     }
 
-    private Integer computeProgressivo(Integer annoContabile){
-        List<Ddt> ddts = ddtRepository.findByAnnoContabileOrderByProgressivoDesc(annoContabile);
-        if(ddts != null && !ddts.isEmpty()){
-            Optional<Ddt> lastDdt = ddts.stream().findFirst();
-            if(lastDdt.isPresent()){
-                return lastDdt.get().getProgressivo() + 1;
-            }
+    private void checkExistsByAnnoContabileAndProgressivo(Integer annoContabile, Integer progressivo){
+        Optional<Ddt> ddt = ddtRepository.findByAnnoContabileAndProgressivo(annoContabile, progressivo);
+        if(ddt.isPresent()){
+            throw new DdtAlreadyExistingException(annoContabile, progressivo);
         }
-        return 1;
     }
 
 }

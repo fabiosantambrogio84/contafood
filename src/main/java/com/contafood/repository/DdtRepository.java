@@ -4,6 +4,7 @@ import com.contafood.model.Ddt;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface DdtRepository extends CrudRepository<Ddt, Long> {
@@ -14,4 +15,6 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
     Set<Ddt> findAllByOrderByAnnoContabileDescProgressivoDesc();
 
     List<Ddt> findByAnnoContabileOrderByProgressivoDesc(Integer annoContabile);
+
+    Optional<Ddt> findByAnnoContabileAndProgressivo(Integer annoContabile, Integer progressivo);
 }
