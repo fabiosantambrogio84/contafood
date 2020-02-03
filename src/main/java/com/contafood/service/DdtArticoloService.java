@@ -22,9 +22,12 @@ public class DdtArticoloService {
 
     private final DdtArticoloRepository ddtArticoloRepository;
 
+    private final ArticoloService articoloService;
+
     @Autowired
-    public DdtArticoloService(final DdtArticoloRepository ddtArticoloRepository){
+    public DdtArticoloService(final DdtArticoloRepository ddtArticoloRepository, final ArticoloService articoloService){
         this.ddtArticoloRepository = ddtArticoloRepository;
+        this.articoloService = articoloService;
     }
 
     public Set<DdtArticolo> findAll(){
@@ -94,10 +97,15 @@ public class DdtArticoloService {
             quantita = 0F;
         }
         BigDecimal prezzoAcquisto = new BigDecimal(0);
-        Articolo articolo = ddtArticolo.getArticolo();
-        if(articolo != null){
-            prezzoAcquisto = articolo.getPrezzoAcquisto();
+        Long articoloId = ddtArticolo.getId().getArticoloId();
+        if(articoloId != null){
+            Articolo articolo = articoloService.getOne(articoloId);
+            LOGGER.info("Compute costo for 'articolo' {}", articolo);
+            if(articolo != null){
+                prezzoAcquisto = articolo.getPrezzoAcquisto();
+            }
         }
+        LOGGER.info("Prezzo acquisto '{}'", prezzoAcquisto);
         costo = (prezzoAcquisto.multiply(BigDecimal.valueOf(quantita))).setScale(2, RoundingMode.CEILING);
         return costo;
     }
