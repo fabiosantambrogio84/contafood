@@ -24,7 +24,7 @@ public class AliquotaIvaService {
 
     public Set<AliquotaIva> getAll(){
         LOGGER.info("Retrieving the list of 'aliquoteIva'");
-        Set<AliquotaIva> aliquoteIva = aliquotaIvaRepository.findAll();
+        Set<AliquotaIva> aliquoteIva = aliquotaIvaRepository.findAllByOrderByValore();
         LOGGER.info("Retrieved {} 'aliquoteIva'", aliquoteIva.size());
         return aliquoteIva;
     }

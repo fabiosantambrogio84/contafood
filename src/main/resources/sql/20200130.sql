@@ -13,6 +13,11 @@ CREATE TABLE `ddt` (
     data_trasporto date,
     ora_trasporto time,
     trasportatore varchar(255),
+    fatturato bit(1) NOT NULL DEFAULT b'0',
+    totale_imponibile decimal(10,3),
+    totale_iva decimal(10,3),
+    totale_costo decimal(10,3),
+    totale decimal(10,3),
     note text,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
@@ -22,8 +27,9 @@ CREATE TABLE `ddt` (
 ) ENGINE=InnoDB;
 
 CREATE TABLE `ddt_articolo` (
-	id_ddt int(10) unsigned NOT NULL AUTO_INCREMENT,
+	id_ddt int(10) unsigned,
 	id_articolo int(10) unsigned,
+	uuid varchar(255),
 	quantita decimal(10,3),
 	numero_pezzi int(10),
 	prezzo decimal(10,3),
@@ -32,7 +38,7 @@ CREATE TABLE `ddt_articolo` (
     costo decimal(10,3),
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
-	PRIMARY KEY (`id_ddt`, `id_articolo`),
+	PRIMARY KEY (id_ddt, id_articolo, uuid),
 	CONSTRAINT `fk_ddt_articolo_ddt` FOREIGN KEY (`id_ddt`) REFERENCES `ddt` (`id`),
 	CONSTRAINT `fk_ddt_articolo_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
 ) ENGINE=InnoDB;

@@ -14,11 +14,15 @@ public class DdtArticoloKey implements Serializable {
     @Column(name = "id_articolo")
     Long articoloId;
 
+    @Column(name = "uuid")
+    String uuid;
+
     public DdtArticoloKey(){}
 
-    public DdtArticoloKey(Long ddtId, Long articoloId){
+    public DdtArticoloKey(Long ddtId, Long articoloId, String uuid){
         this.ddtId = ddtId;
         this.articoloId = articoloId;
+        this.uuid = uuid;
     }
 
     public Long getDdtId() {
@@ -37,9 +41,17 @@ public class DdtArticoloKey implements Serializable {
         this.articoloId = articoloId;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(ddtId, articoloId);
+        return Objects.hash(ddtId, articoloId, uuid);
     }
 
     @Override
@@ -52,7 +64,7 @@ public class DdtArticoloKey implements Serializable {
         }
         final DdtArticoloKey that = (DdtArticoloKey) obj;
         return Objects.equals(ddtId, that.ddtId) &&
-                Objects.equals(articoloId, that.articoloId);
+                Objects.equals(articoloId, that.articoloId) && Objects.equals(uuid, that.uuid);
     }
 
     @Override
@@ -62,6 +74,7 @@ public class DdtArticoloKey implements Serializable {
         result.append("{");
         result.append("ddtId: " + ddtId);
         result.append(", articoloId: " + articoloId);
+        result.append(", uuid: " + uuid);
         result.append("}");
 
         return result.toString();

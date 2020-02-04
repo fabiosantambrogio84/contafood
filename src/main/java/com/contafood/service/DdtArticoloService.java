@@ -67,6 +67,11 @@ public class DdtArticoloService {
         LOGGER.info("Deleted 'ddt articolo' by 'ddt' '{}'", ddtId);
     }
 
+    public Articolo getArticolo(DdtArticolo ddtArticolo){
+        Long articoloId = ddtArticolo.getId().getArticoloId();
+        return articoloService.getOne(articoloId);
+    }
+
     private BigDecimal computeImponibile(DdtArticolo ddtArticolo){
         BigDecimal imponibile = new BigDecimal(0);
 

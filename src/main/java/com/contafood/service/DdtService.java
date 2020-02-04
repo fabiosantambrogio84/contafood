@@ -2,6 +2,8 @@ package com.contafood.service;
 
 import com.contafood.exception.DdtAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
+import com.contafood.model.AliquotaIva;
+import com.contafood.model.Articolo;
 import com.contafood.model.Ddt;
 import com.contafood.model.DdtArticolo;
 import com.contafood.repository.DdtRepository;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -72,8 +76,11 @@ public class DdtService {
 
         createdDdt.getDdtArticoli().stream().forEach(da -> {
             da.getId().setDdtId(createdDdt.getId());
+            da.getId().setUuid(UUID.randomUUID().toString());
             ddtArticoloService.create(da);
         });
+
+        computeTotali(createdDdt, createdDdt.getDdtArticoli());
 
         ddtRepository.save(createdDdt);
         LOGGER.info("Created 'ddt' '{}'", createdDdt);
@@ -96,8 +103,13 @@ public class DdtService {
         Ddt updatedDdt = ddtRepository.save(ddt);
         ddtArticoli.stream().forEach(da -> {
             da.getId().setDdtId(updatedDdt.getId());
+            da.getId().setUuid(UUID.randomUUID().toString());
             ddtArticoloService.create(da);
         });
+
+        computeTotali(updatedDdt, updatedDdt.getDdtArticoli());
+
+        ddtRepository.save(updatedDdt);
         LOGGER.info("Updated 'ddt' '{}'", updatedDdt);
         return updatedDdt;
     }
@@ -134,6 +146,46 @@ public class DdtService {
         if(ddt.isPresent()){
             throw new DdtAlreadyExistingException(annoContabile, progressivo);
         }
+    }
+
+    private void computeTotali(Ddt ddt, Set<DdtArticolo> ddtArticoli){
+        Map<AliquotaIva, Set<DdtArticolo>> ivaDdtArticoliMap = new HashMap<>();
+        ddtArticoli.stream().forEach(da -> {
+            Articolo articolo = ddtArticoloService.getArticolo(da);
+            AliquotaIva iva = articolo.getAliquotaIva();
+            Set<DdtArticolo> ddtArticoliByIva;
+            if(ivaDdtArticoliMap.containsKey(iva)){
+                ddtArticoliByIva = ivaDdtArticoliMap.get(iva);
+            } else {
+                ddtArticoliByIva = new HashSet<>();
+            }
+            ddtArticoliByIva.add(da);
+            ivaDdtArticoliMap.put(iva, ddtArticoliByIva);
+        });
+        BigDecimal totaleImponibile = new BigDecimal(0);
+        BigDecimal totaleIva = new BigDecimal(0);
+        BigDecimal totaleCosto = new BigDecimal(0);
+        BigDecimal totale = new BigDecimal(0);
+        for (Map.Entry<AliquotaIva, Set<DdtArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
+            BigDecimal iva = entry.getKey().getValore();
+            BigDecimal totaleByIva = new BigDecimal(0);
+            Set<DdtArticolo> ddtArticoliByIva = entry.getValue();
+            for(DdtArticolo ddtArticolo: ddtArticoliByIva){
+                totaleImponibile = totaleImponibile.add(ddtArticolo.getImponibile());
+
+                totaleCosto = totaleCosto.add(ddtArticolo.getCosto());
+
+                BigDecimal partialIva = ddtArticolo.getImponibile().multiply(iva.divide(new BigDecimal(100)));
+                totaleIva = totaleIva.add(partialIva);
+
+                totaleByIva = totaleByIva.add(ddtArticolo.getImponibile());
+            }
+            totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
+        }
+        ddt.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.CEILING));
+        ddt.setTotaleIva(totaleIva.setScale(2, RoundingMode.CEILING));
+        ddt.setTotaleCosto(totaleCosto.setScale(2, RoundingMode.CEILING));
+        ddt.setTotale(totale.setScale(2, RoundingMode.CEILING));
     }
 
 }

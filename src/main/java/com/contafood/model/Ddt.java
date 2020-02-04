@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
@@ -50,6 +51,21 @@ public class Ddt {
 
     @Column(name = "trasportatore")
     private String trasportatore;
+
+    @Column(name = "fatturato")
+    private Boolean fatturato;
+
+    @Column(name = "totale_imponibile")
+    private BigDecimal totaleImponibile;
+
+    @Column(name = "totale_iva")
+    private BigDecimal totaleIva;
+
+    @Column(name = "totale_costo")
+    private BigDecimal totaleCosto;
+
+    @Column(name = "totale")
+    private BigDecimal totale;
 
     @Column(name = "note")
     private String note;
@@ -152,6 +168,46 @@ public class Ddt {
         this.trasportatore = trasportatore;
     }
 
+    public Boolean getFatturato() {
+        return fatturato;
+    }
+
+    public void setFatturato(Boolean fatturato) {
+        this.fatturato = fatturato;
+    }
+
+    public BigDecimal getTotaleImponibile() {
+        return totaleImponibile;
+    }
+
+    public void setTotaleImponibile(BigDecimal totaleImponibile) {
+        this.totaleImponibile = totaleImponibile;
+    }
+
+    public BigDecimal getTotaleIva() {
+        return totaleIva;
+    }
+
+    public void setTotaleIva(BigDecimal totaleIva) {
+        this.totaleIva = totaleIva;
+    }
+
+    public BigDecimal getTotaleCosto() {
+        return totaleCosto;
+    }
+
+    public void setTotaleCosto(BigDecimal totaleCosto) {
+        this.totaleCosto = totaleCosto;
+    }
+
+    public BigDecimal getTotale() {
+        return totale;
+    }
+
+    public void setTotale(BigDecimal totale) {
+        this.totale = totale;
+    }
+
     public String getNote() {
         return note;
     }
@@ -200,6 +256,11 @@ public class Ddt {
         result.append(", dataTrasporto: " + dataTrasporto);
         result.append(", oraTrasporto: " + oraTrasporto);
         result.append(", trasportatore: " + trasportatore);
+        result.append(", fatturato: " + fatturato);
+        result.append(", totaleImponibile: " + totaleImponibile);
+        result.append(", totaleIva: " + totaleIva);
+        result.append(", totaleCosto: " + totaleCosto);
+        result.append(", totale: " + totale);
         result.append(", note: " + note);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
