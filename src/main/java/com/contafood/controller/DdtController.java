@@ -2,12 +2,14 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Ddt;
+import com.contafood.model.Pagamento;
 import com.contafood.service.DdtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -41,6 +43,13 @@ public class DdtController {
     public Ddt getOne(@PathVariable final Long ddtId) {
         LOGGER.info("Performing GET request for retrieving 'ddt' '{}'", ddtId);
         return ddtService.getOne(ddtId);
+    }
+
+    @RequestMapping(method = GET, path = "/{ddtId}/pagamenti")
+    @CrossOrigin
+    public List<Pagamento> getDdtPagamenti(@PathVariable final Long ddtId) {
+        LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
+        return ddtService.getDdtPagamenti(ddtId);
     }
 
     @RequestMapping(method = GET, path = "/progressivo")

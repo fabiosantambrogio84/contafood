@@ -24,12 +24,14 @@ public class DdtService {
     private final DdtRepository ddtRepository;
     private final DdtArticoloService ddtArticoloService;
     private final StatoDdtService statoDdtService;
+    private final PagamentoService pagamentoService;
 
     @Autowired
-    public DdtService(final DdtRepository ddtRepository, final DdtArticoloService ddtArticoloService, final StatoDdtService statoDdtService){
+    public DdtService(final DdtRepository ddtRepository, final DdtArticoloService ddtArticoloService, final StatoDdtService statoDdtService, final PagamentoService pagamentoService){
         this.ddtRepository = ddtRepository;
         this.ddtArticoloService = ddtArticoloService;
         this.statoDdtService = statoDdtService;
+        this.pagamentoService = pagamentoService;
     }
 
     public Set<Ddt> getAll(){
@@ -44,6 +46,13 @@ public class DdtService {
         Ddt ddt = ddtRepository.findById(ddtId).orElseThrow(ResourceNotFoundException::new);
         LOGGER.info("Retrieved 'ddt' '{}'", ddt);
         return ddt;
+    }
+
+    public List<Pagamento> getDdtPagamenti(Long ddtId){
+        LOGGER.info("Retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
+        List<Pagamento> pagamenti = pagamentoService.getDdtPagamenti(ddtId);
+        LOGGER.info("Retrieved {} 'pagamenti' of 'ddt' '{}'", pagamenti.size(), ddtId);
+        return pagamenti;
     }
 
     public Map<String, Integer> getAnnoContabileAndProgressivo(){
@@ -133,6 +142,12 @@ public class DdtService {
                 } else {
                     ddt.setAutista(null);
                 }
+            } else if(key.equals("totaleAcconto")){
+                if(value != null){
+                    ddt.setTotaleAcconto(new BigDecimal(Float.parseFloat((String)value)));
+                } else {
+                    ddt.setTotaleAcconto(new BigDecimal(0));
+                }
             }
         });
         Ddt patchedDdt = ddtRepository.save(ddt);
@@ -144,6 +159,7 @@ public class DdtService {
     @Transactional
     public void delete(Long ddtId){
         LOGGER.info("Deleting 'ddt' '{}'", ddtId);
+        pagamentoService.deleteByDdtId(ddtId);
         ddtArticoloService.deleteByDdtId(ddtId);
         ddtRepository.deleteById(ddtId);
         LOGGER.info("Deleted 'ddt' '{}'", ddtId);

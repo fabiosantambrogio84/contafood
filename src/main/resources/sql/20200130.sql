@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `pagamento`;
 DROP TABLE IF EXISTS `ddt_articolo`;
 DROP TABLE IF EXISTS `ddt`;
 DROP TABLE IF EXISTS `stato_ddt`;
@@ -64,3 +65,25 @@ INSERT INTO stato_ddt(id,codice,descrizione,ordine) VALUES(1,'PARZIALMENTE_PAGAT
 INSERT INTO stato_ddt(id,codice,descrizione,ordine) VALUES(2,'PAGATO','Pagato',3);
 
 UPDATE stato_ordine SET codice='PARZIALMENTE_EVASO' WHERE id=1;
+
+CREATE TABLE `pagamento` (
+	id int(10) unsigned NOT NULL AUTO_INCREMENT,
+	data DATE,
+	id_tipo_pagamento int(10) unsigned,
+	id_ddt int(10) unsigned,
+	descrizione varchar(255),
+	importo decimal(10,3),
+    note text,
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
+	PRIMARY KEY (`id`),
+	CONSTRAINT `fk_pagamento_tipo_pag` FOREIGN KEY (`id_tipo_pagamento`) REFERENCES `tipo_pagamento` (`id`),
+	CONSTRAINT `fk_pagamento_ddt` FOREIGN KEY (`id_ddt`) REFERENCES `ddt` (`id`)
+) ENGINE=InnoDB;
+
+DELIMITER $$
+CREATE TRIGGER trg_update_ddt_acconto AFTER INSERT ON pagamento FOR EACH ROW
+BEGIN
+    UPDATE ddt SET totale_acconto = (totale_acconto + NEW.importo) WHERE ddt.id = NEW.idDdt;
+END;$$
+DELIMITER ;
