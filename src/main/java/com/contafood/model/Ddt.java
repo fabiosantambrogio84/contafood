@@ -37,6 +37,14 @@ public class Ddt {
     @JoinColumn(name="id_punto_consegna")
     private PuntoConsegna puntoConsegna;
 
+    @ManyToOne
+    @JoinColumn(name="id_autista")
+    private Autista autista;
+
+    @ManyToOne
+    @JoinColumn(name="id_stato")
+    private StatoDdt statoDdt;
+
     @Column(name = "numero_colli")
     private Integer numeroColli;
 
@@ -126,6 +134,22 @@ public class Ddt {
 
     public void setPuntoConsegna(PuntoConsegna puntoConsegna) {
         this.puntoConsegna = puntoConsegna;
+    }
+
+    public Autista getAutista() {
+        return autista;
+    }
+
+    public void setAutista(Autista autista) {
+        this.autista = autista;
+    }
+
+    public StatoDdt getStatoDdt() {
+        return statoDdt;
+    }
+
+    public void setStatoDdt(StatoDdt statoDdt) {
+        this.statoDdt = statoDdt;
     }
 
     public Integer getNumeroColli() {
@@ -251,6 +275,8 @@ public class Ddt {
         result.append(", data: " + data);
         result.append(", cliente: " + cliente);
         result.append(", puntoConsegna: " + puntoConsegna);
+        result.append(", autista: " + autista);
+        result.append(", statoDdt: " + statoDdt);
         result.append(", numeroColli: " + numeroColli);
         result.append(", tipoTrasporto: " + tipoTrasporto);
         result.append(", dataTrasporto: " + dataTrasporto);

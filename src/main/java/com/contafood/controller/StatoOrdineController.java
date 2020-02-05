@@ -53,7 +53,7 @@ public class StatoOrdineController {
     @RequestMapping(method = PUT, path = "/{statoOrdineId}")
     @CrossOrigin
     public StatoOrdine update(@PathVariable final Long statoOrdineId, @RequestBody final StatoOrdine statoOrdine){
-        LOGGER.info("Performing PUT request for updating 'tipoPagamento' '{}'", statoOrdineId);
+        LOGGER.info("Performing PUT request for updating 'statoOrdine' '{}'", statoOrdineId);
         if (!Objects.equals(statoOrdineId, statoOrdine.getId())) {
             throw new CannotChangeResourceIdException();
         }

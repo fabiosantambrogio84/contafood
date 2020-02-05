@@ -2,10 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.DdtAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.AliquotaIva;
-import com.contafood.model.Articolo;
-import com.contafood.model.Ddt;
-import com.contafood.model.DdtArticolo;
+import com.contafood.model.*;
 import com.contafood.repository.DdtRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +23,13 @@ public class DdtService {
 
     private final DdtRepository ddtRepository;
     private final DdtArticoloService ddtArticoloService;
+    private final StatoDdtService statoDdtService;
 
     @Autowired
-    public DdtService(final DdtRepository ddtRepository, final DdtArticoloService ddtArticoloService){
+    public DdtService(final DdtRepository ddtRepository, final DdtArticoloService ddtArticoloService, final StatoDdtService statoDdtService){
         this.ddtRepository = ddtRepository;
         this.ddtArticoloService = ddtArticoloService;
+        this.statoDdtService = statoDdtService;
     }
 
     public Set<Ddt> getAll(){
@@ -70,6 +69,8 @@ public class DdtService {
 
         checkExistsByAnnoContabileAndProgressivo(ddt.getAnnoContabile(),ddt.getProgressivo());
 
+        ddt.setStatoDdt(statoDdtService.getDaPagare());
+
         ddt.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         Ddt createdDdt = ddtRepository.save(ddt);
@@ -97,6 +98,7 @@ public class DdtService {
         ddtArticoloService.deleteByDdtId(ddt.getId());
 
         Ddt ddtCurrent = ddtRepository.findById(ddt.getId()).orElseThrow(ResourceNotFoundException::new);
+        ddt.setStatoDdt(ddtCurrent.getStatoDdt());
         ddt.setDataInserimento(ddtCurrent.getDataInserimento());
         ddt.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
@@ -123,8 +125,14 @@ public class DdtService {
         patchDdt.forEach((key, value) -> {
             if(key.equals("id")){
                 ddt.setId(Long.valueOf((Integer)value));
-            } else if(key.equals("dataConsegna")){
-
+            } else if(key.equals("idAutista")){
+                if(value != null){
+                    Autista autista = new Autista();
+                    autista.setId(Long.valueOf((Integer)value));
+                    ddt.setAutista(autista);
+                } else {
+                    ddt.setAutista(null);
+                }
             }
         });
         Ddt patchedDdt = ddtRepository.save(ddt);
