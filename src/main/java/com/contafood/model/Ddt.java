@@ -75,6 +75,9 @@ public class Ddt {
     @Column(name = "totale")
     private BigDecimal totale;
 
+    @Column(name = "totale_acconto")
+    private BigDecimal totaleAcconto;
+
     @Column(name = "note")
     private String note;
 
@@ -232,6 +235,14 @@ public class Ddt {
         this.totale = totale;
     }
 
+    public BigDecimal getTotaleAcconto() {
+        return totaleAcconto;
+    }
+
+    public void setTotaleAcconto(BigDecimal totaleAcconto) {
+        this.totaleAcconto = totaleAcconto;
+    }
+
     public String getNote() {
         return note;
     }
@@ -287,6 +298,7 @@ public class Ddt {
         result.append(", totaleIva: " + totaleIva);
         result.append(", totaleCosto: " + totaleCosto);
         result.append(", totale: " + totale);
+        result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", note: " + note);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);

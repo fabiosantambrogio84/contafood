@@ -194,6 +194,7 @@ public class DdtService {
         ddt.setTotaleIva(totaleIva.setScale(2, RoundingMode.CEILING));
         ddt.setTotaleCosto(totaleCosto.setScale(2, RoundingMode.CEILING));
         ddt.setTotale(totale.setScale(2, RoundingMode.CEILING));
+        ddt.setTotaleAcconto(new BigDecimal(0));
     }
 
 }

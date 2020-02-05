@@ -31,6 +31,7 @@ CREATE TABLE `ddt` (
     totale_iva decimal(10,3),
     totale_costo decimal(10,3),
     totale decimal(10,3),
+    totale_acconto decimal(10,3),
     note text,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
