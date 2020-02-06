@@ -4,6 +4,7 @@ import com.contafood.exception.DdtAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.DdtRepository;
+import com.contafood.repository.PagamentoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,14 @@ public class DdtService {
     private final DdtRepository ddtRepository;
     private final DdtArticoloService ddtArticoloService;
     private final StatoDdtService statoDdtService;
-    private final PagamentoService pagamentoService;
+    private final PagamentoRepository pagamentoRepository;
 
     @Autowired
-    public DdtService(final DdtRepository ddtRepository, final DdtArticoloService ddtArticoloService, final StatoDdtService statoDdtService, final PagamentoService pagamentoService){
+    public DdtService(final DdtRepository ddtRepository, final DdtArticoloService ddtArticoloService, final StatoDdtService statoDdtService, final PagamentoRepository pagamentoRepository){
         this.ddtRepository = ddtRepository;
         this.ddtArticoloService = ddtArticoloService;
         this.statoDdtService = statoDdtService;
-        this.pagamentoService = pagamentoService;
+        this.pagamentoRepository = pagamentoRepository;
     }
 
     public Set<Ddt> getAll(){
@@ -46,13 +47,6 @@ public class DdtService {
         Ddt ddt = ddtRepository.findById(ddtId).orElseThrow(ResourceNotFoundException::new);
         LOGGER.info("Retrieved 'ddt' '{}'", ddt);
         return ddt;
-    }
-
-    public List<Pagamento> getDdtPagamenti(Long ddtId){
-        LOGGER.info("Retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
-        List<Pagamento> pagamenti = pagamentoService.getDdtPagamenti(ddtId);
-        LOGGER.info("Retrieved {} 'pagamenti' of 'ddt' '{}'", pagamenti.size(), ddtId);
-        return pagamenti;
     }
 
     public Map<String, Integer> getAnnoContabileAndProgressivo(){
@@ -142,12 +136,6 @@ public class DdtService {
                 } else {
                     ddt.setAutista(null);
                 }
-            } else if(key.equals("totaleAcconto")){
-                if(value != null){
-                    ddt.setTotaleAcconto(new BigDecimal(Float.parseFloat((String)value)));
-                } else {
-                    ddt.setTotaleAcconto(new BigDecimal(0));
-                }
             }
         });
         Ddt patchedDdt = ddtRepository.save(ddt);
@@ -159,7 +147,7 @@ public class DdtService {
     @Transactional
     public void delete(Long ddtId){
         LOGGER.info("Deleting 'ddt' '{}'", ddtId);
-        pagamentoService.deleteByDdtId(ddtId);
+        pagamentoRepository.deleteByDdtId(ddtId);
         ddtArticoloService.deleteByDdtId(ddtId);
         ddtRepository.deleteById(ddtId);
         LOGGER.info("Deleted 'ddt' '{}'", ddtId);
@@ -213,4 +201,54 @@ public class DdtService {
         ddt.setTotaleAcconto(new BigDecimal(0));
     }
 
+    // PAGAMENTI
+    public Set<Pagamento> getDdtPagamenti(){
+        LOGGER.info("Retrieving 'pagamenti'");
+        Set<Pagamento> pagamenti = pagamentoRepository.findAllByOrderByDataDesc();
+        LOGGER.info("Retrieved {} 'pagamenti'", pagamenti.size());
+        return pagamenti;
+    }
+
+    public List<Pagamento> getDdtPagamentiByIdDdt(Long ddtId){
+        LOGGER.info("Retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
+        List<Pagamento> pagamenti = pagamentoRepository.findByDdtIdOrderByDataDesc(ddtId);
+        LOGGER.info("Retrieved {} 'pagamenti' of 'ddt' '{}'", pagamenti.size(), ddtId);
+        return pagamenti;
+    }
+
+    public Pagamento getDdtPagamento(Long pagamentoId){
+        LOGGER.info("Retrieving 'pagamento' '{}'", pagamentoId);
+        Pagamento pagamento = pagamentoRepository.findById(pagamentoId).orElseThrow(ResourceNotFoundException::new);
+        LOGGER.info("Retrieved 'pagamento' '{}'", pagamento);
+        return pagamento;
+    }
+
+    @Transactional
+    public Pagamento createDdtPagamento(Pagamento pagamento){
+        LOGGER.info("Creating 'pagamento'");
+
+        pagamento.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+
+        Pagamento createdPagamento = pagamentoRepository.save(pagamento);
+        LOGGER.info("Created 'pagamento' '{}'", createdPagamento);
+
+        Ddt ddt = createdPagamento.getDdt();
+        LOGGER.info("Updating 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
+        BigDecimal totaleAcconto = ddt.getTotaleAcconto();
+        if(totaleAcconto == null){
+            totaleAcconto = new BigDecimal(0);
+        }
+        BigDecimal newTotaleAcconto = totaleAcconto.add(createdPagamento.getImporto()).setScale(2, RoundingMode.CEILING);
+        ddt.setTotaleAcconto(newTotaleAcconto);
+        ddtRepository.save(ddt);
+        LOGGER.info("Updated 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
+        return createdPagamento;
+    }
+
+    @Transactional
+    public void deleteDdtPagamento(Long pagamentoId){
+        LOGGER.info("Deleting 'pagamento' '{}'", pagamentoId);
+        pagamentoRepository.deleteById(pagamentoId);
+        LOGGER.info("Deleted 'pagamento' '{}'", pagamentoId);
+    }
 }

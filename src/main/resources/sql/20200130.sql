@@ -81,9 +81,3 @@ CREATE TABLE `pagamento` (
 	CONSTRAINT `fk_pagamento_ddt` FOREIGN KEY (`id_ddt`) REFERENCES `ddt` (`id`)
 ) ENGINE=InnoDB;
 
-DELIMITER $$
-CREATE TRIGGER trg_update_ddt_acconto AFTER INSERT ON pagamento FOR EACH ROW
-BEGIN
-    UPDATE ddt SET totale_acconto = (totale_acconto + NEW.importo) WHERE ddt.id = NEW.idDdt;
-END;$$
-DELIMITER ;
