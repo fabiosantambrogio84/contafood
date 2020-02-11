@@ -1,6 +1,7 @@
 package com.contafood.service;
 
 import com.contafood.exception.DdtAlreadyExistingException;
+import com.contafood.exception.DdtPagamentoExceedingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.DdtRepository;
@@ -227,19 +228,40 @@ public class DdtService {
     public Pagamento createDdtPagamento(Pagamento pagamento){
         LOGGER.info("Creating 'pagamento'");
 
+        BigDecimal importo = pagamento.getImporto();
+        if(importo == null){
+            importo = new BigDecimal(0);
+        }
+
+        Ddt ddt = ddtRepository.findById(pagamento.getDdt().getId()).orElseThrow(ResourceNotFoundException::new);
+        BigDecimal totaleAcconto = ddt.getTotaleAcconto();
+        if(totaleAcconto == null){
+            totaleAcconto = new BigDecimal(0);
+        }
+        BigDecimal totale = ddt.getTotale();
+        if(totale == null){
+            totale = new BigDecimal(0);
+        }
+        BigDecimal newTotaleAcconto = totaleAcconto.add(importo).setScale(2, RoundingMode.CEILING);
+        if(newTotaleAcconto.compareTo(totale) == 1){
+            LOGGER.error("The 'importo' '{}' sum to '{}' is greater than the DDT 'totale' '{}' (idDdt={})", importo, totaleAcconto, totale, pagamento.getDdt().getId());
+            throw new DdtPagamentoExceedingException();
+        }
+        String descrizione = pagamento.getDescrizione();
+        if(newTotaleAcconto.compareTo(totale) == 0){
+            descrizione = descrizione.replace("Pagamento", "Saldo");
+        } else if(newTotaleAcconto.compareTo(totale) == -1){
+            descrizione = descrizione.replace("Pagamento", "Acconto");
+        }
+        pagamento.setDescrizione(descrizione);
         pagamento.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         Pagamento createdPagamento = pagamentoRepository.save(pagamento);
         LOGGER.info("Created 'pagamento' '{}'", createdPagamento);
 
-        Ddt ddt = createdPagamento.getDdt();
         LOGGER.info("Updating 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
-        BigDecimal totaleAcconto = ddt.getTotaleAcconto();
-        if(totaleAcconto == null){
-            totaleAcconto = new BigDecimal(0);
-        }
-        BigDecimal newTotaleAcconto = totaleAcconto.add(createdPagamento.getImporto()).setScale(2, RoundingMode.CEILING);
         ddt.setTotaleAcconto(newTotaleAcconto);
+        computeStato(ddt);
         ddtRepository.save(ddt);
         LOGGER.info("Updated 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
         return createdPagamento;
@@ -248,7 +270,42 @@ public class DdtService {
     @Transactional
     public void deleteDdtPagamento(Long pagamentoId){
         LOGGER.info("Deleting 'pagamento' '{}'", pagamentoId);
+        Pagamento pagamento = pagamentoRepository.findById(pagamentoId).orElseThrow(ResourceNotFoundException::new);
+        BigDecimal importo = pagamento.getImporto();
+        if(importo == null){
+            importo = new BigDecimal(0);
+        }
+        Ddt ddt = pagamento.getDdt();
+        BigDecimal totaleAcconto = ddt.getTotaleAcconto();
+        if(totaleAcconto == null){
+            totaleAcconto = new BigDecimal(0);
+        }
+        BigDecimal newTotaleAcconto = totaleAcconto.subtract(importo).setScale(2, RoundingMode.CEILING);
+        ddt.setTotaleAcconto(newTotaleAcconto);
+        computeStato(ddt);
+        ddtRepository.save(ddt);
         pagamentoRepository.deleteById(pagamentoId);
         LOGGER.info("Deleted 'pagamento' '{}'", pagamentoId);
+    }
+
+    private void computeStato(Ddt ddt){
+        BigDecimal totaleAcconto = ddt.getTotaleAcconto();
+        if(totaleAcconto == null){
+            totaleAcconto = new BigDecimal(0);
+        }
+        if(totaleAcconto.compareTo(BigDecimal.ZERO) == 0){
+            ddt.setStatoDdt(statoDdtService.getDaPagare());
+        } else {
+            BigDecimal totale = ddt.getTotale();
+            if(totale == null){
+                totale = new BigDecimal(0);
+            }
+            BigDecimal result = totale.subtract(totaleAcconto);
+            if(result.compareTo(BigDecimal.ZERO) == -1 || result.compareTo(BigDecimal.ZERO) == 0){
+                ddt.setStatoDdt(statoDdtService.getPagato());
+            } else {
+                ddt.setStatoDdt(statoDdtService.getParzialmentePagato());
+            }
+        }
     }
 }

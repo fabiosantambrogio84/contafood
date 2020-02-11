@@ -20,7 +20,7 @@ public class Pagamento {
     private Date data;
 
     @ManyToOne
-    @JoinColumn(name="id_tipo_cliente")
+    @JoinColumn(name="id_tipo_pagamento")
     private TipoPagamento tipoPagamento;
 
     @ManyToOne

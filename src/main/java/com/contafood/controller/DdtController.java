@@ -124,6 +124,6 @@ public class DdtController {
     @CrossOrigin
     public void deleteDdtPagamento(@PathVariable final Long pagamentoId){
         LOGGER.info("Performing DELETE request for deleting 'pagamento' '{}'", pagamentoId);
-        ddtService.delete(pagamentoId);
+        ddtService.deleteDdtPagamento(pagamentoId);
     }
 }
