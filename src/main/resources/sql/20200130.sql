@@ -81,3 +81,4 @@ CREATE TABLE `pagamento` (
 	CONSTRAINT `fk_pagamento_ddt` FOREIGN KEY (`id_ddt`) REFERENCES `ddt` (`id`)
 ) ENGINE=InnoDB;
 
+ALTER TABLE `ddt_articolo` ADD COLUMN lotto varchar(255) AFTER uuid;

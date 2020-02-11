@@ -26,6 +26,9 @@ public class DdtArticolo implements Serializable {
     @JsonIgnoreProperties("ddtArticoli")
     private Articolo articolo;
 
+    @Column(name = "lotto")
+    private String lotto;
+
     @Column(name = "quantita")
     private Float quantita;
 
@@ -72,6 +75,14 @@ public class DdtArticolo implements Serializable {
 
     public void setArticolo(Articolo articolo) {
         this.articolo = articolo;
+    }
+
+    public String getLotto() {
+        return lotto;
+    }
+
+    public void setLotto(String lotto) {
+        this.lotto = lotto;
     }
 
     public Float getQuantita() {
@@ -145,6 +156,7 @@ public class DdtArticolo implements Serializable {
         result.append("{");
         result.append("ddtId: " + id.ddtId);
         result.append(", articoloId: " + id.articoloId);
+        result.append(", lotto: " + lotto);
         result.append(", quantita: " + quantita);
         result.append(", numeroPezzi: " + numeroPezzi);
         result.append(", prezzo: " + prezzo);
