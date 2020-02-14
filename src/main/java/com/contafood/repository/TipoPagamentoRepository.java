@@ -7,6 +7,5 @@ import java.util.Set;
 
 public interface TipoPagamentoRepository extends CrudRepository<TipoPagamento, Long> {
 
-    @Override
-    Set<TipoPagamento> findAll();
+    Set<TipoPagamento> findAllByOrderByDescrizione();
 }
