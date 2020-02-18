@@ -71,7 +71,7 @@ public class DdtService {
     public Ddt create(Ddt ddt){
         LOGGER.info("Creating 'ddt'");
 
-        checkExistsByAnnoContabileAndProgressivo(ddt.getAnnoContabile(),ddt.getProgressivo());
+        checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), Long.valueOf(-1));
 
         ddt.setStatoDdt(statoDdtService.getDaPagare());
 
@@ -95,13 +95,14 @@ public class DdtService {
     @Transactional
     public Ddt update(Ddt ddt){
         LOGGER.info("Updating 'ddt'");
-        checkExistsByAnnoContabileAndProgressivo(ddt.getAnnoContabile(),ddt.getProgressivo());
+        checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), ddt.getId());
 
         Set<DdtArticolo> ddtArticoli = ddt.getDdtArticoli();
         ddt.setDdtArticoli(new HashSet<>());
         ddtArticoloService.deleteByDdtId(ddt.getId());
 
         Ddt ddtCurrent = ddtRepository.findById(ddt.getId()).orElseThrow(ResourceNotFoundException::new);
+        ddt.setAutista(ddtCurrent.getAutista());
         ddt.setStatoDdt(ddtCurrent.getStatoDdt());
         ddt.setDataInserimento(ddtCurrent.getDataInserimento());
         ddt.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
@@ -113,7 +114,7 @@ public class DdtService {
             ddtArticoloService.create(da);
         });
 
-        computeTotali(updatedDdt, updatedDdt.getDdtArticoli());
+        computeTotali(updatedDdt, ddtArticoli);
 
         ddtRepository.save(updatedDdt);
         LOGGER.info("Updated 'ddt' '{}'", updatedDdt);
@@ -154,8 +155,8 @@ public class DdtService {
         LOGGER.info("Deleted 'ddt' '{}'", ddtId);
     }
 
-    private void checkExistsByAnnoContabileAndProgressivo(Integer annoContabile, Integer progressivo){
-        Optional<Ddt> ddt = ddtRepository.findByAnnoContabileAndProgressivo(annoContabile, progressivo);
+    private void checkExistsByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt){
+        Optional<Ddt> ddt = ddtRepository.findByAnnoContabileAndProgressivoAndIdNot(annoContabile, progressivo, idDdt);
         if(ddt.isPresent()){
             throw new DdtAlreadyExistingException(annoContabile, progressivo);
         }

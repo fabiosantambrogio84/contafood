@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class DdtController {
     public Set<Ddt> getAll(@RequestParam(name = "dataDa", required = false) Date dataDa,
                            @RequestParam(name = "dataA", required = false) Date dataA,
                            @RequestParam(name = "progressivo", required = false) Integer progressivo,
-                           @RequestParam(name = "importo", required = false) Double importo,
+                           @RequestParam(name = "importo", required = false) Float importo,
                            @RequestParam(name = "tipoPagamento", required = false) Integer idTipoPagamento,
                            @RequestParam(name = "cliente", required = false) String cliente,
                            @RequestParam(name = "agente", required = false) Integer idAgente,
@@ -71,14 +72,14 @@ public class DdtController {
         };
         Predicate<Ddt> isDdtImportoEquals = ddt -> {
             if(importo != null){
-                return ddt.getTotale().compareTo(new BigDecimal(importo))==0;
+                return ddt.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.CEILING))==0;
             }
             return true;
         };
         Predicate<Ddt> isDdtTipoPagamentoEquals = ddt -> {
             if(idTipoPagamento != null){
                 List<Pagamento> pagamenti = ddtService.getDdtPagamentiByIdDdt(ddt.getId());
-                return pagamenti.stream().filter(p -> p.getTipoPagamento() != null).map(p -> p.getTipoPagamento().getId()).filter(tp -> tp.equals(idTipoPagamento)).findFirst().isPresent();
+                return pagamenti.stream().filter(p -> p.getTipoPagamento() != null).map(p -> p.getTipoPagamento().getId()).filter(tp -> tp.equals(Long.valueOf(idTipoPagamento))).findFirst().isPresent();
             }
             return true;
         };
@@ -120,7 +121,7 @@ public class DdtController {
             if(idAutista != null){
                 Autista autista = ddt.getAutista();
                 if(autista != null){
-                    if(autista.getId().equals(idAutista)){
+                    if(autista.getId().equals(Long.valueOf(idAutista))){
                         return true;
                     }
                 }
@@ -132,7 +133,7 @@ public class DdtController {
             if(idArticolo != null){
                 Set<DdtArticolo> ddtArticoli = ddt.getDdtArticoli();
                 if(ddtArticoli != null && !ddtArticoli.isEmpty()){
-                    return ddtArticoli.stream().filter(da -> da.getId() != null).map(da -> da.getId()).filter(daId -> daId.getArticoloId() != null && daId.getArticoloId().equals(idArticolo)).findFirst().isPresent();
+                    return ddtArticoli.stream().filter(da -> da.getId() != null).map(da -> da.getId()).filter(daId -> daId.getArticoloId() != null && daId.getArticoloId().equals(Long.valueOf(idArticolo))).findFirst().isPresent();
                 }
                 return false;
             }
@@ -142,7 +143,7 @@ public class DdtController {
             if(idStato != null){
                 StatoDdt statoDdt = ddt.getStatoDdt();
                 if(statoDdt != null){
-                    return statoDdt.getId().equals(idStato);
+                    return statoDdt.getId().equals(Long.valueOf(idStato));
                 }
                 return false;
             }
@@ -302,4 +303,5 @@ public class DdtController {
         LOGGER.info("Performing DELETE request for deleting 'pagamento' '{}'", pagamentoId);
         ddtService.deleteDdtPagamento(pagamentoId);
     }
+
 }

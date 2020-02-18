@@ -16,5 +16,5 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
 
     List<Ddt> findByAnnoContabileOrderByProgressivoDesc(Integer annoContabile);
 
-    Optional<Ddt> findByAnnoContabileAndProgressivo(Integer annoContabile, Integer progressivo);
+    Optional<Ddt> findByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt);
 }

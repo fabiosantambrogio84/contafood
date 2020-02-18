@@ -88,8 +88,10 @@ public class DdtArticoloService {
         if(sconto == null){
             sconto = new BigDecimal(0);
         }
+        BigDecimal quantitaPerPrezzo = prezzo.multiply(BigDecimal.valueOf(quantita));
+        BigDecimal scontoValue = sconto.divide(BigDecimal.valueOf(100)).multiply(quantitaPerPrezzo);
 
-        imponibile = (prezzo.multiply(BigDecimal.valueOf(quantita))).subtract(sconto).setScale(2, RoundingMode.CEILING);
+        imponibile = quantitaPerPrezzo.subtract(scontoValue).setScale(2, RoundingMode.CEILING);
         return imponibile;
     }
 
