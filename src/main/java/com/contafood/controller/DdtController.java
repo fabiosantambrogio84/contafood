@@ -88,12 +88,12 @@ public class DdtController {
                 Cliente ddtCliente = ddt.getCliente();
                 if(ddtCliente != null){
                     if(ddtCliente.getDittaIndividuale() != null && Boolean.TRUE.equals(ddtCliente.getDittaIndividuale())){
-                        String clienteNomeCognome = ddtCliente.getNome().concat(" ").concat(ddtCliente.getCognome());
-                        if(clienteNomeCognome.contains(cliente)){
+                        String clienteNomeCognome = (ddtCliente.getNome().concat(" ").concat(ddtCliente.getCognome())).toLowerCase();
+                        if(clienteNomeCognome.contains(cliente.toLowerCase())){
                             return true;
                         }
                     }else {
-                        if(ddtCliente.getRagioneSociale().contains(cliente)){
+                        if((ddtCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase())){
                             return true;
                         }
                     }

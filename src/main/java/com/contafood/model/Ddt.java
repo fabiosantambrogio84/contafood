@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"ddtArticoli"})
+@EqualsAndHashCode(exclude = {"ddtArticoli", "ddtPagamenti"})
 @Entity
 @Table(name = "ddt")
 public class Ddt {
@@ -90,6 +90,10 @@ public class Ddt {
     @OneToMany(mappedBy = "ddt")
     @JsonIgnoreProperties("ddt")
     private Set<DdtArticolo> ddtArticoli = new HashSet<>();
+
+    @OneToMany(mappedBy = "ddt")
+    @JsonIgnoreProperties("ddt")
+    private Set<Pagamento> ddtPagamenti = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -273,6 +277,14 @@ public class Ddt {
 
     public void setDdtArticoli(Set<DdtArticolo> ddtArticoli) {
         this.ddtArticoli = ddtArticoli;
+    }
+
+    public Set<Pagamento> getDdtPagamenti() {
+        return ddtPagamenti;
+    }
+
+    public void setDdtPagamenti(Set<Pagamento> ddtPagamenti) {
+        this.ddtPagamenti = ddtPagamenti;
     }
 
     @Override
