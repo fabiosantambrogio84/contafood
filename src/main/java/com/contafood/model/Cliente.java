@@ -79,6 +79,10 @@ public class Cliente {
     @JoinColumn(name="id_agente")
     private Agente agente;
 
+    @ManyToOne
+    @JoinColumn(name="id_listino")
+    private Listino listino;
+
     @Column(name = "estrazione_conad")
     private String estrazioneConad;
 
@@ -277,6 +281,14 @@ public class Cliente {
 
     public void setAgente(Agente agente) {
         this.agente = agente;
+    }
+
+    public Listino getListino() {
+        return listino;
+    }
+
+    public void setListino(Listino listino) {
+        this.listino = listino;
     }
 
     public String getEstrazioneConad() {

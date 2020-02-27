@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -32,13 +33,18 @@ public class ScontoController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public List<Sconto> getAll(@RequestParam(required = false) String tipologia) {
-        if(StringUtils.isEmpty(tipologia)){
-            LOGGER.info("Performing GET request for retrieving list of 'sconti'");
-            return scontoService.getAll();
-        } else {
+    public List<Sconto> getAll(@RequestParam(required = false) String tipologia,
+                               @RequestParam(required = false) Integer idCliente,
+                               @RequestParam(required = false) Date date) {
+        if(!StringUtils.isEmpty(tipologia) && idCliente == null && date == null){
             LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by tipologia '{}'", tipologia);
             return scontoService.getAllByTipologia(tipologia);
+        } else if(!StringUtils.isEmpty(tipologia) && idCliente != null && date != null){
+            LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by tipologia '{}', cliente '{}' and date '{}'", tipologia, idCliente, date);
+            return scontoService.getByTipologiaClienteIdAndDateDalAndDateAl(tipologia, Long.valueOf(idCliente), date);
+        } else {
+            LOGGER.info("Performing GET request for retrieving list of 'sconti'");
+            return scontoService.getAll();
         }
     }
 

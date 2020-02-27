@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -27,6 +28,13 @@ public class ScontoService {
     public List<Sconto> getAll(){
         LOGGER.info("Retrieving the list of 'sconti'");
         List<Sconto> sconti = scontoRepository.findAll();
+        LOGGER.info("Retrieved {} 'sconti'", sconti.size());
+        return sconti;
+    }
+
+    public List<Sconto> getByTipologiaClienteIdAndDateDalAndDateAl(String tipologia, Long idCliente, Date date){
+        LOGGER.info("Retrieving the list of 'sconti' of tipologia '{}' for cliente '{}', valid from '{}' to '{}'", tipologia, idCliente, date);
+        List<Sconto> sconti = scontoRepository.findByTipologiaAndClienteIdAndDataDalGreaterThanEqualAndDataAlLessThanEqual(tipologia, idCliente, date, date);
         LOGGER.info("Retrieved {} 'sconti'", sconti.size());
         return sconti;
     }
