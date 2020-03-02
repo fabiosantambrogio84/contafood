@@ -14,5 +14,5 @@ public interface ScontoRepository extends CrudRepository<Sconto, Long> {
 
     List<Sconto> findByTipologia(String tipologia);
 
-    List<Sconto> findByTipologiaAndClienteIdAndDataDalGreaterThanEqualAndDataAlLessThanEqual(String tipologia, Long idCliente, Date dataDal, Date dataAl);
+    List<Sconto> findByTipologiaAndClienteId(String tipologia, Long idCliente);
 }

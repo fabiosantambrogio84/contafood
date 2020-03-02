@@ -1,6 +1,7 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
+import com.contafood.model.Ddt;
 import com.contafood.model.Sconto;
 import com.contafood.service.ScontoService;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -35,13 +38,27 @@ public class ScontoController {
     @CrossOrigin
     public List<Sconto> getAll(@RequestParam(required = false) String tipologia,
                                @RequestParam(required = false) Integer idCliente,
-                               @RequestParam(required = false) Date date) {
-        if(!StringUtils.isEmpty(tipologia) && idCliente == null && date == null){
+                               @RequestParam(required = false) Date data) {
+        Predicate<Sconto> isScontoDataDaGreaterOrEquals = sconto -> {
+            if(data != null && sconto.getDataDal() != null){
+                return sconto.getDataDal().compareTo(data)>=0;
+            }
+            return true;
+        };
+        Predicate<Sconto> isScontoDataALessOrEquals = sconto -> {
+            if(data != null && sconto.getDataAl() != null){
+                return sconto.getDataAl().compareTo(data)<=0;
+            }
+            return true;
+        };
+
+        if(!StringUtils.isEmpty(tipologia) && idCliente == null && data == null){
             LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by tipologia '{}'", tipologia);
             return scontoService.getAllByTipologia(tipologia);
-        } else if(!StringUtils.isEmpty(tipologia) && idCliente != null && date != null){
-            LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by tipologia '{}', cliente '{}' and date '{}'", tipologia, idCliente, date);
-            return scontoService.getByTipologiaClienteIdAndDateDalAndDateAl(tipologia, Long.valueOf(idCliente), date);
+        } else if(!StringUtils.isEmpty(tipologia) && idCliente != null && data != null){
+            LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by tipologia '{}', cliente '{}' and date '{}'", tipologia, idCliente, data);
+            List<Sconto> sconti = scontoService.getByTipologiaAndClienteId(tipologia, Long.valueOf(idCliente));
+            return sconti.stream().filter(isScontoDataDaGreaterOrEquals.and(isScontoDataALessOrEquals)).collect(Collectors.toList());
         } else {
             LOGGER.info("Performing GET request for retrieving list of 'sconti'");
             return scontoService.getAll();

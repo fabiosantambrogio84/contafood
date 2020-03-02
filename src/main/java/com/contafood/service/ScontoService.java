@@ -32,9 +32,9 @@ public class ScontoService {
         return sconti;
     }
 
-    public List<Sconto> getByTipologiaClienteIdAndDateDalAndDateAl(String tipologia, Long idCliente, Date date){
-        LOGGER.info("Retrieving the list of 'sconti' of tipologia '{}' for cliente '{}', valid from '{}' to '{}'", tipologia, idCliente, date);
-        List<Sconto> sconti = scontoRepository.findByTipologiaAndClienteIdAndDataDalGreaterThanEqualAndDataAlLessThanEqual(tipologia, idCliente, date, date);
+    public List<Sconto> getByTipologiaAndClienteId(String tipologia, Long idCliente){
+        LOGGER.info("Retrieving the list of 'sconti' of tipologia '{}' for cliente '{}'", tipologia, idCliente);
+        List<Sconto> sconti = scontoRepository.findByTipologiaAndClienteId(tipologia, idCliente);
         LOGGER.info("Retrieved {} 'sconti'", sconti.size());
         return sconti;
     }
