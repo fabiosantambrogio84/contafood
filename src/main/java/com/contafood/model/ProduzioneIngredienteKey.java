@@ -14,11 +14,15 @@ public class ProduzioneIngredienteKey implements Serializable {
     @Column(name = "id_ingrediente")
     Long ingredienteId;
 
+    @Column(name = "uuid")
+    String uuid;
+
     public ProduzioneIngredienteKey(){}
 
-    public ProduzioneIngredienteKey(Long produzioneId, Long ingredienteId){
+    public ProduzioneIngredienteKey(Long produzioneId, Long ingredienteId, String uuid){
         this.produzioneId = produzioneId;
         this.ingredienteId = ingredienteId;
+        this.uuid = uuid;
     }
 
     public Long getProduzioneId() {
@@ -37,9 +41,17 @@ public class ProduzioneIngredienteKey implements Serializable {
         this.ingredienteId = ingredienteId;
     }
 
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(produzioneId, ingredienteId);
+        return Objects.hash(produzioneId, ingredienteId, uuid);
     }
 
     @Override
@@ -52,7 +64,7 @@ public class ProduzioneIngredienteKey implements Serializable {
         }
         final ProduzioneIngredienteKey that = (ProduzioneIngredienteKey) obj;
         return Objects.equals(produzioneId, that.produzioneId) &&
-                Objects.equals(ingredienteId, that.ingredienteId);
+                Objects.equals(ingredienteId, that.ingredienteId) && Objects.equals(uuid, that.uuid);
     }
 
     @Override
@@ -62,6 +74,7 @@ public class ProduzioneIngredienteKey implements Serializable {
         result.append("{");
         result.append("produzioneId: " + produzioneId);
         result.append(", ingredienteId: " + ingredienteId);
+        result.append(", uuid: " + uuid);
         result.append("}");
 
         return result.toString();

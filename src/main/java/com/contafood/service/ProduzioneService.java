@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,6 +79,7 @@ public class ProduzioneService {
 
         createdProduzione.getProduzioneIngredienti().stream().forEach(pi -> {
             pi.getId().setProduzioneId(produzioneId);
+            pi.getId().setUuid(UUID.randomUUID().toString());
             produzioneIngredienteService.create(pi);
         });
         createdProduzione.getProduzioneConfezioni().stream().forEach(pc -> {
@@ -114,6 +116,7 @@ public class ProduzioneService {
 
         produzioneIngredienti.stream().forEach(pi -> {
             pi.getId().setProduzioneId(produzioneId);
+            pi.getId().setUuid(UUID.randomUUID().toString());
             produzioneIngredienteService.create(pi);
         });
         produzioneConfezioni.stream().forEach(pc -> {

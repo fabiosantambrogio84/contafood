@@ -39,15 +39,15 @@ public class ScontoController {
     public List<Sconto> getAll(@RequestParam(required = false) String tipologia,
                                @RequestParam(required = false) Integer idCliente,
                                @RequestParam(required = false) Date data) {
-        Predicate<Sconto> isScontoDataDaGreaterOrEquals = sconto -> {
+        Predicate<Sconto> isScontoDataDaLessOrEquals = sconto -> {
             if(data != null && sconto.getDataDal() != null){
-                return sconto.getDataDal().compareTo(data)>=0;
+                return sconto.getDataDal().compareTo(data)<=0;
             }
             return true;
         };
-        Predicate<Sconto> isScontoDataALessOrEquals = sconto -> {
+        Predicate<Sconto> isScontoDataAGreaterOrEquals = sconto -> {
             if(data != null && sconto.getDataAl() != null){
-                return sconto.getDataAl().compareTo(data)<=0;
+                return sconto.getDataAl().compareTo(data)>=0;
             }
             return true;
         };
@@ -58,7 +58,7 @@ public class ScontoController {
         } else if(!StringUtils.isEmpty(tipologia) && idCliente != null && data != null){
             LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by tipologia '{}', cliente '{}' and date '{}'", tipologia, idCliente, data);
             List<Sconto> sconti = scontoService.getByTipologiaAndClienteId(tipologia, Long.valueOf(idCliente));
-            return sconti.stream().filter(isScontoDataDaGreaterOrEquals.and(isScontoDataALessOrEquals)).collect(Collectors.toList());
+            return sconti.stream().filter(isScontoDataDaLessOrEquals.and(isScontoDataAGreaterOrEquals)).collect(Collectors.toList());
         } else {
             LOGGER.info("Performing GET request for retrieving list of 'sconti'");
             return scontoService.getAll();

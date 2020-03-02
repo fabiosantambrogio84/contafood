@@ -30,6 +30,9 @@ public class ProduzioneConfezione implements Serializable {
     @Column(name = "lotto")
     private String lotto;
 
+    @Column(name = "peso")
+    private Float peso;
+
     public ProduzioneConfezioneKey getId() {
         return id;
     }
@@ -70,6 +73,14 @@ public class ProduzioneConfezione implements Serializable {
         this.lotto = lotto;
     }
 
+    public Float getPeso() {
+        return peso;
+    }
+
+    public void setPeso(Float peso) {
+        this.peso = peso;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -79,6 +90,7 @@ public class ProduzioneConfezione implements Serializable {
         result.append(", confezioneId: " + id.confezioneId);
         result.append(", numConfezioni: " + numConfezioni);
         result.append(", lotto: " + lotto);
+        result.append(", peso: " + peso);
         result.append("}");
 
         return result.toString();
