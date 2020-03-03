@@ -1,5 +1,6 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"ddtArticoli", "ddtPagamenti"})
+@EqualsAndHashCode(exclude = {"ddtArticoli", "ddtPagamenti", "fatturaDdts"})
 @Entity
 @Table(name = "ddt")
 public class Ddt {
@@ -94,6 +95,10 @@ public class Ddt {
     @OneToMany(mappedBy = "ddt")
     @JsonIgnoreProperties("ddt")
     private Set<Pagamento> ddtPagamenti = new HashSet<>();
+
+    @OneToMany(mappedBy = "ddt")
+    @JsonIgnore
+    private Set<FatturaDdt> fatturaDdts = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -285,6 +290,14 @@ public class Ddt {
 
     public void setDdtPagamenti(Set<Pagamento> ddtPagamenti) {
         this.ddtPagamenti = ddtPagamenti;
+    }
+
+    public Set<FatturaDdt> getFatturaDdts() {
+        return fatturaDdts;
+    }
+
+    public void setFatturaDdts(Set<FatturaDdt> fatturaDdts) {
+        this.fatturaDdts = fatturaDdts;
     }
 
     @Override
