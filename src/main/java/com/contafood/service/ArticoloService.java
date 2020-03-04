@@ -52,6 +52,13 @@ public class ArticoloService {
         return articoli;
     }
 
+    public List<Articolo> getAllByAttivoAndFornitoreId(Boolean active, Long idFornitore){
+        LOGGER.info("Retrieving the list of 'articoli' filtered by 'attivo' value '{}' and fornitore '{}'", active, idFornitore);
+        List<Articolo> articoli = articoloRepository.findByAttivoAndFornitoreId(active,idFornitore);
+        LOGGER.info("Retrieved {} 'articoli'", articoli.size());
+        return articoli;
+    }
+
     public Articolo getOne(Long articoloId){
         LOGGER.info("Retrieving 'articolo' '{}'", articoloId);
         Articolo articolo = articoloRepository.findById(articoloId).orElseThrow(ResourceNotFoundException::new);
