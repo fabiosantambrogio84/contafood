@@ -46,10 +46,12 @@ public class DdtController {
                            @RequestParam(name = "agente", required = false) Integer idAgente,
                            @RequestParam(name = "autista", required = false) Integer idAutista,
                            @RequestParam(name = "articolo", required = false) Integer idArticolo,
-                           @RequestParam(name = "stato", required = false) Integer idStato) {
+                           @RequestParam(name = "stato", required = false) Integer idStato,
+                           @RequestParam(name = "idCliente", required = false) Integer idCliente,
+                           @RequestParam(name = "fatturato", required = false) Boolean fatturato) {
         LOGGER.info("Performing GET request for retrieving list of 'ddts'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}",
-                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato);
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, idCliente {}, fatturato {}",
+                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, idCliente, fatturato);
         // /contafood-be/ddts?dataDa=&dataA=&progressivo=&importo=&tipoPagamento=&cliente=&agente=&autista=&articolo=
 
         Predicate<Ddt> isDdtDataDaGreaterOrEquals = ddt -> {
@@ -149,6 +151,24 @@ public class DdtController {
             }
             return true;
         };
+        Predicate<Ddt> isDdtIdClienteEquals = ddt -> {
+            if(idCliente != null){
+                Cliente ddtCliente = ddt.getCliente();
+                if(ddtCliente != null){
+                    if(ddtCliente.getId().equals(Long.valueOf(idCliente))){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        };
+        Predicate<Ddt> isDdtFatturatoEquals = ddt -> {
+            if(fatturato != null){
+                return ddt.getFatturato().equals(fatturato);
+            }
+            return true;
+        };
 
         Set<Ddt> ddts = ddtService.getAll();
         return ddts.stream().filter(isDdtDataDaGreaterOrEquals
@@ -160,7 +180,9 @@ public class DdtController {
                 .and(isDdtAgenteEquals)
                 .and(isDdtAutistaEquals)
                 .and(isDdtArticoloEquals)
-                .and(isDdtStatoEquals)).collect(Collectors.toSet());
+                .and(isDdtStatoEquals)
+                .and(isDdtIdClienteEquals)
+                .and(isDdtFatturatoEquals)).collect(Collectors.toSet());
     }
 
     @RequestMapping(method = GET, path = "/{ddtId}")

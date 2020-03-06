@@ -33,6 +33,7 @@ CREATE TABLE `fattura` (
 	id_cliente int(10) unsigned,
 	id_agente int(10) unsigned,
 	id_stato int(10) unsigned,
+	spedito_ade bit(1) DEFAULT b'0',
     totale_imponibile decimal(10,3),
     totale_acconto decimal(10,3),
     totale_iva decimal(10,3),

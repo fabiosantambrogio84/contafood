@@ -40,6 +40,9 @@ public class Fattura {
     @JoinColumn(name="id_stato")
     private StatoFattura statoFattura;
 
+    @Column(name = "spedito_ade")
+    private Boolean speditoAde;
+
     @Column(name = "totale_imponibile")
     private BigDecimal totaleImponibile;
 
@@ -121,6 +124,14 @@ public class Fattura {
         this.statoFattura = statoFattura;
     }
 
+    public Boolean getSpeditoAde() {
+        return speditoAde;
+    }
+
+    public void setSpeditoAde(Boolean speditoAde) {
+        this.speditoAde = speditoAde;
+    }
+
     public BigDecimal getTotaleImponibile() {
         return totaleImponibile;
     }
@@ -197,6 +208,7 @@ public class Fattura {
         result.append(", cliente: " + cliente);
         result.append(", agente: " + agente);
         result.append(", statoFattura: " + statoFattura);
+        result.append(", speditoAde: " + speditoAde);
         result.append(", totaleImponibile: " + totaleImponibile);
         result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", totaleIva: " + totaleIva);

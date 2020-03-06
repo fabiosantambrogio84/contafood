@@ -2,8 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.FatturaAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.Fattura;
-import com.contafood.model.FatturaDdt;
+import com.contafood.model.*;
 import com.contafood.repository.FatturaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +13,7 @@ import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FatturaService {
@@ -23,12 +23,16 @@ public class FatturaService {
     private final FatturaRepository fatturaRepository;
     private final FatturaDdtService fatturaDdtService;
     private final StatoFatturaService statoFatturaService;
+    private final StatoDdtService statoDdtService;
+    private final DdtService ddtService;
 
     @Autowired
-    public FatturaService(final FatturaRepository fatturaRepository, final FatturaDdtService fatturaDdtService, final StatoFatturaService statoFatturaService){
+    public FatturaService(final FatturaRepository fatturaRepository, final FatturaDdtService fatturaDdtService, final StatoFatturaService statoFatturaService, final StatoDdtService statoDdtService, final DdtService ddtService){
         this.fatturaRepository = fatturaRepository;
         this.fatturaDdtService = fatturaDdtService;
         this.statoFatturaService = statoFatturaService;
+        this.statoDdtService = statoDdtService;
+        this.ddtService = ddtService;
     }
 
     public Set<Fattura> getAll(){
@@ -62,6 +66,26 @@ public class FatturaService {
         return result;
     }
 
+    public Set<Pagamento> getFatturaDdtPagamenti(Long idFattura){
+        Set<Pagamento> pagamenti = new HashSet<>();
+        Fattura fattura = fatturaRepository.findById(idFattura).orElseThrow(ResourceNotFoundException::new);
+        Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
+        fatturaDdts.forEach(fd -> {
+            pagamenti.addAll(fd.getDdt().getDdtPagamenti());
+        });
+        return pagamenti;
+    }
+
+    public Set<DdtArticolo> getFatturaDdtArticoli(Long idFattura){
+        Set<DdtArticolo> ddtArticoli = new HashSet<>();
+        Fattura fattura = fatturaRepository.findById(idFattura).orElseThrow(ResourceNotFoundException::new);
+        Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
+        fatturaDdts.forEach(fd -> {
+            ddtArticoli.addAll(fd.getDdt().getDdtArticoli());
+        });
+        return ddtArticoli;
+    }
+
     @Transactional
     public Fattura create(Fattura fattura){
         LOGGER.info("Creating 'fattura'");
@@ -69,7 +93,7 @@ public class FatturaService {
         checkExistsByAnnoAndProgressivoAndIdNot(fattura.getAnno(),fattura.getProgressivo(), Long.valueOf(-1));
 
         fattura.setStatoFattura(statoFatturaService.getDaPagare());
-
+        fattura.setSpeditoAde(false);
         fattura.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         Fattura createdFattura = fatturaRepository.save(fattura);
@@ -79,6 +103,8 @@ public class FatturaService {
             fd.getId().setUuid(UUID.randomUUID().toString());
             fatturaDdtService.create(fd);
         });
+
+        computeStato(createdFattura);
 
         fatturaRepository.save(createdFattura);
         LOGGER.info("Created 'fattura' '{}'", createdFattura);
@@ -124,5 +150,29 @@ public class FatturaService {
         if(fattura.isPresent()){
             throw new FatturaAlreadyExistingException(anno, progressivo);
         }
+    }
+
+    private void computeStato(Fattura fattura){
+        StatoDdt ddtStatoPagato = statoDdtService.getPagato();
+        StatoDdt ddtStatoDaPagare = statoDdtService.getDaPagare();
+
+        Set<Ddt> ddts = new HashSet<>();
+        fattura.getFatturaDdts().forEach(fd -> {
+            Long idDdt = fd.getId().getDdtId();
+            ddts.add(ddtService.getOne(idDdt));
+        });
+        LOGGER.info("Fattura ddts size {}", ddts.size());
+        int ddtsSize = ddts.size();
+        Set<Ddt> ddtsPagati = ddts.stream().filter(d -> d.getStatoDdt().equals(ddtStatoPagato)).collect(Collectors.toSet());
+        if(ddtsSize == ddtsPagati.size()){
+            fattura.setStatoFattura(statoFatturaService.getPagata());
+            return;
+        }
+        Set<Ddt> ddtsDaPagare = ddts.stream().filter(d -> d.getStatoDdt().equals(ddtStatoDaPagare)).collect(Collectors.toSet());
+        if(ddtsSize == ddtsDaPagare.size()){
+            fattura.setStatoFattura(statoFatturaService.getDaPagare());
+            return;
+        }
+        fattura.setStatoFattura(statoFatturaService.getParzialmentePagata());
     }
 }
