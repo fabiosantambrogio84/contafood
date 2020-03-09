@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -167,6 +168,14 @@ public class FatturaController {
     public Fattura create(@RequestBody final Fattura fattura){
         LOGGER.info("Performing POST request for creating 'fattura'");
         return fatturaService.create(fattura);
+    }
+
+    @RequestMapping(method = POST, path = "/creazione-automatica")
+    @ResponseStatus(CREATED)
+    @CrossOrigin
+    public List<Fattura> createBulk(@RequestBody(required = false) final String body){
+        LOGGER.info("Performing POST request for creating bulk 'fatture'");
+        return fatturaService.createBulk();
     }
 
     @RequestMapping(method = PUT, path = "/{fatturaId}")

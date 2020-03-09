@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -109,6 +112,70 @@ public class FatturaService {
         fatturaRepository.save(createdFattura);
         LOGGER.info("Created 'fattura' '{}'", createdFattura);
         return createdFattura;
+    }
+
+    @Transactional
+    public List<Fattura> createBulk(){
+        LOGGER.info("Creating bulk 'fatture'...");
+        List<Fattura> createdFatture = new ArrayList<>();
+
+        List<Ddt> ddts = ddtService.getAll().stream().filter(ddt -> ddt.getFatturato() != null && ddt.getFatturato() == Boolean.FALSE).collect(Collectors.toList());
+
+        LOGGER.info("Retrieved {} 'ddt' with fatturato=false", ddts.size());
+
+        Map<Long, List<Ddt>> clientiDdtsMap = new HashMap<>();
+        ddts.forEach(ddt -> {
+            Cliente cliente = ddt.getCliente();
+            if(cliente != null){
+                clientiDdtsMap.computeIfAbsent(cliente.getId(), v -> new ArrayList<Ddt>());
+                clientiDdtsMap.computeIfPresent(cliente.getId(), (key, value) -> {
+                    value.add(ddt);
+                    return value;
+                });
+            }
+        });
+
+        LOGGER.info("Iterating on map with key=idCliente and value=List<Ddt>...");
+        for (Map.Entry<Long, List<Ddt>> entry : clientiDdtsMap.entrySet()) {
+            Long idCliente = entry.getKey();
+            List<Ddt> ddtsCliente = entry.getValue();
+
+            Map<String, Integer> annoProgressivoMap = getAnnoAndProgressivo();
+            Fattura fattura = new Fattura();
+            Set<FatturaDdt> fatturaDdts = new HashSet<>();
+
+            fattura.setProgressivo(annoProgressivoMap.get("progressivo"));
+            fattura.setAnno(annoProgressivoMap.get("anno"));
+            Cliente cliente = new Cliente();
+            cliente.setId(idCliente);
+            fattura.setCliente(cliente);
+            fattura.setData(Date.valueOf(LocalDate.now()));
+
+            BigDecimal totale = new BigDecimal(0);
+            BigDecimal totaleAcconto = new BigDecimal(0);
+            for(Ddt ddt:ddtsCliente){
+                totale = totale.add(ddt.getTotale());
+                totaleAcconto = totaleAcconto.add(ddt.getTotaleAcconto());
+            }
+            fattura.setTotale(totale);
+            fattura.setTotaleAcconto(totaleAcconto);
+
+            ddtsCliente.forEach(ddt -> {
+                FatturaDdt fatturaDdt = new FatturaDdt();
+                FatturaDdtKey fatturaDdtKey = new FatturaDdtKey();
+                fatturaDdtKey.setDdtId(ddt.getId());
+
+                fatturaDdt.setId(fatturaDdtKey);
+                fatturaDdts.add(fatturaDdt);
+            });
+            fattura.setFatturaDdts(fatturaDdts);
+
+            create(fattura);
+        }
+        LOGGER.info("End of iteration on map with key=idCliente and value=List<Ddt>");
+
+        LOGGER.info("Created {} bulk 'fatture'", createdFatture.size());
+        return createdFatture;
     }
 
     @Transactional
