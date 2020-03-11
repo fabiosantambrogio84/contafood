@@ -138,6 +138,10 @@ public class DdtService {
                 } else {
                     ddt.setAutista(null);
                 }
+            } else if(key.equals("fatturato")){
+                if(value != null){
+                    ddt.setFatturato((Boolean)value);
+                }
             }
         });
         Ddt patchedDdt = ddtRepository.save(ddt);

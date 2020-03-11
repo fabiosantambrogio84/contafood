@@ -70,13 +70,18 @@ public class FatturaController {
         };
         Predicate<Fattura> isFatturaImportoEquals = fattura -> {
             if(importo != null){
-                return fattura.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.CEILING))==0;
+                LOGGER.info("Importo {} - Importo BigDecimal {} - Fattura totale {}", importo, new BigDecimal(importo).setScale(2, RoundingMode.DOWN), fattura.getTotale());
+                return fattura.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.DOWN))==0;
             }
             return true;
         };
         Predicate<Fattura> isFatturaTipoPagamentoEquals = fattura -> {
             if(idTipoPagamento != null){
                 Set<Pagamento> pagamenti = fatturaService.getFatturaDdtPagamenti(fattura.getId());
+                pagamenti.forEach(p -> {
+                    TipoPagamento tipoPagamento = p.getTipoPagamento();
+                    LOGGER.info("Tipo pagamento id: {}", tipoPagamento.getId());
+                });
                 return pagamenti.stream().filter(p -> p.getTipoPagamento() != null).map(p -> p.getTipoPagamento().getId()).filter(tp -> tp.equals(Long.valueOf(idTipoPagamento))).findFirst().isPresent();
             }
             return true;
@@ -173,11 +178,12 @@ public class FatturaController {
     @RequestMapping(method = POST, path = "/creazione-automatica")
     @ResponseStatus(CREATED)
     @CrossOrigin
-    public List<Fattura> createBulk(@RequestBody(required = false) final String body){
+    public List<Fattura> createBulk(@RequestBody(required = false) final Map<String, Object> body){
         LOGGER.info("Performing POST request for creating bulk 'fatture'");
-        return fatturaService.createBulk();
+        return fatturaService.createBulk(body);
     }
 
+    /*
     @RequestMapping(method = PUT, path = "/{fatturaId}")
     @CrossOrigin
     public Fattura update(@PathVariable final Long fatturaId, @RequestBody final Fattura fattura){
@@ -187,6 +193,7 @@ public class FatturaController {
         }
         return fatturaService.update(fattura);
     }
+     */
 
     @RequestMapping(method = DELETE, path = "/{fatturaId}")
     @ResponseStatus(NO_CONTENT)

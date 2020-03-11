@@ -111,17 +111,33 @@ public class FatturaService {
 
         fatturaRepository.save(createdFattura);
         LOGGER.info("Created 'fattura' '{}'", createdFattura);
+
+        setFatturaDdtsFatturato(createdFattura, true);
         return createdFattura;
     }
 
     @Transactional
-    public List<Fattura> createBulk(){
+    public List<Fattura> createBulk(Map<String, Object> body){
         LOGGER.info("Creating bulk 'fatture'...");
         List<Fattura> createdFatture = new ArrayList<>();
 
-        List<Ddt> ddts = ddtService.getAll().stream().filter(ddt -> ddt.getFatturato() != null && ddt.getFatturato() == Boolean.FALSE).collect(Collectors.toList());
+        Date data = Date.valueOf((String)body.get("data"));
+        LOGGER.info("Retrieving 'ddt' with 'data' less or equal to '{}'", data);
 
-        LOGGER.info("Retrieved {} 'ddt' with fatturato=false", ddts.size());
+        List<Ddt> ddts = ddtService.getAll().stream().filter(ddt -> {
+            Boolean fatturato = ddt.getFatturato();
+            if(data != null){
+                if(ddt.getData().compareTo(data)<=0){
+                    return fatturato != null && fatturato == Boolean.FALSE;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }).collect(Collectors.toList());
+
+        LOGGER.info("Retrieved {} 'ddt' with fatturato=false and data less or equal to {}", ddts.size(), data);
 
         Map<Long, List<Ddt>> clientiDdtsMap = new HashMap<>();
         ddts.forEach(ddt -> {
@@ -178,6 +194,7 @@ public class FatturaService {
         return createdFatture;
     }
 
+    /*
     @Transactional
     public Fattura update(Fattura fattura){
         LOGGER.info("Updating 'fattura'");
@@ -203,10 +220,15 @@ public class FatturaService {
         LOGGER.info("Updated 'fattura' '{}'", updatedFattura);
         return updatedFattura;
     }
+    */
 
     @Transactional
     public void delete(Long fatturaId){
         LOGGER.info("Deleting 'fattura' '{}'", fatturaId);
+
+        Fattura fattura = fatturaRepository.findById(fatturaId).orElseThrow(ResourceNotFoundException::new);
+        setFatturaDdtsFatturato(fattura, false);
+
         fatturaDdtService.deleteByFatturaId(fatturaId);
         fatturaRepository.deleteById(fatturaId);
         LOGGER.info("Deleted 'fattura' '{}'", fatturaId);
@@ -241,5 +263,18 @@ public class FatturaService {
             return;
         }
         fattura.setStatoFattura(statoFatturaService.getParzialmentePagata());
+    }
+
+    private void setFatturaDdtsFatturato(Fattura fattura, boolean fatturato){
+        LOGGER.info("Setting 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
+        fattura.getFatturaDdts().forEach(fd -> {
+            Long idDdt = fd.getId().getDdtId();
+            Map<String,Object> patchDdt = new HashMap<>();
+            patchDdt.put("id", idDdt.intValue());
+            patchDdt.put("fatturato", fatturato);
+            ddtService.patch(patchDdt);
+        });
+        LOGGER.info("Successfully set 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
+
     }
 }
