@@ -76,6 +76,7 @@ public class FatturaController {
             return true;
         };
         Predicate<Fattura> isFatturaTipoPagamentoEquals = fattura -> {
+            /*
             if(idTipoPagamento != null){
                 Set<Pagamento> pagamenti = fatturaService.getFatturaDdtPagamenti(fattura.getId());
                 pagamenti.forEach(p -> {
@@ -84,6 +85,7 @@ public class FatturaController {
                 });
                 return pagamenti.stream().filter(p -> p.getTipoPagamento() != null).map(p -> p.getTipoPagamento().getId()).filter(tp -> tp.equals(Long.valueOf(idTipoPagamento))).findFirst().isPresent();
             }
+            */
             return true;
         };
         Predicate<Fattura> isFatturaClienteContains = fattura -> {
