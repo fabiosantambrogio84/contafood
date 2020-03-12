@@ -70,18 +70,25 @@ public class FatturaController {
         };
         Predicate<Fattura> isFatturaImportoEquals = fattura -> {
             if(importo != null){
-                LOGGER.info("Importo {} - Importo BigDecimal {} - Fattura totale {}", importo, new BigDecimal(importo).setScale(2, RoundingMode.DOWN), fattura.getTotale());
-                return fattura.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.DOWN))==0;
+                LOGGER.info("Importo {} - Fattura totale {} - Fattura totale float {}", importo, fattura.getTotale(), fattura.getTotale().floatValue());
+                if(importo.equals(fattura.getTotale().floatValue())){
+                    return true;
+                } else {
+                    return false;
+                }
+                //return fattura.getTotale().compareTo(new BigDecimal(importo).setScale(2, BigDecimal.ROUND_DOWN))==0;
             }
             return true;
         };
         Predicate<Fattura> isFatturaTipoPagamentoEquals = fattura -> {
+            LOGGER.info("Filter by idTipoPagamento '{}'", idTipoPagamento);
             if(idTipoPagamento != null){
                 Cliente fatturaCliente = fattura.getCliente();
                 if(fatturaCliente != null){
                     TipoPagamento tipoPagamento = fatturaCliente.getTipoPagamento();
                     if(tipoPagamento != null){
-                        return tipoPagamento.getId().equals(idTipoPagamento);
+                        LOGGER.info("Cliente id '{}', TipoPagamento id '{}'", fatturaCliente.getId(), tipoPagamento.getId());
+                        return tipoPagamento.getId().equals(Long.valueOf(idTipoPagamento));
                     }
                 }
             }
