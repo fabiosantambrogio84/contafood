@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni", "ordineClienteArticoli", "ddtArticoli"})
+@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni", "ordineClienteArticoli", "ddtArticoli", "ddtAcquistoArticoli"})
 @Entity
 @Table(name = "articolo")
 public class Articolo {
@@ -98,6 +98,10 @@ public class Articolo {
     @OneToMany(mappedBy = "articolo")
     @JsonIgnore
     private Set<DdtArticolo> ddtArticoli = new HashSet<>();
+
+    @OneToMany(mappedBy = "articolo")
+    @JsonIgnore
+    private Set<DdtAcquistoArticolo> ddtAcquistoArticoli = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -289,6 +293,14 @@ public class Articolo {
 
     public void setDdtArticoli(Set<DdtArticolo> ddtArticoli) {
         this.ddtArticoli = ddtArticoli;
+    }
+
+    public Set<DdtAcquistoArticolo> getDdtAcquistoArticoli() {
+        return ddtAcquistoArticoli;
+    }
+
+    public void setDdtAcquistoArticoli(Set<DdtAcquistoArticolo> ddtAcquistoArticoli) {
+        this.ddtAcquistoArticoli = ddtAcquistoArticoli;
     }
 
     @Override
