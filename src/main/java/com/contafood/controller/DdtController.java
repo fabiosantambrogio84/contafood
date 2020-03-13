@@ -3,6 +3,7 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
 import com.contafood.service.DdtService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,11 +49,16 @@ public class DdtController {
                            @RequestParam(name = "articolo", required = false) Integer idArticolo,
                            @RequestParam(name = "stato", required = false) Integer idStato,
                            @RequestParam(name = "idCliente", required = false) Integer idCliente,
-                           @RequestParam(name = "fatturato", required = false) Boolean fatturato) {
+                           @RequestParam(name = "fatturato", required = false) Boolean fatturato,
+                           @RequestParam(name = "lotto", required = false) String lotto) {
         LOGGER.info("Performing GET request for retrieving list of 'ddts'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, idCliente {}, fatturato {}",
-                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, idCliente, fatturato);
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, idCliente {}, fatturato {}, lotto {}",
+                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, idCliente, fatturato, lotto);
         // /contafood-be/ddts?dataDa=&dataA=&progressivo=&importo=&tipoPagamento=&cliente=&agente=&autista=&articolo=
+
+        if(!StringUtils.isEmpty(lotto)){
+            return ddtService.getAllByLotto(lotto);
+        }
 
         Predicate<Ddt> isDdtDataDaGreaterOrEquals = ddt -> {
             if(dataDa != null){

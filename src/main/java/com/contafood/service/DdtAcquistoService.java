@@ -41,6 +41,13 @@ public class DdtAcquistoService {
         return ddtsAcquisto;
     }
 
+    public Set<DdtAcquisto> getAllByLotto(String lotto){
+        LOGGER.info("Retrieving the list of 'ddts acquisto' filtered by 'lotto' '{}'", lotto);
+        Set<DdtAcquisto> ddtsAcquisto = ddtAcquistoRepository.findAllByLotto(lotto);
+        LOGGER.info("Retrieved {} 'ddts acquisto'", ddtsAcquisto.size());
+        return ddtsAcquisto;
+    }
+
     public DdtAcquisto getOne(Long ddtAcquistoId){
         LOGGER.info("Retrieving 'ddt acquisto' '{}'", ddtAcquistoId);
         DdtAcquisto ddtAcquisto = ddtAcquistoRepository.findById(ddtAcquistoId).orElseThrow(ResourceNotFoundException::new);

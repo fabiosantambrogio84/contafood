@@ -1,16 +1,22 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.*;
+import com.contafood.model.Articolo;
+import com.contafood.model.ArticoloImmagine;
+import com.contafood.model.Fornitore;
+import com.contafood.model.ListinoPrezzo;
 import com.contafood.service.ArticoloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -31,14 +37,31 @@ public class ArticoloController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Articolo> getAll(@RequestParam(name = "attivo", required = false) Boolean active) {
+    public Set<Articolo> getAll(@RequestParam(name = "attivo", required = false) Boolean active,
+                                @RequestParam(name = "idFornitore", required = false) Integer idFornitore) {
         LOGGER.info("Performing GET request for retrieving list of 'articoli'");
-        LOGGER.info("Query parameter 'attivo' equal to '{}'", active);
+        LOGGER.info("Query parameter: 'attivo' '{}', 'idFornitore' '{}'", active, idFornitore);
+
+        Predicate<Articolo> isArticoloIdFornitoreEquals = articolo -> {
+            if(idFornitore != null){
+                Fornitore articoloFornitore = articolo.getFornitore();
+                if(articoloFornitore != null){
+                    if(articoloFornitore.getId().equals(Long.valueOf(idFornitore))){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        };
+
+        Set<Articolo> articoli = new HashSet<>();
         if(active != null){
-            return articoloService.getAllByAttivo(active);
+            articoli = articoloService.getAllByAttivo(active);
         } else {
-            return articoloService.getAll();
+            articoli = articoloService.getAll();
         }
+        return articoli.stream().filter(isArticoloIdFornitoreEquals).collect(Collectors.toSet());
     }
 
     @RequestMapping(method = GET, path = "/{articoloId}")

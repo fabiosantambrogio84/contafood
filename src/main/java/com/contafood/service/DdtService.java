@@ -43,6 +43,13 @@ public class DdtService {
         return ddts;
     }
 
+    public Set<Ddt> getAllByLotto(String lotto){
+        LOGGER.info("Retrieving the list of 'ddts' filtered by 'lotto' '{}'", lotto);
+        Set<Ddt> ddts = ddtRepository.findAllByLotto(lotto);
+        LOGGER.info("Retrieved {} 'ddts'", ddts.size());
+        return ddts;
+    }
+
     public Ddt getOne(Long ddtId){
         LOGGER.info("Retrieving 'ddt' '{}'", ddtId);
         Ddt ddt = ddtRepository.findById(ddtId).orElseThrow(ResourceNotFoundException::new);

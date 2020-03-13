@@ -45,6 +45,13 @@ public class ProduzioneService {
         return produzioni;
     }
 
+    public Set<Produzione> getAllByLotto(String lotto){
+        LOGGER.info("Retrieving the list of 'produzioni' filtered by 'lotto' '{}'", lotto);
+        Set<Produzione> produzioni = produzioneRepository.findAllByLotto(lotto);
+        LOGGER.info("Retrieved {} 'produzioni'", produzioni.size());
+        return produzioni;
+    }
+
     public Produzione getOne(Long produzioneId){
         LOGGER.info("Retrieving 'produzione' '{}'", produzioneId);
         Produzione produzione = produzioneRepository.findById(produzioneId).orElseThrow(ResourceNotFoundException::new);

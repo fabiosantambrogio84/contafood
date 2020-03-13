@@ -3,6 +3,7 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
 import com.contafood.service.DdtAcquistoService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,11 +39,16 @@ public class DdtAcquistoController {
     @RequestMapping(method = GET)
     @CrossOrigin
     public Set<DdtAcquisto> getAll(@RequestParam(name = "numero", required = false) Integer numero,
-                           @RequestParam(name = "fornitore", required = false) String fornitore,
-                           @RequestParam(name = "stato", required = false) Integer idStato) {
+                                    @RequestParam(name = "fornitore", required = false) String fornitore,
+                                    @RequestParam(name = "stato", required = false) Integer idStato,
+                                    @RequestParam(name = "lotto", required = false) String lotto) {
         LOGGER.info("Performing GET request for retrieving list of 'ddts acquisto'");
-        LOGGER.info("Request params: numero {}, fornitore {}, stato {}",
-                numero, fornitore, idStato);
+        LOGGER.info("Request params: numero {}, fornitore {}, stato {}, lotto {}",
+                numero, fornitore, idStato, lotto);
+
+        if(!StringUtils.isEmpty(lotto)){
+            return ddtAcquistoService.getAllByLotto(lotto);
+        }
 
         Predicate<DdtAcquisto> isDdtAcquistoNumeroEquals = ddtAcquisto -> {
             if(numero != null){
