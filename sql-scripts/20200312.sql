@@ -51,3 +51,16 @@ CREATE TABLE `ddt_acquisto_articolo` (
 -- INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(0,'DA_PAGARE','Da pagare',1);
 -- INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(1,'PARZIALMENTE_PAGATO','Parzialmente pagato',2);
 -- INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(2,'PAGATO','Pagato',3);
+
+ALTER DATABASE `contafood` DEFAULT CHARACTER SET latin1 DEFAULT COLLATE latin1_general_cs;
+ALTER TABLE contafood.produzione_confezione COLLATE=latin1_general_cs;
+ALTER TABLE contafood.produzione_ingrediente COLLATE=latin1_general_cs;
+ALTER TABLE contafood.produzione COLLATE=latin1_general_cs;
+ALTER TABLE contafood.ddt_articolo COLLATE=latin1_general_cs;
+ALTER TABLE contafood.ddt_acquisto_articolo COLLATE=latin1_general_cs;
+
+ALTER TABLE contafood.produzione_confezione MODIFY COLUMN lotto varchar(100) CHARACTER SET latin1 COLLATE latin1_general_cs NULL;
+ALTER TABLE contafood.produzione_ingrediente MODIFY COLUMN lotto varchar(100) CHARACTER SET latin1 COLLATE latin1_general_cs NULL;
+ALTER TABLE contafood.produzione MODIFY COLUMN lotto varchar(100) CHARACTER SET latin1 COLLATE latin1_general_cs NULL;
+ALTER TABLE contafood.ddt_articolo MODIFY COLUMN lotto varchar(100) CHARACTER SET latin1 COLLATE latin1_general_cs NULL;
+ALTER TABLE contafood.ddt_acquisto_articolo MODIFY COLUMN lotto varchar(100) CHARACTER SET latin1 COLLATE latin1_general_cs NULL;
