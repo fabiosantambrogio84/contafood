@@ -98,15 +98,8 @@ public class FatturaController {
             if(cliente != null){
                 Cliente fatturaCliente = fattura.getCliente();
                 if(fatturaCliente != null){
-                    if(fatturaCliente.getDittaIndividuale() != null && Boolean.TRUE.equals(fatturaCliente.getDittaIndividuale())){
-                        String clienteNomeCognome = (fatturaCliente.getNome().concat(" ").concat(fatturaCliente.getCognome())).toLowerCase();
-                        if(clienteNomeCognome.contains(cliente.toLowerCase())){
-                            return true;
-                        }
-                    }else {
-                        if((fatturaCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase())){
-                            return true;
-                        }
+                    if((fatturaCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase())){
+                        return true;
                     }
                 }
                 return false;

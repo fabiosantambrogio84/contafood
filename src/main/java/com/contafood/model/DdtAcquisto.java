@@ -20,7 +20,7 @@ public class DdtAcquisto {
     private Long id;
 
     @Column(name = "numero")
-    private Integer numero;
+    private String numero;
 
     @Column(name = "data")
     private Date data;
@@ -28,10 +28,6 @@ public class DdtAcquisto {
     @ManyToOne
     @JoinColumn(name="id_fornitore")
     private Fornitore fornitore;
-
-    @ManyToOne
-    @JoinColumn(name="id_stato")
-    private StatoDdtAcquisto statoDdtAcquisto;
 
     @Column(name = "numero_colli")
     private Integer numeroColli;
@@ -64,11 +60,11 @@ public class DdtAcquisto {
         this.id = id;
     }
 
-    public Integer getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(Integer numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 
@@ -86,14 +82,6 @@ public class DdtAcquisto {
 
     public void setFornitore(Fornitore fornitore) {
         this.fornitore = fornitore;
-    }
-
-    public StatoDdtAcquisto getStatoDdtAcquisto() {
-        return statoDdtAcquisto;
-    }
-
-    public void setStatoDdtAcquisto(StatoDdtAcquisto statoDdtAcquisto) {
-        this.statoDdtAcquisto = statoDdtAcquisto;
     }
 
     public Integer getNumeroColli() {
@@ -161,7 +149,6 @@ public class DdtAcquisto {
         result.append(", numero: " + numero);
         result.append(", data: " + data);
         result.append(", fornitore: " + fornitore);
-        result.append(", statoDdtAcquisto: " + statoDdtAcquisto);
         result.append(", numeroColli: " + numeroColli);
         result.append(", totaleImponibile: " + totaleImponibile);
         result.append(", totale: " + totale);

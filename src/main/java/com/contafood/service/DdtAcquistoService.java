@@ -25,13 +25,11 @@ public class DdtAcquistoService {
 
     private final DdtAcquistoRepository ddtAcquistoRepository;
     private final DdtAcquistoArticoloService ddtAcquistoArticoloService;
-    private final StatoDdtAcquistoService statoDdtAcquistoService;
 
     @Autowired
-    public DdtAcquistoService(final DdtAcquistoRepository ddtAcquistoRepository, final DdtAcquistoArticoloService ddtAcquistoArticoloService, final StatoDdtAcquistoService statoDdtAcquistoService){
+    public DdtAcquistoService(final DdtAcquistoRepository ddtAcquistoRepository, final DdtAcquistoArticoloService ddtAcquistoArticoloService){
         this.ddtAcquistoRepository = ddtAcquistoRepository;
         this.ddtAcquistoArticoloService = ddtAcquistoArticoloService;
-        this.statoDdtAcquistoService = statoDdtAcquistoService;
     }
 
     public Set<DdtAcquisto> getAll(){
@@ -59,7 +57,6 @@ public class DdtAcquistoService {
     public DdtAcquisto create(DdtAcquisto ddtAcquisto){
         LOGGER.info("Creating 'ddt acquisto'");
 
-        ddtAcquisto.setStatoDdtAcquisto(statoDdtAcquistoService.getDaPagare());
         ddtAcquisto.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         DdtAcquisto createdDdtAcquisto = ddtAcquistoRepository.save(ddtAcquisto);
@@ -86,7 +83,6 @@ public class DdtAcquistoService {
         ddtAcquistoArticoloService.deleteByDdtAcquistoId(ddtAcquisto.getId());
 
         DdtAcquisto ddtAcquistoCurrent = ddtAcquistoRepository.findById(ddtAcquisto.getId()).orElseThrow(ResourceNotFoundException::new);
-        ddtAcquisto.setStatoDdtAcquisto(ddtAcquistoCurrent.getStatoDdtAcquisto());
         ddtAcquisto.setDataInserimento(ddtAcquistoCurrent.getDataInserimento());
         ddtAcquisto.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
 

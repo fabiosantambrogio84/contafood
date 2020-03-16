@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS `ddt_acquisto_articolo`;
 DROP TABLE IF EXISTS `ddt_acquisto`;
 DROP TABLE IF EXISTS `stato_ddt_acquisto`;
 
+/*
 CREATE TABLE `stato_ddt_acquisto` (
 	id int(10) unsigned NOT NULL,
 	codice varchar(255),
@@ -11,13 +12,14 @@ CREATE TABLE `stato_ddt_acquisto` (
 	data_aggiornamento TIMESTAMP,
 	PRIMARY KEY (id)
 ) ENGINE=InnoDB;
+*/
 
 CREATE TABLE `ddt_acquisto` (
 	id int(10) unsigned NOT NULL AUTO_INCREMENT,
-	numero int(11),
+	numero varchar(255),
 	data DATE,
 	id_fornitore int(10) unsigned,
-	id_stato int(10) unsigned,
+	-- id_stato int(10) unsigned,
     numero_colli int(10),
     totale_imponibile decimal(10,3),
     totale decimal(10,3),
@@ -25,8 +27,8 @@ CREATE TABLE `ddt_acquisto` (
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
 	PRIMARY KEY (`id`),
-	CONSTRAINT `fk_ddt_acq_fornitore` FOREIGN KEY (`id_fornitore`) REFERENCES `fornitore` (`id`),
-	CONSTRAINT `fk_ddt_acq_stato` FOREIGN KEY (`id_stato`) REFERENCES `stato_ddt_acquisto` (`id`)
+	CONSTRAINT `fk_ddt_acq_fornitore` FOREIGN KEY (`id_fornitore`) REFERENCES `fornitore` (`id`)
+	-- CONSTRAINT `fk_ddt_acq_stato` FOREIGN KEY (`id_stato`) REFERENCES `stato_ddt_acquisto` (`id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE `ddt_acquisto_articolo` (
@@ -46,6 +48,6 @@ CREATE TABLE `ddt_acquisto_articolo` (
 	CONSTRAINT `fk_ddt_acq_articolo_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
 ) ENGINE=InnoDB;
 
-INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(0,'DA_PAGARE','Da pagare',1);
-INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(1,'PARZIALMENTE_PAGATO','Parzialmente pagato',2);
-INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(2,'PAGATO','Pagato',3);
+-- INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(0,'DA_PAGARE','Da pagare',1);
+-- INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(1,'PARZIALMENTE_PAGATO','Parzialmente pagato',2);
+-- INSERT INTO stato_ddt_acquisto(id,codice,descrizione,ordine) VALUES(2,'PAGATO','Pagato',3);

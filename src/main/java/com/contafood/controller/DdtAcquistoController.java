@@ -40,11 +40,10 @@ public class DdtAcquistoController {
     @CrossOrigin
     public Set<DdtAcquisto> getAll(@RequestParam(name = "numero", required = false) Integer numero,
                                     @RequestParam(name = "fornitore", required = false) String fornitore,
-                                    @RequestParam(name = "stato", required = false) Integer idStato,
                                     @RequestParam(name = "lotto", required = false) String lotto) {
         LOGGER.info("Performing GET request for retrieving list of 'ddts acquisto'");
-        LOGGER.info("Request params: numero {}, fornitore {}, stato {}, lotto {}",
-                numero, fornitore, idStato, lotto);
+        LOGGER.info("Request params: numero {}, fornitore {}, lotto {}",
+                numero, fornitore, lotto);
 
         if(!StringUtils.isEmpty(lotto)){
             return ddtAcquistoService.getAllByLotto(lotto);
@@ -76,21 +75,10 @@ public class DdtAcquistoController {
             }
             return true;
         };
-        Predicate<DdtAcquisto> isDdtAcquistoStatoAcquistoEquals = ddtAcquisto -> {
-            if(idStato != null){
-                StatoDdtAcquisto statoacquistoDdtAcquisto = ddtAcquisto.getStatoDdtAcquisto();
-                if(statoacquistoDdtAcquisto != null){
-                    return statoacquistoDdtAcquisto.getId().equals(Long.valueOf(idStato));
-                }
-                return false;
-            }
-            return true;
-        };
 
         Set<DdtAcquisto> ddtsAcquisto = ddtAcquistoService.getAll();
         return ddtsAcquisto.stream().filter(isDdtAcquistoNumeroEquals
-                .and(isDdtAcquistoFornitoreContains)
-                .and(isDdtAcquistoStatoAcquistoEquals)).collect(Collectors.toSet());
+                .and(isDdtAcquistoFornitoreContains)).collect(Collectors.toSet());
     }
 
     @RequestMapping(method = GET, path = "/{ddtAcquistoId}")
