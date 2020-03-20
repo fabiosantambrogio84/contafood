@@ -29,6 +29,10 @@ public class Fattura {
     private Date data;
 
     @ManyToOne
+    @JoinColumn(name="id_tipo")
+    private TipoFattura tipoFattura;
+
+    @ManyToOne
     @JoinColumn(name="id_cliente")
     private Cliente cliente;
 
@@ -98,6 +102,14 @@ public class Fattura {
 
     public void setData(Date data) {
         this.data = data;
+    }
+
+    public TipoFattura getTipoFattura() {
+        return tipoFattura;
+    }
+
+    public void setTipoFattura(TipoFattura tipoFattura) {
+        this.tipoFattura = tipoFattura;
     }
 
     public Cliente getCliente() {
@@ -205,6 +217,7 @@ public class Fattura {
         result.append(", progressivo: " + progressivo);
         result.append(", anno: " + anno);
         result.append(", data: " + data);
+        result.append(", tipoFattura: " + tipoFattura);
         result.append(", cliente: " + cliente);
         result.append(", agente: " + agente);
         result.append(", statoFattura: " + statoFattura);

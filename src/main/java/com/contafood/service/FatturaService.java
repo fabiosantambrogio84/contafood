@@ -28,14 +28,16 @@ public class FatturaService {
     private final StatoFatturaService statoFatturaService;
     private final StatoDdtService statoDdtService;
     private final DdtService ddtService;
+    private final TipoFatturaService tipoFatturaService;
 
     @Autowired
-    public FatturaService(final FatturaRepository fatturaRepository, final FatturaDdtService fatturaDdtService, final StatoFatturaService statoFatturaService, final StatoDdtService statoDdtService, final DdtService ddtService){
+    public FatturaService(final FatturaRepository fatturaRepository, final FatturaDdtService fatturaDdtService, final StatoFatturaService statoFatturaService, final StatoDdtService statoDdtService, final DdtService ddtService, final TipoFatturaService tipoFatturaService){
         this.fatturaRepository = fatturaRepository;
         this.fatturaDdtService = fatturaDdtService;
         this.statoFatturaService = statoFatturaService;
         this.statoDdtService = statoDdtService;
         this.ddtService = ddtService;
+        this.tipoFatturaService = tipoFatturaService;
     }
 
     public Set<Fattura> getAll(){
@@ -166,6 +168,8 @@ public class FatturaService {
             cliente.setId(idCliente);
             fattura.setCliente(cliente);
             fattura.setData(Date.valueOf(LocalDate.now()));
+
+            fattura.setTipoFattura(tipoFatturaService.getVendita());
 
             BigDecimal totale = new BigDecimal(0);
             BigDecimal totaleAcconto = new BigDecimal(0);

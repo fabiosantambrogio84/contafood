@@ -1,6 +1,5 @@
 package com.contafood.controller;
 
-import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
 import com.contafood.service.FatturaService;
 import org.slf4j.Logger;
@@ -8,12 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -23,7 +19,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(path="/fatture-vendita")
+@RequestMapping(path="/fatture")
 public class FatturaController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(FatturaController.class);
@@ -45,10 +41,11 @@ public class FatturaController {
                                @RequestParam(name = "cliente", required = false) String cliente,
                                @RequestParam(name = "agente", required = false) Integer idAgente,
                                @RequestParam(name = "articolo", required = false) Integer idArticolo,
-                               @RequestParam(name = "stato", required = false) Integer idStato) {
+                               @RequestParam(name = "stato", required = false) Integer idStato,
+                               @RequestParam(name = "tipo", required = false) Integer idTipo) {
         LOGGER.info("Performing GET request for retrieving list of 'fatture'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}",
-                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato);
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
+                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
         Predicate<Fattura> isFatturaDataDaGreaterOrEquals = fattura -> {
             if(dataDa != null){
@@ -141,6 +138,16 @@ public class FatturaController {
             }
             return true;
         };
+        Predicate<Fattura> isFatturaTipoEquals = fattura -> {
+            if(idTipo != null){
+                TipoFattura tipoFattura = fattura.getTipoFattura();
+                if(tipoFattura != null){
+                    return tipoFattura.getId().equals(Long.valueOf(idTipo));
+                }
+                return false;
+            }
+            return true;
+        };
 
         Set<Fattura> fatture = fatturaService.getAll();
         return fatture.stream().filter(isFatturaDataDaGreaterOrEquals
@@ -151,7 +158,8 @@ public class FatturaController {
                 .and(isFatturaClienteContains)
                 .and(isFatturaAgenteEquals)
                 .and(isFatturaDdtArticoloEquals)
-                .and(isFatturaStatoEquals)).collect(Collectors.toSet());
+                .and(isFatturaStatoEquals)
+                .and(isFatturaTipoEquals)).collect(Collectors.toSet());
     }
 
     @RequestMapping(method = GET, path = "/{fatturaId}")
