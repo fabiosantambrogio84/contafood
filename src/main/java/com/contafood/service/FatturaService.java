@@ -281,4 +281,5 @@ public class FatturaService {
         LOGGER.info("Successfully set 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
 
     }
+
 }

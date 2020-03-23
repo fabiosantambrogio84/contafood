@@ -2,15 +2,15 @@ package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"articoli"})
+@EqualsAndHashCode(exclude = {"articoli", "fatturaAccompagnatoriaTotali"})
 @Entity
 @Table(name = "aliquota_iva")
 public class AliquotaIva {
@@ -28,6 +28,10 @@ public class AliquotaIva {
     @OneToMany(mappedBy = "aliquotaIva")
     @JsonIgnore
     private List<Articolo> articoli;
+
+    @OneToMany(mappedBy = "aliquotaIva")
+    @JsonIgnore
+    private Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -59,6 +63,14 @@ public class AliquotaIva {
 
     public void setArticoli(List<Articolo> articoli) {
         this.articoli = articoli;
+    }
+
+    public Set<FatturaAccompagnatoriaTotale> getFatturaAccompagnatoriaTotali() {
+        return fatturaAccompagnatoriaTotali;
+    }
+
+    public void setFatturaAccompagnatoriaTotali(Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali) {
+        this.fatturaAccompagnatoriaTotali = fatturaAccompagnatoriaTotali;
     }
 
     @Override
