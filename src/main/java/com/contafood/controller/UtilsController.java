@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -59,5 +60,19 @@ public class UtilsController {
     public List<String> getTipologieTrasportoDdt() {
         LOGGER.info("Performing GET request for retrieving list of 'tipologie-trasporto-ddt'");
         return TipologiaTrasportoDdt.labels();
+    }
+
+    @RequestMapping(method = GET, path = "/statistiche-periodi")
+    @CrossOrigin
+    public List<Map<StatisticaPeriodo, String>> getStatistichePeriodi() {
+        LOGGER.info("Performing GET request for retrieving list of 'statistiche periodi'");
+        return StatisticaPeriodo.getAll();
+    }
+
+    @RequestMapping(method = GET, path = "/statistiche-opzioni")
+    @CrossOrigin
+    public List<Map<StatisticaOpzione, String>> getStatisticheOpzioni() {
+        LOGGER.info("Performing GET request for retrieving list of 'statistiche opzioni'");
+        return StatisticaOpzione.getAll();
     }
 }
