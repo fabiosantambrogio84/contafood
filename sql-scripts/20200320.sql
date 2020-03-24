@@ -1,3 +1,4 @@
+DROP VIEW IF EXISTS `v_fattura`;
 DROP TABLE IF EXISTS `fattura_accom_articolo`;
 DROP TABLE IF EXISTS `fattura_accom_totale`;
 DROP TABLE IF EXISTS `fattura_accom`;
@@ -36,6 +37,7 @@ CREATE TABLE `fattura_accom` (
     data_trasporto date,
     ora_trasporto time,
     trasportatore varchar(255),
+    totale_acconto decimal(10,3),
     totale decimal(10,3),
     note text,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -51,6 +53,7 @@ CREATE TABLE `fattura_accom_articolo` (
 	id_fattura_accom int(10) unsigned,
 	id_articolo int(10) unsigned,
 	uuid varchar(255),
+	lotto varchar(100),
 	quantita decimal(10,3),
 	numero_pezzi int(10),
 	prezzo decimal(10,3),
@@ -76,3 +79,14 @@ CREATE TABLE `fattura_accom_totale` (
 	CONSTRAINT `fk_fattura_accom_totale_fatt` FOREIGN KEY (`id_fattura_accom`) REFERENCES `fattura_accom` (`id`),
 	CONSTRAINT `fk_fattura_accom_totale_iva` FOREIGN KEY (`id_aliquota_iva`) REFERENCES `aliquota_iva` (`id`)
 ) ENGINE=InnoDB;
+
+CREATE VIEW `v_fattura` AS
+SELECT
+    id, progressivo, anno, data, id_tipo, id_cliente, id_stato, spedito_ade, totale_acconto, totale, note, data_inserimento, data_aggiornamento
+FROM
+    fattura
+UNION ALL
+select
+	id, progressivo, anno, data, id_tipo, id_cliente, id_stato, spedito_ade, totale_acconto, totale, note, data_inserimento, data_aggiornamento
+FROM
+    fattura_accom;

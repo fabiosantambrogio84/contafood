@@ -2,14 +2,17 @@ package com.contafood.service;
 
 import com.contafood.exception.FatturaAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.FatturaAccompagnatoria;
+import com.contafood.model.*;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
+import com.contafood.repository.VFatturaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -24,14 +27,16 @@ public class FatturaAccompagnatoriaService {
     private final FatturaAccompagnatoriaTotaleService fatturaAccompagnatoriaTotaleService;
     private final StatoFatturaService statoFatturaService;
     private final TipoFatturaService tipoFatturaService;
+    private final VFatturaRepository vFatturaRepository;
 
     @Autowired
-    public FatturaAccompagnatoriaService(final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository, final FatturaAccompagnatoriaArticoloService fatturaAccompagnatoriaArticoloService, final FatturaAccompagnatoriaTotaleService fatturaAccompagnatoriaTotaleService, final StatoFatturaService statoFatturaService, final TipoFatturaService tipoFatturaService){
+    public FatturaAccompagnatoriaService(final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository, final FatturaAccompagnatoriaArticoloService fatturaAccompagnatoriaArticoloService, final FatturaAccompagnatoriaTotaleService fatturaAccompagnatoriaTotaleService, final StatoFatturaService statoFatturaService, final TipoFatturaService tipoFatturaService, final VFatturaRepository vFatturaRepository){
         this.fatturaAccompagnatoriaRepository = fatturaAccompagnatoriaRepository;
         this.fatturaAccompagnatoriaArticoloService = fatturaAccompagnatoriaArticoloService;
         this.fatturaAccompagnatoriaTotaleService = fatturaAccompagnatoriaTotaleService;
         this.statoFatturaService = statoFatturaService;
         this.tipoFatturaService = tipoFatturaService;
+        this.vFatturaRepository = vFatturaRepository;
     }
 
     public Set<FatturaAccompagnatoria> getAll(){
@@ -51,9 +56,9 @@ public class FatturaAccompagnatoriaService {
     public Map<String, Integer> getAnnoAndProgressivo(){
         Integer anno = ZonedDateTime.now().getYear();
         Integer progressivo = 1;
-        List<FatturaAccompagnatoria> fattureAccompagnatorie = fatturaAccompagnatoriaRepository.findByAnnoOrderByProgressivoDesc(anno);
+        List<VFattura> fattureAccompagnatorie = vFatturaRepository.findByAnnoOrderByProgressivoDesc(anno);
         if(fattureAccompagnatorie != null && !fattureAccompagnatorie.isEmpty()){
-            Optional<FatturaAccompagnatoria> lastFatturaAccompagnatoria = fattureAccompagnatorie.stream().findFirst();
+            Optional<VFattura> lastFatturaAccompagnatoria = fattureAccompagnatorie.stream().findFirst();
             if(lastFatturaAccompagnatoria.isPresent()){
                 progressivo = lastFatturaAccompagnatoria.get().getProgressivo() + 1;
             }
@@ -72,6 +77,7 @@ public class FatturaAccompagnatoriaService {
         checkExistsByAnnoAndProgressivoAndIdNot(fatturaAccompagnatoria.getAnno(),fatturaAccompagnatoria.getProgressivo(), Long.valueOf(-1));
 
         fatturaAccompagnatoria.setStatoFattura(statoFatturaService.getDaPagare());
+        fatturaAccompagnatoria.setTipoFattura(tipoFatturaService.getAccompagnatoria());
         fatturaAccompagnatoria.setSpeditoAde(false);
         fatturaAccompagnatoria.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
@@ -88,6 +94,8 @@ public class FatturaAccompagnatoriaService {
             fat.getId().setUuid(UUID.randomUUID().toString());
             fatturaAccompagnatoriaTotaleService.create(fat);
         });
+
+        computeTotali(createdFatturaAccompagnatoria, createdFatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli());
 
         fatturaAccompagnatoriaRepository.save(createdFatturaAccompagnatoria);
         LOGGER.info("Created 'fattura accompagnatoria' '{}'", createdFatturaAccompagnatoria);
@@ -110,6 +118,37 @@ public class FatturaAccompagnatoriaService {
         if(fatturaAccompagnatoria.isPresent()){
             throw new FatturaAlreadyExistingException(anno, progressivo);
         }
+    }
+
+    private void computeTotali(FatturaAccompagnatoria fatturaAccompagnatoria, Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli){
+        Map<AliquotaIva, Set<FatturaAccompagnatoriaArticolo>> ivaFatturaAccompagnatoriaArticoliMap = new HashMap<>();
+        fatturaAccompagnatoriaArticoli.stream().forEach(faa -> {
+            Articolo articolo = fatturaAccompagnatoriaArticoloService.getArticolo(faa);
+            AliquotaIva iva = articolo.getAliquotaIva();
+            Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoliByIva;
+            if(ivaFatturaAccompagnatoriaArticoliMap.containsKey(iva)){
+                fatturaAccompagnatoriaArticoliByIva = ivaFatturaAccompagnatoriaArticoliMap.get(iva);
+            } else {
+                fatturaAccompagnatoriaArticoliByIva = new HashSet<>();
+            }
+            fatturaAccompagnatoriaArticoliByIva.add(faa);
+            ivaFatturaAccompagnatoriaArticoliMap.put(iva, fatturaAccompagnatoriaArticoliByIva);
+        });
+        BigDecimal totaleImponibile = new BigDecimal(0);
+        BigDecimal totaleIva = new BigDecimal(0);
+        BigDecimal totaleCosto = new BigDecimal(0);
+        BigDecimal totale = new BigDecimal(0);
+        for (Map.Entry<AliquotaIva, Set<FatturaAccompagnatoriaArticolo>> entry : ivaFatturaAccompagnatoriaArticoliMap.entrySet()) {
+            BigDecimal iva = entry.getKey().getValore();
+            BigDecimal totaleByIva = new BigDecimal(0);
+            Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoliByIva = entry.getValue();
+            for(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo: fatturaAccompagnatoriaArticoliByIva){
+                totaleByIva = totaleByIva.add(fatturaAccompagnatoriaArticolo.getImponibile());
+            }
+            totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
+        }
+        fatturaAccompagnatoria.setTotale(totale.setScale(2, RoundingMode.CEILING));
+        fatturaAccompagnatoria.setTotaleAcconto(new BigDecimal(0));
     }
 
 }

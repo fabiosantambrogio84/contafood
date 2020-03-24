@@ -14,7 +14,5 @@ public interface FatturaAccompagnatoriaRepository extends CrudRepository<Fattura
 
     Set<FatturaAccompagnatoria> findAllByOrderByAnnoDescProgressivoDesc();
 
-    List<FatturaAccompagnatoria> findByAnnoOrderByProgressivoDesc(Integer anno);
-
     Optional<FatturaAccompagnatoria> findByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFatturaAccompagnatoria);
 }

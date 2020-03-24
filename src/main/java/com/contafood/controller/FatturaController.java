@@ -33,7 +33,7 @@ public class FatturaController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Fattura> getAll(@RequestParam(name = "dataDa", required = false) Date dataDa,
+    public Set<VFattura> getAll(@RequestParam(name = "dataDa", required = false) Date dataDa,
                                @RequestParam(name = "dataA", required = false) Date dataA,
                                @RequestParam(name = "progressivo", required = false) Integer progressivo,
                                @RequestParam(name = "importo", required = false) Float importo,
@@ -43,29 +43,29 @@ public class FatturaController {
                                @RequestParam(name = "articolo", required = false) Integer idArticolo,
                                @RequestParam(name = "stato", required = false) Integer idStato,
                                @RequestParam(name = "tipo", required = false) Integer idTipo) {
-        LOGGER.info("Performing GET request for retrieving list of 'fatture'");
+        LOGGER.info("Performing GET request for retrieving list of 'fatture vendita and fatture accompagnatorie'");
         LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
                 dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
-        Predicate<Fattura> isFatturaDataDaGreaterOrEquals = fattura -> {
+        Predicate<VFattura> isFatturaDataDaGreaterOrEquals = fattura -> {
             if(dataDa != null){
                 return fattura.getData().compareTo(dataDa)>=0;
             }
             return true;
         };
-        Predicate<Fattura> isFatturaDataALessOrEquals = fattura -> {
+        Predicate<VFattura> isFatturaDataALessOrEquals = fattura -> {
             if(dataA != null){
                 return fattura.getData().compareTo(dataA)<=0;
             }
             return true;
         };
-        Predicate<Fattura> isFatturaProgressivoEquals = fattura -> {
+        Predicate<VFattura> isFatturaProgressivoEquals = fattura -> {
             if(progressivo != null){
                 return fattura.getProgressivo().equals(progressivo);
             }
             return true;
         };
-        Predicate<Fattura> isFatturaImportoEquals = fattura -> {
+        Predicate<VFattura> isFatturaImportoEquals = fattura -> {
             if(importo != null){
                 LOGGER.info("Importo {} - Fattura totale {} - Fattura totale float {}", importo, fattura.getTotale(), fattura.getTotale().floatValue());
                 if(importo.equals(fattura.getTotale().floatValue())){
@@ -77,7 +77,7 @@ public class FatturaController {
             }
             return true;
         };
-        Predicate<Fattura> isFatturaTipoPagamentoEquals = fattura -> {
+        Predicate<VFattura> isFatturaTipoPagamentoEquals = fattura -> {
             LOGGER.info("Filter by idTipoPagamento '{}'", idTipoPagamento);
             if(idTipoPagamento != null){
                 Cliente fatturaCliente = fattura.getCliente();
@@ -91,7 +91,7 @@ public class FatturaController {
             }
             return true;
         };
-        Predicate<Fattura> isFatturaClienteContains = fattura -> {
+        Predicate<VFattura> isFatturaClienteContains = fattura -> {
             if(cliente != null){
                 Cliente fatturaCliente = fattura.getCliente();
                 if(fatturaCliente != null){
@@ -103,7 +103,7 @@ public class FatturaController {
             }
             return true;
         };
-        Predicate<Fattura> isFatturaAgenteEquals = fattura -> {
+        Predicate<VFattura> isFatturaAgenteEquals = fattura -> {
             if(idAgente != null){
                 Cliente fatturaCliente = fattura.getCliente();
                 if(fatturaCliente != null){
@@ -118,7 +118,7 @@ public class FatturaController {
             }
             return true;
         };
-        Predicate<Fattura> isFatturaDdtArticoloEquals = fattura -> {
+        Predicate<VFattura> isFatturaDdtArticoloEquals = fattura -> {
             if(idArticolo != null){
                 Set<DdtArticolo> ddtArticoli = fatturaService.getFatturaDdtArticoli(fattura.getId());
                 if(ddtArticoli != null && !ddtArticoli.isEmpty()){
@@ -128,7 +128,7 @@ public class FatturaController {
             }
             return true;
         };
-        Predicate<Fattura> isFatturaStatoEquals = fattura -> {
+        Predicate<VFattura> isFatturaStatoEquals = fattura -> {
             if(idStato != null){
                 StatoFattura statoFattura = fattura.getStatoFattura();
                 if(statoFattura != null){
@@ -138,7 +138,7 @@ public class FatturaController {
             }
             return true;
         };
-        Predicate<Fattura> isFatturaTipoEquals = fattura -> {
+        Predicate<VFattura> isFatturaTipoEquals = fattura -> {
             if(idTipo != null){
                 TipoFattura tipoFattura = fattura.getTipoFattura();
                 if(tipoFattura != null){
@@ -149,7 +149,7 @@ public class FatturaController {
             return true;
         };
 
-        Set<Fattura> fatture = fatturaService.getAll();
+        Set<VFattura> fatture = fatturaService.getAll();
         return fatture.stream().filter(isFatturaDataDaGreaterOrEquals
                 .and(isFatturaDataALessOrEquals)
                 .and(isFatturaProgressivoEquals)

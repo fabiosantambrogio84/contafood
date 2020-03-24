@@ -1,23 +1,19 @@
 package com.contafood.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"fatturaAccompagnatoriaArticoli"})
+@EqualsAndHashCode()
 @Entity
-@Table(name = "fattura_accom")
-public class FatturaAccompagnatoria {
+@Table(name = "v_fattura")
+public class VFattura {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @Column(name = "progressivo")
@@ -38,30 +34,11 @@ public class FatturaAccompagnatoria {
     private Cliente cliente;
 
     @ManyToOne
-    @JoinColumn(name="id_punto_consegna")
-    private PuntoConsegna puntoConsegna;
-
-    @ManyToOne
     @JoinColumn(name="id_stato")
     private StatoFattura statoFattura;
 
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
-
-    @Column(name = "numero_colli")
-    private Integer numeroColli;
-
-    @Column(name = "tipo_trasporto")
-    private String tipoTrasporto;
-
-    @Column(name = "data_trasporto")
-    private Date dataTrasporto;
-
-    @Column(name = "ora_trasporto")
-    private Time oraTrasporto;
-
-    @Column(name = "trasportatore")
-    private String trasportatore;
 
     @Column(name = "totale_acconto")
     private BigDecimal totaleAcconto;
@@ -77,14 +54,6 @@ public class FatturaAccompagnatoria {
 
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
-
-    @OneToMany(mappedBy = "fatturaAccompagnatoria")
-    @JsonIgnoreProperties("fatturaAccompagnatoria")
-    private Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = new HashSet<>();
-
-    @OneToMany(mappedBy = "fatturaAccompagnatoria")
-    @JsonIgnoreProperties("fatturaAccompagnatoria")
-    private Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -134,14 +103,6 @@ public class FatturaAccompagnatoria {
         this.cliente = cliente;
     }
 
-    public PuntoConsegna getPuntoConsegna() {
-        return puntoConsegna;
-    }
-
-    public void setPuntoConsegna(PuntoConsegna puntoConsegna) {
-        this.puntoConsegna = puntoConsegna;
-    }
-
     public StatoFattura getStatoFattura() {
         return statoFattura;
     }
@@ -156,46 +117,6 @@ public class FatturaAccompagnatoria {
 
     public void setSpeditoAde(Boolean speditoAde) {
         this.speditoAde = speditoAde;
-    }
-
-    public Integer getNumeroColli() {
-        return numeroColli;
-    }
-
-    public void setNumeroColli(Integer numeroColli) {
-        this.numeroColli = numeroColli;
-    }
-
-    public String getTipoTrasporto() {
-        return tipoTrasporto;
-    }
-
-    public void setTipoTrasporto(String tipoTrasporto) {
-        this.tipoTrasporto = tipoTrasporto;
-    }
-
-    public Date getDataTrasporto() {
-        return dataTrasporto;
-    }
-
-    public void setDataTrasporto(Date dataTrasporto) {
-        this.dataTrasporto = dataTrasporto;
-    }
-
-    public Time getOraTrasporto() {
-        return oraTrasporto;
-    }
-
-    public void setOraTrasporto(Time oraTrasporto) {
-        this.oraTrasporto = oraTrasporto;
-    }
-
-    public String getTrasportatore() {
-        return trasportatore;
-    }
-
-    public void setTrasportatore(String trasportatore) {
-        this.trasportatore = trasportatore;
     }
 
     public BigDecimal getTotale() {
@@ -237,23 +158,6 @@ public class FatturaAccompagnatoria {
     public void setDataAggiornamento(Timestamp dataAggiornamento) {
         this.dataAggiornamento = dataAggiornamento;
     }
-
-    public Set<FatturaAccompagnatoriaArticolo> getFatturaAccompagnatoriaArticoli() {
-        return fatturaAccompagnatoriaArticoli;
-    }
-
-    public void setFatturaAccompagnatoriaArticoli(Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli) {
-        this.fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoli;
-    }
-
-    public Set<FatturaAccompagnatoriaTotale> getFatturaAccompagnatoriaTotali() {
-        return fatturaAccompagnatoriaTotali;
-    }
-
-    public void setFatturaAccompagnatoriaTotali(Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali) {
-        this.fatturaAccompagnatoriaTotali = fatturaAccompagnatoriaTotali;
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -265,14 +169,8 @@ public class FatturaAccompagnatoria {
         result.append(", data: " + data);
         result.append(", tipoFattura: " + tipoFattura);
         result.append(", cliente: " + cliente);
-        result.append(", puntoConsegna: " + puntoConsegna);
         result.append(", statoFattura: " + statoFattura);
         result.append(", speditoAde: " + speditoAde);
-        result.append(", numeroColli: " + numeroColli);
-        result.append(", tipoTrasporto: " + tipoTrasporto);
-        result.append(", dataTrasporto: " + dataTrasporto);
-        result.append(", oraTrasporto: " + oraTrasporto);
-        result.append(", trasportatore: " + trasportatore);
         result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", totale: " + totale);
         result.append(", note: " + note);

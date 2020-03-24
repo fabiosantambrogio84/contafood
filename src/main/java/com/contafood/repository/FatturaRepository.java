@@ -12,9 +12,5 @@ public interface FatturaRepository extends CrudRepository<Fattura, Long> {
     @Override
     Set<Fattura> findAll();
 
-    Set<Fattura> findAllByOrderByAnnoDescProgressivoDesc();
-
-    List<Fattura> findByAnnoOrderByProgressivoDesc(Integer anno);
-
     Optional<Fattura> findByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura);
 }

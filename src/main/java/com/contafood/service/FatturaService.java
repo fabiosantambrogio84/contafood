@@ -4,6 +4,7 @@ import com.contafood.exception.FatturaAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.FatturaRepository;
+import com.contafood.repository.VFatturaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +30,23 @@ public class FatturaService {
     private final StatoDdtService statoDdtService;
     private final DdtService ddtService;
     private final TipoFatturaService tipoFatturaService;
+    private final VFatturaRepository vFatturaRepository;
 
     @Autowired
-    public FatturaService(final FatturaRepository fatturaRepository, final FatturaDdtService fatturaDdtService, final StatoFatturaService statoFatturaService, final StatoDdtService statoDdtService, final DdtService ddtService, final TipoFatturaService tipoFatturaService){
+    public FatturaService(final FatturaRepository fatturaRepository, final FatturaDdtService fatturaDdtService, final StatoFatturaService statoFatturaService, final StatoDdtService statoDdtService, final DdtService ddtService, final TipoFatturaService tipoFatturaService, final VFatturaRepository vFatturaRepository){
         this.fatturaRepository = fatturaRepository;
         this.fatturaDdtService = fatturaDdtService;
         this.statoFatturaService = statoFatturaService;
         this.statoDdtService = statoDdtService;
         this.ddtService = ddtService;
         this.tipoFatturaService = tipoFatturaService;
+        this.vFatturaRepository = vFatturaRepository;
     }
 
-    public Set<Fattura> getAll(){
-        LOGGER.info("Retrieving the list of 'fatture'");
-        Set<Fattura> fatture = fatturaRepository.findAllByOrderByAnnoDescProgressivoDesc();
-        LOGGER.info("Retrieved {} 'fatture'", fatture.size());
+    public Set<VFattura> getAll(){
+        LOGGER.info("Retrieving the list of 'fatture vendita and fatture accompagnatorie'");
+        Set<VFattura> fatture = vFatturaRepository.findAllByOrderByAnnoDescProgressivoDesc();
+        LOGGER.info("Retrieved {} 'fatture vendita and fatture accompagnatorie'", fatture.size());
         return fatture;
     }
 
@@ -57,9 +60,9 @@ public class FatturaService {
     public Map<String, Integer> getAnnoAndProgressivo(){
         Integer anno = ZonedDateTime.now().getYear();
         Integer progressivo = 1;
-        List<Fattura> fatture = fatturaRepository.findByAnnoOrderByProgressivoDesc(anno);
+        List<VFattura> fatture = vFatturaRepository.findByAnnoOrderByProgressivoDesc(anno);
         if(fatture != null && !fatture.isEmpty()){
-            Optional<Fattura> lastFattura = fatture.stream().findFirst();
+            Optional<VFattura> lastFattura = fatture.stream().findFirst();
             if(lastFattura.isPresent()){
                 progressivo = lastFattura.get().getProgressivo() + 1;
             }
@@ -98,6 +101,7 @@ public class FatturaService {
         checkExistsByAnnoAndProgressivoAndIdNot(fattura.getAnno(),fattura.getProgressivo(), Long.valueOf(-1));
 
         fattura.setStatoFattura(statoFatturaService.getDaPagare());
+        fattura.setTipoFattura(tipoFatturaService.getVendita());
         fattura.setSpeditoAde(false);
         fattura.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
@@ -168,8 +172,6 @@ public class FatturaService {
             cliente.setId(idCliente);
             fattura.setCliente(cliente);
             fattura.setData(Date.valueOf(LocalDate.now()));
-
-            fattura.setTipoFattura(tipoFatturaService.getVendita());
 
             BigDecimal totale = new BigDecimal(0);
             BigDecimal totaleAcconto = new BigDecimal(0);
