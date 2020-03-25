@@ -64,14 +64,14 @@ public class UtilsController {
 
     @RequestMapping(method = GET, path = "/statistiche-periodi")
     @CrossOrigin
-    public List<Map<StatisticaPeriodo, String>> getStatistichePeriodi() {
+    public List<Map<String, Object>> getStatistichePeriodi() {
         LOGGER.info("Performing GET request for retrieving list of 'statistiche periodi'");
         return StatisticaPeriodo.getAll();
     }
 
     @RequestMapping(method = GET, path = "/statistiche-opzioni")
     @CrossOrigin
-    public List<Map<StatisticaOpzione, String>> getStatisticheOpzioni() {
+    public List<Map<String, Object>> getStatisticheOpzioni() {
         LOGGER.info("Performing GET request for retrieving list of 'statistiche opzioni'");
         return StatisticaOpzione.getAll();
     }

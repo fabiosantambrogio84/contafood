@@ -9,4 +9,6 @@ public interface FornitoreRepository extends CrudRepository<Fornitore, Long> {
 
     @Override
     Set<Fornitore> findAll();
+
+    Set<Fornitore> findAllByOrderByRagioneSocialeAsc();
 }

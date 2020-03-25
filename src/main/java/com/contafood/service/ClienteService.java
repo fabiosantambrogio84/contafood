@@ -38,7 +38,7 @@ public class ClienteService {
 
     public Set<Cliente> getAll(){
         LOGGER.info("Retrieving the list of 'clienti'");
-        Set<Cliente> clienti = clienteRepository.findAll();
+        Set<Cliente> clienti = clienteRepository.findAllByOrderByRagioneSocialeAsc();
         LOGGER.info("Retrieved {} 'clienti'", clienti.size());
         return clienti;
     }

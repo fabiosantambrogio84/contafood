@@ -11,7 +11,11 @@ public interface ArticoloRepository extends CrudRepository<Articolo, Long> {
     @Override
     Set<Articolo> findAll();
 
+    Set<Articolo> findAllByOrderByCodiceAsc();
+
     Set<Articolo> findByAttivo(Boolean attivo);
+
+    Set<Articolo> findByAttivoOrderByCodiceAsc(Boolean attivo);
 
     List<Articolo> findByAttivoAndFornitoreId(Boolean attivo, Long idFornitore);
 }

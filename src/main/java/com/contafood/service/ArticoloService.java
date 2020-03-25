@@ -40,14 +40,14 @@ public class ArticoloService {
 
     public Set<Articolo> getAll(){
         LOGGER.info("Retrieving the list of 'articoli'");
-        Set<Articolo> articoli = articoloRepository.findAll();
+        Set<Articolo> articoli = articoloRepository.findAllByOrderByCodiceAsc();
         LOGGER.info("Retrieved {} 'articoli'", articoli.size());
         return articoli;
     }
 
     public Set<Articolo> getAllByAttivo(Boolean active){
         LOGGER.info("Retrieving the list of 'articoli' filtered by 'attivo' value '{}'", active);
-        Set<Articolo> articoli = articoloRepository.findByAttivo(active);
+        Set<Articolo> articoli = articoloRepository.findByAttivoOrderByCodiceAsc(active);
         LOGGER.info("Retrieved {} 'articoli'", articoli.size());
         return articoli;
     }

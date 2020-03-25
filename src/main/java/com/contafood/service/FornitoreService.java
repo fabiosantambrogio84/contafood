@@ -27,7 +27,7 @@ public class FornitoreService {
 
     public Set<Fornitore> getAll(){
         LOGGER.info("Retrieving the list of 'fornitori'");
-        Set<Fornitore> fornitori = fornitoreRepository.findAll();
+        Set<Fornitore> fornitori = fornitoreRepository.findAllByOrderByRagioneSocialeAsc();
         LOGGER.info("Retrieved {} 'fornitori'", fornitori.size());
         return fornitori;
     }

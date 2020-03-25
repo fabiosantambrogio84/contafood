@@ -25,11 +25,12 @@ public enum StatisticaOpzione {
         return ordine;
     }
 
-    public static List<Map<StatisticaOpzione, String>> getAll(){
-        List<Map<StatisticaOpzione, String>> returningList = new ArrayList<>();
+    public static List<Map<String, Object>> getAll(){
+        List<Map<String, Object>> returningList = new ArrayList<>();
         Arrays.stream(StatisticaOpzione.values()).sorted(Comparator.comparingInt(StatisticaOpzione::getOrdine)).forEach(s -> {
-            Map<StatisticaOpzione, String> statisticaOpzioneMap = new HashMap<>();
-            statisticaOpzioneMap.put(s, s.getLabel());
+            Map<String, Object> statisticaOpzioneMap = new HashMap<>();
+            statisticaOpzioneMap.put("codice", s);
+            statisticaOpzioneMap.put("label", s.getLabel());
             returningList.add(statisticaOpzioneMap);
         });
         return returningList;

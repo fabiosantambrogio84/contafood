@@ -25,11 +25,12 @@ public enum StatisticaPeriodo {
         return ordine;
     }
 
-    public static List<Map<StatisticaPeriodo, String>> getAll(){
-        List<Map<StatisticaPeriodo, String>> returningList = new ArrayList<>();
+    public static List<Map<String, Object>> getAll(){
+        List<Map<String, Object>> returningList = new ArrayList<>();
         Arrays.stream(StatisticaPeriodo.values()).sorted(Comparator.comparingInt(StatisticaPeriodo::getOrdine)).forEach(s -> {
-            Map<StatisticaPeriodo, String> statisticaPeriodoMap = new HashMap<>();
-            statisticaPeriodoMap.put(s, s.getLabel());
+            Map<String, Object> statisticaPeriodoMap = new HashMap<>();
+            statisticaPeriodoMap.put("codice", s);
+            statisticaPeriodoMap.put("label", s.getLabel());
             returningList.add(statisticaPeriodoMap);
         });
         return returningList;
