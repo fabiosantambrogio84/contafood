@@ -1,8 +1,12 @@
 DROP VIEW IF EXISTS `v_fattura`;
+ALTER TABLE `fattura` DROP FOREIGN KEY fk_fattura_tipo;
+ALTER TABLE `fattura` DROP COLUMN id_tipo;
 DROP TABLE IF EXISTS `fattura_accom_articolo`;
 DROP TABLE IF EXISTS `fattura_accom_totale`;
 DROP TABLE IF EXISTS `fattura_accom`;
 DROP TABLE IF EXISTS `tipo_fattura`;
+
+ALTER TABLE contafood.fattura MODIFY COLUMN note text CHARACTER SET latin1 COLLATE latin1_general_cs NULL;
 
 CREATE TABLE `tipo_fattura` (
 	id int(10) unsigned,
@@ -12,7 +16,7 @@ CREATE TABLE `tipo_fattura` (
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
 	PRIMARY KEY (id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 INSERT INTO tipo_fattura(id,codice,descrizione,ordine) VALUES(0,'VENDITA','Vendita',1);
 INSERT INTO tipo_fattura(id,codice,descrizione,ordine) VALUES(1,'ACCOMPAGNATORIA','Accompagnatoria',2);
@@ -47,7 +51,7 @@ CREATE TABLE `fattura_accom` (
 	CONSTRAINT `fk_fattura_accom_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
 	CONSTRAINT `fk_fattura_accom_punto_con` FOREIGN KEY (`id_punto_consegna`) REFERENCES `punto_consegna` (`id`),
 	CONSTRAINT `fk_fattura_accom_stato` FOREIGN KEY (`id_stato`) REFERENCES `stato_fattura` (`id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 CREATE TABLE `fattura_accom_articolo` (
 	id_fattura_accom int(10) unsigned,
@@ -65,7 +69,7 @@ CREATE TABLE `fattura_accom_articolo` (
 	PRIMARY KEY (id_fattura_accom, id_articolo, uuid),
 	CONSTRAINT `fk_fattura_accom_articolo_fatt` FOREIGN KEY (`id_fattura_accom`) REFERENCES `fattura_accom` (`id`),
 	CONSTRAINT `fk_fattura_accom_articolo_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 CREATE TABLE `fattura_accom_totale` (
 	id_fattura_accom int(10) unsigned,
@@ -78,7 +82,7 @@ CREATE TABLE `fattura_accom_totale` (
 	PRIMARY KEY (id_fattura_accom, id_aliquota_iva, uuid),
 	CONSTRAINT `fk_fattura_accom_totale_fatt` FOREIGN KEY (`id_fattura_accom`) REFERENCES `fattura_accom` (`id`),
 	CONSTRAINT `fk_fattura_accom_totale_iva` FOREIGN KEY (`id_aliquota_iva`) REFERENCES `aliquota_iva` (`id`)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 CREATE VIEW `v_fattura` AS
 SELECT
@@ -106,7 +110,7 @@ CREATE PROCEDURE setTotaleDdtArticoli()
 begin
 	DECLARE done INT DEFAULT FALSE;
 	DECLARE v_id_ddt, v_id_articolo INT(10);
-	DECLARE v_uuid VARCHAR(255);
+	DECLARE v_uuid VARCHAR(255) CHARACTER SET latin1;
 	declare v_totale DECIMAL(10,3);
 
 	DECLARE cur1 CURSOR FOR select ddt_articolo.id_ddt, ddt_articolo.id_articolo, ddt_articolo.uuid,
