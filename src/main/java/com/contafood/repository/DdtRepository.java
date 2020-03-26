@@ -4,6 +4,7 @@ import com.contafood.model.Ddt;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -18,6 +19,8 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
     List<Ddt> findByAnnoContabileOrderByProgressivoDesc(Integer annoContabile);
 
     Optional<Ddt> findByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt);
+
+    List<Ddt> findByDataGreaterThanEqualOrderByProgressivoDesc(Date data);
 
     @Query(nativeQuery = true,
             value = "select distinct ddt.* from ddt join ddt_articolo on ddt.id = ddt_articolo.id_ddt where ddt_articolo.lotto = ?1 order by ddt.anno_contabile desc, ddt.progressivo desc"

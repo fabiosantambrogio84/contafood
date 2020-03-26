@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -55,6 +56,13 @@ public class DdtService {
         Ddt ddt = ddtRepository.findById(ddtId).orElseThrow(ResourceNotFoundException::new);
         LOGGER.info("Retrieved 'ddt' '{}'", ddt);
         return ddt;
+    }
+
+    public List<Ddt> getByDataGreaterThanEqual(Date data){
+        LOGGER.info("Retrieving 'ddt' with 'data' greater or equals to '{}'", data);
+        List<Ddt> ddts = ddtRepository.findByDataGreaterThanEqualOrderByProgressivoDesc(data);
+        LOGGER.info("Retrieved {} 'ddt' with 'data' greater or equals to '{}'", ddts.size(), data);
+        return ddts;
     }
 
     public Map<String, Integer> getAnnoContabileAndProgressivo(){

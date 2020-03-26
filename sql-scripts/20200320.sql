@@ -90,3 +90,80 @@ select
 	id, progressivo, anno, data, id_tipo, id_cliente, id_stato, spedito_ade, totale_acconto, totale, note, data_inserimento, data_aggiornamento
 FROM
     fattura_accom;
+
+
+ALTER TABLE `ddt_articolo` ADD COLUMN totale decimal(10,3) after costo;
+ALTER TABLE `ddt` ADD COLUMN totale_quantita decimal(10,3) after totale_acconto;
+
+--------------------------
+DROP procedure IF EXISTS setTotaleDdtArticoli;
+DROP procedure IF EXISTS setTotaliDdt;
+
+
+DELIMITER //
+
+CREATE PROCEDURE setTotaleDdtArticoli()
+begin
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE v_id_ddt, v_id_articolo INT(10);
+	DECLARE v_uuid VARCHAR(255);
+	declare v_totale DECIMAL(10,3);
+
+	DECLARE cur1 CURSOR FOR select ddt_articolo.id_ddt, ddt_articolo.id_articolo, ddt_articolo.uuid,
+							imponibile + ((aliquota_iva.valore/100)*imponibile) as totale
+							FROM ddt_articolo
+							join articolo on ddt_articolo.id_articolo = articolo.id
+							join aliquota_iva on articolo.id_aliquota_iva = aliquota_iva.id;
+
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	OPEN cur1;
+
+	read_loop: LOOP
+	    FETCH cur1 INTO v_id_ddt,v_id_articolo,v_uuid,v_totale;
+	    IF done THEN
+	      LEAVE read_loop;
+	    END IF;
+
+		update ddt_articolo set totale = v_totale where ddt_articolo.id_ddt=v_id_ddt and ddt_articolo.id_articolo=v_id_articolo and ddt_articolo.uuid=v_uuid;
+
+	END LOOP;
+
+  CLOSE cur1;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE setTotaliDdt()
+begin
+	DECLARE done INT DEFAULT FALSE;
+	DECLARE v_id_ddt INT(10);
+	declare v_quantita, v_totale DECIMAL(10,3);
+
+	DECLARE cur1 CURSOR FOR SELECT id_ddt, sum(quantita) as quantita, sum(totale) as totale
+							FROM ddt_articolo
+							group by id_ddt;
+
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	OPEN cur1;
+
+	read_loop: LOOP
+	    FETCH cur1 INTO v_id_ddt,v_quantita,v_totale;
+	    IF done THEN
+	      LEAVE read_loop;
+	    END IF;
+
+		update ddt set totale_quantita = v_quantita, totale = v_totale where ddt.id=v_id_ddt;
+
+	END LOOP;
+
+  CLOSE cur1;
+END //
+
+DELIMITER ;
+
+-- CALL setTotaleDdtArticoli();
+-- CALL setTotaliDdt();

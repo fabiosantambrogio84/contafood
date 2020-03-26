@@ -79,6 +79,9 @@ public class Ddt {
     @Column(name = "totale_acconto")
     private BigDecimal totaleAcconto;
 
+    @Column(name = "totale_quantita")
+    private BigDecimal totaleQuantita;
+
     @Column(name = "note")
     private String note;
 
@@ -250,6 +253,14 @@ public class Ddt {
 
     public void setTotaleAcconto(BigDecimal totaleAcconto) {
         this.totaleAcconto = totaleAcconto;
+    }
+
+    public BigDecimal getTotaleQuantita() {
+        return totaleQuantita;
+    }
+
+    public void setTotaleQuantita(BigDecimal totaleQuantita) {
+        this.totaleQuantita = totaleQuantita;
     }
 
     public String getNote() {
