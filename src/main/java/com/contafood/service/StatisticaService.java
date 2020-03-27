@@ -310,9 +310,9 @@ public class StatisticaService {
                     .setCodice(codice)
                     .setDescrizione(descrizione)
                     .setNumeroRighe(numRighe)
-                    .setTotaleQuantitaVenduta(totQuantitaVenduta)
-                    .setTotaleVenduto(totVenduto)
-                    .setTotaleVendutoMedio(totVendutoMedio)
+                    .setTotaleQuantitaVenduta(totQuantitaVenduta.setScale(2, RoundingMode.CEILING))
+                    .setTotaleVenduto(totVenduto.setScale(2, RoundingMode.CEILING))
+                    .setTotaleVendutoMedio(totVendutoMedio.setScale(2, RoundingMode.CEILING))
                     .build();
 
             statisticaArticoliGroups.add(statisticaArticoloGroup);
