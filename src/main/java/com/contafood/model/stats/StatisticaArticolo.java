@@ -4,17 +4,47 @@ import java.math.BigDecimal;
 
 public class StatisticaArticolo {
 
+    private String tipologia;
+
+    private Long idArticolo;
+
+    private Integer progressivo;
+
     private String codice;
 
     private String descrizione;
 
-    private Integer numeroRighe;
+    private String lotto;
 
-    private BigDecimal totaleVenduto;
+    private Float quantita;
 
-    private BigDecimal totaleQuantitaVenduta;
+    private BigDecimal prezzo;
 
-    private BigDecimal totaleVendutoMedio;
+    private BigDecimal totale;
+
+    public String getTipologia() {
+        return tipologia;
+    }
+
+    public void setTipologia(String tipologia) {
+        this.tipologia = tipologia;
+    }
+
+    public Long getIdArticolo() {
+        return idArticolo;
+    }
+
+    public void setIdArticolo(Long idArticolo) {
+        this.idArticolo = idArticolo;
+    }
+
+    public Integer getProgressivo() {
+        return progressivo;
+    }
+
+    public void setProgressivo(Integer progressivo) {
+        this.progressivo = progressivo;
+    }
 
     public String getCodice() {
         return codice;
@@ -32,36 +62,36 @@ public class StatisticaArticolo {
         this.descrizione = descrizione;
     }
 
-    public Integer getNumeroRighe() {
-        return numeroRighe;
+    public String getLotto() {
+        return lotto;
     }
 
-    public void setNumeroRighe(Integer numeroRighe) {
-        this.numeroRighe = numeroRighe;
+    public void setLotto(String lotto) {
+        this.lotto = lotto;
     }
 
-    public BigDecimal getTotaleVenduto() {
-        return totaleVenduto;
+    public Float getQuantita() {
+        return quantita;
     }
 
-    public void setTotaleVenduto(BigDecimal totaleVenduto) {
-        this.totaleVenduto = totaleVenduto;
+    public void setQuantita(Float quantita) {
+        this.quantita = quantita;
     }
 
-    public BigDecimal getTotaleQuantitaVenduta() {
-        return totaleQuantitaVenduta;
+    public BigDecimal getPrezzo() {
+        return prezzo;
     }
 
-    public void setTotaleQuantitaVenduta(BigDecimal totaleQuantitaVenduta) {
-        this.totaleQuantitaVenduta = totaleQuantitaVenduta;
+    public void setPrezzo(BigDecimal prezzo) {
+        this.prezzo = prezzo;
     }
 
-    public BigDecimal getTotaleVendutoMedio() {
-        return totaleVendutoMedio;
+    public BigDecimal getTotale() {
+        return totale;
     }
 
-    public void setTotaleVendutoMedio(BigDecimal totaleVendutoMedio) {
-        this.totaleVendutoMedio = totaleVendutoMedio;
+    public void setTotale(BigDecimal totale) {
+        this.totale = totale;
     }
 
     @Override
@@ -69,12 +99,15 @@ public class StatisticaArticolo {
         StringBuilder result = new StringBuilder();
 
         result.append("{");
-        result.append("codice: " + codice);
-        result.append("descrizione: " + descrizione);
-        result.append(", totaleVenduto: " + totaleVenduto);
-        result.append(", totaleQuantitaVenduta: " + totaleQuantitaVenduta);
-        result.append(", numeroRighe: " + numeroRighe);
-        result.append(", totaleVendutoMedio: " + totaleVendutoMedio);
+        result.append("tipologia: " + tipologia);
+        result.append("idArticolo: " + idArticolo);
+        result.append(", progressivo: " + progressivo);
+        result.append(", codice: " + codice);
+        result.append(", descrizione: " + descrizione);
+        result.append(", lotto: " + lotto);
+        result.append(", quantita: " + quantita);
+        result.append(", prezzo: " + prezzo);
+        result.append(", totale: " + totale);
         result.append("}");
 
         return result.toString();

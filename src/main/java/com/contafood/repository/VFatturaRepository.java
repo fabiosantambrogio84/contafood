@@ -1,6 +1,6 @@
 package com.contafood.repository;
 
-import com.contafood.model.VFattura;
+import com.contafood.model.views.VFattura;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

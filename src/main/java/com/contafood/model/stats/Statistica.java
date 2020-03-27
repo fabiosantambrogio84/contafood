@@ -1,7 +1,5 @@
 package com.contafood.model.stats;
 
-import com.contafood.model.DdtArticolo;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +12,9 @@ public class Statistica {
 
     private Integer numeroRighe;
 
-    private List<DdtArticolo> ddtArticoli;
-
     private List<StatisticaArticolo> statisticaArticoli;
+
+    private List<StatisticaArticoloGroup> statisticaArticoloGroups;
 
     public BigDecimal getTotaleVenduto() {
         return totaleVenduto;
@@ -42,20 +40,20 @@ public class Statistica {
         this.numeroRighe = numeroRighe;
     }
 
-    public List<DdtArticolo> getDdtArticoli() {
-        return ddtArticoli;
-    }
-
-    public void setDdtArticoli(List<DdtArticolo> ddtArticoli) {
-        this.ddtArticoli = ddtArticoli;
-    }
-
     public List<StatisticaArticolo> getStatisticaArticoli() {
         return statisticaArticoli;
     }
 
     public void setStatisticaArticoli(List<StatisticaArticolo> statisticaArticoli) {
         this.statisticaArticoli = statisticaArticoli;
+    }
+
+    public List<StatisticaArticoloGroup> getStatisticaArticoloGroups() {
+        return statisticaArticoloGroups;
+    }
+
+    public void setStatisticaArticoloGroups(List<StatisticaArticoloGroup> statisticaArticoloGroups) {
+        this.statisticaArticoloGroups = statisticaArticoloGroups;
     }
 
     @Override
@@ -66,14 +64,14 @@ public class Statistica {
         result.append("totaleVenduto: " + totaleVenduto);
         result.append(", totaleQuantitaVenduta: " + totaleQuantitaVenduta);
         result.append(", numeroRighe: " + numeroRighe);
-        result.append(", ddtArticoli: [");
-        if(ddtArticoli != null && !ddtArticoli.isEmpty()){
-            result.append(ddtArticoli.stream().map(a -> a.getId().getDdtId()+" - "+a.getId().getArticoloId()).collect(Collectors.joining(",")));
-        }
-        result.append("]");
         result.append(", statisticaArticoli: [");
         if(statisticaArticoli != null && !statisticaArticoli.isEmpty()){
-            result.append(statisticaArticoli.stream().map(a -> a.getCodice()).collect(Collectors.joining(",")));
+            result.append(statisticaArticoli.stream().map(a -> a.getTipologia()+"-"+a.getProgressivo()+"-"+a.getCodice()+"-"+a.getTotale()).collect(Collectors.joining(", ")));
+        }
+        result.append("]");
+        result.append(", statisticaArticoloGroups: [");
+        if(statisticaArticoloGroups != null && !statisticaArticoloGroups.isEmpty()){
+            result.append(statisticaArticoloGroups.stream().map(a -> a.getCodice()).collect(Collectors.joining(", ")));
         }
         result.append("]");
         result.append("}");

@@ -1,5 +1,8 @@
-package com.contafood.model;
+package com.contafood.model.views;
 
+import com.contafood.model.Cliente;
+import com.contafood.model.StatoFattura;
+import com.contafood.model.TipoFattura;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;

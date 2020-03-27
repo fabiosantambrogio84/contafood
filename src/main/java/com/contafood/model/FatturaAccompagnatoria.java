@@ -69,6 +69,9 @@ public class FatturaAccompagnatoria {
     @Column(name = "totale")
     private BigDecimal totale;
 
+    @Column(name = "totale_quantita")
+    private BigDecimal totaleQuantita;
+
     @Column(name = "note")
     private String note;
 
@@ -214,6 +217,14 @@ public class FatturaAccompagnatoria {
         this.totaleAcconto = totaleAcconto;
     }
 
+    public BigDecimal getTotaleQuantita() {
+        return totaleQuantita;
+    }
+
+    public void setTotaleQuantita(BigDecimal totaleQuantita) {
+        this.totaleQuantita = totaleQuantita;
+    }
+
     public String getNote() {
         return note;
     }
@@ -275,6 +286,7 @@ public class FatturaAccompagnatoria {
         result.append(", trasportatore: " + trasportatore);
         result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", totale: " + totale);
+        result.append(", totaleQuantita: " + totaleQuantita);
         result.append(", note: " + note);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);

@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.exception.FatturaAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
 import com.contafood.repository.VFatturaRepository;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -68,6 +70,13 @@ public class FatturaAccompagnatoriaService {
         result.put("progressivo", progressivo);
 
         return result;
+    }
+
+    public List<FatturaAccompagnatoria> getByDataGreaterThanEqual(Date data){
+        LOGGER.info("Retrieving 'fattureAccompagnatorie' with 'data' greater or equals to '{}'", data);
+        List<FatturaAccompagnatoria> fattureAccompagnatorie = fatturaAccompagnatoriaRepository.findByDataGreaterThanEqualOrderByProgressivoDesc(data);
+        LOGGER.info("Retrieved {} 'fattureAccompagnatorie' with 'data' greater or equals to '{}'", fattureAccompagnatorie.size(), data);
+        return fattureAccompagnatorie;
     }
 
     @Transactional
@@ -134,9 +143,7 @@ public class FatturaAccompagnatoriaService {
             fatturaAccompagnatoriaArticoliByIva.add(faa);
             ivaFatturaAccompagnatoriaArticoliMap.put(iva, fatturaAccompagnatoriaArticoliByIva);
         });
-        BigDecimal totaleImponibile = new BigDecimal(0);
-        BigDecimal totaleIva = new BigDecimal(0);
-        BigDecimal totaleCosto = new BigDecimal(0);
+        Float totaleQuantita = 0f;
         BigDecimal totale = new BigDecimal(0);
         for (Map.Entry<AliquotaIva, Set<FatturaAccompagnatoriaArticolo>> entry : ivaFatturaAccompagnatoriaArticoliMap.entrySet()) {
             BigDecimal iva = entry.getKey().getValore();
@@ -144,11 +151,13 @@ public class FatturaAccompagnatoriaService {
             Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoliByIva = entry.getValue();
             for(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo: fatturaAccompagnatoriaArticoliByIva){
                 totaleByIva = totaleByIva.add(fatturaAccompagnatoriaArticolo.getImponibile());
+                totaleQuantita = totaleQuantita + fatturaAccompagnatoriaArticolo.getQuantita();
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
         fatturaAccompagnatoria.setTotale(totale.setScale(2, RoundingMode.CEILING));
         fatturaAccompagnatoria.setTotaleAcconto(new BigDecimal(0));
+        fatturaAccompagnatoria.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.CEILING));
     }
 
 }

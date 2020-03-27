@@ -47,6 +47,9 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
     @Column(name = "costo")
     private BigDecimal costo;
 
+    @Column(name = "totale")
+    private BigDecimal totale;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -133,6 +136,14 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
         this.costo = costo;
     }
 
+    public BigDecimal getTotale() {
+        return totale;
+    }
+
+    public void setTotale(BigDecimal totale) {
+        this.totale = totale;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -163,6 +174,7 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
         result.append(", sconto: " + sconto);
         result.append(", imponibile: " + imponibile);
         result.append(", costo: " + costo);
+        result.append(", totale: " + totale);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

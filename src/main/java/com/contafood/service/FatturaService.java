@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.exception.FatturaAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaRepository;
 import com.contafood.repository.VFatturaRepository;
 import org.slf4j.Logger;

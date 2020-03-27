@@ -199,14 +199,15 @@ public class DdtService {
         BigDecimal totaleIva = new BigDecimal(0);
         BigDecimal totaleCosto = new BigDecimal(0);
         BigDecimal totale = new BigDecimal(0);
+        Float totaleQuantita = 0f;
         for (Map.Entry<AliquotaIva, Set<DdtArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
             BigDecimal iva = entry.getKey().getValore();
             BigDecimal totaleByIva = new BigDecimal(0);
             Set<DdtArticolo> ddtArticoliByIva = entry.getValue();
             for(DdtArticolo ddtArticolo: ddtArticoliByIva){
                 totaleImponibile = totaleImponibile.add(ddtArticolo.getImponibile());
-
                 totaleCosto = totaleCosto.add(ddtArticolo.getCosto());
+                totaleQuantita = totaleQuantita + ddtArticolo.getQuantita();
 
                 BigDecimal partialIva = ddtArticolo.getImponibile().multiply(iva.divide(new BigDecimal(100)));
                 totaleIva = totaleIva.add(partialIva);
@@ -220,6 +221,7 @@ public class DdtService {
         ddt.setTotaleCosto(totaleCosto.setScale(2, RoundingMode.CEILING));
         ddt.setTotale(totale.setScale(2, RoundingMode.CEILING));
         ddt.setTotaleAcconto(new BigDecimal(0));
+        ddt.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.CEILING));
     }
 
     // PAGAMENTI

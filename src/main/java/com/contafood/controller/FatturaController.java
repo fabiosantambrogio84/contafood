@@ -1,6 +1,7 @@
 package com.contafood.controller;
 
 import com.contafood.model.*;
+import com.contafood.model.views.VFattura;
 import com.contafood.service.FatturaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,15 +35,15 @@ public class FatturaController {
     @RequestMapping(method = GET)
     @CrossOrigin
     public Set<VFattura> getAll(@RequestParam(name = "dataDa", required = false) Date dataDa,
-                               @RequestParam(name = "dataA", required = false) Date dataA,
-                               @RequestParam(name = "progressivo", required = false) Integer progressivo,
-                               @RequestParam(name = "importo", required = false) Float importo,
-                               @RequestParam(name = "tipoPagamento", required = false) Integer idTipoPagamento,
-                               @RequestParam(name = "cliente", required = false) String cliente,
-                               @RequestParam(name = "agente", required = false) Integer idAgente,
-                               @RequestParam(name = "articolo", required = false) Integer idArticolo,
-                               @RequestParam(name = "stato", required = false) Integer idStato,
-                               @RequestParam(name = "tipo", required = false) Integer idTipo) {
+                                @RequestParam(name = "dataA", required = false) Date dataA,
+                                @RequestParam(name = "progressivo", required = false) Integer progressivo,
+                                @RequestParam(name = "importo", required = false) Float importo,
+                                @RequestParam(name = "tipoPagamento", required = false) Integer idTipoPagamento,
+                                @RequestParam(name = "cliente", required = false) String cliente,
+                                @RequestParam(name = "agente", required = false) Integer idAgente,
+                                @RequestParam(name = "articolo", required = false) Integer idArticolo,
+                                @RequestParam(name = "stato", required = false) Integer idStato,
+                                @RequestParam(name = "tipo", required = false) Integer idTipo) {
         LOGGER.info("Performing GET request for retrieving list of 'fatture vendita and fatture accompagnatorie'");
         LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
                 dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
