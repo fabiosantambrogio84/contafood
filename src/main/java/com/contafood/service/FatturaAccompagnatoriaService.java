@@ -155,9 +155,9 @@ public class FatturaAccompagnatoriaService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
-        fatturaAccompagnatoria.setTotale(totale.setScale(2, RoundingMode.CEILING));
+        fatturaAccompagnatoria.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
         fatturaAccompagnatoria.setTotaleAcconto(new BigDecimal(0));
-        fatturaAccompagnatoria.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.CEILING));
+        fatturaAccompagnatoria.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.HALF_DOWN));
     }
 
 }

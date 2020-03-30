@@ -80,7 +80,7 @@ public class DdtController {
         };
         Predicate<Ddt> isDdtImportoEquals = ddt -> {
             if(importo != null){
-                return ddt.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.CEILING))==0;
+                return ddt.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.HALF_DOWN))==0;
             }
             return true;
         };

@@ -216,12 +216,12 @@ public class DdtService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
-        ddt.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.CEILING));
-        ddt.setTotaleIva(totaleIva.setScale(2, RoundingMode.CEILING));
-        ddt.setTotaleCosto(totaleCosto.setScale(2, RoundingMode.CEILING));
-        ddt.setTotale(totale.setScale(2, RoundingMode.CEILING));
+        ddt.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
+        ddt.setTotaleIva(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
+        ddt.setTotaleCosto(totaleCosto.setScale(2, RoundingMode.HALF_DOWN));
+        ddt.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
         ddt.setTotaleAcconto(new BigDecimal(0));
-        ddt.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.CEILING));
+        ddt.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.HALF_DOWN));
     }
 
     // PAGAMENTI
@@ -264,7 +264,7 @@ public class DdtService {
         if(totale == null){
             totale = new BigDecimal(0);
         }
-        BigDecimal newTotaleAcconto = totaleAcconto.add(importo).setScale(2, RoundingMode.CEILING);
+        BigDecimal newTotaleAcconto = totaleAcconto.add(importo).setScale(2, RoundingMode.HALF_DOWN);
         if(newTotaleAcconto.compareTo(totale) == 1){
             LOGGER.error("The 'importo' '{}' sum to '{}' is greater than the DDT 'totale' '{}' (idDdt={})", importo, totaleAcconto, totale, pagamento.getDdt().getId());
             throw new DdtPagamentoExceedingException();
@@ -302,7 +302,7 @@ public class DdtService {
         if(totaleAcconto == null){
             totaleAcconto = new BigDecimal(0);
         }
-        BigDecimal newTotaleAcconto = totaleAcconto.subtract(importo).setScale(2, RoundingMode.CEILING);
+        BigDecimal newTotaleAcconto = totaleAcconto.subtract(importo).setScale(2, RoundingMode.HALF_DOWN);
         ddt.setTotaleAcconto(newTotaleAcconto);
         computeStato(ddt);
         ddtRepository.save(ddt);

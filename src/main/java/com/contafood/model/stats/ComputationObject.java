@@ -1,30 +1,29 @@
 package com.contafood.model.stats;
 
-import com.contafood.model.Ddt;
-import com.contafood.model.FatturaAccompagnatoria;
+import com.contafood.model.DdtArticolo;
+import com.contafood.model.FatturaAccompagnatoriaArticolo;
 
 import java.util.List;
 
 public class ComputationObject {
 
-    private List<Ddt> ddts;
+    private List<DdtArticolo> ddtArticoli;
 
-    private List<FatturaAccompagnatoria> fattureAccompagnatorie;
+    private List<FatturaAccompagnatoriaArticolo> fattureAccompagnatorieArticoli;
 
-    public List<Ddt> getDdts() {
-        return ddts;
+    public List<DdtArticolo> getDdtArticoli() {
+        return ddtArticoli;
     }
 
-    public void setDdts(List<Ddt> ddts) {
-        this.ddts = ddts;
+    public void setDdtArticoli(List<DdtArticolo> ddtArticoli) {
+        this.ddtArticoli = ddtArticoli;
     }
 
-    public List<FatturaAccompagnatoria> getFattureAccompagnatorie() {
-        return fattureAccompagnatorie;
+    public List<FatturaAccompagnatoriaArticolo> getFattureAccompagnatorieArticoli() {
+        return fattureAccompagnatorieArticoli;
     }
 
-    public void setFattureAccompagnatorie(List<FatturaAccompagnatoria> fattureAccompagnatorie) {
-        this.fattureAccompagnatorie = fattureAccompagnatorie;
+    public void setFattureAccompagnatorieArticoli(List<FatturaAccompagnatoriaArticolo> fattureAccompagnatorieArticoli) {
+        this.fattureAccompagnatorieArticoli = fattureAccompagnatorieArticoli;
     }
-
 }

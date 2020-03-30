@@ -139,8 +139,8 @@ public class DdtAcquistoService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
-        ddtAcquisto.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.CEILING));
-        ddtAcquisto.setTotale(totale.setScale(2, RoundingMode.CEILING));
+        ddtAcquisto.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
+        ddtAcquisto.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
     }
 
 }

@@ -37,23 +37,23 @@ public class StatisticaService {
         statistica.setTotaleQuantitaVenduta(BigDecimal.ZERO);
         statistica.setNumeroRighe(0);
 
-        // filter ddts
-        List<Ddt> filteredDdts = filterDdts(statisticaFilter);
+        // filter ddts articoli
+        List<DdtArticolo> filteredDdtArticoli = filterDdtArticoli(statisticaFilter);
 
-        // filter fatture accompagnatorie
-        List<FatturaAccompagnatoria> filteredFattureAccompagnatorie = filterFattureAccompagnatorie(statisticaFilter);
+        // filter fatture accompagnatorie articoli
+        List<FatturaAccompagnatoriaArticolo> filteredFattureAccompagnatorieArticoli = filterFattureAccompagnatorieArticoli(statisticaFilter);
 
-        if(!isNullOrEmpty(filteredDdts) && !isNullOrEmpty(filteredFattureAccompagnatorie)){
+        if(!isNullOrEmpty(filteredDdtArticoli) && !isNullOrEmpty(filteredFattureAccompagnatorieArticoli)){
             ComputationObject computationObject = new ComputationObject();
-            computationObject.setDdts(filteredDdts);
-            computationObject.setFattureAccompagnatorie(filteredFattureAccompagnatorie);
+            computationObject.setDdtArticoli(filteredDdtArticoli);
+            computationObject.setFattureAccompagnatorieArticoli(filteredFattureAccompagnatorieArticoli);
 
             BigDecimal totaleVenduto = computeTotaleVenduto(computationObject);
-            BigDecimal totaleQuantitaVenduta = computeTotaleQuantitaVenduta(computationObject);
+            Float totaleQuantitaVenduta = computeTotaleQuantitaVenduta(computationObject);
             long numeroRighe = computeNumeroRighe(computationObject);
 
-            statistica.setTotaleVenduto(totaleVenduto.setScale(2, RoundingMode.CEILING));
-            statistica.setTotaleQuantitaVenduta(totaleQuantitaVenduta.setScale(2, RoundingMode.CEILING));
+            statistica.setTotaleVenduto(totaleVenduto.setScale(2, RoundingMode.HALF_DOWN));
+            statistica.setTotaleQuantitaVenduta(new BigDecimal(totaleQuantitaVenduta).setScale(2, RoundingMode.HALF_DOWN));
             statistica.setNumeroRighe(Long.valueOf(numeroRighe).intValue());
 
             StatisticaOpzione opzione = statisticaFilter.getOpzione();
@@ -73,32 +73,26 @@ public class StatisticaService {
         return statistica;
     }
 
-    private List<Ddt> filterDdts(StatisticaFilter statisticaFilter){
-        LOGGER.info("Retrieving 'ddts' for statistiche computation...");
+    private List<DdtArticolo> filterDdtArticoli(StatisticaFilter statisticaFilter){
+        LOGGER.info("Retrieving 'ddts articoli' for statistiche computation...");
         List<Ddt> filteredDdts = new ArrayList<>();
+        List<DdtArticolo> filteredDdtArticoli = new ArrayList<>();
 
         // retrieve all the DDTs with data >= inputData
+        LOGGER.info("Retrieving 'ddts' with 'data' >= {} ...", statisticaFilter.getDataDal());
         List<Ddt> ddts = ddtService.getByDataGreaterThanEqual(statisticaFilter.getDataDal());
+        LOGGER.info("Retrieved {} 'ddts' with 'data' >= {}", ddts.size(), statisticaFilter.getDataDal());
+
         if(ddts != null && !ddts.isEmpty()) {
+            // filter ddts
             Date dataA = statisticaFilter.getDataAl();
-            Long idFornitore = statisticaFilter.getIdFornitore();
             List<Long> idsClienti = statisticaFilter.getIdsClienti();
-            List<Long> idsArticoli = statisticaFilter.getIdsArticoli();
+
+            LOGGER.info("Filtering 'ddts' by 'dataAl' <= {} and 'idsClienti' in {}  ...", dataA, idsClienti);
 
             Predicate<Ddt> isDdtDataALessOrEquals = ddt -> {
                 if (dataA != null) {
                     return ddt.getData().compareTo(dataA) <= 0;
-                }
-                return true;
-            };
-
-            Predicate<Ddt> isDdtFornitoreEquals = ddt -> {
-                if (idFornitore != null) {
-                    Set<DdtArticolo> ddtArticoli = ddt.getDdtArticoli();
-                    List<Long> idsFornitori = ddtArticoli.stream().filter(da -> da.getArticolo() != null).map(da -> da.getArticolo()).filter(a -> a.getFornitore() != null).map(a -> a.getFornitore().getId()).collect(Collectors.toList());
-                    if (idsFornitori != null && !idsFornitori.isEmpty()) {
-                        return idsFornitori.contains(idFornitore);
-                    }
                 }
                 return true;
             };
@@ -113,56 +107,71 @@ public class StatisticaService {
                 return true;
             };
 
-            Predicate<Ddt> isDdtArticoliIn = ddt -> {
-                if (idsArticoli != null && !idsArticoli.isEmpty()) {
-                    Set<DdtArticolo> ddtArticoli = ddt.getDdtArticoli();
-                    List<Long> idsDdtArticoli = ddtArticoli.stream().map(da -> da.getId().getArticoloId()).collect(Collectors.toList());
-                    for (Long id : idsDdtArticoli) {
-                        if (idsArticoli.contains(id)) {
-                            return true;
+            // filter ddts
+            filteredDdts = ddts.stream().filter(isDdtDataALessOrEquals
+                    .and(isDdtClientiIn)).collect(Collectors.toList());
+        }
+        LOGGER.info("Retrieved {} filtered 'ddts' for statistiche computation", filteredDdts.size());
+
+        if(filteredDdts != null && !filteredDdts.isEmpty()){
+            Long idFornitore = statisticaFilter.getIdFornitore();
+            List<Long> idsArticoli = statisticaFilter.getIdsArticoli();
+
+            LOGGER.info("Filtering 'ddts articoli' by 'idFornitore' = {} and 'idsArticoli' in {}  ...", idFornitore, idsArticoli);
+
+            Set<DdtArticolo> ddtArticoli = filteredDdts.stream().flatMap(ddt -> ddt.getDdtArticoli().stream()).collect(Collectors.toSet());
+
+            Predicate<DdtArticolo> isDdtArticoloFornitoreEquals = ddtArticolo -> {
+                if (idFornitore != null) {
+                    Articolo articolo = ddtArticolo.getArticolo();
+                    if(articolo != null){
+                        Fornitore fornitore = articolo.getFornitore();
+                        if(fornitore != null){
+                            return fornitore.getId().equals(idFornitore);
                         }
                     }
-                    return false;
                 }
                 return true;
             };
 
-            // filter ddts
-            filteredDdts = ddts.stream().filter(isDdtDataALessOrEquals
-                    .and(isDdtFornitoreEquals)
-                    .and(isDdtClientiIn)
-                    .and(isDdtArticoliIn)).collect(Collectors.toList());
+            Predicate<DdtArticolo> isDdtArticoloArticoliIn = ddtArticolo -> {
+                if (idsArticoli != null && !idsArticoli.isEmpty()) {
+                    Articolo articolo = ddtArticolo.getArticolo();
+                    if(articolo != null){
+                        return idsArticoli.contains(articolo.getId());
+                    }
+                }
+                return true;
+            };
+
+            filteredDdtArticoli = ddtArticoli.stream().filter(isDdtArticoloFornitoreEquals.and(isDdtArticoloArticoliIn)).collect(Collectors.toList());
+
         }
-        LOGGER.info("Retrieved {} 'ddts' for statistiche computation", filteredDdts.size());
-        return filteredDdts;
+        LOGGER.info("Retrieved {} filtered 'ddts articoli' for statistiche computation", filteredDdtArticoli.size());
+
+        return filteredDdtArticoli;
     }
 
-    private List<FatturaAccompagnatoria> filterFattureAccompagnatorie(StatisticaFilter statisticaFilter){
-        LOGGER.info("Retrieving 'fattureAccompagnatorie' for statistiche computation...");
+    private List<FatturaAccompagnatoriaArticolo> filterFattureAccompagnatorieArticoli(StatisticaFilter statisticaFilter){
+        LOGGER.info("Retrieving 'fattureAccompagnatorieArticoli' for statistiche computation...");
         List<FatturaAccompagnatoria> filteredFattureAccompagnatorie = new ArrayList<>();
+        List<FatturaAccompagnatoriaArticolo> filteredFattureAccompagnatorieArticoli = new ArrayList<>();
 
         // retrieve all the FattureAccompagnatorie with data >= inputData
+        LOGGER.info("Retrieving 'fattureAccompagnatorie' with 'data' >= {} ...", statisticaFilter.getDataDal());
         List<FatturaAccompagnatoria> fattureAccompagnatorie = fatturaAccompagnatoriaService.getByDataGreaterThanEqual(statisticaFilter.getDataDal());
+        LOGGER.info("Retrieved {} 'fattureAccompagnatorie' with 'data' >= {}", fattureAccompagnatorie.size(), statisticaFilter.getDataDal());
+
         if(fattureAccompagnatorie != null && !fattureAccompagnatorie.isEmpty()) {
+            // filter fatture accompagnatorie
             Date dataA = statisticaFilter.getDataAl();
-            Long idFornitore = statisticaFilter.getIdFornitore();
             List<Long> idsClienti = statisticaFilter.getIdsClienti();
-            List<Long> idsArticoli = statisticaFilter.getIdsArticoli();
+
+            LOGGER.info("Filtering 'fattureAccompagnatorie' by 'dataAl' <= {} and 'idsClienti' in {}  ...", dataA, idsClienti);
 
             Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaDataALessOrEquals = fatturaAccompagnatoria -> {
                 if (dataA != null) {
                     return fatturaAccompagnatoria.getData().compareTo(dataA) <= 0;
-                }
-                return true;
-            };
-
-            Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaFornitoreEquals = fatturaAccompagnatoria -> {
-                if (idFornitore != null) {
-                    Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli();
-                    List<Long> idsFornitori = fatturaAccompagnatoriaArticoli.stream().filter(fa -> fa.getArticolo() != null).map(fa -> fa.getArticolo()).filter(a -> a.getFornitore() != null).map(a -> a.getFornitore().getId()).collect(Collectors.toList());
-                    if (idsFornitori != null && !idsFornitori.isEmpty()) {
-                        return idsFornitori.contains(idFornitore);
-                    }
                 }
                 return true;
             };
@@ -177,38 +186,59 @@ public class StatisticaService {
                 return true;
             };
 
-            Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaArticoliIn = fatturaAccompagnatoria -> {
-                if (idsArticoli != null && !idsArticoli.isEmpty()) {
-                    Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli();
-                    List<Long> idsDdtArticoli = fatturaAccompagnatoriaArticoli.stream().map(fa -> fa.getId().getArticoloId()).collect(Collectors.toList());
-                    for (Long id : idsDdtArticoli) {
-                        if (idsArticoli.contains(id)) {
-                            return true;
+            // filter fatture accompagnatorie
+            filteredFattureAccompagnatorie = fattureAccompagnatorie.stream().filter(isFatturaAccompagnatoriaDataALessOrEquals
+                    .and(isFatturaAccompagnatoriaClientiIn)).collect(Collectors.toList());
+        }
+
+        LOGGER.info("Retrieved {} filtered'fattureAccompagnatorie' for statistiche computation", filteredFattureAccompagnatorie.size());
+
+        if(filteredFattureAccompagnatorie != null && !filteredFattureAccompagnatorie.isEmpty()){
+            Long idFornitore = statisticaFilter.getIdFornitore();
+            List<Long> idsArticoli = statisticaFilter.getIdsArticoli();
+
+            LOGGER.info("Filtering 'fattureAccompagnatorieArticoli' by 'idFornitore' = {} and 'idsArticoli' in {}  ...", idFornitore, idsArticoli);
+
+            Set<FatturaAccompagnatoriaArticolo> fattureAccompagnatorieArticoli = filteredFattureAccompagnatorie.stream().flatMap(fatturaAccompagnatoria -> fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().stream()).collect(Collectors.toSet());
+
+            Predicate<FatturaAccompagnatoriaArticolo> isFatturaAccompagnatoriaArticoloFornitoreEquals = fatturaAccompagnatoria -> {
+                if (idFornitore != null) {
+                    Articolo articolo = fatturaAccompagnatoria.getArticolo();
+                    if(articolo != null){
+                        Fornitore fornitore = articolo.getFornitore();
+                        if(fornitore != null){
+                            return fornitore.getId().equals(idFornitore);
                         }
                     }
-                    return false;
                 }
                 return true;
             };
 
-            // filter fatture accompagnatorie
-            filteredFattureAccompagnatorie = fattureAccompagnatorie.stream().filter(isFatturaAccompagnatoriaDataALessOrEquals
-                    .and(isFatturaAccompagnatoriaFornitoreEquals)
-                    .and(isFatturaAccompagnatoriaClientiIn)
-                    .and(isFatturaAccompagnatoriaArticoliIn)).collect(Collectors.toList());
+            Predicate<FatturaAccompagnatoriaArticolo> isFatturaAccompagnatoriaArticoliIn = FatturaAccompagnatoriaArticolo -> {
+                if (idsArticoli != null && !idsArticoli.isEmpty()) {
+                    Articolo articolo = FatturaAccompagnatoriaArticolo.getArticolo();
+                    if(articolo != null){
+                        return idsArticoli.contains(articolo.getId());
+                    }
+                }
+                return true;
+            };
+
+            filteredFattureAccompagnatorieArticoli = fattureAccompagnatorieArticoli.stream().filter(isFatturaAccompagnatoriaArticoloFornitoreEquals.and(isFatturaAccompagnatoriaArticoliIn)).collect(Collectors.toList());
+
         }
 
-        LOGGER.info("Retrieved {} 'fattureAccompagnatorie' for statistiche computation", filteredFattureAccompagnatorie.size());
-        return filteredFattureAccompagnatorie;
+
+        return filteredFattureAccompagnatorieArticoli;
     }
 
     private BigDecimal computeTotaleVenduto(ComputationObject computationObject){
         BigDecimal totaleVenduto = BigDecimal.ZERO;
 
-        BigDecimal totaleVendutoDdts = computationObject.getDdts().stream().map(ddt -> ddt.getTotale()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totaleVendutoDdts = computationObject.getDdtArticoli().stream().map(da -> da.getTotale()).reduce(BigDecimal.ZERO, BigDecimal::add);
         LOGGER.info("Totale venduto ddts {}", totaleVendutoDdts);
 
-        BigDecimal totaleVendutoFattureAccompagnatorie = computationObject.getFattureAccompagnatorie().stream().map(fa -> fa.getTotale()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totaleVendutoFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().stream().map(fa -> fa.getTotale()).reduce(BigDecimal.ZERO, BigDecimal::add);
         LOGGER.info("Totale venduto fatture accompagnatorie {}", totaleVendutoFattureAccompagnatorie);
 
         totaleVenduto = totaleVendutoDdts.add(totaleVendutoFattureAccompagnatorie);
@@ -216,27 +246,27 @@ public class StatisticaService {
         return totaleVenduto;
     }
 
-    private BigDecimal computeTotaleQuantitaVenduta(ComputationObject computationObject){
-        BigDecimal totaleQuantitaVenduta = BigDecimal.ZERO;
+    private Float computeTotaleQuantitaVenduta(ComputationObject computationObject){
+        Float totaleQuantitaVenduta = 0f;
 
-        BigDecimal totaleQuantitaVendutaDdts = computationObject.getDdts().stream().map(ddt -> ddt.getTotaleQuantita()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        Float totaleQuantitaVendutaDdts = computationObject.getDdtArticoli().stream().map(da -> da.getQuantita()).reduce(0f, (fa1, fa2) -> fa1 + fa2);
         LOGGER.info("Totale quantita venduta ddts {}", totaleQuantitaVendutaDdts);
 
-        BigDecimal totaleQuantitaVendutaFattureAccompagnatorie = computationObject.getFattureAccompagnatorie().stream().map(fa -> fa.getTotaleQuantita()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        Float totaleQuantitaVendutaFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().stream().map(fa -> fa.getQuantita()).reduce(0f, (fa1, fa2) -> fa1 + fa2);
         LOGGER.info("Totale quantita venduta fatture accompagnatorie {}", totaleQuantitaVendutaFattureAccompagnatorie);
 
-        totaleQuantitaVenduta = totaleQuantitaVendutaDdts.add(totaleQuantitaVendutaFattureAccompagnatorie);
+        totaleQuantitaVenduta = totaleQuantitaVendutaDdts + totaleQuantitaVendutaFattureAccompagnatorie;
         LOGGER.info("Totale quantita venduta {}", totaleQuantitaVenduta);
         return totaleQuantitaVenduta;
     }
 
     private long computeNumeroRighe(ComputationObject computationObject){
-        long numeroRighe = 0L;
+        long numeroRighe = 0l;
 
-        long numeroRigheDdts = computationObject.getDdts().stream().flatMap(ddt -> ddt.getDdtArticoli().stream()).count();
+        long numeroRigheDdts = computationObject.getDdtArticoli().stream().count();
         LOGGER.info("Numero righe ddts {}", numeroRigheDdts);
 
-        long numeroRigheFattureAccompagnatorie = computationObject.getFattureAccompagnatorie().stream().flatMap(fa -> fa.getFatturaAccompagnatoriaArticoli().stream()).count();
+        long numeroRigheFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().stream().count();
         LOGGER.info("Numero righe fatture accompagnatorie {}", numeroRigheFattureAccompagnatorie);
 
         numeroRighe = numeroRigheDdts + numeroRigheFattureAccompagnatorie;
@@ -245,12 +275,10 @@ public class StatisticaService {
     }
 
     private List<StatisticaArticolo> createStatisticaArticoli(ComputationObject computationObject){
+        LOGGER.info("Computing 'statistica mostra dettaglio'...");
         List<StatisticaArticolo> statisticaArticoli = new ArrayList<>();
 
-        List<DdtArticolo> ddtArticoli = computationObject.getDdts().stream().flatMap(ddt -> ddt.getDdtArticoli().stream()).collect(Collectors.toList());
-        List<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = computationObject.getFattureAccompagnatorie().stream().flatMap(fa -> fa.getFatturaAccompagnatoriaArticoli().stream()).collect(Collectors.toList());
-
-        for(DdtArticolo ddtArticolo: ddtArticoli){
+        for(DdtArticolo ddtArticolo: computationObject.getDdtArticoli()){
             StatisticaArticolo statisticaArticolo = new StatisticaArticoloBuilder()
                     .setTipologia("DDT")
                     .setIdArticolo(ddtArticolo.getId().getArticoloId())
@@ -266,7 +294,7 @@ public class StatisticaService {
             statisticaArticoli.add(statisticaArticolo);
         }
 
-        for(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo: fatturaAccompagnatoriaArticoli){
+        for(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo: computationObject.getFattureAccompagnatorieArticoli()){
             StatisticaArticolo statisticaArticolo = new StatisticaArticoloBuilder()
                     .setTipologia("FATTURA_ACCOMPAGNATORIA")
                     .setIdArticolo(fatturaAccompagnatoriaArticolo.getId().getArticoloId())
@@ -286,10 +314,13 @@ public class StatisticaService {
         Collections.sort(statisticaArticoli, Comparator.comparing(StatisticaArticolo::getProgressivo).reversed()
                 .thenComparing(StatisticaArticolo::getCodice));
 
+        LOGGER.info("Computed 'statistica mostra dettaglio'");
+
         return statisticaArticoli;
     }
 
     private List<StatisticaArticoloGroup> createStatisticaArticoliGroups(ComputationObject computationObject){
+        LOGGER.info("Computing 'statistica raggruppa dettaglio'...");
         List<StatisticaArticoloGroup> statisticaArticoliGroups = new ArrayList<>();
 
         List<StatisticaArticolo> statisticaArticoli = createStatisticaArticoli(computationObject);
@@ -304,15 +335,15 @@ public class StatisticaService {
             Integer numRighe = statisticaArticoliByArticolo.size();
             BigDecimal totVenduto = statisticaArticoliByArticolo.stream().map(sa -> sa.getTotale()).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal totQuantitaVenduta = statisticaArticoliByArticolo.stream().map(sa -> new BigDecimal(sa.getQuantita())).reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal totVendutoMedio = totVenduto.divide(new BigDecimal(numRighe), 3, RoundingMode.HALF_UP);
+            BigDecimal totVendutoMedio = totVenduto.divide(new BigDecimal(numRighe), 3, RoundingMode.HALF_DOWN);
 
             StatisticaArticoloGroup statisticaArticoloGroup = new StatisticaArticoloGroupBuilder()
                     .setCodice(codice)
                     .setDescrizione(descrizione)
                     .setNumeroRighe(numRighe)
-                    .setTotaleQuantitaVenduta(totQuantitaVenduta.setScale(2, RoundingMode.CEILING))
-                    .setTotaleVenduto(totVenduto.setScale(2, RoundingMode.CEILING))
-                    .setTotaleVendutoMedio(totVendutoMedio.setScale(2, RoundingMode.CEILING))
+                    .setTotaleQuantitaVenduta(totQuantitaVenduta.setScale(2, RoundingMode.HALF_DOWN))
+                    .setTotaleVenduto(totVenduto.setScale(2, RoundingMode.HALF_DOWN))
+                    .setTotaleVendutoMedio(totVendutoMedio.setScale(2, RoundingMode.HALF_DOWN))
                     .build();
 
             statisticaArticoliGroups.add(statisticaArticoloGroup);
@@ -321,6 +352,7 @@ public class StatisticaService {
         // sort list by codice articolo desc
         Collections.sort(statisticaArticoliGroups, Comparator.comparing(StatisticaArticoloGroup::getCodice));
 
+        LOGGER.info("Computed 'statistica raggruppa dettaglio'");
         return statisticaArticoliGroups;
     }
 

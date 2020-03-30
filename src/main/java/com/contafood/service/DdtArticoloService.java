@@ -94,7 +94,7 @@ public class DdtArticoloService {
         BigDecimal quantitaPerPrezzo = prezzo.multiply(BigDecimal.valueOf(quantita));
         BigDecimal scontoValue = sconto.divide(BigDecimal.valueOf(100)).multiply(quantitaPerPrezzo);
 
-        imponibile = quantitaPerPrezzo.subtract(scontoValue).setScale(2, RoundingMode.CEILING);
+        imponibile = quantitaPerPrezzo.subtract(scontoValue).setScale(2, RoundingMode.HALF_DOWN);
         return imponibile;
     }
 
@@ -116,7 +116,7 @@ public class DdtArticoloService {
             }
         }
         LOGGER.info("Prezzo acquisto '{}'", prezzoAcquisto);
-        costo = (prezzoAcquisto.multiply(BigDecimal.valueOf(quantita))).setScale(2, RoundingMode.CEILING);
+        costo = (prezzoAcquisto.multiply(BigDecimal.valueOf(quantita))).setScale(2, RoundingMode.HALF_DOWN);
         return costo;
     }
 
@@ -139,7 +139,7 @@ public class DdtArticoloService {
         BigDecimal quantitaPerPrezzo = prezzo.multiply(BigDecimal.valueOf(quantita));
         BigDecimal scontoValue = sconto.divide(BigDecimal.valueOf(100)).multiply(quantitaPerPrezzo);
 
-        BigDecimal imponibile = quantitaPerPrezzo.subtract(scontoValue).setScale(2, RoundingMode.CEILING);
+        BigDecimal imponibile = quantitaPerPrezzo.subtract(scontoValue).setScale(2, RoundingMode.HALF_DOWN);
 
         BigDecimal aliquotaIvaValore = new BigDecimal(0);
         Long articoloId = ddtArticolo.getId().getArticoloId();
@@ -155,7 +155,7 @@ public class DdtArticoloService {
         }
 
         BigDecimal ivaValue = aliquotaIvaValore.divide(BigDecimal.valueOf(100)).multiply(imponibile);
-        totale = imponibile.add(ivaValue).setScale(2, RoundingMode.CEILING);
+        totale = imponibile.add(ivaValue).setScale(2, RoundingMode.HALF_DOWN);
 
         return totale;
     }
