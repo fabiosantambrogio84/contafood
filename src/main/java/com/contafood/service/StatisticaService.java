@@ -43,7 +43,7 @@ public class StatisticaService {
         // filter fatture accompagnatorie articoli
         List<FatturaAccompagnatoriaArticolo> filteredFattureAccompagnatorieArticoli = filterFattureAccompagnatorieArticoli(statisticaFilter);
 
-        if(!isNullOrEmpty(filteredDdtArticoli) && !isNullOrEmpty(filteredFattureAccompagnatorieArticoli)){
+        if(!isNullOrEmpty(filteredDdtArticoli) || !isNullOrEmpty(filteredFattureAccompagnatorieArticoli)){
             ComputationObject computationObject = new ComputationObject();
             computationObject.setDdtArticoli(filteredDdtArticoli);
             computationObject.setFattureAccompagnatorieArticoli(filteredFattureAccompagnatorieArticoli);
@@ -225,9 +225,8 @@ public class StatisticaService {
             };
 
             filteredFattureAccompagnatorieArticoli = fattureAccompagnatorieArticoli.stream().filter(isFatturaAccompagnatoriaArticoloFornitoreEquals.and(isFatturaAccompagnatoriaArticoliIn)).collect(Collectors.toList());
-
         }
-
+        LOGGER.info("Retrieved {} filtered 'fattureAccompagnatorieArticoli' for statistiche computation", filteredFattureAccompagnatorieArticoli.size());
 
         return filteredFattureAccompagnatorieArticoli;
     }
