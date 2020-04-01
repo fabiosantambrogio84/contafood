@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,6 +56,18 @@ public class ArticoloService {
     public List<Articolo> getAllByAttivoAndFornitoreId(Boolean active, Long idFornitore){
         LOGGER.info("Retrieving the list of 'articoli' filtered by 'attivo' value '{}' and fornitore '{}'", active, idFornitore);
         List<Articolo> articoli = articoloRepository.findByAttivoAndFornitoreId(active,idFornitore);
+        LOGGER.info("Retrieved {} 'articoli'", articoli.size());
+        return articoli;
+    }
+
+    public Set<Articolo> getAllByAttivoAndBarcode(Boolean active, String barcode){
+        LOGGER.info("Retrieving the list of 'articoli' filtered by 'attivo' '{}' and 'barcode' '{}'", active, barcode);
+        Set<Articolo> articoli = new HashSet<>();
+        articoli = articoloRepository.findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsTrue(active, barcode);
+        if(articoli == null || articoli.isEmpty()){
+            barcode = barcode.substring(0, 6);
+            articoli = articoloRepository.findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsFalse(active, barcode);
+        }
         LOGGER.info("Retrieved {} 'articoli'", articoli.size());
         return articoli;
     }

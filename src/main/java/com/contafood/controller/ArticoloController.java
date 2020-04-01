@@ -6,6 +6,7 @@ import com.contafood.model.ArticoloImmagine;
 import com.contafood.model.Fornitore;
 import com.contafood.model.ListinoPrezzo;
 import com.contafood.service.ArticoloService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,10 @@ public class ArticoloController {
     @RequestMapping(method = GET)
     @CrossOrigin
     public Set<Articolo> getAll(@RequestParam(name = "attivo", required = false) Boolean active,
-                                @RequestParam(name = "idFornitore", required = false) Integer idFornitore) {
+                                @RequestParam(name = "idFornitore", required = false) Integer idFornitore,
+                                @RequestParam(name = "barcode", required = false) String barcode) {
         LOGGER.info("Performing GET request for retrieving list of 'articoli'");
-        LOGGER.info("Query parameter: 'attivo' '{}', 'idFornitore' '{}'", active, idFornitore);
+        LOGGER.info("Query parameter: 'attivo' '{}', 'idFornitore' '{}', 'barcode' '{}'", active, idFornitore, barcode);
 
         Predicate<Articolo> isArticoloIdFornitoreEquals = articolo -> {
             if(idFornitore != null){
@@ -56,12 +58,17 @@ public class ArticoloController {
         };
 
         Set<Articolo> articoli = new HashSet<>();
-        if(active != null){
-            articoli = articoloService.getAllByAttivo(active);
+        if(active != null && !StringUtils.isEmpty(barcode)){
+            articoli = articoloService.getAllByAttivoAndBarcode(active, barcode);
         } else {
-            articoli = articoloService.getAll();
+            if(active != null){
+                articoli = articoloService.getAllByAttivo(active);
+            } else {
+                articoli = articoloService.getAll();
+            }
+            articoli = articoli.stream().filter(isArticoloIdFornitoreEquals).collect(Collectors.toSet());
         }
-        return articoli.stream().filter(isArticoloIdFornitoreEquals).collect(Collectors.toSet());
+        return articoli;
     }
 
     @RequestMapping(method = GET, path = "/{articoloId}")
