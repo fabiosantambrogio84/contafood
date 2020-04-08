@@ -50,6 +50,9 @@ public class Produzione {
     @Column(name = "scadenza")
     private Date scadenza;
 
+    @Column(name = "tempo_impiegato")
+    private Float tempoImpiegato;
+
     @Column(name = "quantita_totale")
     private Float quantitaTotale;
 
@@ -159,6 +162,14 @@ public class Produzione {
         this.scadenza = scadenza;
     }
 
+    public Float getTempoImpiegato() {
+        return tempoImpiegato;
+    }
+
+    public void setTempoImpiegato(Float tempoImpiegato) {
+        this.tempoImpiegato = tempoImpiegato;
+    }
+
     public Float getQuantitaTotale() {
         return quantitaTotale;
     }
@@ -240,6 +251,7 @@ public class Produzione {
         result.append(", lottoGiorno: " + lottoGiorno);
         result.append(", lottoNumeroProgressivo: " + lottoNumeroProgressivo);
         result.append(", scadenza: " + scadenza);
+        result.append(", tempoImpiegato: " + tempoImpiegato);
         result.append(", quantitaTotale: " + quantitaTotale);
         result.append(", numeroConfezioni: " + numeroConfezioni);
         result.append(", scopo: " + scopo);

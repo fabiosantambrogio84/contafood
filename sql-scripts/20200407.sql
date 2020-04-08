@@ -22,3 +22,6 @@ ALTER TABLE contafood.stato_ddt MODIFY COLUMN data_aggiornamento timestamp NULL;
 ALTER TABLE contafood.stato_fattura MODIFY COLUMN data_aggiornamento timestamp NULL;
 ALTER TABLE contafood.stato_ordine MODIFY COLUMN data_aggiornamento timestamp NULL;
 ALTER TABLE contafood.tipo_fattura MODIFY COLUMN data_aggiornamento timestamp NULL;
+
+
+ALTER TABLE contafood.produzione ADD COLUMN tempo_impiegato decimal(10,2) after scadenza;
