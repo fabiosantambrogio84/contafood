@@ -25,3 +25,6 @@ ALTER TABLE contafood.tipo_fattura MODIFY COLUMN data_aggiornamento timestamp NU
 
 
 ALTER TABLE contafood.produzione ADD COLUMN tempo_impiegato decimal(10,2) after scadenza;
+
+ALTER TABLE contafood.ddt_articolo ADD COLUMN scadenza DATE after lotto;
+ALTER TABLE contafood.fattura_accom_articolo ADD COLUMN scadenza DATE after lotto;

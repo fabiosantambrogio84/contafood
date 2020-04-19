@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
@@ -28,6 +29,9 @@ public class DdtArticolo implements Serializable {
 
     @Column(name = "lotto")
     private String lotto;
+
+    @Column(name = "scadenza")
+    private Date scadenza;
 
     @Column(name = "quantita")
     private Float quantita;
@@ -86,6 +90,14 @@ public class DdtArticolo implements Serializable {
 
     public void setLotto(String lotto) {
         this.lotto = lotto;
+    }
+
+    public Date getScadenza() {
+        return scadenza;
+    }
+
+    public void setScadenza(Date scadenza) {
+        this.scadenza = scadenza;
     }
 
     public Float getQuantita() {
@@ -168,6 +180,7 @@ public class DdtArticolo implements Serializable {
         result.append("ddtId: " + id.ddtId);
         result.append(", articoloId: " + id.articoloId);
         result.append(", lotto: " + lotto);
+        result.append(", scadenza: " + scadenza);
         result.append(", quantita: " + quantita);
         result.append(", numeroPezzi: " + numeroPezzi);
         result.append(", prezzo: " + prezzo);
