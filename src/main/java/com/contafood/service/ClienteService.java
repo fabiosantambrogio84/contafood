@@ -68,6 +68,8 @@ public class ClienteService {
 
     public Cliente update(Cliente cliente){
         LOGGER.info("Updating 'cliente'");
+        Cliente currentCliente = clienteRepository.findById(cliente.getId()).orElseThrow(ResourceNotFoundException::new);
+        cliente.setDataInserimento(currentCliente.getDataInserimento());
         Cliente updatedCliente = clienteRepository.save(cliente);
         LOGGER.info("Updated 'cliente' '{}'", updatedCliente);
         return updatedCliente;
