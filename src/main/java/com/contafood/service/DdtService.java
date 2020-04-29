@@ -92,6 +92,8 @@ public class DdtService {
 
         ddt.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
+        LOGGER.info(ddt.getScannerLog());
+
         Ddt createdDdt = ddtRepository.save(ddt);
 
         createdDdt.getDdtArticoli().stream().forEach(da -> {
@@ -121,6 +123,8 @@ public class DdtService {
         ddt.setStatoDdt(ddtCurrent.getStatoDdt());
         ddt.setDataInserimento(ddtCurrent.getDataInserimento());
         ddt.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
+
+        LOGGER.info(ddt.getScannerLog());
 
         Ddt updatedDdt = ddtRepository.save(ddt);
         ddtArticoli.stream().forEach(da -> {

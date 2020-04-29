@@ -91,6 +91,9 @@ public class Ddt {
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
 
+    @Transient
+    private String scannerLog;
+
     @OneToMany(mappedBy = "ddt")
     @JsonIgnoreProperties("ddt")
     private Set<DdtArticolo> ddtArticoli = new HashSet<>();
@@ -285,6 +288,14 @@ public class Ddt {
 
     public void setDataAggiornamento(Timestamp dataAggiornamento) {
         this.dataAggiornamento = dataAggiornamento;
+    }
+
+    public String getScannerLog() {
+        return scannerLog;
+    }
+
+    public void setScannerLog(String scannerLog) {
+        this.scannerLog = scannerLog;
     }
 
     public Set<DdtArticolo> getDdtArticoli() {
