@@ -1,8 +1,10 @@
 package com.contafood.service;
 
+import com.contafood.exception.ArticoloBarcodeCannotStartWithZeroException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.ArticoloRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +83,15 @@ public class ArticoloService {
 
     public Articolo create(Articolo articolo){
         LOGGER.info("Creating 'articolo'");
+
+        String barcode = articolo.getBarcode();
+        if(!StringUtils.isEmpty(barcode)){
+            if(barcode.startsWith("0")){
+                LOGGER.error("The barcode '"+barcode+"' is not permitted: it starts with 0");
+                throw new ArticoloBarcodeCannotStartWithZeroException();
+            }
+        }
+
         String codice = articolo.getCodice().toUpperCase();
         articolo.setCodice(codice);
         articolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
@@ -116,6 +127,15 @@ public class ArticoloService {
 
     public Articolo update(Articolo articolo){
         LOGGER.info("Updating 'articolo'");
+
+        String barcode = articolo.getBarcode();
+        if(!StringUtils.isEmpty(barcode)){
+            if(barcode.startsWith("0")){
+                LOGGER.error("The barcode '"+barcode+"' is not permitted: it starts with 0");
+                throw new ArticoloBarcodeCannotStartWithZeroException();
+            }
+        }
+
         Articolo articoloCurrent = articoloRepository.findById(articolo.getId()).orElseThrow(ResourceNotFoundException::new);
         BigDecimal prezzoListinoBaseCurrent = articoloCurrent.getPrezzoListinoBase();
         articolo.setDataInserimento(articoloCurrent.getDataInserimento());
@@ -161,5 +181,4 @@ public class ArticoloService {
         LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
         return listiniPrezzi;
     }
-
 }

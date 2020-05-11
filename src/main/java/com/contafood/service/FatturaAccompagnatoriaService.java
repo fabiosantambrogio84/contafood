@@ -90,6 +90,8 @@ public class FatturaAccompagnatoriaService {
         fatturaAccompagnatoria.setSpeditoAde(false);
         fatturaAccompagnatoria.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
+        LOGGER.info(fatturaAccompagnatoria.getScannerLog());
+
         FatturaAccompagnatoria createdFatturaAccompagnatoria = fatturaAccompagnatoriaRepository.save(fatturaAccompagnatoria);
 
         createdFatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().stream().forEach(faa -> {

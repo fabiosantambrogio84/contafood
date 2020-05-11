@@ -81,6 +81,9 @@ public class FatturaAccompagnatoria {
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
 
+    @Transient
+    private String scannerLog;
+
     @OneToMany(mappedBy = "fatturaAccompagnatoria")
     @JsonIgnoreProperties("fatturaAccompagnatoria")
     private Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = new HashSet<>();
@@ -247,6 +250,14 @@ public class FatturaAccompagnatoria {
 
     public void setDataAggiornamento(Timestamp dataAggiornamento) {
         this.dataAggiornamento = dataAggiornamento;
+    }
+
+    public String getScannerLog() {
+        return scannerLog;
+    }
+
+    public void setScannerLog(String scannerLog) {
+        this.scannerLog = scannerLog;
     }
 
     public Set<FatturaAccompagnatoriaArticolo> getFatturaAccompagnatoriaArticoli() {
