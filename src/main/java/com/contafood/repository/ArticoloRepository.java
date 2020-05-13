@@ -15,7 +15,7 @@ public interface ArticoloRepository extends CrudRepository<Articolo, Long> {
 
     Set<Articolo> findByAttivoOrderByCodiceAsc(Boolean attivo);
 
-    List<Articolo> findByAttivoAndFornitoreId(Boolean attivo, Long idFornitore);
+    Set<Articolo> findByAttivoAndFornitoreId(Boolean attivo, Long idFornitore);
 
     Set<Articolo> findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsTrue(Boolean attivo, String barcode);
 

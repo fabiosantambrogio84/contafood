@@ -55,16 +55,16 @@ public class ArticoloService {
         return articoli;
     }
 
-    public List<Articolo> getAllByAttivoAndFornitoreId(Boolean active, Long idFornitore){
+    public Set<Articolo> getAllByAttivoAndFornitoreId(Boolean active, Long idFornitore){
         LOGGER.info("Retrieving the list of 'articoli' filtered by 'attivo' value '{}' and fornitore '{}'", active, idFornitore);
-        List<Articolo> articoli = articoloRepository.findByAttivoAndFornitoreId(active,idFornitore);
+        Set<Articolo> articoli = articoloRepository.findByAttivoAndFornitoreId(active,idFornitore);
         LOGGER.info("Retrieved {} 'articoli'", articoli.size());
         return articoli;
     }
 
     public Set<Articolo> getAllByAttivoAndBarcode(Boolean active, String barcode){
         LOGGER.info("Retrieving the list of 'articoli' filtered by 'attivo' '{}' and 'barcode' '{}'", active, barcode);
-        Set<Articolo> articoli = new HashSet<>();
+        Set<Articolo> articoli;
         articoli = articoloRepository.findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsTrue(active, barcode);
         if(articoli == null || articoli.isEmpty()){
             barcode = barcode.substring(0, 7);

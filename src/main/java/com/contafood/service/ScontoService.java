@@ -75,7 +75,7 @@ public class ScontoService {
         // create the list of valid Sconti of tipologia FORNITORE with Articolo valued
         List<Sconto> validScontiFornitori = new ArrayList<>();
         validScontiFornitoriWithoutArticoli.forEach(sf -> {
-            List<Articolo> articoliByFornitore = articoloService.getAllByAttivoAndFornitoreId(true, sf.getFornitore().getId());
+            Set<Articolo> articoliByFornitore = articoloService.getAllByAttivoAndFornitoreId(true, sf.getFornitore().getId());
             articoliByFornitore.forEach(a -> {
                 Sconto sconto = new Sconto();
                 sconto.setId(sf.getId());

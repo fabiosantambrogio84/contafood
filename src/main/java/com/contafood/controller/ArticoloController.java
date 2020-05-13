@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -38,7 +35,7 @@ public class ArticoloController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Articolo> getAll(@RequestParam(name = "attivo", required = false) Boolean active,
+    public List<Articolo> getAll(@RequestParam(name = "attivo", required = false) Boolean active,
                                 @RequestParam(name = "idFornitore", required = false) Integer idFornitore,
                                 @RequestParam(name = "barcode", required = false) String barcode) {
         LOGGER.info("Performing GET request for retrieving list of 'articoli'");
@@ -57,7 +54,7 @@ public class ArticoloController {
             return true;
         };
 
-        Set<Articolo> articoli = new HashSet<>();
+        Set<Articolo> articoli;
         if(active != null && !StringUtils.isEmpty(barcode)){
             articoli = articoloService.getAllByAttivoAndBarcode(active, barcode);
         } else {
@@ -68,7 +65,7 @@ public class ArticoloController {
             }
             articoli = articoli.stream().filter(isArticoloIdFornitoreEquals).collect(Collectors.toSet());
         }
-        return articoli;
+        return articoli.stream().sorted(Comparator.comparing(Articolo::getCodice)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = GET, path = "/{articoloId}")
