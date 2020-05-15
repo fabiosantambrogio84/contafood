@@ -1,5 +1,6 @@
 package com.contafood.controller;
 
+import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
 import com.contafood.service.NotaAccreditoService;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -41,10 +43,11 @@ public class NotaAccreditoController {
                            @RequestParam(name = "progressivo", required = false) Integer progressivo,
                            @RequestParam(name = "importo", required = false) Float importo,
                            @RequestParam(name = "cliente", required = false) String cliente,
-                           @RequestParam(name = "agente", required = false) Integer idAgente) {
+                           @RequestParam(name = "agente", required = false) Integer idAgente,
+                           @RequestParam(name = "articolo", required = false) Integer idArticolo) {
         LOGGER.info("Performing GET request for retrieving list of 'note accredito'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, cliente {}, agente {}",
-                dataDa, dataA, progressivo, importo, cliente, idAgente);
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, cliente {}, agente {}, articolo {}",
+                dataDa, dataA, progressivo, importo, cliente, idAgente, idArticolo);
 
         Predicate<NotaAccredito> isNotaAccreditoDataDaGreaterOrEquals = notaAccredito -> {
             if(dataDa != null){
@@ -97,6 +100,16 @@ public class NotaAccreditoController {
             }
             return true;
         };
+        Predicate<NotaAccredito> isNotaAccreditoArticoloEquals = notaAccredito -> {
+            if(idArticolo != null){
+                Set<NotaAccreditoArticolo> notaAccreditoArticoli = notaAccredito.getNotaAccreditoArticoli();
+                if(notaAccreditoArticoli != null && !notaAccreditoArticoli.isEmpty()){
+                    return notaAccreditoArticoli.stream().filter(naa -> naa.getId() != null).map(naa -> naa.getId()).filter(naaId -> naaId.getArticoloId() != null && naaId.getArticoloId().equals(Long.valueOf(idArticolo))).findFirst().isPresent();
+                }
+                return false;
+            }
+            return true;
+        };
 
         Set<NotaAccredito> noteAccredito = notaAccreditoService.getAll();
         return noteAccredito.stream().filter(isNotaAccreditoDataDaGreaterOrEquals
@@ -104,7 +117,8 @@ public class NotaAccreditoController {
                 .and(isNotaAccreditoProgressivoEquals)
                 .and(isNotaAccreditoImportoEquals)
                 .and(isNotaAccreditoClienteContains)
-                .and(isNotaAccreditoAgenteEquals)).collect(Collectors.toSet());
+                .and(isNotaAccreditoAgenteEquals)
+                .and(isNotaAccreditoArticoloEquals)).collect(Collectors.toSet());
     }
 
     @RequestMapping(method = GET, path = "/{notaAccreditoId}")
@@ -127,6 +141,16 @@ public class NotaAccreditoController {
     public NotaAccredito create(@RequestBody final NotaAccredito notaAccredito){
         LOGGER.info("Performing POST request for creating 'nota accredito'");
         return notaAccreditoService.create(notaAccredito);
+    }
+
+    @RequestMapping(method = PUT, path = "/{notaAccreditoId}")
+    @CrossOrigin
+    public NotaAccredito update(@PathVariable final Long notaAccreditoId, @RequestBody final NotaAccredito notaAccredito){
+        LOGGER.info("Performing PUT request for updating 'nota accredito' '{}'", notaAccreditoId);
+        if (!Objects.equals(notaAccreditoId, notaAccredito.getId())) {
+            throw new CannotChangeResourceIdException();
+        }
+        return notaAccreditoService.update(notaAccredito);
     }
 
     @RequestMapping(method = DELETE, path = "/{notaAccreditoId}")

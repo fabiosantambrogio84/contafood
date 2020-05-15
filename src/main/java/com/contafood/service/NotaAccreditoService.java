@@ -2,10 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.AliquotaIva;
-import com.contafood.model.Articolo;
-import com.contafood.model.NotaAccredito;
-import com.contafood.model.NotaAccreditoArticolo;
+import com.contafood.model.*;
 import com.contafood.repository.NotaAccreditoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,13 +66,6 @@ public class NotaAccreditoService {
         return result;
     }
 
-    public List<NotaAccredito> getByDataGreaterThanEqual(Date data){
-        LOGGER.info("Retrieving 'note accredito' with 'data' greater or equals to '{}'", data);
-        List<NotaAccredito> noteAccredito = notaAccreditoRepository.findByDataGreaterThanEqualOrderByProgressivoDesc(data);
-        LOGGER.info("Retrieved {} 'note accredito' with 'data' greater or equals to '{}'", noteAccredito.size(), data);
-        return noteAccredito;
-    }
-
     @Transactional
     public NotaAccredito create(NotaAccredito notaAccredito){
         LOGGER.info("Creating 'nota accredito'");
@@ -111,6 +101,54 @@ public class NotaAccreditoService {
         LOGGER.info("Created 'nota accredito' '{}'", createdNotaAccredito);
 
         return createdNotaAccredito;
+    }
+
+    @Transactional
+    public NotaAccredito update(NotaAccredito notaAccredito){
+        LOGGER.info("Updating 'nota accredito'");
+
+        checkExistsByAnnoAndProgressivoAndIdNot(notaAccredito.getAnno(), notaAccredito.getProgressivo(), notaAccredito.getId());
+
+        Set<NotaAccreditoArticolo> notaAccreditoArticoli = notaAccredito.getNotaAccreditoArticoli();
+        Set<NotaAccreditoTotale> notaAccreditoTotali = notaAccredito.getNotaAccreditoTotali();
+        Set<NotaAccreditoInfo> notaAccreditoInfo = notaAccredito.getNotaAccreditoInfo();
+
+        notaAccredito.setNotaAccreditoArticoli(new HashSet<>());
+        notaAccredito.setNotaAccreditoTotali(new HashSet<>());
+        notaAccredito.setNotaAccreditoInfo(new HashSet<>());
+
+        notaAccreditoArticoloService.deleteByNotaAccreditoId(notaAccredito.getId());
+        notaAccreditoTotaleService.deleteByNotaAccreditoId(notaAccredito.getId());
+        notaAccreditoInfoService.deleteByNotaAccreditoId(notaAccredito.getId());
+
+        NotaAccredito notaAccreditoCurrent = notaAccreditoRepository.findById(notaAccredito.getId()).orElseThrow(ResourceNotFoundException::new);
+        notaAccredito.setDataInserimento(notaAccreditoCurrent.getDataInserimento());
+        notaAccredito.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
+
+        NotaAccredito updatedNotaAccredito = notaAccreditoRepository.save(notaAccredito);
+
+        notaAccreditoArticoli.stream().forEach(naa -> {
+            naa.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
+            naa.getId().setUuid(UUID.randomUUID().toString());
+            notaAccreditoArticoloService.create(naa);
+        });
+
+        notaAccreditoTotali.stream().forEach(nat -> {
+            nat.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
+            nat.getId().setUuid(UUID.randomUUID().toString());
+            notaAccreditoTotaleService.create(nat);
+        });
+
+        notaAccreditoInfo.stream().forEach(nai -> {
+            nai.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
+            notaAccreditoInfoService.create(nai);
+        });
+
+        computeTotali(updatedNotaAccredito, notaAccreditoArticoli);
+
+        notaAccreditoRepository.save(updatedNotaAccredito);
+        LOGGER.info("Updated 'nota accredito' '{}'", updatedNotaAccredito);
+        return updatedNotaAccredito;
     }
 
     @Transactional
