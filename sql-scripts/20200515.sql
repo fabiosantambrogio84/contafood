@@ -11,6 +11,8 @@ CREATE TABLE `nota_accredito` (
 	id_cliente int(10) unsigned,
 	spedito_ade bit(1) DEFAULT b'0',
     totale decimal(10,3),
+    totale_acconto decimal(10,3),
+    totale_quantita decimal(10,3),
     note text,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
