@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Add">
+      <change afterPath="$PROJECT_DIR$/.idea/contafood.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20200515.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/out/" />
-    <ignored path="$PROJECT_DIR$/target/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,19 +18,6 @@
   </component>
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -38,163 +28,43 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>codice</find>
-      <find>id_categoria</find>
-      <find>categoria</find>
-    </findStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$/src/main/java</dir>
-    </dirStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/src/main/java/model/Fornitore.java" />
-        <option value="$PROJECT_DIR$/src/main/java/ContaFoodApplication.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/ContaFoodApplication.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/repository/FornitoreRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/Application.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/exception/ResourceNotFoundException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/exception/CannotChangeResourceIdException.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/logback.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/controller/FornitoreController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/repository/IngredienteRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/IngredienteService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/controller/CategoriaArticoloController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/controller/IngredienteController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/RicettaIngredienteKey.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/RicettaIngredienteService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/repository/RicettaIngredienteRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/20190702.sql" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/repository/AutistaRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/controller/AutistaController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/CategoriaRicetta.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/RicettaIngrediente.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/repository/AgenteRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/controller/AgenteController.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/20190816.sql" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/Agente.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/Ingrediente.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/20190819.sql" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/Ricetta.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/application.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/Configurazione.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/repository/ConfigurazioneRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/AgenteService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/ConfigurazioneService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/controller/ConfigurazioneController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/ParametroService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/controller/ParametroController.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/20190820.sql" />
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/model/Parametro.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/configuration/SecurityConfiguration.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/controller/RicettaController.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/application-docker-test.properties" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/repository/CategoriaRicettaRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/CategoriaRicettaService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/repository/RicettaRepository.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/contafood/service/RicettaService.java" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-      </list>
-    </option>
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="importAutomatically" value="true" />
-      </MavenImportingSettings>
-    </option>
-  </component>
-  <component name="MavenProjectNavigator">
-    <treeState>
-      <expand>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="contafood" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-        </path>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="contafood" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
-        </path>
-      </expand>
-      <select />
-    </treeState>
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
-  </component>
+  <component name="ProjectId" id="1XOZ4qCFwmJr4ZtINvmWCN8YDWn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="contafood" type="b2602c69:ProjectViewProjectNode" />
-              <item name="contafood" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="contafood" type="b2602c69:ProjectViewProjectNode" />
-              <item name="contafood" type="462c0819:PsiDirectoryNode" />
-              <item name=".idea" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-    </panes>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/sql" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/sql-scripts" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.contafood.model.views" />
+      <recent name="com.contafood.model.stats" />
       <recent name="com.contafood.model" />
       <recent name="com.contafood" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.contafood.exception" />
+      <recent name="com.contafood.model.stats" />
       <recent name="com.contafood.controller" />
-      <recent name="com.contafood.service" />
-      <recent name="com.contafood.model" />
+      <recent name="com.contafood.util" />
       <recent name="com.contafood.repository" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\sql-scripts" />
+      <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\src\main\resources\sql" />
       <recent name="$PROJECT_DIR$/src/main/resources/sql" />
       <recent name="$PROJECT_DIR$/src/main/resources/spec" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
     <configuration name="contafood [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
@@ -247,9 +117,17 @@
       <option name="AUTO_RESTART" value="false" />
       <method v="2" />
     </configuration>
+    <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="contafood" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.contafood.Application" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Remote.Contafood-remote" />
+      <item itemvalue="Spring Boot.Application" />
     </list>
   </component>
   <component name="SvnConfiguration">
@@ -262,153 +140,68 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1562063508674</updated>
-    </task>
-    <task id="LOCAL-00001" summary="Add first packages structure">
-      <created>1562064164337</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1562064164339</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Add Fornitore class">
-      <created>1562159464011</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1562159464011</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Add Provincia enum">
-      <created>1562160633870</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1562160633870</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Add sql resources">
-      <created>1562162528609</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1562162528609</updated>
-    </task>
-    <task id="LOCAL-00005" summary="First implementation of Fornitore">
-      <created>1562247435721</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1562247435721</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Update implementation of Fornitore">
-      <created>1562252293045</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1562252293045</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Add PUT on Fornitore">
-      <created>1562254441742</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1562254441742</updated>
-    </task>
-    <task id="LOCAL-00008" summary="Add Note attribute on Fornitore">
-      <created>1562585463858</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1562585463859</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Add CrossOrigin">
-      <created>1562684298828</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1562684298828</updated>
-    </task>
-    <task id="LOCAL-00010" summary="Add Ingrediente resource, repository and service">
-      <created>1563201130837</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1563201130837</updated>
-    </task>
-    <task id="LOCAL-00011" summary="Add CrossOrigin for categoriaArticolo and ingrediente controllers">
-      <created>1563201212330</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1563201212330</updated>
-    </task>
-    <task id="LOCAL-00012" summary="Add specification files">
-      <created>1563461717311</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1563461717311</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Add logic for Ricetta">
-      <created>1563551545865</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1563551545865</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Add 'Autista', 'Agente' models and update 'Fornitore'">
-      <created>1565945894320</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1565945894320</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Fix alter table fornitore">
-      <created>1565964598062</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1565964598067</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Remove unused fields on 'Fornitore'">
-      <created>1566205765886</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1566205765886</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Add new fields on 'Ingrediente'">
-      <created>1566222845887</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1566222845887</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Change type of 'Ricetta.tempo_preparazione' to Integer">
-      <created>1566225395502</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1566225395502</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Add 'Parametro' entity and security configuration">
-      <created>1566304107613</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1566304107613</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Remove RicettaResource">
-      <created>1566559236415</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1566559236415</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Update docket-test-properties">
-      <created>1567770137468</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1567770137468</updated>
+      <workItem from="1580918920448" duration="696000" />
+      <workItem from="1580984435882" duration="2068000" />
+      <workItem from="1581325755011" duration="1386000" />
+      <workItem from="1581414166868" duration="8733000" />
+      <workItem from="1581435807519" duration="1166000" />
+      <workItem from="1581499033249" duration="1364000" />
+      <workItem from="1581594491987" duration="6321000" />
+      <workItem from="1581613559126" duration="2563000" />
+      <workItem from="1581667418403" duration="1855000" />
+      <workItem from="1581943577031" duration="4338000" />
+      <workItem from="1582014017569" duration="4162000" />
+      <workItem from="1582100141156" duration="1718000" />
+      <workItem from="1582187397350" duration="2469000" />
+      <workItem from="1582281943135" duration="1846000" />
+      <workItem from="1582533959322" duration="3155000" />
+      <workItem from="1582646996714" duration="700000" />
+      <workItem from="1582818851046" duration="3333000" />
+      <workItem from="1582891340450" duration="4508000" />
+      <workItem from="1583137869588" duration="8748000" />
+      <workItem from="1583244536957" duration="5825000" />
+      <workItem from="1583312032834" duration="6330000" />
+      <workItem from="1583395972201" duration="2515000" />
+      <workItem from="1583500593081" duration="10075000" />
+      <workItem from="1583741703335" duration="5117000" />
+      <workItem from="1583914381015" duration="6374000" />
+      <workItem from="1584018118465" duration="8083000" />
+      <workItem from="1584089345619" duration="12184000" />
+      <workItem from="1584346376956" duration="8435000" />
+      <workItem from="1584432941745" duration="603000" />
+      <workItem from="1584453768373" duration="1209000" />
+      <workItem from="1584530082306" duration="2264000" />
+      <workItem from="1584709570943" duration="4892000" />
+      <workItem from="1584956037315" duration="6415000" />
+      <workItem from="1584980538333" duration="21000" />
+      <workItem from="1585036793290" duration="10249000" />
+      <workItem from="1585122767165" duration="20523000" />
+      <workItem from="1585209877442" duration="7239000" />
+      <workItem from="1585296603749" duration="167000" />
+      <workItem from="1585296810567" duration="148000" />
+      <workItem from="1585297020253" duration="11551000" />
+      <workItem from="1585319568970" duration="2218000" />
+      <workItem from="1585550353438" duration="11523000" />
+      <workItem from="1585660406383" duration="1772000" />
+      <workItem from="1585725356719" duration="4880000" />
+      <workItem from="1585811626337" duration="3672000" />
+      <workItem from="1586244586132" duration="6563000" />
+      <workItem from="1586330647161" duration="3008000" />
+      <workItem from="1586416213707" duration="2433000" />
+      <workItem from="1586506924238" duration="626000" />
+      <workItem from="1587106586981" duration="2472000" />
+      <workItem from="1587308060374" duration="2149000" />
+      <workItem from="1587372149290" duration="1085000" />
+      <workItem from="1587568592426" duration="1474000" />
+      <workItem from="1588144946938" duration="3504000" />
+      <workItem from="1588174996734" duration="625000" />
+      <workItem from="1588582223139" duration="2205000" />
+      <workItem from="1588749319153" duration="2316000" />
+      <workItem from="1588929803634" duration="708000" />
+      <workItem from="1588934152940" duration="1731000" />
+      <workItem from="1589185458366" duration="5337000" />
+      <workItem from="1589379694122" duration="3370000" />
+      <workItem from="1589528377593" duration="2019000" />
     </task>
     <task id="LOCAL-00022" summary="Fix logging.path property">
       <created>1567771970159</created>
@@ -417,552 +210,492 @@
       <option name="project" value="LOCAL" />
       <updated>1567771970159</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Move Pagamento methods to DdtService">
+      <created>1580994177920</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1580994177920</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Compute Ddt.stato and refresh totali">
+      <created>1581429012501</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1581429012501</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Add DdtArticolo.lotto">
+      <created>1581435351493</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1581435351493</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Add filters to GET DDts">
+      <created>1581667831160</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1581667831161</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Fix filters to GET DDts and fix PUT">
+      <created>1582023082284</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1582023082284</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Ignoring case in DDT filter by Cliente. Return Pagamenti in DDT response">
+      <created>1582192752993</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1582192752993</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Add scheduled job for deleting expired Sconti. Add filters on Sconti">
+      <created>1582820866575</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1582820866576</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Add scheduled job for deleting expired Sconti">
+      <created>1583138002745</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1583138002745</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Fix filter on Sconto. Add uuid to ProduzioneIngredienteKey">
+      <created>1583162079029</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1583162079029</updated>
+    </task>
+    <task id="LOCAL-00032" summary="First implementation of Fattura">
+      <created>1583254025656</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1583254025656</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Fix saving Cliente">
+      <created>1583316446262</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1583316446262</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Add method to retrieve valid Sconti with priority based on Tipologia">
+      <created>1583340271145</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1583340271145</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Add Fattura creation and filters">
+      <created>1583512630773</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1583512630773</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Fix Articolo creation">
+      <created>1583751766027</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1583751766028</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Add Fattura bulk creation">
+      <created>1583760937043</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1583760937043</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Fix Fattura creation bulk and DDTs retrieval">
+      <created>1583923801354</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1583923801354</updated>
+    </task>
+    <task id="LOCAL-00039" summary="temporarily remove Fattura filter on TipologiaPagamento">
+      <created>1584018203781</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1584018203781</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Fix Fattura filter by TipoPagamento">
+      <created>1584018538653</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1584018538653</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Fix filter DDT.importo">
+      <created>1584023731583</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1584023731583</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Moved sql scripts to new folder external to build">
+      <created>1584023987067</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1584023987067</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Add DdtAcquisto, DdtAcquistoArticolo model,repository,service,controller">
+      <created>1584027060229</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1584027060229</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Fix Ingrediente.dataInserimento on POST">
+      <created>1584091959204</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1584091959204</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Add target folder to gitignore">
+      <created>1584092051232</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1584092051232</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Removed spec and sql folders from target">
+      <created>1584092098624</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1584092098624</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Add RicercaLotto on Ddt, DdtAcquisto and Produzione">
+      <created>1584112632422</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1584112632422</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Fix DdtAcquisto: remove Stato, Numero as String">
+      <created>1584352960710</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1584352960710</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Fix DB collation for case sensitive queries">
+      <created>1584358910243</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1584358910243</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Fix Ricerca Lotti Produzione.lotto film chiusura">
+      <created>1584536711225</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1584536711226</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Add TipoFattura, filter Fattura.tipoFattura">
+      <created>1584713337398</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1584713337399</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Add controller,repository,service for FatturaAccompagnatoria">
+      <created>1584979536998</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1584979536999</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Add FatturaAccompagnatoria">
+      <created>1585063885457</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1585063885458</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Add enums, endpoints for StatistichePeriodi e StatisticheOpzioni">
+      <created>1585066285257</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1585066285257</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Add order for Clienti,Fornitori and Articoli. Fix StatisticaOpzione e StatistichePeriodo">
+      <created>1585129274924</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1585129274925</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Add computation of Statistiche">
+      <created>1585210421106</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1585210421107</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Fix character set and collation">
+      <created>1585215630801</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1585215630801</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Add FattureAccompagnatorie in Statistiche computation">
+      <created>1585313574509</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1585313574510</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Fix decimal round on StatisticheArticoliGroups">
+      <created>1585322806551</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1585322806551</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Fix computation of Statistiche">
+      <created>1585556840370</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1585556840370</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Fix Statistiche computation">
+      <created>1585581668408</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1585581668408</updated>
+    </task>
+    <task id="LOCAL-00062" summary="Add logic for retrieving Articolo by barcode">
+      <created>1585756679636</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1585756679636</updated>
+    </task>
+    <task id="LOCAL-00063" summary="Remove not null on data_aggiornamento column">
+      <created>1586250795516</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1586250795518</updated>
+    </task>
+    <task id="LOCAL-00064" summary="Add Produzione.tempoImpiegato">
+      <created>1586330717998</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1586330717999</updated>
+    </task>
+    <task id="LOCAL-00065" summary="Fix barcode substring for Articolo with variable weight">
+      <created>1586418629648</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1586418629649</updated>
+    </task>
+    <task id="LOCAL-00066" summary="Add scadenza to DdtArticolo and FatturaAccompagnatoriaArticolo">
+      <created>1587310749715</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1587310749715</updated>
+    </task>
+    <task id="LOCAL-00067" summary="Fix Cliente.dataInserimento on update">
+      <created>1587570940623</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1587570940623</updated>
+    </task>
+    <task id="LOCAL-00068" summary="Add Ddt.scannerLog">
+      <created>1588148165366</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1588148165367</updated>
+    </task>
+    <task id="LOCAL-00069" summary="Add check on Articolo.barcode starting with zero">
+      <created>1589203248672</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1589203248673</updated>
+    </task>
+    <task id="LOCAL-00070" summary="Fix sort Articolo">
+      <created>1589384519804</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1589384519805</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="-3" y="24" width="1926" height="1059" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6348485" visible="true" weight="0.25559106" />
-      <window_info id="Structure" order="1" sideWeight="0.36515152" side_tool="true" visible="true" weight="0.25559106" />
-      <window_info id="Image Layers" order="2" />
-      <window_info id="Designer" order="3" />
-      <window_info id="UI Designer" order="4" />
-      <window_info id="Capture Tool" order="5" />
-      <window_info id="Favorites" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32939914" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3290461" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.2926045" />
-      <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Messages" order="10" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="Maven" order="4" weight="0.32960597" />
-      <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info anchor="right" id="Capture Analysis" order="6" />
-      <window_info anchor="right" id="Palette&#9;" order="7" />
-    </layout>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.sql" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add first packages structure" />
-    <MESSAGE value="Add Fornitore class" />
-    <MESSAGE value="Add Provincia enum" />
-    <MESSAGE value="Add sql resources" />
-    <MESSAGE value="First implementation of Fornitore" />
-    <MESSAGE value="Update implementation of Fornitore" />
-    <MESSAGE value="Add PUT on Fornitore" />
-    <MESSAGE value="Add Note attribute on Fornitore" />
-    <MESSAGE value="Add CrossOrigin" />
-    <MESSAGE value="Add Ingrediente resource, repository and service" />
-    <MESSAGE value="Add CrossOrigin for categoriaArticolo and ingrediente controllers" />
-    <MESSAGE value="Add specification files" />
-    <MESSAGE value="Add logic for Ricetta" />
-    <MESSAGE value="Add 'Autista', 'Agente' models and update 'Fornitore'" />
-    <MESSAGE value="Fix alter table fornitore" />
-    <MESSAGE value="Remove unused fields on 'Fornitore'" />
-    <MESSAGE value="Add new fields on 'Ingrediente'" />
-    <MESSAGE value="Change type of 'Ricetta.tempo_preparazione' to Integer" />
-    <MESSAGE value="Add 'Parametro' entity and security configuration" />
-    <MESSAGE value="Remove RicettaResource" />
-    <MESSAGE value="Update docket-test-properties" />
-    <MESSAGE value="Fix logging.path property" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix logging.path property" />
+    <MESSAGE value="Removed spec and sql folders from target" />
+    <MESSAGE value="Add RicercaLotto on Ddt, DdtAcquisto and Produzione" />
+    <MESSAGE value="Fix DdtAcquisto: remove Stato, Numero as String" />
+    <MESSAGE value="Fix DB collation for case sensitive queries" />
+    <MESSAGE value="Fix Ricerca Lotti Produzione.lotto film chiusura" />
+    <MESSAGE value="Add TipoFattura, filter Fattura.tipoFattura" />
+    <MESSAGE value="Add controller,repository,service for FatturaAccompagnatoria" />
+    <MESSAGE value="Add FatturaAccompagnatoria" />
+    <MESSAGE value="Add enums, endpoints for StatistichePeriodi e StatisticheOpzioni" />
+    <MESSAGE value="Add order for Clienti,Fornitori and Articoli. Fix StatisticaOpzione e StatistichePeriodo" />
+    <MESSAGE value="Add computation of Statistiche" />
+    <MESSAGE value="Fix character set and collation" />
+    <MESSAGE value="Add FattureAccompagnatorie in Statistiche computation" />
+    <MESSAGE value="Fix decimal round on StatisticheArticoliGroups" />
+    <MESSAGE value="Fix computation of Statistiche" />
+    <MESSAGE value="Fix Statistiche computation" />
+    <MESSAGE value="Add logic for retrieving Articolo by barcode" />
+    <MESSAGE value="Remove not null on data_aggiornamento column" />
+    <MESSAGE value="Add Produzione.tempoImpiegato" />
+    <MESSAGE value="Fix barcode substring for Articolo with variable weight" />
+    <MESSAGE value="Add scadenza to DdtArticolo and FatturaAccompagnatoriaArticolo" />
+    <MESSAGE value="Fix Cliente.dataInserimento on update" />
+    <MESSAGE value="Add Ddt.scannerLog" />
+    <MESSAGE value="Add check on Articolo.barcode starting with zero" />
+    <MESSAGE value="Fix sort Articolo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix sort Articolo" />
   </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/util/Provincia.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1350">
-          <caret line="90" column="10" selection-start-line="90" selection-start-column="10" selection-end-line="90" selection-end-column="10" />
-          <folding>
-            <element signature="e#2866#2867#0" expanded="true" />
-            <element signature="e#2900#2901#0" expanded="true" />
-            <element signature="e#2932#2933#0" expanded="true" />
-            <element signature="e#2960#2961#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/Application.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="8" column="63" selection-start-line="8" selection-start-column="63" selection-end-line="8" selection-end-column="63" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/repository/FornitoreRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="10" column="6" selection-start-line="10" selection-start-column="6" selection-end-line="10" selection-end-column="6" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/exception/CannotChangeResourceIdException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="11" column="5" selection-start-line="11" selection-start-column="5" selection-end-line="11" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#309#310#0" expanded="true" />
-            <element signature="e#370#371#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/exception/ResourceNotFoundException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="6" column="28" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/CategoriaArticoloController.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/IngredienteController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="45" column="60" selection-start-line="45" selection-start-column="60" selection-end-line="45" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/RicettaIngredienteKey.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="18" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="18" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#505#506#0" expanded="true" />
-            <element signature="e#537#538#0" expanded="true" />
-            <element signature="e#585#586#0" expanded="true" />
-            <element signature="e#627#628#0" expanded="true" />
-            <element signature="e#665#666#0" expanded="true" />
-            <element signature="e#701#702#0" expanded="true" />
-            <element signature="e#757#758#0" expanded="true" />
-            <element signature="e#807#808#0" expanded="true" />
-            <element signature="e#872#873#0" expanded="true" />
-            <element signature="e#933#934#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/repository/RicettaIngredienteRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="7" column="45" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/repository/AutistaRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="7" column="62" lean-forward="true" selection-start-line="7" selection-start-column="62" selection-end-line="7" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="25" column="97" lean-forward="true" selection-start-line="25" selection-start-column="97" selection-end-line="25" selection-end-column="97" />
-          <folding>
-            <element signature="e#559#560#0" expanded="true" />
-            <element signature="e#617#618#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AutistaController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="58" column="41" lean-forward="true" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
-          <folding>
-            <element signature="e#821#822#0" expanded="true" />
-            <element signature="e#873#874#0" expanded="true" />
-            <element signature="e#1171#1172#0" expanded="true" />
-            <element signature="e#1235#1236#0" expanded="true" />
-            <element signature="e#1372#1373#0" expanded="true" />
-            <element signature="e#1434#1435#0" expanded="true" />
-            <element signature="e#2074#2075#0" expanded="true" />
-            <element signature="e#2131#2132#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/RicettaIngrediente.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-          <folding>
-            <element signature="e#759#760#0" expanded="true" />
-            <element signature="e#784#785#0" expanded="true" />
-            <element signature="e#835#836#0" expanded="true" />
-            <element signature="e#863#864#0" expanded="true" />
-            <element signature="e#898#899#0" expanded="true" />
-            <element signature="e#928#929#0" expanded="true" />
-            <element signature="e#975#976#0" expanded="true" />
-            <element signature="e#1013#1014#0" expanded="true" />
-            <element signature="e#1056#1057#0" expanded="true" />
-            <element signature="e#1090#1091#0" expanded="true" />
-            <element signature="e#1149#1150#0" expanded="true" />
-            <element signature="e#1195#1196#0" expanded="true" />
-            <element signature="e#1229#1230#0" expanded="true" />
-            <element signature="e#1260#1261#0" expanded="true" />
-            <element signature="e#1307#1308#0" expanded="true" />
-            <element signature="e#1347#1348#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/repository/AgenteRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="10" column="13" lean-forward="true" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AgenteController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="57" column="56" selection-start-line="57" selection-start-column="56" selection-end-line="57" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/CategoriaRicettaController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/FornitoreController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="45" column="11" selection-start-line="45" selection-start-column="11" selection-end-line="45" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="21" lean-forward="true" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/Agente.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="77" selection-start-line="77" selection-end-line="77" />
-          <folding>
-            <element signature="e#1310#1311#0" expanded="true" />
-            <element signature="e#1338#1339#0" expanded="true" />
-            <element signature="e#1380#1381#0" expanded="true" />
-            <element signature="e#1414#1415#0" expanded="true" />
-            <element signature="e#1450#1451#0" expanded="true" />
-            <element signature="e#1482#1483#0" expanded="true" />
-            <element signature="e#1532#1533#0" expanded="true" />
-            <element signature="e#1574#1575#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="55" selection-start-line="55" selection-end-line="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/repository/IngredienteRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="7" column="38" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/RicettaIngredienteService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="27" column="39" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/IngredienteService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="10" column="8" selection-start-line="10" selection-start-column="8" selection-end-line="10" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/Ingrediente.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1170">
-          <caret line="118" column="30" selection-start-line="118" selection-start-column="30" selection-end-line="118" selection-end-column="30" />
-          <folding>
-            <element signature="e#1621#1622#0" expanded="true" />
-            <element signature="e#1657#1658#0" expanded="true" />
-            <element signature="e#1715#1716#0" expanded="true" />
-            <element signature="e#1765#1766#0" expanded="true" />
-            <element signature="e#1804#1805#0" expanded="true" />
-            <element signature="e#1836#1837#0" expanded="true" />
-            <element signature="e#1889#1890#0" expanded="true" />
-            <element signature="e#1931#1932#0" expanded="true" />
-            <element signature="e#1976#1977#0" expanded="true" />
-            <element signature="e#2014#2015#0" expanded="true" />
-            <element signature="e#2079#2080#0" expanded="true" />
-            <element signature="e#2133#2134#0" expanded="true" />
-            <element signature="e#2164#2165#0" expanded="true" />
-            <element signature="e#2191#2192#0" expanded="true" />
-            <element signature="e#2231#2232#0" expanded="true" />
-            <element signature="e#2263#2264#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1215">
-          <caret line="85" column="37" selection-start-line="85" selection-start-column="37" selection-end-line="85" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#5474#5475#0" expanded="true" />
-            <element signature="e#5508#5509#0" expanded="true" />
-            <element signature="e#5573#5574#0" expanded="true" />
-            <element signature="e#5619#5620#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AgenteService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="48" column="58" selection-start-line="48" selection-start-column="58" selection-end-line="48" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/repository/ParametroRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-config/5.1.5.RELEASE/spring-security-config-5.1.5.RELEASE.jar!/org/springframework/security/config/annotation/web/builders/HttpSecurity.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="138" column="40" selection-start-line="138" selection-start-column="40" selection-end-line="138" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/5.1.5.RELEASE/spring-security-core-5.1.5.RELEASE.jar!/org/springframework/security/core/userdetails/User.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="198" column="32" selection-start-line="198" selection-start-column="32" selection-end-line="198" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/Parametro.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
-          <folding>
-            <element signature="e#1055#1056#0" expanded="true" />
-            <element signature="e#1105#1106#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/ParametroService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="33" column="70" selection-start-line="33" selection-start-column="70" selection-end-line="33" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="525">
-          <caret line="35" column="21" selection-start-line="35" selection-start-column="21" selection-end-line="35" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/configuration/SecurityConfiguration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/ParametroController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="22" selection-start-line="22" selection-end-line="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/sql/20190816.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="8" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/sql/20190819.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="7" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/RicettaController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/sql/20190702.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="873">
-          <caret line="67" column="23" selection-start-line="67" selection-start-column="23" selection-end-line="67" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/logback.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" selection-start-line="33" selection-end-line="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/sql/20190820.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application-prod.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="37" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/sql/20190904.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application-docker-test.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/CategoriaRicetta.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/repository/CategoriaRicettaRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/CategoriaRicettaService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="26" column="94" selection-start-line="26" selection-start-column="94" selection-end-line="26" selection-end-column="94" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/Ricetta.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/repository/RicettaRepository.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="12" column="37" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/RicettaService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="32" column="69" selection-start-line="32" selection-start-column="69" selection-end-line="32" selection-end-column="69" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="6" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
+  <component name="WindowStateProjectService">
+    <state x="552" y="181" key="#Auto_Import" timestamp="1583751849983">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="552" y="181" key="#Auto_Import/0.0.1920.1040@0.0.1920.1040" timestamp="1583751849983" />
+    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1588929909779">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1588929909779" />
+    <state x="765" y="214" key="#com.intellij.ide.util.MemberChooser" timestamp="1588144993109">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="544" y="95" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1587308587165" />
+    <state x="765" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1588144993109" />
+    <state x="811" y="413" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1580918986936">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="811" y="413" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580918986936" />
+    <state x="540" y="179" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor" timestamp="1580918982852">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="540" y="179" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1580918982852" />
+    <state x="761" y="411" width="398" height="221" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585302325783">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="761" y="411" width="398" height="221" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1585302325783" />
+    <state x="50" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1585302839809">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="50" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585302839809" />
+    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1584346779030">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1584346779030" />
+    <state x="568" y="119" key="CommitChangelistDialog2" timestamp="1589384518517">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="404" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1588148163454" />
+    <state x="568" y="119" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589384518517" />
+    <state x="740" y="279" key="FileChooserDialogImpl" timestamp="1581499155132">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="279" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1581499155132" />
+    <state width="177" height="238" key="Git.Branch.Popup" timestamp="1589210684128">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="177" height="238" key="Git.Branch.Popup/0.0.1920.1040@0.0.1920.1040" timestamp="1589210684128" />
+    <state width="1877" height="293" key="GridCell.Tab.0.bottom" timestamp="1589383733377">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1323" height="154" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1587308671692" />
+    <state width="1877" height="293" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589383733377" />
+    <state width="1877" height="293" key="GridCell.Tab.0.center" timestamp="1589383733377">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1323" height="154" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1587308671692" />
+    <state width="1877" height="293" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589383733377" />
+    <state width="1877" height="293" key="GridCell.Tab.0.left" timestamp="1589383733377">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1323" height="154" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1587308671691" />
+    <state width="1877" height="293" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589383733377" />
+    <state width="1877" height="293" key="GridCell.Tab.0.right" timestamp="1589383733377">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1323" height="154" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1587308671692" />
+    <state width="1877" height="293" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589383733377" />
+    <state width="1323" height="223" key="GridCell.Tab.1.bottom" timestamp="1587308595443">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="223" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
+    <state width="1323" height="223" key="GridCell.Tab.1.center" timestamp="1587308595443">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="223" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
+    <state width="1323" height="223" key="GridCell.Tab.1.left" timestamp="1587308595443">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="223" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
+    <state width="1323" height="223" key="GridCell.Tab.1.right" timestamp="1587308595443">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1323" height="223" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
+    <state x="627" y="226" key="NewModule_or_Project.wizard" timestamp="1581499196048">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="627" y="226" key="NewModule_or_Project.wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1581499196048" />
+    <state x="701" y="234" key="RollbackChangesDialog" timestamp="1585064934042">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="701" y="234" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585064934042" />
+    <state x="552" y="257" key="Vcs.Push.Dialog.v2" timestamp="1589384521369">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="393" y="180" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1588148167366" />
+    <state x="552" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589384521369" />
+    <state x="668" y="349" key="com.intellij.ide.util.TipDialog" timestamp="1580918924580">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="668" y="349" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580918924580" />
+    <state x="535" y="0" width="586" height="728" key="find.popup" timestamp="1585556478010">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="535" y="0" width="586" height="728" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1585556478010" />
+    <state x="752" y="141" width="710" height="732" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1583251518106" />
+    <state x="342" y="146" key="new project wizard" timestamp="1585571640410">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="342" y="146" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1585571640410" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1589381611479">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="443" y="158" width="672" height="475" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1585145873782" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1589381611479" />
   </component>
 </project>

@@ -2,3 +2,4 @@ node_modules
 misc.xml
 workspace.xml
 /target/
+/.idea/
