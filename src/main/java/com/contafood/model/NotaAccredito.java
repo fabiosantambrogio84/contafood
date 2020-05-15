@@ -32,10 +32,6 @@ public class NotaAccredito {
     @JoinColumn(name="id_cliente")
     private Cliente cliente;
 
-    @ManyToOne
-    @JoinColumn(name="id_agente")
-    private Agente agente;
-
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
 
@@ -107,14 +103,6 @@ public class NotaAccredito {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
-    }
-
-    public Agente getAgente() {
-        return agente;
-    }
-
-    public void setAgente(Agente agente) {
-        this.agente = agente;
     }
 
     public Boolean getSpeditoAde() {
@@ -207,7 +195,6 @@ public class NotaAccredito {
         result.append(", anno: " + anno);
         result.append(", data: " + data);
         result.append(", cliente: " + cliente);
-        result.append(", agente: " + agente);
         result.append(", speditoAde: " + speditoAde);
         result.append(", totale: " + totale);
         result.append(", totaleAcconto: " + totaleAcconto);

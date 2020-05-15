@@ -9,15 +9,13 @@ CREATE TABLE `nota_accredito` (
 	anno int(11),
 	data DATE,
 	id_cliente int(10) unsigned,
-	id_agente int(10) unsigned,
 	spedito_ade bit(1) DEFAULT b'0',
     totale decimal(10,3),
     note text,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
 	PRIMARY KEY (`id`),
-	CONSTRAINT `fk_nota_accredito_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
-	CONSTRAINT `fk_nota_accredito_agente` FOREIGN KEY (`id_agente`) REFERENCES `agente` (`id`)
+	CONSTRAINT `fk_nota_accredito_cliente` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 CREATE TABLE `nota_accredito_articolo` (
