@@ -8,11 +8,11 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "nota_accredito_info")
-public class NotaAccreditoInfo implements Serializable {
+@Table(name = "nota_accredito_riga")
+public class NotaAccreditoRiga implements Serializable {
 
     @EmbeddedId
-    NotaAccreditoInfoKey id;
+    NotaAccreditoRigaKey id;
 
     @ManyToOne
     @MapsId("id_nota_accredito")
@@ -52,11 +52,11 @@ public class NotaAccreditoInfo implements Serializable {
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
 
-    public NotaAccreditoInfoKey getId() {
+    public NotaAccreditoRigaKey getId() {
         return id;
     }
 
-    public void setId(NotaAccreditoInfoKey id) {
+    public void setId(NotaAccreditoRigaKey id) {
         this.id = id;
     }
 

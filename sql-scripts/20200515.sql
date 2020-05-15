@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS nota_accredito_info;
+DROP TABLE IF EXISTS nota_accredito_riga;
 DROP TABLE IF EXISTS nota_accredito_totale;
 DROP TABLE IF EXISTS nota_accredito_articolo;
 DROP TABLE IF EXISTS nota_accredito;
@@ -53,7 +53,7 @@ CREATE TABLE `nota_accredito_totale` (
 	CONSTRAINT `fk_nota_accredito_totale_iva` FOREIGN KEY (`id_aliquota_iva`) REFERENCES `aliquota_iva` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
-CREATE TABLE `nota_accredito_info` (
+CREATE TABLE `nota_accredito_riga` (
 	id_nota_accredito int(10) unsigned,
 	uuid varchar(255),
 	descrizione text,
@@ -67,7 +67,7 @@ CREATE TABLE `nota_accredito_info` (
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	data_aggiornamento TIMESTAMP,
 	PRIMARY KEY (id_nota_accredito, uuid),
-	CONSTRAINT `fk_nota_accredito_info_nota` FOREIGN KEY (`id_nota_accredito`) REFERENCES `nota_accredito` (`id`),
-	CONSTRAINT `fk_nota_accredito_info_udm` FOREIGN KEY (`id_unita_misura`) REFERENCES `unita_misura` (`id`),
-	CONSTRAINT `fk_nota_accredito_info_iva` FOREIGN KEY (`id_aliquota_iva`) REFERENCES `aliquota_iva` (`id`)
+	CONSTRAINT `fk_nota_accredito_riga_nota` FOREIGN KEY (`id_nota_accredito`) REFERENCES `nota_accredito` (`id`),
+	CONSTRAINT `fk_nota_accredito_riga_udm` FOREIGN KEY (`id_unita_misura`) REFERENCES `unita_misura` (`id`),
+	CONSTRAINT `fk_nota_accredito_riga_iva` FOREIGN KEY (`id_aliquota_iva`) REFERENCES `aliquota_iva` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;

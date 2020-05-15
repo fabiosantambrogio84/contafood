@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
-public class NotaAccreditoInfoKey implements Serializable {
+public class NotaAccreditoRigaKey implements Serializable {
 
     @Column(name = "id_nota_accredito")
     Long notaAccreditoId;
@@ -14,9 +14,9 @@ public class NotaAccreditoInfoKey implements Serializable {
     @Column(name = "uuid")
     String uuid;
 
-    public NotaAccreditoInfoKey(){}
+    public NotaAccreditoRigaKey(){}
 
-    public NotaAccreditoInfoKey(Long notaAccreditoId, String uuid){
+    public NotaAccreditoRigaKey(Long notaAccreditoId, String uuid){
         this.notaAccreditoId = notaAccreditoId;
         this.uuid = uuid;
     }
@@ -50,7 +50,7 @@ public class NotaAccreditoInfoKey implements Serializable {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final NotaAccreditoInfoKey that = (NotaAccreditoInfoKey) obj;
+        final NotaAccreditoRigaKey that = (NotaAccreditoRigaKey) obj;
         return Objects.equals(notaAccreditoId, that.notaAccreditoId) && Objects.equals(uuid, that.uuid);
     }
 

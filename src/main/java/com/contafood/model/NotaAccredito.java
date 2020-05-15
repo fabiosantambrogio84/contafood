@@ -63,7 +63,7 @@ public class NotaAccredito {
 
     @OneToMany(mappedBy = "notaAccredito")
     @JsonIgnoreProperties("notaAccredito")
-    private Set<NotaAccreditoInfo> notaAccreditoInfo = new HashSet<>();
+    private Set<NotaAccreditoRiga> notaAccreditoRiga = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -177,12 +177,12 @@ public class NotaAccredito {
         this.notaAccreditoTotali = notaAccreditoTotali;
     }
 
-    public Set<NotaAccreditoInfo> getNotaAccreditoInfo() {
-        return notaAccreditoInfo;
+    public Set<NotaAccreditoRiga> getNotaAccreditoRiga() {
+        return notaAccreditoRiga;
     }
 
-    public void setNotaAccreditoInfo(Set<NotaAccreditoInfo> notaAccreditoInfo) {
-        this.notaAccreditoInfo = notaAccreditoInfo;
+    public void setNotaAccreditoRiga(Set<NotaAccreditoRiga> notaAccreditoRiga) {
+        this.notaAccreditoRiga = notaAccreditoRiga;
     }
 
     @Override

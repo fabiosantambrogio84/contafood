@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -25,14 +24,14 @@ public class NotaAccreditoService {
     private final NotaAccreditoRepository notaAccreditoRepository;
     private final NotaAccreditoArticoloService notaAccreditoArticoloService;
     private final NotaAccreditoTotaleService notaAccreditoTotaleService;
-    private final NotaAccreditoInfoService notaAccreditoInfoService;
+    private final NotaAccreditoRigaService notaAccreditoRigaService;
 
     @Autowired
-    public NotaAccreditoService(final NotaAccreditoRepository notaAccreditoRepository, final NotaAccreditoArticoloService notaAccreditoArticoloService, final NotaAccreditoTotaleService notaAccreditoTotaleService, final NotaAccreditoInfoService notaAccreditoInfoService){
+    public NotaAccreditoService(final NotaAccreditoRepository notaAccreditoRepository, final NotaAccreditoArticoloService notaAccreditoArticoloService, final NotaAccreditoTotaleService notaAccreditoTotaleService, final NotaAccreditoRigaService notaAccreditoRigaService){
         this.notaAccreditoRepository = notaAccreditoRepository;
         this.notaAccreditoArticoloService = notaAccreditoArticoloService;
         this.notaAccreditoTotaleService = notaAccreditoTotaleService;
-        this.notaAccreditoInfoService = notaAccreditoInfoService;
+        this.notaAccreditoRigaService = notaAccreditoRigaService;
     }
 
     public Set<NotaAccredito> getAll(){
@@ -89,10 +88,10 @@ public class NotaAccreditoService {
             notaAccreditoTotaleService.create(nat);
         });
 
-        createdNotaAccredito.getNotaAccreditoInfo().stream().forEach(nai -> {
-            nai.getId().setNotaAccreditoId(createdNotaAccredito.getId());
-            nai.getId().setUuid(UUID.randomUUID().toString());
-            notaAccreditoInfoService.create(nai);
+        createdNotaAccredito.getNotaAccreditoRiga().stream().forEach(nar -> {
+            nar.getId().setNotaAccreditoId(createdNotaAccredito.getId());
+            nar.getId().setUuid(UUID.randomUUID().toString());
+            notaAccreditoRigaService.create(nar);
         });
 
         computeTotali(createdNotaAccredito, createdNotaAccredito.getNotaAccreditoArticoli());
@@ -111,15 +110,15 @@ public class NotaAccreditoService {
 
         Set<NotaAccreditoArticolo> notaAccreditoArticoli = notaAccredito.getNotaAccreditoArticoli();
         Set<NotaAccreditoTotale> notaAccreditoTotali = notaAccredito.getNotaAccreditoTotali();
-        Set<NotaAccreditoInfo> notaAccreditoInfo = notaAccredito.getNotaAccreditoInfo();
+        Set<NotaAccreditoRiga> notaAccreditoRiga = notaAccredito.getNotaAccreditoRiga();
 
         notaAccredito.setNotaAccreditoArticoli(new HashSet<>());
         notaAccredito.setNotaAccreditoTotali(new HashSet<>());
-        notaAccredito.setNotaAccreditoInfo(new HashSet<>());
+        notaAccredito.setNotaAccreditoRiga(new HashSet<>());
 
         notaAccreditoArticoloService.deleteByNotaAccreditoId(notaAccredito.getId());
         notaAccreditoTotaleService.deleteByNotaAccreditoId(notaAccredito.getId());
-        notaAccreditoInfoService.deleteByNotaAccreditoId(notaAccredito.getId());
+        notaAccreditoRigaService.deleteByNotaAccreditoId(notaAccredito.getId());
 
         NotaAccredito notaAccreditoCurrent = notaAccreditoRepository.findById(notaAccredito.getId()).orElseThrow(ResourceNotFoundException::new);
         notaAccredito.setDataInserimento(notaAccreditoCurrent.getDataInserimento());
@@ -139,9 +138,9 @@ public class NotaAccreditoService {
             notaAccreditoTotaleService.create(nat);
         });
 
-        notaAccreditoInfo.stream().forEach(nai -> {
-            nai.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
-            notaAccreditoInfoService.create(nai);
+        notaAccreditoRiga.stream().forEach(nar -> {
+            nar.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
+            notaAccreditoRigaService.create(nar);
         });
 
         computeTotali(updatedNotaAccredito, notaAccreditoArticoli);
@@ -157,7 +156,7 @@ public class NotaAccreditoService {
 
         notaAccreditoArticoloService.deleteByNotaAccreditoId(notaAccreditoId);
         notaAccreditoTotaleService.deleteByNotaAccreditoId(notaAccreditoId);
-        notaAccreditoInfoService.deleteByNotaAccreditoId(notaAccreditoId);
+        notaAccreditoRigaService.deleteByNotaAccreditoId(notaAccreditoId);
         notaAccreditoRepository.deleteById(notaAccreditoId);
         LOGGER.info("Deleted 'nota accredito' '{}'", notaAccreditoId);
     }

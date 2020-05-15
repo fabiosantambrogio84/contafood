@@ -31,7 +31,7 @@ public class UnitaMisura {
 
     @OneToMany(mappedBy = "unitaMisura")
     @JsonIgnore
-    private List<NotaAccreditoInfo> notaAccreditoInfo;
+    private List<NotaAccreditoRiga> notaAccreditoRiga;
 
     public Long getId() {
         return id;
@@ -73,12 +73,12 @@ public class UnitaMisura {
         this.articoli = articoli;
     }
 
-    public List<NotaAccreditoInfo> getNotaAccreditoInfo() {
-        return notaAccreditoInfo;
+    public List<NotaAccreditoRiga> getNotaAccreditoRiga() {
+        return notaAccreditoRiga;
     }
 
-    public void setNotaAccreditoInfo(List<NotaAccreditoInfo> notaAccreditoInfo) {
-        this.notaAccreditoInfo = notaAccreditoInfo;
+    public void setNotaAccreditoRiga(List<NotaAccreditoRiga> notaAccreditoRiga) {
+        this.notaAccreditoRiga = notaAccreditoRiga;
     }
 
     @Override
