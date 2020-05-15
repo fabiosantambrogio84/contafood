@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"articoli"})
+@EqualsAndHashCode(exclude = {"articoli", "notaAccreditoInfo"})
 @Entity
 @Table(name = "unita_misura")
 public class UnitaMisura {
@@ -28,6 +28,10 @@ public class UnitaMisura {
     @OneToMany(mappedBy = "unitaMisura")
     @JsonIgnore
     private List<Articolo> articoli;
+
+    @OneToMany(mappedBy = "unitaMisura")
+    @JsonIgnore
+    private List<NotaAccreditoInfo> notaAccreditoInfo;
 
     public Long getId() {
         return id;
@@ -67,6 +71,14 @@ public class UnitaMisura {
 
     public void setArticoli(List<Articolo> articoli) {
         this.articoli = articoli;
+    }
+
+    public List<NotaAccreditoInfo> getNotaAccreditoInfo() {
+        return notaAccreditoInfo;
+    }
+
+    public void setNotaAccreditoInfo(List<NotaAccreditoInfo> notaAccreditoInfo) {
+        this.notaAccreditoInfo = notaAccreditoInfo;
     }
 
     @Override

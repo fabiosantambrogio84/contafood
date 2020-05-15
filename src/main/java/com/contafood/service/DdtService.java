@@ -1,7 +1,7 @@
 package com.contafood.service;
 
-import com.contafood.exception.DdtAlreadyExistingException;
 import com.contafood.exception.DdtPagamentoExceedingException;
+import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.DdtRepository;
@@ -181,7 +181,7 @@ public class DdtService {
     private void checkExistsByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt){
         Optional<Ddt> ddt = ddtRepository.findByAnnoContabileAndProgressivoAndIdNot(annoContabile, progressivo, idDdt);
         if(ddt.isPresent()){
-            throw new DdtAlreadyExistingException(annoContabile, progressivo);
+            throw new ResourceAlreadyExistingException("ddt", annoContabile, progressivo);
         }
     }
 

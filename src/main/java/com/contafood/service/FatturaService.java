@@ -1,6 +1,6 @@
 package com.contafood.service;
 
-import com.contafood.exception.FatturaAlreadyExistingException;
+import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
@@ -244,7 +244,7 @@ public class FatturaService {
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
         Optional<Fattura> fattura = fatturaRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);
         if(fattura.isPresent()){
-            throw new FatturaAlreadyExistingException(anno, progressivo);
+            throw new ResourceAlreadyExistingException("fattura", anno, progressivo);
         }
     }
 

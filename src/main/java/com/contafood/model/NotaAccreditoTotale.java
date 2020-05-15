@@ -8,22 +8,22 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "fattura_accom_totale")
-public class FatturaAccompagnatoriaTotale implements Serializable {
+@Table(name = "nota_accredito_totale")
+public class NotaAccreditoTotale implements Serializable {
 
     @EmbeddedId
-    FatturaAccompagnatoriaTotaleKey id;
+    NotaAccreditoTotaleKey id;
 
     @ManyToOne
-    @MapsId("id_fattura_accom")
-    @JoinColumn(name = "id_fattura_accom")
-    @JsonIgnoreProperties("fatturaAccompagnatoriaTotali")
-    private FatturaAccompagnatoria fatturaAccompagnatoria;
+    @MapsId("id_nota_accredito")
+    @JoinColumn(name = "id_nota_accredito")
+    @JsonIgnoreProperties("notaAccreditoTotali")
+    private NotaAccredito notaAccredito;
 
     @ManyToOne
     @MapsId("id_aliquota_iva")
     @JoinColumn(name = "id_aliquota_iva")
-    @JsonIgnoreProperties("fatturaAccompagnatoriaAliquoteIva")
+    @JsonIgnoreProperties("notaAccreditoAliquoteIva")
     private AliquotaIva aliquotaIva;
 
     @Column(name = "totale_iva")
@@ -38,20 +38,20 @@ public class FatturaAccompagnatoriaTotale implements Serializable {
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
 
-    public FatturaAccompagnatoriaTotaleKey getId() {
+    public NotaAccreditoTotaleKey getId() {
         return id;
     }
 
-    public void setId(FatturaAccompagnatoriaTotaleKey id) {
+    public void setId(NotaAccreditoTotaleKey id) {
         this.id = id;
     }
 
-    public FatturaAccompagnatoria getFatturaAccompagnatoria() {
-        return fatturaAccompagnatoria;
+    public NotaAccredito getNotaAccredito() {
+        return notaAccredito;
     }
 
-    public void setFatturaAccompagnatoria(FatturaAccompagnatoria fatturaAccompagnatoria) {
-        this.fatturaAccompagnatoria = fatturaAccompagnatoria;
+    public void setNotaAccredito(NotaAccredito notaAccredito) {
+        this.notaAccredito = notaAccredito;
     }
 
     public AliquotaIva getAliquotaIva() {
@@ -99,7 +99,7 @@ public class FatturaAccompagnatoriaTotale implements Serializable {
         StringBuilder result = new StringBuilder();
 
         result.append("{");
-        result.append("fatturaAccompagnatoriaId: " + id.fatturaAccompagnatoriaId);
+        result.append("notaAccreditoId: " + id.notaAccreditoId);
         result.append(", aliquotaIvaId: " + id.aliquotaIvaId);
         result.append(", totaleImponibile: " + totaleImponibile);
         result.append(", totaleIva: " + totaleIva);

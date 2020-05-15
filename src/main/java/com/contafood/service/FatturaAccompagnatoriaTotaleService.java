@@ -52,9 +52,9 @@ public class FatturaAccompagnatoriaTotaleService {
     }
 
     public void deleteByFatturaAccompagnatoriaId(Long fatturaAccompagnatoriaId){
-        LOGGER.info("Deleting 'fattura articolo' by 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
+        LOGGER.info("Deleting 'fattura totali' by 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
         fatturaAccompagnatoriaTotaleRepository.deleteByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
-        LOGGER.info("Deleted 'ddt articolo' by 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
+        LOGGER.info("Deleted 'fattura totali' by 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
     }
 
 }

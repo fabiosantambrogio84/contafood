@@ -1,8 +1,11 @@
 package com.contafood.service;
 
-import com.contafood.exception.FatturaAlreadyExistingException;
+import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.*;
+import com.contafood.model.AliquotaIva;
+import com.contafood.model.Articolo;
+import com.contafood.model.FatturaAccompagnatoria;
+import com.contafood.model.FatturaAccompagnatoriaArticolo;
 import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
 import com.contafood.repository.VFatturaRepository;
@@ -127,7 +130,7 @@ public class FatturaAccompagnatoriaService {
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
         Optional<FatturaAccompagnatoria> fatturaAccompagnatoria = fatturaAccompagnatoriaRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);
         if(fatturaAccompagnatoria.isPresent()){
-            throw new FatturaAlreadyExistingException(anno, progressivo);
+            throw new ResourceAlreadyExistingException("fattura", anno, progressivo);
         }
     }
 

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"fatturaAccompagnatoriaArticoli"})
+@EqualsAndHashCode(exclude = {"fatturaAccompagnatoriaArticoli", "fatturaAccompagnatoriaTotali"})
 @Entity
 @Table(name = "fattura_accom")
 public class FatturaAccompagnatoria {

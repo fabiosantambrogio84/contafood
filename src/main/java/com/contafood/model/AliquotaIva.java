@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"articoli", "fatturaAccompagnatoriaTotali"})
+@EqualsAndHashCode(exclude = {"articoli", "fatturaAccompagnatoriaTotali", "notaAccreditoTotali", "notaAccreditoInfo"})
 @Entity
 @Table(name = "aliquota_iva")
 public class AliquotaIva {
@@ -32,6 +32,14 @@ public class AliquotaIva {
     @OneToMany(mappedBy = "aliquotaIva")
     @JsonIgnore
     private Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali = new HashSet<>();
+
+    @OneToMany(mappedBy = "aliquotaIva")
+    @JsonIgnore
+    private Set<NotaAccreditoTotale> notaAccreditoTotali = new HashSet<>();
+
+    @OneToMany(mappedBy = "aliquotaIva")
+    @JsonIgnore
+    private Set<NotaAccreditoInfo> notaAccreditoInfo = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -71,6 +79,22 @@ public class AliquotaIva {
 
     public void setFatturaAccompagnatoriaTotali(Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali) {
         this.fatturaAccompagnatoriaTotali = fatturaAccompagnatoriaTotali;
+    }
+
+    public Set<NotaAccreditoTotale> getNotaAccreditoTotali() {
+        return notaAccreditoTotali;
+    }
+
+    public void setNotaAccreditoTotali(Set<NotaAccreditoTotale> notaAccreditoTotali) {
+        this.notaAccreditoTotali = notaAccreditoTotali;
+    }
+
+    public Set<NotaAccreditoInfo> getNotaAccreditoInfo() {
+        return notaAccreditoInfo;
+    }
+
+    public void setNotaAccreditoInfo(Set<NotaAccreditoInfo> notaAccreditoInfo) {
+        this.notaAccreditoInfo = notaAccreditoInfo;
     }
 
     @Override
