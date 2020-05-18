@@ -32,6 +32,10 @@ public class NotaAccredito {
     @JoinColumn(name="id_cliente")
     private Cliente cliente;
 
+    @ManyToOne
+    @JoinColumn(name="id_stato")
+    private StatoNotaAccredito statoNotaAccredito;
+
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
 
@@ -55,15 +59,11 @@ public class NotaAccredito {
 
     @OneToMany(mappedBy = "notaAccredito")
     @JsonIgnoreProperties("notaAccredito")
-    private Set<NotaAccreditoArticolo> notaAccreditoArticoli = new HashSet<>();
-
-    @OneToMany(mappedBy = "notaAccredito")
-    @JsonIgnoreProperties("notaAccredito")
     private Set<NotaAccreditoTotale> notaAccreditoTotali = new HashSet<>();
 
     @OneToMany(mappedBy = "notaAccredito")
     @JsonIgnoreProperties("notaAccredito")
-    private Set<NotaAccreditoRiga> notaAccreditoRiga = new HashSet<>();
+    private Set<NotaAccreditoRiga> notaAccreditoRighe = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -103,6 +103,14 @@ public class NotaAccredito {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public StatoNotaAccredito getStatoNotaAccredito() {
+        return statoNotaAccredito;
+    }
+
+    public void setStatoNotaAccredito(StatoNotaAccredito statoNotaAccredito) {
+        this.statoNotaAccredito = statoNotaAccredito;
     }
 
     public Boolean getSpeditoAde() {
@@ -161,14 +169,6 @@ public class NotaAccredito {
         this.dataAggiornamento = dataAggiornamento;
     }
 
-    public Set<NotaAccreditoArticolo> getNotaAccreditoArticoli() {
-        return notaAccreditoArticoli;
-    }
-
-    public void setNotaAccreditoArticoli(Set<NotaAccreditoArticolo> notaAccreditoArticoli) {
-        this.notaAccreditoArticoli = notaAccreditoArticoli;
-    }
-
     public Set<NotaAccreditoTotale> getNotaAccreditoTotali() {
         return notaAccreditoTotali;
     }
@@ -177,12 +177,12 @@ public class NotaAccredito {
         this.notaAccreditoTotali = notaAccreditoTotali;
     }
 
-    public Set<NotaAccreditoRiga> getNotaAccreditoRiga() {
-        return notaAccreditoRiga;
+    public Set<NotaAccreditoRiga> getNotaAccreditoRighe() {
+        return notaAccreditoRighe;
     }
 
-    public void setNotaAccreditoRiga(Set<NotaAccreditoRiga> notaAccreditoRiga) {
-        this.notaAccreditoRiga = notaAccreditoRiga;
+    public void setNotaAccreditoRighe(Set<NotaAccreditoRiga> notaAccreditoRighe) {
+        this.notaAccreditoRighe = notaAccreditoRighe;
     }
 
     @Override
@@ -195,6 +195,7 @@ public class NotaAccredito {
         result.append(", anno: " + anno);
         result.append(", data: " + data);
         result.append(", cliente: " + cliente);
+        result.append(", stato: " + statoNotaAccredito);
         result.append(", speditoAde: " + speditoAde);
         result.append(", totale: " + totale);
         result.append(", totaleAcconto: " + totaleAcconto);

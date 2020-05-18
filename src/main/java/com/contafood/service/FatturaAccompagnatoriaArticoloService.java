@@ -85,7 +85,7 @@ public class FatturaAccompagnatoriaArticoloService {
     }
 
     private BigDecimal computeTotale(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo){
-        return AccountingUtils.computeTotale(fatturaAccompagnatoriaArticolo.getQuantita(), fatturaAccompagnatoriaArticolo.getPrezzo(), fatturaAccompagnatoriaArticolo.getSconto(), fatturaAccompagnatoriaArticolo.getId().getArticoloId(), articoloService);
+        return AccountingUtils.computeTotale(fatturaAccompagnatoriaArticolo.getQuantita(), fatturaAccompagnatoriaArticolo.getPrezzo(), fatturaAccompagnatoriaArticolo.getSconto(), null, fatturaAccompagnatoriaArticolo.getId().getArticoloId(), articoloService);
     }
 
 }

@@ -2,6 +2,7 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
+import com.contafood.model.views.VFattura;
 import com.contafood.service.NotaAccreditoService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -44,10 +45,11 @@ public class NotaAccreditoController {
                            @RequestParam(name = "importo", required = false) Float importo,
                            @RequestParam(name = "cliente", required = false) String cliente,
                            @RequestParam(name = "agente", required = false) Integer idAgente,
-                           @RequestParam(name = "articolo", required = false) Integer idArticolo) {
+                           @RequestParam(name = "articolo", required = false) Integer idArticolo,
+                           @RequestParam(name = "stato", required = false) Integer idStato ) {
         LOGGER.info("Performing GET request for retrieving list of 'note accredito'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, cliente {}, agente {}, articolo {}",
-                dataDa, dataA, progressivo, importo, cliente, idAgente, idArticolo);
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, cliente {}, agente {}, articolo {}, stato {}",
+                dataDa, dataA, progressivo, importo, cliente, idAgente, idArticolo, idStato);
 
         Predicate<NotaAccredito> isNotaAccreditoDataDaGreaterOrEquals = notaAccredito -> {
             if(dataDa != null){
@@ -100,11 +102,11 @@ public class NotaAccreditoController {
             }
             return true;
         };
-        Predicate<NotaAccredito> isNotaAccreditoArticoloEquals = notaAccredito -> {
-            if(idArticolo != null){
-                Set<NotaAccreditoArticolo> notaAccreditoArticoli = notaAccredito.getNotaAccreditoArticoli();
-                if(notaAccreditoArticoli != null && !notaAccreditoArticoli.isEmpty()){
-                    return notaAccreditoArticoli.stream().filter(naa -> naa.getId() != null).map(naa -> naa.getId()).filter(naaId -> naaId.getArticoloId() != null && naaId.getArticoloId().equals(Long.valueOf(idArticolo))).findFirst().isPresent();
+        Predicate<NotaAccredito> isNotaAccreditoStatoEquals = notaAccredito -> {
+            if(idStato != null){
+                StatoNotaAccredito statoNotaAccredito = notaAccredito.getStatoNotaAccredito();
+                if(statoNotaAccredito != null){
+                    return statoNotaAccredito.getId().equals(Long.valueOf(idStato));
                 }
                 return false;
             }
@@ -118,7 +120,7 @@ public class NotaAccreditoController {
                 .and(isNotaAccreditoImportoEquals)
                 .and(isNotaAccreditoClienteContains)
                 .and(isNotaAccreditoAgenteEquals)
-                .and(isNotaAccreditoArticoloEquals)).collect(Collectors.toSet());
+                .and(isNotaAccreditoStatoEquals)).collect(Collectors.toSet());
     }
 
     @RequestMapping(method = GET, path = "/{notaAccreditoId}")

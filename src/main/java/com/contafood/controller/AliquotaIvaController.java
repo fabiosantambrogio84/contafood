@@ -3,11 +3,13 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.AliquotaIva;
 import com.contafood.service.AliquotaIvaService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,9 +32,9 @@ public class AliquotaIvaController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<AliquotaIva> getAll() {
-        LOGGER.info("Performing GET request for retrieving list of 'aliquote iva'");
-        return aliquotaIvaService.getAll();
+    public Set<AliquotaIva> getAll(@RequestParam(name = "all", required = false) Boolean all) {
+        LOGGER.info("Performing GET request for retrieving list of 'aliquote iva' with 'all' {}", all);
+        return aliquotaIvaService.getAll(all);
     }
 
     @RequestMapping(method = GET, path = "/{aliquotaIvaId}")

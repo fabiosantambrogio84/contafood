@@ -2,7 +2,10 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.*;
+import com.contafood.model.AliquotaIva;
+import com.contafood.model.NotaAccredito;
+import com.contafood.model.NotaAccreditoRiga;
+import com.contafood.model.NotaAccreditoTotale;
 import com.contafood.repository.NotaAccreditoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,16 +25,16 @@ public class NotaAccreditoService {
     private static Logger LOGGER = LoggerFactory.getLogger(NotaAccreditoService.class);
 
     private final NotaAccreditoRepository notaAccreditoRepository;
-    private final NotaAccreditoArticoloService notaAccreditoArticoloService;
     private final NotaAccreditoTotaleService notaAccreditoTotaleService;
     private final NotaAccreditoRigaService notaAccreditoRigaService;
+    private final StatoNotaAccreditoService statoNotaAccreditoService;
 
     @Autowired
-    public NotaAccreditoService(final NotaAccreditoRepository notaAccreditoRepository, final NotaAccreditoArticoloService notaAccreditoArticoloService, final NotaAccreditoTotaleService notaAccreditoTotaleService, final NotaAccreditoRigaService notaAccreditoRigaService){
+    public NotaAccreditoService(final NotaAccreditoRepository notaAccreditoRepository, final NotaAccreditoTotaleService notaAccreditoTotaleService, final NotaAccreditoRigaService notaAccreditoRigaService, final StatoNotaAccreditoService statoNotaAccreditoService){
         this.notaAccreditoRepository = notaAccreditoRepository;
-        this.notaAccreditoArticoloService = notaAccreditoArticoloService;
         this.notaAccreditoTotaleService = notaAccreditoTotaleService;
         this.notaAccreditoRigaService = notaAccreditoRigaService;
+        this.statoNotaAccreditoService = statoNotaAccreditoService;
     }
 
     public Set<NotaAccredito> getAll(){
@@ -71,15 +74,16 @@ public class NotaAccreditoService {
 
         checkExistsByAnnoAndProgressivoAndIdNot(notaAccredito.getAnno(), notaAccredito.getProgressivo(), Long.valueOf(-1));
 
+        notaAccredito.setStatoNotaAccredito(statoNotaAccreditoService.getDaPagare());
         notaAccredito.setSpeditoAde(false);
         notaAccredito.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         NotaAccredito createdNotaAccredito = notaAccreditoRepository.save(notaAccredito);
 
-        createdNotaAccredito.getNotaAccreditoArticoli().stream().forEach(naa -> {
-            naa.getId().setNotaAccreditoId(createdNotaAccredito.getId());
-            naa.getId().setUuid(UUID.randomUUID().toString());
-            notaAccreditoArticoloService.create(naa);
+        createdNotaAccredito.getNotaAccreditoRighe().stream().forEach(nar -> {
+            nar.getId().setNotaAccreditoId(createdNotaAccredito.getId());
+            nar.getId().setUuid(UUID.randomUUID().toString());
+            notaAccreditoRigaService.create(nar);
         });
 
         createdNotaAccredito.getNotaAccreditoTotali().stream().forEach(nat -> {
@@ -88,13 +92,7 @@ public class NotaAccreditoService {
             notaAccreditoTotaleService.create(nat);
         });
 
-        createdNotaAccredito.getNotaAccreditoRiga().stream().forEach(nar -> {
-            nar.getId().setNotaAccreditoId(createdNotaAccredito.getId());
-            nar.getId().setUuid(UUID.randomUUID().toString());
-            notaAccreditoRigaService.create(nar);
-        });
-
-        computeTotali(createdNotaAccredito, createdNotaAccredito.getNotaAccreditoArticoli());
+        computeTotali(createdNotaAccredito, createdNotaAccredito.getNotaAccreditoRighe());
 
         notaAccreditoRepository.save(createdNotaAccredito);
         LOGGER.info("Created 'nota accredito' '{}'", createdNotaAccredito);
@@ -108,29 +106,21 @@ public class NotaAccreditoService {
 
         checkExistsByAnnoAndProgressivoAndIdNot(notaAccredito.getAnno(), notaAccredito.getProgressivo(), notaAccredito.getId());
 
-        Set<NotaAccreditoArticolo> notaAccreditoArticoli = notaAccredito.getNotaAccreditoArticoli();
         Set<NotaAccreditoTotale> notaAccreditoTotali = notaAccredito.getNotaAccreditoTotali();
-        Set<NotaAccreditoRiga> notaAccreditoRiga = notaAccredito.getNotaAccreditoRiga();
+        Set<NotaAccreditoRiga> notaAccreditoRighe = notaAccredito.getNotaAccreditoRighe();
 
-        notaAccredito.setNotaAccreditoArticoli(new HashSet<>());
         notaAccredito.setNotaAccreditoTotali(new HashSet<>());
-        notaAccredito.setNotaAccreditoRiga(new HashSet<>());
+        notaAccredito.setNotaAccreditoRighe(new HashSet<>());
 
-        notaAccreditoArticoloService.deleteByNotaAccreditoId(notaAccredito.getId());
         notaAccreditoTotaleService.deleteByNotaAccreditoId(notaAccredito.getId());
         notaAccreditoRigaService.deleteByNotaAccreditoId(notaAccredito.getId());
 
         NotaAccredito notaAccreditoCurrent = notaAccreditoRepository.findById(notaAccredito.getId()).orElseThrow(ResourceNotFoundException::new);
+        notaAccredito.setStatoNotaAccredito(notaAccreditoCurrent.getStatoNotaAccredito());
         notaAccredito.setDataInserimento(notaAccreditoCurrent.getDataInserimento());
         notaAccredito.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         NotaAccredito updatedNotaAccredito = notaAccreditoRepository.save(notaAccredito);
-
-        notaAccreditoArticoli.stream().forEach(naa -> {
-            naa.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
-            naa.getId().setUuid(UUID.randomUUID().toString());
-            notaAccreditoArticoloService.create(naa);
-        });
 
         notaAccreditoTotali.stream().forEach(nat -> {
             nat.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
@@ -138,12 +128,12 @@ public class NotaAccreditoService {
             notaAccreditoTotaleService.create(nat);
         });
 
-        notaAccreditoRiga.stream().forEach(nar -> {
+        notaAccreditoRighe.stream().forEach(nar -> {
             nar.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
             notaAccreditoRigaService.create(nar);
         });
 
-        computeTotali(updatedNotaAccredito, notaAccreditoArticoli);
+        computeTotali(updatedNotaAccredito, notaAccreditoRighe);
 
         notaAccreditoRepository.save(updatedNotaAccredito);
         LOGGER.info("Updated 'nota accredito' '{}'", updatedNotaAccredito);
@@ -154,7 +144,6 @@ public class NotaAccreditoService {
     public void delete(Long notaAccreditoId){
         LOGGER.info("Deleting 'nota accredito' '{}'", notaAccreditoId);
 
-        notaAccreditoArticoloService.deleteByNotaAccreditoId(notaAccreditoId);
         notaAccreditoTotaleService.deleteByNotaAccreditoId(notaAccreditoId);
         notaAccreditoRigaService.deleteByNotaAccreditoId(notaAccreditoId);
         notaAccreditoRepository.deleteById(notaAccreditoId);
@@ -168,24 +157,30 @@ public class NotaAccreditoService {
         }
     }
 
-    private void computeTotali(NotaAccredito notaAccredito, Set<NotaAccreditoArticolo> notaAccreditoArticoli){
-        Map<AliquotaIva, Set<NotaAccreditoArticolo>> ivaNotaAccreditoArticoliMap = new HashMap<>();
-        notaAccreditoArticoli.stream().forEach(naa -> {
-            Articolo articolo = notaAccreditoArticoloService.getArticolo(naa);
-            AliquotaIva iva = articolo.getAliquotaIva();
-            Set<NotaAccreditoArticolo> notaAccreditoArticoliByIva = ivaNotaAccreditoArticoliMap.getOrDefault(iva, new HashSet<>());
-            notaAccreditoArticoliByIva.add(naa);
-            ivaNotaAccreditoArticoliMap.put(iva, notaAccreditoArticoliByIva);
+    private void computeTotali(NotaAccredito notaAccredito, Set<NotaAccreditoRiga> notaAccreditoRighe){
+        Map<AliquotaIva, Set<NotaAccreditoRiga>> ivaNotaAccreditoRigheMap = new HashMap<>();
+        notaAccreditoRighe.stream().forEach(nar -> {
+            AliquotaIva iva = notaAccreditoRigaService.getAliquotaIva(nar);
+            Set<NotaAccreditoRiga> notaAccreditoArticoliByIva = ivaNotaAccreditoRigheMap.getOrDefault(iva, new HashSet<>());
+            notaAccreditoArticoliByIva.add(nar);
+            ivaNotaAccreditoRigheMap.put(iva, notaAccreditoArticoliByIva);
         });
         Float totaleQuantita = 0f;
         BigDecimal totale = new BigDecimal(0);
-        for (Map.Entry<AliquotaIva, Set<NotaAccreditoArticolo>> entry : ivaNotaAccreditoArticoliMap.entrySet()) {
+        for (Map.Entry<AliquotaIva, Set<NotaAccreditoRiga>> entry : ivaNotaAccreditoRigheMap.entrySet()) {
             BigDecimal iva = entry.getKey().getValore();
             BigDecimal totaleByIva = new BigDecimal(0);
-            Set<NotaAccreditoArticolo> notaAccreditoArticoliByIva = entry.getValue();
-            for(NotaAccreditoArticolo notaAccreditoArticolo: notaAccreditoArticoliByIva){
-                totaleByIva = totaleByIva.add(notaAccreditoArticolo.getImponibile());
-                totaleQuantita = totaleQuantita + notaAccreditoArticolo.getQuantita();
+
+            LOGGER.info("IVA {}, totale by iva {}", iva, totaleByIva);
+
+            Set<NotaAccreditoRiga> notaAccreditoRigheByIva = entry.getValue();
+            for(NotaAccreditoRiga notaAccreditoRiga: notaAccreditoRigheByIva){
+                if(notaAccreditoRiga.getImponibile() != null){
+                    totaleByIva = totaleByIva.add(notaAccreditoRiga.getImponibile());
+                }
+                if(notaAccreditoRiga.getQuantita() != null){
+                    totaleQuantita = totaleQuantita + notaAccreditoRiga.getQuantita();
+                }
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }

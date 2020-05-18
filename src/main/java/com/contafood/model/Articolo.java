@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni", "ordineClienteArticoli", "ddtArticoli", "ddtAcquistoArticoli", "fatturaAccompagnatoriaArticoli"})
+@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni", "ordineClienteArticoli", "ddtArticoli", "ddtAcquistoArticoli", "fatturaAccompagnatoriaArticoli", "notaAccreditoRighe"})
 @Entity
 @Table(name = "articolo")
 public class Articolo {
@@ -106,6 +106,10 @@ public class Articolo {
     @OneToMany(mappedBy = "articolo")
     @JsonIgnore
     private Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = new HashSet<>();
+
+    @OneToMany(mappedBy = "articolo")
+    @JsonIgnore
+    private Set<NotaAccreditoRiga> notaAccreditoRighe = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -313,6 +317,14 @@ public class Articolo {
 
     public void setFatturaAccompagnatoriaArticoli(Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli) {
         this.fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoli;
+    }
+
+    public Set<NotaAccreditoRiga> getNotaAccreditoRighe() {
+        return notaAccreditoRighe;
+    }
+
+    public void setNotaAccreditoRighe(Set<NotaAccreditoRiga> notaAccreditoRighe) {
+        this.notaAccreditoRighe = notaAccreditoRighe;
     }
 
     @Override

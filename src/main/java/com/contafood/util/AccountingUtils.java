@@ -52,19 +52,23 @@ public class AccountingUtils {
         return costo;
     }
 
-    public static BigDecimal computeTotale(Float quantita, BigDecimal prezzo, BigDecimal sconto, Long idArticolo, ArticoloService articoloService){
+    public static BigDecimal computeTotale(Float quantita, BigDecimal prezzo, BigDecimal sconto, AliquotaIva aliquotaIva, Long idArticolo, ArticoloService articoloService){
         BigDecimal totale = new BigDecimal(0);
 
         BigDecimal imponibile = computeImponibile(quantita, prezzo, sconto);
 
         BigDecimal aliquotaIvaValore = new BigDecimal(0);
-        if(idArticolo != null){
-            Articolo articolo = articoloService.getOne(idArticolo);
-            LOGGER.info("Compute costo for 'articolo' {}", articolo);
-            if(articolo != null){
-                AliquotaIva aliquotaIVa = articolo.getAliquotaIva();
-                if(aliquotaIVa != null){
-                    aliquotaIvaValore = articolo.getAliquotaIva().getValore();
+        if(aliquotaIva != null){
+            aliquotaIvaValore = aliquotaIva.getValore();
+        } else {
+            if (idArticolo != null) {
+                Articolo articolo = articoloService.getOne(idArticolo);
+                LOGGER.info("Compute costo for 'articolo' {}", articolo);
+                if (articolo != null) {
+                    AliquotaIva aliquotaIVa = articolo.getAliquotaIva();
+                    if (aliquotaIVa != null) {
+                        aliquotaIvaValore = articolo.getAliquotaIva().getValore();
+                    }
                 }
             }
         }

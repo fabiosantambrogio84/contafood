@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
@@ -17,7 +18,7 @@ public class NotaAccreditoRiga implements Serializable {
     @ManyToOne
     @MapsId("id_nota_accredito")
     @JoinColumn(name = "id_nota_accredito")
-    @JsonIgnoreProperties("notaAccreditoInfo")
+    @JsonIgnoreProperties("notaAccreditoRighe")
     private NotaAccredito notaAccredito;
 
     @Column(name = "descrizione")
@@ -25,6 +26,9 @@ public class NotaAccreditoRiga implements Serializable {
 
     @Column(name = "lotto")
     private String lotto;
+
+    @Column(name = "scadenza")
+    private Date scadenza;
 
     @ManyToOne
     @JoinColumn(name="id_unita_misura")
@@ -45,6 +49,13 @@ public class NotaAccreditoRiga implements Serializable {
 
     @Column(name = "imponibile")
     private BigDecimal imponibile;
+
+    @Column(name = "totale")
+    private BigDecimal totale;
+
+    @ManyToOne
+    @JoinColumn(name="id_articolo")
+    private Articolo articolo;
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
@@ -82,6 +93,14 @@ public class NotaAccreditoRiga implements Serializable {
 
     public void setLotto(String lotto) {
         this.lotto = lotto;
+    }
+
+    public Date getScadenza() {
+        return scadenza;
+    }
+
+    public void setScadenza(Date scadenza) {
+        this.scadenza = scadenza;
     }
 
     public UnitaMisura getUnitaMisura() {
@@ -132,6 +151,22 @@ public class NotaAccreditoRiga implements Serializable {
         this.imponibile = imponibile;
     }
 
+    public BigDecimal getTotale() {
+        return totale;
+    }
+
+    public void setTotale(BigDecimal totale) {
+        this.totale = totale;
+    }
+
+    public Articolo getArticolo() {
+        return articolo;
+    }
+
+    public void setArticolo(Articolo articolo) {
+        this.articolo = articolo;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -156,12 +191,15 @@ public class NotaAccreditoRiga implements Serializable {
         result.append("notaAccreditoId: " + id.notaAccreditoId);
         result.append(", descrizione: " + descrizione);
         result.append(", lotto: " + lotto);
+        result.append(", scadenza: " + scadenza);
         result.append(", unitaMisura: " + unitaMisura);
         result.append(", quantita: " + quantita);
         result.append(", prezzo: " + prezzo);
         result.append(", sconto: " + sconto);
         result.append(", aliquotaIva: " + aliquotaIva);
         result.append(", imponibile: " + imponibile);
+        result.append(", totale: " + totale);
+        result.append(", articolo: " + articolo);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

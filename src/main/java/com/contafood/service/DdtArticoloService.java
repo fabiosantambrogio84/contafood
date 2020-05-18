@@ -85,7 +85,7 @@ public class DdtArticoloService {
     }
 
     private BigDecimal computeTotale(DdtArticolo ddtArticolo){
-        return AccountingUtils.computeTotale(ddtArticolo.getQuantita(), ddtArticolo.getPrezzo(), ddtArticolo.getSconto(), ddtArticolo.getId().getArticoloId(), articoloService);
+        return AccountingUtils.computeTotale(ddtArticolo.getQuantita(), ddtArticolo.getPrezzo(), ddtArticolo.getSconto(), null, ddtArticolo.getId().getArticoloId(), articoloService);
     }
 
 }
