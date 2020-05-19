@@ -22,9 +22,6 @@ public class AliquotaIva {
     @Column(name = "valore")
     private BigDecimal valore;
 
-    @Column(name = "zero")
-    private Boolean zero;
-
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -58,14 +55,6 @@ public class AliquotaIva {
 
     public void setValore(BigDecimal valore) {
         this.valore = valore;
-    }
-
-    public Boolean getZero() {
-        return zero;
-    }
-
-    public void setZero(Boolean zero) {
-        this.zero = zero;
     }
 
     public Timestamp getDataInserimento() {
@@ -114,7 +103,6 @@ public class AliquotaIva {
         result.append("{");
         result.append("id: " + id);
         result.append(", valore: " + valore);
-        result.append(", zero: " + zero);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
 

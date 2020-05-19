@@ -3,13 +3,11 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.AliquotaIva;
 import com.contafood.repository.AliquotaIvaRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -24,16 +22,9 @@ public class AliquotaIvaService {
         this.aliquotaIvaRepository = aliquotaIvaRepository;
     }
 
-    public Set<AliquotaIva> getAll(Boolean all){
-        LOGGER.info("Retrieving the list of 'aliquoteIva' with 'all' {}", all);
-        Set<AliquotaIva> aliquoteIva = new HashSet<>();
-        if(all != null){
-            if(Boolean.TRUE.equals(all)){
-                aliquoteIva = aliquotaIvaRepository.findAllByOrderByValore();
-            }
-        } else {
-            aliquoteIva = aliquotaIvaRepository.findByZeroFalseOrderByValore();
-        }
+    public Set<AliquotaIva> getAll(){
+        LOGGER.info("Retrieving the list of 'aliquoteIva'");
+        Set<AliquotaIva> aliquoteIva = aliquotaIvaRepository.findAllByOrderByValore();
         LOGGER.info("Retrieved {} 'aliquoteIva'", aliquoteIva.size());
         return aliquoteIva;
     }

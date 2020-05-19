@@ -27,6 +27,10 @@ public class Pagamento {
     @JoinColumn(name="id_ddt")
     private Ddt ddt;
 
+    @ManyToOne
+    @JoinColumn(name="id_nota_accredito")
+    private NotaAccredito notaAccredito;
+
     @Column(name = "descrizione")
     private String descrizione;
 
@@ -72,6 +76,14 @@ public class Pagamento {
 
     public void setDdt(Ddt ddt) {
         this.ddt = ddt;
+    }
+
+    public NotaAccredito getNotaAccredito() {
+        return notaAccredito;
+    }
+
+    public void setNotaAccredito(NotaAccredito notaAccredito) {
+        this.notaAccredito = notaAccredito;
     }
 
     public String getDescrizione() {

@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"notaAccreditoArticoli", "notaAccreditoTotali", "notaAccreditoInfo"})
+@EqualsAndHashCode(exclude = {"notaAccreditoArticoli", "notaAccreditoTotali", "notaAccreditoRighe", "notaAccreditoPagamenti"})
 @Entity
 @Table(name = "nota_accredito")
 public class NotaAccredito {
@@ -64,6 +64,10 @@ public class NotaAccredito {
     @OneToMany(mappedBy = "notaAccredito")
     @JsonIgnoreProperties("notaAccredito")
     private Set<NotaAccreditoRiga> notaAccreditoRighe = new HashSet<>();
+
+    @OneToMany(mappedBy = "notaAccredito")
+    @JsonIgnoreProperties("notaAccredito")
+    private Set<Pagamento> notaAccreditoPagamenti = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -183,6 +187,14 @@ public class NotaAccredito {
 
     public void setNotaAccreditoRighe(Set<NotaAccreditoRiga> notaAccreditoRighe) {
         this.notaAccreditoRighe = notaAccreditoRighe;
+    }
+
+    public Set<Pagamento> getNotaAccreditoPagamenti() {
+        return notaAccreditoPagamenti;
+    }
+
+    public void setNotaAccreditoPagamenti(Set<Pagamento> notaAccreditoPagamenti) {
+        this.notaAccreditoPagamenti = notaAccreditoPagamenti;
     }
 
     @Override

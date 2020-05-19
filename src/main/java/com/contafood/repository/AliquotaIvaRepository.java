@@ -7,7 +7,5 @@ import java.util.Set;
 
 public interface AliquotaIvaRepository extends CrudRepository<AliquotaIva, Long> {
 
-    Set<AliquotaIva> findByZeroFalseOrderByValore();
-
     Set<AliquotaIva> findAllByOrderByValore();
 }

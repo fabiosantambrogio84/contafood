@@ -86,7 +86,7 @@ public class DdtController {
         };
         Predicate<Ddt> isDdtTipoPagamentoEquals = ddt -> {
             if(idTipoPagamento != null){
-                List<Pagamento> pagamenti = ddtService.getDdtPagamentiByIdDdt(ddt.getId());
+                Set<Pagamento> pagamenti = ddtService.getDdtPagamentiByIdDdt(ddt.getId());
                 return pagamenti.stream().filter(p -> p.getTipoPagamento() != null).map(p -> p.getTipoPagamento().getId()).filter(tp -> tp.equals(Long.valueOf(idTipoPagamento))).findFirst().isPresent();
             }
             return true;
@@ -233,96 +233,6 @@ public class DdtController {
     public void delete(@PathVariable final Long ddtId){
         LOGGER.info("Performing DELETE request for deleting 'ddt' '{}'", ddtId);
         ddtService.delete(ddtId);
-    }
-
-    // PAGAMENTI
-    @RequestMapping(method = GET, path = "/pagamenti")
-    @CrossOrigin
-    public Set<Pagamento> getDdtPagamenti(@RequestParam(name = "dataDa", required = false) Date dataDa,
-                                          @RequestParam(name = "dataA", required = false) Date dataA,
-                                          @RequestParam(name = "cliente", required = false) String cliente,
-                                          @RequestParam(name = "importo", required = false) Double importo) {
-        LOGGER.info("Performing GET request for retrieving all 'pagamenti'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, cliente {}, importo {}",
-                dataDa, dataA, cliente, importo);
-
-        Predicate<Pagamento> isPagamentoDataDaGreaterOrEquals = pagamento -> {
-            if(dataDa != null){
-                return pagamento.getData().compareTo(dataDa)>=0;
-            }
-            return true;
-        };
-        Predicate<Pagamento> isPagamentoDataALessOrEquals = pagamento -> {
-            if(dataA != null){
-                return pagamento.getData().compareTo(dataA)<=0;
-            }
-            return true;
-        };
-        Predicate<Pagamento> isPagamentoClienteContains = pagamento -> {
-            if(cliente != null){
-                Ddt ddt = pagamento.getDdt();
-                if(ddt != null){
-                    Cliente ddtCliente = ddt.getCliente();
-                    if(ddtCliente != null){
-                        if(ddtCliente.getDittaIndividuale() != null && Boolean.TRUE.equals(ddtCliente.getDittaIndividuale())){
-                            String clienteNomeCognome = ddtCliente.getNome().concat(" ").concat(ddtCliente.getCognome());
-                            if(clienteNomeCognome.contains(cliente)){
-                                return true;
-                            }
-                        }else {
-                            if(ddtCliente.getRagioneSociale().contains(cliente)){
-                                return true;
-                            }
-                        }
-                    }
-                }
-                return false;
-            }
-            return true;
-        };
-        Predicate<Pagamento> isPagamentoImportoEquals = pagamento -> {
-            if(importo != null){
-                return pagamento.getImporto().compareTo(new BigDecimal(importo))==0;
-            }
-            return true;
-        };
-
-        Set<Pagamento> pagamenti = ddtService.getDdtPagamenti();
-        return pagamenti.stream().filter(isPagamentoDataDaGreaterOrEquals
-                .and(isPagamentoDataALessOrEquals)
-                .and(isPagamentoClienteContains)
-                .and(isPagamentoImportoEquals))
-                .collect(Collectors.toSet());
-    }
-
-    @RequestMapping(method = GET, path = "/{ddtId}/pagamenti")
-    @CrossOrigin
-    public List<Pagamento> getDdtPagamentiByIdDdt(@PathVariable final Long ddtId) {
-        LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
-        return ddtService.getDdtPagamentiByIdDdt(ddtId);
-    }
-
-    @RequestMapping(method = GET, path = "/pagamenti/{pagamentoId}")
-    @CrossOrigin
-    public Pagamento getDdtPagamento(@PathVariable final Long pagamentoId) {
-        LOGGER.info("Performing GET request for retrieving 'pagamento' '{}'", pagamentoId);
-        return ddtService.getDdtPagamento(pagamentoId);
-    }
-
-    @RequestMapping(method = POST, path = "/{ddtId}/pagamenti")
-    @ResponseStatus(CREATED)
-    @CrossOrigin
-    public Pagamento createDdtPagamento(@PathVariable final Long ddtId, @RequestBody final Pagamento pagamento){
-        LOGGER.info("Performing POST request for creating 'pagamento'");
-        return ddtService.createDdtPagamento(pagamento);
-    }
-
-    @RequestMapping(method = DELETE, path = "/pagamenti/{pagamentoId}")
-    @ResponseStatus(NO_CONTENT)
-    @CrossOrigin
-    public void deleteDdtPagamento(@PathVariable final Long pagamentoId){
-        LOGGER.info("Performing DELETE request for deleting 'pagamento' '{}'", pagamentoId);
-        ddtService.deleteDdtPagamento(pagamentoId);
     }
 
 }

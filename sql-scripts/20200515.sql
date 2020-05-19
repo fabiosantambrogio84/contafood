@@ -75,4 +75,10 @@ INSERT INTO stato_nota_accredito(id,codice,descrizione,ordine) VALUES(2,'PAGATA'
 
 ALTER TABLE aliquota_iva ADD COLUMN zero bit(1) DEFAULT b'0' after valore;
 
-INSERT INTO aliquota_iva VALUES(4, 0, true, now());
+-- INSERT INTO aliquota_iva VALUES(4, 0, true, now());
+
+ALTER TABLE aliquota_iva DROP COLUMN zero;
+
+
+ALTER TABLE pagamento ADD COLUMN id_nota_accredito int(10) unsigned AFTER id_ddt;
+ALTER TABLE pagamento ADD CONSTRAINT fk_pagamento_nota_acc FOREIGN KEY (`id_nota_accredito`) REFERENCES `nota_accredito` (`id`);

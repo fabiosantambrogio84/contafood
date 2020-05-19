@@ -2,11 +2,9 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.AliquotaIva;
-import com.contafood.model.NotaAccredito;
-import com.contafood.model.NotaAccreditoRiga;
-import com.contafood.model.NotaAccreditoTotale;
+import com.contafood.model.*;
 import com.contafood.repository.NotaAccreditoRepository;
+import com.contafood.repository.PagamentoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +26,17 @@ public class NotaAccreditoService {
     private final NotaAccreditoTotaleService notaAccreditoTotaleService;
     private final NotaAccreditoRigaService notaAccreditoRigaService;
     private final StatoNotaAccreditoService statoNotaAccreditoService;
+    private final PagamentoRepository pagamentoRepository;
 
     @Autowired
-    public NotaAccreditoService(final NotaAccreditoRepository notaAccreditoRepository, final NotaAccreditoTotaleService notaAccreditoTotaleService, final NotaAccreditoRigaService notaAccreditoRigaService, final StatoNotaAccreditoService statoNotaAccreditoService){
+    public NotaAccreditoService(final NotaAccreditoRepository notaAccreditoRepository, final NotaAccreditoTotaleService notaAccreditoTotaleService,
+                                final NotaAccreditoRigaService notaAccreditoRigaService, final StatoNotaAccreditoService statoNotaAccreditoService,
+                                final PagamentoRepository pagamentoRepository){
         this.notaAccreditoRepository = notaAccreditoRepository;
         this.notaAccreditoTotaleService = notaAccreditoTotaleService;
         this.notaAccreditoRigaService = notaAccreditoRigaService;
         this.statoNotaAccreditoService = statoNotaAccreditoService;
+        this.pagamentoRepository = pagamentoRepository;
     }
 
     public Set<NotaAccredito> getAll(){
@@ -122,15 +124,16 @@ public class NotaAccreditoService {
 
         NotaAccredito updatedNotaAccredito = notaAccreditoRepository.save(notaAccredito);
 
+        notaAccreditoRighe.stream().forEach(nar -> {
+            nar.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
+            nar.getId().setUuid(UUID.randomUUID().toString());
+            notaAccreditoRigaService.create(nar);
+        });
+
         notaAccreditoTotali.stream().forEach(nat -> {
             nat.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
             nat.getId().setUuid(UUID.randomUUID().toString());
             notaAccreditoTotaleService.create(nat);
-        });
-
-        notaAccreditoRighe.stream().forEach(nar -> {
-            nar.getId().setNotaAccreditoId(updatedNotaAccredito.getId());
-            notaAccreditoRigaService.create(nar);
         });
 
         computeTotali(updatedNotaAccredito, notaAccreditoRighe);
@@ -143,7 +146,7 @@ public class NotaAccreditoService {
     @Transactional
     public void delete(Long notaAccreditoId){
         LOGGER.info("Deleting 'nota accredito' '{}'", notaAccreditoId);
-
+        pagamentoRepository.deleteByNotaAccreditoId(notaAccreditoId);
         notaAccreditoTotaleService.deleteByNotaAccreditoId(notaAccreditoId);
         notaAccreditoRigaService.deleteByNotaAccreditoId(notaAccreditoId);
         notaAccreditoRepository.deleteById(notaAccreditoId);

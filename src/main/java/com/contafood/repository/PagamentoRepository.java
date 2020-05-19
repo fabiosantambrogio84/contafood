@@ -10,8 +10,12 @@ public interface PagamentoRepository extends CrudRepository<Pagamento, Long> {
 
     Set<Pagamento> findAllByOrderByDataDesc();
 
-    List<Pagamento> findByDdtIdOrderByDataDesc(Long ddtId);
+    Set<Pagamento> findByDdtIdOrderByDataDesc(Long ddtId);
+
+    Set<Pagamento> findByNotaAccreditoIdOrderByDataDesc(Long notaAccreditoId);
 
     void deleteByDdtId(Long ddtId);
+
+    void deleteByNotaAccreditoId(Long notaAccreditoId);
 
 }
