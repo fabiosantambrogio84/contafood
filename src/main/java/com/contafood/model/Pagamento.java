@@ -19,6 +19,9 @@ public class Pagamento {
     @Column(name = "data")
     private Date data;
 
+    @Column(name = "tipologia")
+    private String tipologia;
+
     @ManyToOne
     @JoinColumn(name="id_tipo_pagamento")
     private TipoPagamento tipoPagamento;
@@ -30,6 +33,10 @@ public class Pagamento {
     @ManyToOne
     @JoinColumn(name="id_nota_accredito")
     private NotaAccredito notaAccredito;
+
+    @ManyToOne
+    @JoinColumn(name="id_nota_reso")
+    private NotaReso notaReso;
 
     @Column(name = "descrizione")
     private String descrizione;
@@ -62,6 +69,14 @@ public class Pagamento {
         this.data = data;
     }
 
+    public String getTipologia() {
+        return tipologia;
+    }
+
+    public void setTipologia(String tipologia) {
+        this.tipologia = tipologia;
+    }
+
     public TipoPagamento getTipoPagamento() {
         return tipoPagamento;
     }
@@ -84,6 +99,14 @@ public class Pagamento {
 
     public void setNotaAccredito(NotaAccredito notaAccredito) {
         this.notaAccredito = notaAccredito;
+    }
+
+    public NotaReso getNotaReso() {
+        return notaReso;
+    }
+
+    public void setNotaReso(NotaReso notaReso) {
+        this.notaReso = notaReso;
     }
 
     public String getDescrizione() {
@@ -133,6 +156,7 @@ public class Pagamento {
         result.append("{");
         result.append("id: " + id);
         result.append(", data: " + data);
+        result.append(", tipologia: " + tipologia);
         result.append(", descrizione: " + descrizione);
         result.append(", importo: " + importo);
         result.append(", note: " + note);

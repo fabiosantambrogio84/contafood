@@ -174,8 +174,6 @@ public class NotaAccreditoService {
             BigDecimal iva = entry.getKey().getValore();
             BigDecimal totaleByIva = new BigDecimal(0);
 
-            LOGGER.info("IVA {}, totale by iva {}", iva, totaleByIva);
-
             Set<NotaAccreditoRiga> notaAccreditoRigheByIva = entry.getValue();
             for(NotaAccreditoRiga notaAccreditoRiga: notaAccreditoRigheByIva){
                 if(notaAccreditoRiga.getImponibile() != null){

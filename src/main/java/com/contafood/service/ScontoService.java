@@ -4,6 +4,7 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
 import com.contafood.model.Sconto;
 import com.contafood.repository.ScontoRepository;
+import com.contafood.util.Resource;
 import com.contafood.util.TipologiaSconto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public class ScontoService {
         return sconti;
     }
 
-    public List<Sconto> getValidSconti(Long idCliente, Date data){
+    public List<Sconto> getValidSconti(Resource resource, Long idResource, Date data){
         Predicate<Sconto> isScontoDataDaLessOrEquals = sconto -> {
             if(data != null && sconto.getDataDal() != null){
                 return sconto.getDataDal().compareTo(data)<=0;
@@ -54,21 +55,38 @@ public class ScontoService {
             return true;
         };
 
-        LOGGER.info("Retrieving the list of valid  'sconti' for cliente '{}' and date '{}'", idCliente, data);
+        LOGGER.info("Retrieving the list of valid  'sconti' for {} '{}' and date '{}'", resource.getLabel(), idResource, data);
 
         // retrieve the Sconti of tipologia ARTICOLO valid at date
-        List<Sconto> validScontiArticoli = scontoRepository.findByTipologiaAndClienteId(TipologiaSconto.ARTICOLO.name(), idCliente)
-                .stream()
-                .filter(isScontoDataDaLessOrEquals.and(isScontoDataAGreaterOrEquals))
-                .collect(Collectors.toList());
+        List<Sconto> validScontiArticoli = new ArrayList<>();
+        if(resource.equals(Resource.CLIENTE)){
+            validScontiArticoli = scontoRepository.findByTipologiaAndClienteId(TipologiaSconto.ARTICOLO.name(), idResource)
+                    .stream()
+                    .filter(isScontoDataDaLessOrEquals.and(isScontoDataAGreaterOrEquals))
+                    .collect(Collectors.toList());
+        } else if(resource.equals(Resource.FORNITORE)){
+            validScontiArticoli = scontoRepository.findByTipologiaAndFornitoreId(TipologiaSconto.ARTICOLO.name(), idResource)
+                    .stream()
+                    .filter(isScontoDataDaLessOrEquals.and(isScontoDataAGreaterOrEquals))
+                    .collect(Collectors.toList());
+        }
+
 
         LOGGER.info("Valid Sconti Articolo size {}", validScontiArticoli.size());
 
         // retrieve the Sconti of tipologia FORNITORE valid at date (without Articolo valued)
-        List<Sconto> validScontiFornitoriWithoutArticoli = scontoRepository.findByTipologiaAndClienteId(TipologiaSconto.FORNITORE.name(), idCliente)
-                .stream()
-                .filter(isScontoDataDaLessOrEquals.and(isScontoDataAGreaterOrEquals))
-                .collect(Collectors.toList());
+        List<Sconto> validScontiFornitoriWithoutArticoli = new ArrayList<>();
+        if(resource.equals(Resource.CLIENTE)){
+            validScontiFornitoriWithoutArticoli = scontoRepository.findByTipologiaAndClienteId(TipologiaSconto.FORNITORE.name(), idResource)
+                    .stream()
+                    .filter(isScontoDataDaLessOrEquals.and(isScontoDataAGreaterOrEquals))
+                    .collect(Collectors.toList());
+        } else if(resource.equals(Resource.FORNITORE)){
+            validScontiFornitoriWithoutArticoli = scontoRepository.findByTipologiaAndFornitoreId(TipologiaSconto.FORNITORE.name(), idResource)
+                    .stream()
+                    .filter(isScontoDataDaLessOrEquals.and(isScontoDataAGreaterOrEquals))
+                    .collect(Collectors.toList());
+        }
 
         LOGGER.info("Valid Sconti Fornitore (without id_articolo) size {}", validScontiFornitoriWithoutArticoli.size());
 

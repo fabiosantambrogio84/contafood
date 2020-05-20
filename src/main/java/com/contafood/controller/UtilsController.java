@@ -7,10 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -60,6 +57,25 @@ public class UtilsController {
     public List<String> getTipologieTrasportoDdt() {
         LOGGER.info("Performing GET request for retrieving list of 'tipologie-trasporto-ddt'");
         return TipologiaTrasportoDdt.labels();
+    }
+
+    @RequestMapping(method = GET, path = "/tipologie-pagamenti")
+    @CrossOrigin
+    public List<Map<String, Object>> getTipologiePagamenti() {
+        LOGGER.info("Performing GET request for retrieving list of 'tipologie-pagamenti'");
+        List<TipologiaPagamento> tipologiePagamenti = Arrays.asList(TipologiaPagamento.values());
+        tipologiePagamenti.sort(Comparator.comparing(TipologiaPagamento::getLabel));
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for(TipologiaPagamento tipologiaPagamento:tipologiePagamenti){
+            Map<String, Object> tipologiaPagamentoMap = new HashMap<>();
+            tipologiaPagamentoMap.put("label", tipologiaPagamento.getLabel());
+            tipologiaPagamentoMap.put("value", tipologiaPagamento);
+
+            result.add(tipologiaPagamentoMap);
+        }
+
+        return result;
     }
 
     @RequestMapping(method = GET, path = "/statistiche-periodi")

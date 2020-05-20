@@ -17,7 +17,5 @@ public interface NotaAccreditoRepository extends CrudRepository<NotaAccredito, L
 
     List<NotaAccredito> findByAnnoOrderByProgressivoDesc(Integer anno);
 
-    List<NotaAccredito> findByDataGreaterThanEqualOrderByProgressivoDesc(Date data);
-
     Optional<NotaAccredito> findByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idNotaAccredito);
 }

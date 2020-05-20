@@ -30,27 +30,27 @@ public class NotaAccreditoRigaService {
     }
 
     public Set<NotaAccreditoRiga> findAll(){
-        LOGGER.info("Retrieving the list of 'nota accredito info'");
+        LOGGER.info("Retrieving the list of 'nota accredito riga'");
         Set<NotaAccreditoRiga> notaAccreditoRiga = notaAccreditoRigaRepository.findAll();
-        LOGGER.info("Retrieved {} 'nota accredito info'", notaAccreditoRiga.size());
+        LOGGER.info("Retrieved {} 'nota accredito riga'", notaAccreditoRiga.size());
         return notaAccreditoRiga;
     }
 
     public NotaAccreditoRiga create(NotaAccreditoRiga notaAccreditoRiga){
-        LOGGER.info("Creating 'nota accredito info'");
+        LOGGER.info("Creating 'nota accredito riga'");
         notaAccreditoRiga.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         notaAccreditoRiga.setImponibile(computeImponibile(notaAccreditoRiga));
         notaAccreditoRiga.setTotale(computeTotale(notaAccreditoRiga));
 
         NotaAccreditoRiga createdNotaAccreditoRiga = notaAccreditoRigaRepository.save(notaAccreditoRiga);
-        LOGGER.info("Created 'nota accredito info' '{}'", createdNotaAccreditoRiga);
+        LOGGER.info("Created 'nota accredito riga' '{}'", createdNotaAccreditoRiga);
         return createdNotaAccreditoRiga;
     }
 
     public void deleteByNotaAccreditoId(Long notaAccreditoId){
-        LOGGER.info("Deleting 'nota accredito info' by 'nota accredito' '{}'", notaAccreditoId);
+        LOGGER.info("Deleting 'nota accredito riga' by 'nota accredito' '{}'", notaAccreditoId);
         notaAccreditoRigaRepository.deleteByNotaAccreditoId(notaAccreditoId);
-        LOGGER.info("Deleted 'nota accredito info' by 'nota accredito' '{}'", notaAccreditoId);
+        LOGGER.info("Deleted 'nota accredito riga' by 'nota accredito' '{}'", notaAccreditoId);
     }
 
     public AliquotaIva getAliquotaIva(NotaAccreditoRiga notaAccreditoRiga){

@@ -1,10 +1,8 @@
 package com.contafood.controller;
 
-import com.contafood.model.Cliente;
-import com.contafood.model.Ddt;
-import com.contafood.model.NotaAccredito;
-import com.contafood.model.Pagamento;
+import com.contafood.model.*;
 import com.contafood.service.PagamentoService;
+import com.contafood.util.TipologiaPagamento;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +36,15 @@ public class PagamentoController {
     public Set<Pagamento> getDdtPagamenti(@RequestParam(name = "dataDa", required = false) Date dataDa,
                                           @RequestParam(name = "dataA", required = false) Date dataA,
                                           @RequestParam(name = "cliente", required = false) String cliente,
+                                          @RequestParam(name = "fornitore", required = false) String fornitore,
                                           @RequestParam(name = "importo", required = false) Double importo,
+                                          @RequestParam(name = "tipologia", required = false) String tipologia,
                                           @RequestParam(name = "idDdt", required = false)  Integer idDdt,
-                                          @RequestParam(name = "idNotaAccredito", required = false)  Integer idNotaAccredito) {
+                                          @RequestParam(name = "idNotaAccredito", required = false)  Integer idNotaAccredito,
+                                          @RequestParam(name = "idNotaReso", required = false)  Integer idNotaReso) {
         LOGGER.info("Performing GET request for retrieving all 'pagamenti'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, cliente {}, importo {}, idDdt {}, notaAccredito {}",
-                dataDa, dataA, cliente, importo, idDdt, idNotaAccredito);
+        LOGGER.info("Request params: dataDa {}, dataA {}, cliente {}, fornitore {}, importo {}, tipologia {}, idDdt {}, notaAccredito {}, notaReso {}",
+                dataDa, dataA, cliente, fornitore, importo, tipologia, idDdt, idNotaAccredito, idNotaReso);
 
         Predicate<Pagamento> isPagamentoDataDaGreaterOrEquals = pagamento -> {
             if(dataDa != null){
@@ -94,9 +95,35 @@ public class PagamentoController {
             }
             return true;
         };
+        Predicate<Pagamento> isPagamentoFornitoreContains = pagamento -> {
+            if(fornitore != null){
+                NotaReso notaReso = pagamento.getNotaReso();
+                if(notaReso != null){
+                    Fornitore notaResoFornitore = notaReso.getFornitore();
+                    if(notaResoFornitore != null){
+                        if(notaResoFornitore.getRagioneSociale().contains(fornitore)){
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            return true;
+        };
         Predicate<Pagamento> isPagamentoImportoEquals = pagamento -> {
             if(importo != null){
                 return pagamento.getImporto().compareTo(new BigDecimal(importo))==0;
+            }
+            return true;
+        };
+        Predicate<Pagamento> isPagamentoTipologiaEquals = pagamento -> {
+            if(tipologia != null){
+                try{
+                    TipologiaPagamento tipologiaPagamento = TipologiaPagamento.valueOf(tipologia);
+                    return pagamento.getTipologia().equalsIgnoreCase(tipologiaPagamento.name());
+                } catch(Exception e){
+                    return true;
+                }
             }
             return true;
         };
@@ -107,12 +134,17 @@ public class PagamentoController {
         } else if(idNotaAccredito != null){
             LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'notaAccredito' '{}'", idNotaAccredito);
             return pagamentoService.getNotaAccreditoPagamentiByIdNotaAccredito(idNotaAccredito.longValue());
+        } else if(idNotaReso != null){
+            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'notaReso' '{}'", idNotaReso);
+            return pagamentoService.getNotaResoPagamentiByIdNotaReso(idNotaReso.longValue());
         } else {
             Set<Pagamento> pagamenti = pagamentoService.getPagamenti();
             return pagamenti.stream().filter(isPagamentoDataDaGreaterOrEquals
                     .and(isPagamentoDataALessOrEquals)
                     .and(isPagamentoClienteContains)
-                    .and(isPagamentoImportoEquals))
+                    .and(isPagamentoFornitoreContains)
+                    .and(isPagamentoImportoEquals)
+                    .and(isPagamentoTipologiaEquals))
                     .collect(Collectors.toSet());
         }
     }

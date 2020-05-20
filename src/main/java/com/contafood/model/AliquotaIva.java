@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"articoli", "fatturaAccompagnatoriaTotali", "notaAccreditoTotali", "notaAccreditoInfo"})
+@EqualsAndHashCode(exclude = {"articoli", "fatturaAccompagnatoriaTotali", "notaAccreditoTotali", "notaAccreditoRighe", "notaResoTotali", "notaResoRighe"})
 @Entity
 @Table(name = "aliquota_iva")
 public class AliquotaIva {
@@ -39,7 +39,15 @@ public class AliquotaIva {
 
     @OneToMany(mappedBy = "aliquotaIva")
     @JsonIgnore
-    private Set<NotaAccreditoRiga> notaAccreditoRiga = new HashSet<>();
+    private Set<NotaAccreditoRiga> notaAccreditoRighe = new HashSet<>();
+
+    @OneToMany(mappedBy = "aliquotaIva")
+    @JsonIgnore
+    private Set<NotaResoTotale> notaResoTotali = new HashSet<>();
+
+    @OneToMany(mappedBy = "aliquotaIva")
+    @JsonIgnore
+    private Set<NotaResoRiga> notaResoRighe = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -89,12 +97,28 @@ public class AliquotaIva {
         this.notaAccreditoTotali = notaAccreditoTotali;
     }
 
-    public Set<NotaAccreditoRiga> getNotaAccreditoRiga() {
-        return notaAccreditoRiga;
+    public Set<NotaAccreditoRiga> getNotaAccreditoRighe() {
+        return notaAccreditoRighe;
     }
 
-    public void setNotaAccreditoRiga(Set<NotaAccreditoRiga> notaAccreditoRiga) {
-        this.notaAccreditoRiga = notaAccreditoRiga;
+    public void setNotaAccreditoRighe(Set<NotaAccreditoRiga> notaAccreditoRighe) {
+        this.notaAccreditoRighe = notaAccreditoRighe;
+    }
+
+    public Set<NotaResoTotale> getNotaResoTotali() {
+        return notaResoTotali;
+    }
+
+    public void setNotaResoTotali(Set<NotaResoTotale> notaResoTotali) {
+        this.notaResoTotali = notaResoTotali;
+    }
+
+    public Set<NotaResoRiga> getNotaResoRighe() {
+        return notaResoRighe;
+    }
+
+    public void setNotaResoRighe(Set<NotaResoRiga> notaResoRighe) {
+        this.notaResoRighe = notaResoRighe;
     }
 
     @Override

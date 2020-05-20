@@ -4,6 +4,7 @@ import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Ddt;
 import com.contafood.model.Sconto;
 import com.contafood.service.ScontoService;
+import com.contafood.util.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class ScontoController {
     @CrossOrigin
     public List<Sconto> getAll(@RequestParam(required = false) String tipologia,
                                @RequestParam(required = false) Integer idCliente,
+                               @RequestParam(required = false) Integer idFornitore,
                                @RequestParam(required = false) Date data) {
 
         if(!StringUtils.isEmpty(tipologia) && idCliente == null && data == null){
@@ -45,7 +47,10 @@ public class ScontoController {
             return scontoService.getAllByTipologia(tipologia);
         } else if(idCliente != null && data != null){
             LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by cliente '{}' and date '{}'", idCliente, data);
-            return scontoService.getValidSconti(Long.valueOf(idCliente), data);
+            return scontoService.getValidSconti(Resource.CLIENTE, Long.valueOf(idCliente), data);
+        } else if(idFornitore != null && data != null) {
+            LOGGER.info("Performing GET request for retrieving list of 'sconti' filtered by fornitore '{}' and date '{}'", idFornitore, data);
+            return scontoService.getValidSconti(Resource.FORNITORE, Long.valueOf(idFornitore), data);
         } else {
             LOGGER.info("Performing GET request for retrieving list of 'sconti'");
             return scontoService.getAll();
