@@ -1,39 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Add">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/NotaAccreditoController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccreditoArticolo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccreditoArticoloKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccreditoInfo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccreditoInfoKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccreditoTotale.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccreditoTotaleKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/NotaAccreditoArticoloRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/NotaAccreditoInfoRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/NotaAccreditoRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/NotaAccreditoTotaleRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoArticoloService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoInfoService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoTotaleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" afterDir="false" />
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql-scripts/20200515.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql-scripts/20200515.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/exception/DdtAlreadyExistingException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/exception/FatturaAlreadyExistingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/exception/ResourceAlreadyExistingException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/AliquotaIva.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/AliquotaIva.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/FatturaAccompagnatoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/FatturaAccompagnatoria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/FatturaAccompagnatoriaTotale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/FatturaAccompagnatoriaTotale.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/UnitaMisura.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/UnitaMisura.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/FatturaAccompagnatoriaArticoloRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/FatturaAccompagnatoriaArticoloRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaTotaleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaTotaleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,10 +138,10 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.ResourceAlreadyExistingException" />
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Remote.Contafood-remote" />
       <item itemvalue="Spring Boot.Application" />
-      <item itemvalue="Application.ResourceAlreadyExistingException" />
     </list>
     <recent_temporary>
       <list>
@@ -646,14 +616,6 @@
     </state>
     <state x="544" y="95" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1587308587165" />
     <state x="765" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1589538593363" />
-    <state x="811" y="413" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1580918986936">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="811" y="413" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580918986936" />
-    <state x="540" y="179" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor" timestamp="1580918982852">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="540" y="179" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1580918982852" />
     <state x="761" y="411" width="398" height="221" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585302325783">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -666,19 +628,15 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589533462890" />
-    <state x="568" y="119" key="CommitChangelistDialog2" timestamp="1589532100405">
+    <state x="568" y="119" key="CommitChangelistDialog2" timestamp="1590391849596">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="404" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1588148163454" />
-    <state x="568" y="119" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1589532100405" />
-    <state x="740" y="279" key="FileChooserDialogImpl" timestamp="1581499155132">
+    <state x="568" y="119" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590391849596" />
+    <state width="183" height="244" key="Git.Branch.Popup" timestamp="1590391820469">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="279" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1581499155132" />
-    <state width="181" height="242" key="Git.Branch.Popup" timestamp="1589532539689">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="181" height="242" key="Git.Branch.Popup/0.0.1920.1040@0.0.1920.1040" timestamp="1589532539689" />
+    <state width="183" height="244" key="Git.Branch.Popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590391820469" />
     <state width="1877" height="293" key="GridCell.Tab.0.bottom" timestamp="1589538024355">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -715,10 +673,6 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="1323" height="223" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
-    <state x="627" y="226" key="NewModule_or_Project.wizard" timestamp="1581499196048">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="627" y="226" key="NewModule_or_Project.wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1581499196048" />
     <state x="701" y="234" key="RollbackChangesDialog" timestamp="1585064934042">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -731,15 +685,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="846" y="434" key="VCS.EditChangelistDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589532442911" />
-    <state x="552" y="257" key="Vcs.Push.Dialog.v2" timestamp="1589532102950">
+    <state x="552" y="257" key="Vcs.Push.Dialog.v2" timestamp="1590391832564">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="393" y="180" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1588148167366" />
-    <state x="552" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1589532102950" />
-    <state x="668" y="349" key="com.intellij.ide.util.TipDialog" timestamp="1580918924580">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="668" y="349" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1580918924580" />
+    <state x="552" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1590391832564" />
     <state x="535" y="0" width="586" height="728" key="find.popup" timestamp="1585556478010">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
