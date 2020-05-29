@@ -1,6 +1,6 @@
 package com.contafood.exception;
 
-import com.contafood.util.Resource;
+import com.contafood.util.enumeration.Resource;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;

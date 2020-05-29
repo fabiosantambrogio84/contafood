@@ -1,10 +1,9 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.Sconto;
 import com.contafood.model.Telefonata;
 import com.contafood.repository.TelefonataRepository;
-import com.contafood.util.GiornoSettimana;
+import com.contafood.util.enumeration.GiornoSettimana;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

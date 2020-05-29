@@ -2,7 +2,7 @@ package com.contafood.controller;
 
 import com.contafood.model.*;
 import com.contafood.service.PagamentoService;
-import com.contafood.util.TipologiaPagamento;
+import com.contafood.util.enumeration.TipologiaPagamento;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

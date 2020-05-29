@@ -1,6 +1,6 @@
 package com.contafood.model.stats;
 
-import com.contafood.util.StatisticaOpzione;
+import com.contafood.util.enumeration.StatisticaOpzione;
 
 import java.sql.Date;
 import java.util.List;

@@ -1,7 +1,6 @@
-package com.contafood.util;
+package com.contafood.util.enumeration;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public enum StatisticaOpzione {
 

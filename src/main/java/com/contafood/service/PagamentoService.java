@@ -10,7 +10,7 @@ import com.contafood.repository.DdtRepository;
 import com.contafood.repository.NotaAccreditoRepository;
 import com.contafood.repository.NotaResoRepository;
 import com.contafood.repository.PagamentoRepository;
-import com.contafood.util.Resource;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

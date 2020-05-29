@@ -1,7 +1,7 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.OrdineCliente;
+import com.contafood.model.*;
 import com.contafood.service.OrdineClienteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +12,8 @@ import java.sql.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -32,16 +34,68 @@ public class OrdineClienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<OrdineCliente> getAll(
-            @RequestParam(name = "idAutista", required = false) Long idAutista,
-            @RequestParam(name = "dataConsegna", required = false) Date dataConsegna) {
+    public Set<OrdineCliente> getAll( @RequestParam(name = "cliente", required = false) String cliente,
+                                      @RequestParam(name = "dataConsegna", required = false) Date dataConsegna,
+                                      @RequestParam(name = "idAutista", required = false) Integer idAutista,
+                                      @RequestParam(name = "idStato", required = false) Integer idStato,
+                                      @RequestParam(name = "idCliente", required = false) Integer idCliente,
+                                      @RequestParam(name = "idPuntoConsegna", required = false) Integer idPuntoConsegna,
+                                      @RequestParam(name = "dataConsegnaLessOrEqual", required = false) Date dataConsegnaLessOrEqual,
+                                      @RequestParam(name = "idStatoNot", required = false) Integer idStatoNot) {
         LOGGER.info("Performing GET request for retrieving list of 'ordini-clienti'");
-        if(idAutista != null || dataConsegna != null){
-            LOGGER.info("Query parameter 'idAutista' equals to {}", idAutista);
-            LOGGER.info("Query parameter 'dataConsegna' equals to {}", dataConsegna);
-            return ordineClienteService.getAllFilteredBy(idAutista, dataConsegna);
+        LOGGER.info("Request params: cliente {}, dataConsegna {}, idAutista {}, idStato {}, idCliente {}, idPuntoConsegna {}, dataConsegnaLessOrEqual {}, idStatoNot {}",
+                cliente, dataConsegna, idAutista, idStato, idCliente, idPuntoConsegna, dataConsegnaLessOrEqual, idStatoNot);
+
+        Predicate<OrdineCliente> isOrdineClienteClienteContains = ordineCliente -> {
+            if(cliente != null){
+                Cliente ordineClienteCliente = ordineCliente.getCliente();
+                if(ordineClienteCliente != null){
+                    if((ordineClienteCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase())){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaEquals = ordineCliente -> {
+            if(dataConsegna != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegna) == 0;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteAutistaEquals = ordineCliente -> {
+            if(idAutista != null){
+                Autista autista = ordineCliente.getAutista();
+                if(autista != null){
+                    if(autista.getId().equals(Long.valueOf(idAutista))){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteStatoEquals = ordineCliente -> {
+            if(idStato != null){
+                StatoOrdine statoOrdine = ordineCliente.getStatoOrdine();
+                if(statoOrdine != null){
+                    return statoOrdine.getId().equals(Long.valueOf(idStato));
+                }
+                return false;
+            }
+            return true;
+        };
+
+        if(idCliente != null && idPuntoConsegna != null && dataConsegnaLessOrEqual != null && idStatoNot != null){
+            return ordineClienteService.getByIdClienteAndIdPuntoConsegnaAndDataConsegnaLessOrEqualAndIdStatoNot(
+                    Long.valueOf(idCliente), Long.valueOf(idPuntoConsegna), dataConsegnaLessOrEqual, Long.valueOf(idStatoNot)
+            );
         } else {
-            return ordineClienteService.getAll();
+            return ordineClienteService.getAll().stream().filter(isOrdineClienteClienteContains
+                    .and(isOrdineClienteDataConsegnaEquals)
+                    .and(isOrdineClienteAutistaEquals)
+                    .and(isOrdineClienteStatoEquals)).collect(Collectors.toSet());
         }
     }
 

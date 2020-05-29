@@ -1,10 +1,8 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.Autista;
-import com.contafood.model.OrdineCliente;
-import com.contafood.model.OrdineClienteArticolo;
-import com.contafood.model.StatoOrdine;
+import com.contafood.model.*;
+import com.contafood.repository.DdtArticoloOrdineClienteRepository;
 import com.contafood.repository.OrdineClienteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +12,11 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class OrdineClienteService {
@@ -25,12 +26,15 @@ public class OrdineClienteService {
     private final OrdineClienteRepository ordineClienteRepository;
     private final OrdineClienteArticoloService ordineClienteArticoloService;
     private final StatoOrdineService statoOrdineService;
+    private final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository;
 
     @Autowired
-    public OrdineClienteService(final OrdineClienteRepository ordineClienteRepository, final OrdineClienteArticoloService ordineClienteArticoloService, final StatoOrdineService statoOrdineService){
+    public OrdineClienteService(final OrdineClienteRepository ordineClienteRepository, final OrdineClienteArticoloService ordineClienteArticoloService,
+                                final StatoOrdineService statoOrdineService, final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository){
         this.ordineClienteRepository = ordineClienteRepository;
         this.ordineClienteArticoloService = ordineClienteArticoloService;
         this.statoOrdineService = statoOrdineService;
+        this.ddtArticoloOrdineClienteRepository = ddtArticoloOrdineClienteRepository;
     }
 
     public Set<OrdineCliente> getAll(){
@@ -40,18 +44,47 @@ public class OrdineClienteService {
         return ordiniClienti;
     }
 
-    public Set<OrdineCliente> getAllFilteredBy(Long idAutista, Date dataConsegna){
-        LOGGER.info("Retrieving the list of 'ordini clienti' filtered by 'idAutista' {} and 'dataConsegna' {}", idAutista, dataConsegna);
-        Set<OrdineCliente> ordiniClienti = ordineClienteRepository.findByAutistaIdAndDataConsegna(idAutista, dataConsegna);
-        LOGGER.info("Retrieved {} 'ordini clienti'", ordiniClienti.size());
-        return ordiniClienti;
-    }
-
     public OrdineCliente getOne(Long ordineClienteId){
         LOGGER.info("Retrieving 'ordineCliente' '{}'", ordineClienteId);
         OrdineCliente ordineCliente = ordineClienteRepository.findById(ordineClienteId).orElseThrow(ResourceNotFoundException::new);
         LOGGER.info("Retrieved 'ordineCliente' '{}'", ordineCliente);
         return ordineCliente;
+    }
+
+    public Set<OrdineCliente> getByIdClienteAndIdPuntoConsegnaAndDataConsegnaLessOrEqualAndIdStatoNot(Long idCliente, Long idPuntoConsegna, Date dataConsegna, Long idStato){
+        LOGGER.info("Retrieving the list of 'ordini clienti' with idCliente '{}', idPuntoConsegna '{}', dataConsegna <= '{}', idStato '{}'", idCliente, idPuntoConsegna, dataConsegna, idStato);
+        Set<OrdineCliente> ordiniClienti = ordineClienteRepository.findByClienteIdAndPuntoConsegnaId(idCliente, idPuntoConsegna);
+
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaLessOrEquals = ordineCliente -> {
+            if(dataConsegna != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegna)<=0;
+            }
+            return true;
+        };
+
+        Predicate<OrdineCliente> isOrdineClienteStatoNotEquals = ordineCliente -> {
+            if(idStato != null){
+                StatoOrdine statoOrdine = ordineCliente.getStatoOrdine();
+                if(statoOrdine != null){
+                    return !statoOrdine.getId().equals(idStato);
+                }
+                return false;
+            }
+            return true;
+        };
+
+        ordiniClienti = ordiniClienti.stream().filter(isOrdineClienteDataConsegnaLessOrEquals.and(isOrdineClienteStatoNotEquals)).collect(Collectors.toSet());
+
+        LOGGER.info("Retrieved {} 'ordini clienti'", ordiniClienti.size());
+        return ordiniClienti;
+    }
+
+    public Set<OrdineCliente> getOrdiniClientiEvasiAndExpired(){
+        LOGGER.info("Retrieving the list of 'ordini clienti' with stato 'EVASO' and expired (dataConsegna+2 >= now)");
+        Set<OrdineCliente> ordiniClienti = ordineClienteRepository.findByStatoOrdineId(statoOrdineService.getEvaso().getId());
+        ordiniClienti = ordiniClienti.stream().filter(oc -> oc.getDataConsegna().compareTo(Date.valueOf(LocalDate.now().minusDays(2)))<= 0).collect(Collectors.toSet());
+        LOGGER.info("Retrieved {} 'ordini clienti'", ordiniClienti.size());
+        return ordiniClienti;
     }
 
     @Transactional
@@ -123,9 +156,42 @@ public class OrdineClienteService {
     @Transactional
     public void delete(Long ordineClienteId){
         LOGGER.info("Deleting 'ordineCliente' '{}'", ordineClienteId);
+        ddtArticoloOrdineClienteRepository.deleteByOrdineClienteId(ordineClienteId);
         ordineClienteArticoloService.deleteByOrdineClienteId(ordineClienteId);
         ordineClienteRepository.deleteById(ordineClienteId);
         LOGGER.info("Deleted 'ordineCliente' '{}'", ordineClienteId);
+    }
+
+    public OrdineClienteArticolo getOrdineClienteArticolo(OrdineClienteArticoloKey ordineClienteArticoloKey){
+        return ordineClienteArticoloService.getOrdineClienteArticolo(ordineClienteArticoloKey);
+    }
+
+    public void saveOrdineClienteArticolo(OrdineClienteArticolo ordineClienteArticolo){
+        ordineClienteArticoloService.save(ordineClienteArticolo);
+    }
+
+    public void computeStatoOrdineCliente(Long idOrdineCliente){
+        LOGGER.info("Computing stato of 'OrdineCliente' {}", idOrdineCliente);
+        OrdineCliente ordineCliente = getOne(idOrdineCliente);
+        Set<OrdineClienteArticolo> ordineClienteArticoli = ordineClienteArticoloService.getOrdineClienteArticoli(idOrdineCliente);
+        if(ordineClienteArticoli != null && !ordineClienteArticoli.isEmpty()){
+            StatoOrdine statoOrdine = statoOrdineService.getDaEvadere();
+            Integer sumNumeroPezziOrdinati = ordineClienteArticoli.stream().map(oca -> oca.getNumeroPezziOrdinati()).reduce(0, Integer::sum);
+            if(sumNumeroPezziOrdinati > 0){
+                Integer sumNumeroPezziDaEvadere = ordineClienteArticoli.stream().map(oca -> oca.getNumeroPezziDaEvadere()).reduce(0, Integer::sum);
+                if(sumNumeroPezziDaEvadere == 0){
+                    statoOrdine = statoOrdineService.getEvaso();
+                } else {
+                    statoOrdine = statoOrdineService.getParzialmenteEvaso();
+                }
+            }
+            LOGGER.info("Setting stato {} to 'OrdineCliente' {}", statoOrdine.getCodice(), idOrdineCliente);
+            ordineCliente.setStatoOrdine(statoOrdine);
+            ordineClienteRepository.save(ordineCliente);
+            LOGGER.info("Set stato {} to 'OrdineCliente' {}", statoOrdine.getCodice(), idOrdineCliente);
+        }
+
+        LOGGER.info("Computed stato of 'OrdineCliente' {}", idOrdineCliente);
     }
 
     private Integer computeProgressivo(Integer annoContabile){

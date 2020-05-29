@@ -161,6 +161,7 @@ public class VFattura {
     public void setDataAggiornamento(Timestamp dataAggiornamento) {
         this.dataAggiornamento = dataAggiornamento;
     }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

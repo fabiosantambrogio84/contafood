@@ -15,7 +15,9 @@ public interface OrdineClienteRepository extends CrudRepository<OrdineCliente, L
 
     Set<OrdineCliente> findAllByOrderByAnnoContabileDescProgressivoDesc();
 
-    Set<OrdineCliente> findByAutistaIdAndDataConsegna(Long idAutista, Date dataConsegna);
+    Set<OrdineCliente> findByStatoOrdineId(Long idStato);
 
     List<OrdineCliente> findByAnnoContabileOrderByProgressivoDesc(Integer annoContabile);
+
+    Set<OrdineCliente> findByClienteIdAndPuntoConsegnaId(Long idCliente, Long idPuntoConsegna);
 }

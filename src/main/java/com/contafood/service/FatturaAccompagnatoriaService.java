@@ -8,7 +8,7 @@ import com.contafood.model.FatturaAccompagnatoria;
 import com.contafood.model.FatturaAccompagnatoriaArticolo;
 import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
-import com.contafood.repository.VFatturaRepository;
+import com.contafood.repository.views.VFatturaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

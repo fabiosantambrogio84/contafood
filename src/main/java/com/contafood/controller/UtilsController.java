@@ -1,6 +1,6 @@
 package com.contafood.controller;
 
-import com.contafood.util.*;
+import com.contafood.util.enumeration.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.CrossOrigin;

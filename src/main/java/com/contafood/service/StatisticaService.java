@@ -2,7 +2,7 @@ package com.contafood.service;
 
 import com.contafood.model.*;
 import com.contafood.model.stats.*;
-import com.contafood.util.StatisticaOpzione;
+import com.contafood.util.enumeration.StatisticaOpzione;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -6,7 +6,7 @@ import com.contafood.model.Listino;
 import com.contafood.model.ListinoPrezzo;
 import com.contafood.model.ListinoPrezzoVariazione;
 import com.contafood.repository.ListinoPrezzoRepository;
-import com.contafood.util.TipologiaListinoPrezzoVariazione;
+import com.contafood.util.enumeration.TipologiaListinoPrezzoVariazione;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

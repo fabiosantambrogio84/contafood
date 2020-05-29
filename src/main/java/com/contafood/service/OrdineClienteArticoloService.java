@@ -2,6 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.OrdineClienteArticolo;
+import com.contafood.model.OrdineClienteArticoloKey;
 import com.contafood.repository.OrdineClienteArticoloRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,28 @@ public class OrdineClienteArticoloService {
         OrdineClienteArticolo updatedOrdineClienteArticolo = ordineClienteArticoloRepository.save(ordineClienteArticolo);
         LOGGER.info("Updated 'ordine cliente articolo' '{}'", updatedOrdineClienteArticolo);
         return updatedOrdineClienteArticolo;
+    }
+
+    public OrdineClienteArticolo save(OrdineClienteArticolo ordineClienteArticolo){
+        LOGGER.info("Saving 'ordine cliente articolo'");
+        ordineClienteArticolo.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        OrdineClienteArticolo savedOrdineClienteArticolo = ordineClienteArticoloRepository.save(ordineClienteArticolo);
+        LOGGER.info("Saved 'ordine cliente articolo' '{}'", savedOrdineClienteArticolo);
+        return savedOrdineClienteArticolo;
+    }
+
+    public OrdineClienteArticolo getOrdineClienteArticolo(OrdineClienteArticoloKey ordineClienteArticoloKey){
+        LOGGER.info("Retrieving 'ordine cliente articolo' by 'key' '{}'", ordineClienteArticoloKey);
+        OrdineClienteArticolo ordineClienteArticolo = ordineClienteArticoloRepository.findById(ordineClienteArticoloKey).orElseThrow(ResourceNotFoundException::new);
+        LOGGER.info("Retrieved 'ordine cliente articolo' by 'key' '{}'", ordineClienteArticoloKey);
+        return ordineClienteArticolo;
+    }
+
+    public Set<OrdineClienteArticolo> getOrdineClienteArticoli(Long idOrdineCliente){
+        LOGGER.info("Retrieving 'ordine cliente articoli' of 'OrdineCliente' {}", idOrdineCliente);
+        Set<OrdineClienteArticolo> ordineClienteArticoli = ordineClienteArticoloRepository.findByOrdineClienteId(idOrdineCliente);
+        LOGGER.info("Retrieved {} 'ordine cliente articoli' of 'OrdineCliente' {}", ordineClienteArticoli.size(), idOrdineCliente);
+        return ordineClienteArticoli;
     }
 
     public void deleteByOrdineClienteId(Long ordineClienteId){

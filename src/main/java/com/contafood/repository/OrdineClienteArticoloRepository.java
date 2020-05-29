@@ -14,7 +14,7 @@ public interface OrdineClienteArticoloRepository extends CrudRepository<OrdineCl
 
     Optional<OrdineClienteArticolo> findById(OrdineClienteArticoloKey id);
 
-    Set<OrdineClienteArticolo> findByOrdineClienteId(Long ordineClienteId);
+    Set<OrdineClienteArticolo> findByOrdineClienteId(Long idOrdineCliente);
 
     Set<OrdineClienteArticolo> findByArticoloId(Long articoloId);
 

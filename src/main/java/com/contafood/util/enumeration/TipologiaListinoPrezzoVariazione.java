@@ -1,4 +1,4 @@
-package com.contafood.util;
+package com.contafood.util.enumeration;
 
 public enum TipologiaListinoPrezzoVariazione {
 

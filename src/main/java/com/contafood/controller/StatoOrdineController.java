@@ -42,6 +42,13 @@ public class StatoOrdineController {
         return statoOrdineService.getOne(statoOrdineId);
     }
 
+    @RequestMapping(method = GET, path = "/evaso")
+    @CrossOrigin
+    public StatoOrdine getEvaso() {
+        LOGGER.info("Performing GET request for retrieving 'statoOrdine' 'EVASO'");
+        return statoOrdineService.getEvaso();
+    }
+
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin

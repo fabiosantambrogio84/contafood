@@ -5,7 +5,7 @@ import com.contafood.exception.ListinoTipologiaNotAllowedException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.ListinoRepository;
-import com.contafood.util.TipologiaListino;
+import com.contafood.util.enumeration.TipologiaListino;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

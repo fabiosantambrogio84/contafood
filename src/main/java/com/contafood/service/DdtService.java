@@ -88,19 +88,23 @@ public class DdtService {
         checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), Long.valueOf(-1));
 
         ddt.setStatoDdt(statoDdtService.getDaPagare());
-
         ddt.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         LOGGER.info(ddt.getScannerLog());
 
         Ddt createdDdt = ddtRepository.save(ddt);
 
+        // create 'ddt-articoli' and 'ddt-articoli-ordini-clienti'
         createdDdt.getDdtArticoli().stream().forEach(da -> {
             da.getId().setDdtId(createdDdt.getId());
             da.getId().setUuid(UUID.randomUUID().toString());
             ddtArticoloService.create(da);
         });
 
+        // update 'pezzi-da-evadere' and 'stato-ordine' on OrdineCliente
+        ddtArticoloService.updateOrdineClienteFromCreateDdt(createdDdt.getId());
+
+        // compute totali on Ddt
         computeTotali(createdDdt, createdDdt.getDdtArticoli());
 
         ddtRepository.save(createdDdt);
@@ -171,6 +175,10 @@ public class DdtService {
     @Transactional
     public void delete(Long ddtId){
         LOGGER.info("Deleting 'ddt' '{}'", ddtId);
+
+        // update 'pezzi-da-evadere' and 'stato-ordine' on OrdineCliente
+        ddtArticoloService.updateOrdineClienteFromDeleteDdt(ddtId);
+
         pagamentoRepository.deleteByDdtId(ddtId);
         ddtArticoloService.deleteByDdtId(ddtId);
         ddtRepository.deleteById(ddtId);
