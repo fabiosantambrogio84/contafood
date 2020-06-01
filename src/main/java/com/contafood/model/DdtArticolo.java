@@ -17,6 +17,8 @@ import java.util.Set;
 @Table(name = "ddt_articolo")
 public class DdtArticolo implements Serializable {
 
+    private static final long serialVersionUID = -532091236476642128L;
+
     @EmbeddedId
     DdtArticoloKey id;
 

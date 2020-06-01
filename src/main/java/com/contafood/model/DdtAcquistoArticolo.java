@@ -12,6 +12,8 @@ import java.sql.Timestamp;
 @Table(name = "ddt_acquisto_articolo")
 public class DdtAcquistoArticolo implements Serializable {
 
+    private static final long serialVersionUID = -2519558133054646153L;
+
     @EmbeddedId
     DdtAcquistoArticoloKey id;
 

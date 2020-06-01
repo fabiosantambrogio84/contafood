@@ -3,11 +3,12 @@ package com.contafood.model;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @Embeddable
 public class FatturaAccompagnatoriaTotaleKey implements Serializable {
+
+    private static final long serialVersionUID = 6071270490197582469L;
 
     @Column(name = "id_fattura_accom")
     Long fatturaAccompagnatoriaId;

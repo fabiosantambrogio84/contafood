@@ -21,6 +21,9 @@ public class DdtArticoloService {
 
     private static Logger LOGGER = LoggerFactory.getLogger(DdtArticoloService.class);
 
+    private static final String CONTEXT_CREATE_DDT = "create_ddt";
+    private static final String CONTEXT_DELETE_DDT = "delete_ddt";
+
     private final DdtArticoloRepository ddtArticoloRepository;
     private final ArticoloService articoloService;
     private final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository;
@@ -96,7 +99,7 @@ public class DdtArticoloService {
     public void deleteByDdtId(Long ddtId){
         LOGGER.info("Deleting 'ddt articolo' by 'ddt' '{}'", ddtId);
         ddtArticoloRepository.deleteByDdtId(ddtId);
-        ddtArticoloOrdineClienteRepository.deleteByDdtArticoloDdtId(ddtId);
+        ddtArticoloOrdineClienteRepository.deleteByIdDdtId(ddtId);
         LOGGER.info("Deleted 'ddt articolo' by 'ddt' '{}'", ddtId);
     }
 
@@ -107,12 +110,12 @@ public class DdtArticoloService {
 
     @Transactional
     public void updateOrdineClienteFromCreateDdt(Long idDdt){
-        updateOrdineCliente(idDdt, "create_ddt");
+        updateOrdineCliente(idDdt, CONTEXT_CREATE_DDT);
     }
 
     @Transactional
     public void updateOrdineClienteFromDeleteDdt(Long idDdt){
-        updateOrdineCliente(idDdt, "delete_ddt");
+        updateOrdineCliente(idDdt, CONTEXT_DELETE_DDT);
     }
 
     private void updateOrdineCliente(Long idDdt, String context){
@@ -122,7 +125,7 @@ public class DdtArticoloService {
         Map<DdtArticoloKey, Integer> ddtArticoliPezziRemaining = new HashMap<>();
 
         // retrieve the 'DdtArticoloOrdineCliente' of the ddt
-        Set<DdtArticoloOrdineCliente> ddtArticoliOrdiniClienti = ddtArticoloOrdineClienteRepository.findByDdtArticoloDdtId(idDdt);
+        List<DdtArticoloOrdineCliente> ddtArticoliOrdiniClienti = ddtArticoloOrdineClienteRepository.findAllByIdDdtId(idDdt);
         if(ddtArticoliOrdiniClienti != null && !ddtArticoliOrdiniClienti.isEmpty()){
             for(DdtArticoloOrdineCliente ddtArticoloOrdineCliente : ddtArticoliOrdiniClienti){
                 LOGGER.info("'DdtArticoloOrdineCliente' {}", ddtArticoloOrdineCliente);
@@ -192,14 +195,14 @@ public class DdtArticoloService {
         LOGGER.info("Computing 'newPezziDaEvadere' for context {}, pezzi {}, pezziDaEvadere {}, pezziOrdinati {}", context, pezzi, pezziDaEvadere, pezziOrdinati);
 
         Integer newNumeroPezziDaEvadere = null;
-        if(context.equalsIgnoreCase("create_ddt")){
+        if(context.equals(CONTEXT_CREATE_DDT)){
             newNumeroPezziDaEvadere = pezziDaEvadere - pezzi;
             if(newNumeroPezziDaEvadere < 0){
                 LOGGER.info("Context {}: pezzi da evadere {} - pezzi {} less than 0", context, pezziDaEvadere, pezzi);
                 newNumeroPezziDaEvadere = 0;
                 ddtArticoliPezziRemaining.putIfAbsent(ddtArticoloKey, Math.abs(pezziDaEvadere - pezzi));
             }
-        } else if(context.equalsIgnoreCase("delete_ddt")){
+        } else if(context.equals(CONTEXT_DELETE_DDT)){
             newNumeroPezziDaEvadere = pezziDaEvadere + pezzi;
             if(newNumeroPezziDaEvadere > pezziOrdinati){
                 newNumeroPezziDaEvadere = pezziOrdinati;

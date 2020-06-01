@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 @Table(name = "listino_associato")
 public class ListinoAssociato implements Serializable {
 
+    private static final long serialVersionUID = -5060632517997665444L;
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;

@@ -9,6 +9,8 @@ import java.io.Serializable;
 @Table(name = "produzione_confezione")
 public class ProduzioneConfezione implements Serializable {
 
+    private static final long serialVersionUID = -7611851738261520234L;
+
     @EmbeddedId
     ProduzioneConfezioneKey id;
 

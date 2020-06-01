@@ -8,6 +8,8 @@ import java.util.Objects;
 @Embeddable
 public class FatturaDdtKey implements Serializable {
 
+    private static final long serialVersionUID = -1264333928344274658L;
+
     @Column(name = "id_fattura")
     Long fatturaId;
 

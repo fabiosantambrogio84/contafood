@@ -10,6 +10,8 @@ import java.sql.Date;
 @Table(name = "produzione_ingrediente")
 public class ProduzioneIngrediente implements Serializable {
 
+    private static final long serialVersionUID = -6513863375941482733L;
+
     @EmbeddedId
     ProduzioneIngredienteKey id;
 

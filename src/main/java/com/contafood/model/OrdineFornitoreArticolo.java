@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 @Table(name = "ordine_fornitore_articolo")
 public class OrdineFornitoreArticolo implements Serializable {
 
+    private static final long serialVersionUID = -4528212361525258441L;
+
     @EmbeddedId
     OrdineFornitoreArticoloKey id;
 

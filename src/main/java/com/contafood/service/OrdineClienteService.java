@@ -181,7 +181,7 @@ public class OrdineClienteService {
                 Integer sumNumeroPezziDaEvadere = ordineClienteArticoli.stream().map(oca -> oca.getNumeroPezziDaEvadere()).reduce(0, Integer::sum);
                 if(sumNumeroPezziDaEvadere == 0){
                     statoOrdine = statoOrdineService.getEvaso();
-                } else {
+                } else if(sumNumeroPezziDaEvadere < sumNumeroPezziOrdinati){
                     statoOrdine = statoOrdineService.getParzialmenteEvaso();
                 }
             }

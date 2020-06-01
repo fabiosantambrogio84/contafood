@@ -8,6 +8,8 @@ import java.util.Objects;
 @Embeddable
 public class DdtArticoloKey implements Serializable {
 
+    private static final long serialVersionUID = -3173007831154184314L;
+
     @Column(name = "id_ddt")
     Long ddtId;
 

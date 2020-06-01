@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 @Table(name = "nota_accredito_totale")
 public class NotaAccreditoTotale implements Serializable {
 
+    private static final long serialVersionUID = -4325968739210279566L;
+
     @EmbeddedId
     NotaAccreditoTotaleKey id;
 

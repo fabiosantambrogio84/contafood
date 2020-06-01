@@ -8,6 +8,8 @@ import java.util.Objects;
 @Embeddable
 public class ProduzioneIngredienteKey implements Serializable {
 
+    private static final long serialVersionUID = -1264127502656708701L;
+
     @Column(name = "id_produzione")
     Long produzioneId;
 

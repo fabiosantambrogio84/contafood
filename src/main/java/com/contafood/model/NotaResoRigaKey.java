@@ -8,6 +8,8 @@ import java.util.Objects;
 @Embeddable
 public class NotaResoRigaKey implements Serializable {
 
+    private static final long serialVersionUID = 7127987044424242892L;
+
     @Column(name = "id_nota_reso")
     Long notaResoId;
 

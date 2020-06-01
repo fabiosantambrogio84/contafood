@@ -8,6 +8,8 @@ import java.util.Objects;
 @Embeddable
 public class FatturaAccompagnatoriaArticoloKey implements Serializable {
 
+    private static final long serialVersionUID = 9194839976554964707L;
+
     @Column(name = "id_fattura_accom")
     Long fatturaAccompagnatoriaId;
 

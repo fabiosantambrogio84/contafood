@@ -10,14 +10,16 @@ import java.sql.Timestamp;
 @Table(name = "ddt_articolo_ordine_cliente")
 public class DdtArticoloOrdineCliente implements Serializable {
 
+    private static final long serialVersionUID = 2898128805206300825L;
+
     @EmbeddedId
     DdtArticoloOrdineClienteKey id;
 
     @ManyToOne
     @JoinColumns( {
-        @JoinColumn(name = "id_ddt", insertable = false, updatable = false),
-        @JoinColumn(name = "id_articolo", insertable = false, updatable = false),
-        @JoinColumn(name = "uuid", insertable = false, updatable = false)
+        @JoinColumn(name = "id_ddt", referencedColumnName = "id_ddt", insertable = false, updatable = false),
+        @JoinColumn(name = "id_articolo", referencedColumnName = "id_articolo", insertable = false, updatable = false),
+        @JoinColumn(name = "uuid", referencedColumnName = "uuid", insertable = false, updatable = false)
     })
     @JsonIgnoreProperties("ddtArticoliOrdiniClienti")
     private DdtArticolo ddtArticolo;

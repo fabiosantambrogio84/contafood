@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 @Table(name = "articolo_immagine")
 public class ArticoloImmagine implements Serializable {
 
+    private static final long serialVersionUID = 6723798415302736589L;
+
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;

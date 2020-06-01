@@ -11,6 +11,8 @@ import java.sql.Timestamp;
 @Table(name = "fattura_accom_totale")
 public class FatturaAccompagnatoriaTotale implements Serializable {
 
+    private static final long serialVersionUID = 7922341588621573512L;
+
     @EmbeddedId
     FatturaAccompagnatoriaTotaleKey id;
 

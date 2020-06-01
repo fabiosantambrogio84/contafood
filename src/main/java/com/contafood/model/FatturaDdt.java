@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 @Table(name = "fattura_ddt")
 public class FatturaDdt implements Serializable {
 
+    private static final long serialVersionUID = -3593111937916990146L;
+
     @EmbeddedId
     FatturaDdtKey id;
 
