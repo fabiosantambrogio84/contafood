@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni", "ordineClienteArticoli", "ddtArticoli", "ddtAcquistoArticoli", "fatturaAccompagnatoriaArticoli", "notaAccreditoRighe"})
+@EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni", "ordineClienteArticoli", "ddtArticoli", "ddtAcquistoArticoli", "fatturaAccompagnatoriaArticoli", "notaAccreditoRighe", "giacenze"})
 @Entity
 @Table(name = "articolo")
 public class Articolo {
@@ -110,6 +110,10 @@ public class Articolo {
     @OneToMany(mappedBy = "articolo")
     @JsonIgnore
     private Set<NotaAccreditoRiga> notaAccreditoRighe = new HashSet<>();
+
+    @OneToMany(mappedBy = "articolo")
+    @JsonIgnore
+    private Set<Giacenza> giacenze = new HashSet<>();
 
     public Long getId() {
         return id;

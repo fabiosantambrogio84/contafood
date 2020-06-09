@@ -6,6 +6,7 @@ import com.contafood.model.Articolo;
 import com.contafood.model.DdtAcquisto;
 import com.contafood.model.DdtAcquistoArticolo;
 import com.contafood.repository.DdtAcquistoRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,13 @@ public class DdtAcquistoService {
 
     private final DdtAcquistoRepository ddtAcquistoRepository;
     private final DdtAcquistoArticoloService ddtAcquistoArticoloService;
+    private final GiacenzaService giacenzaService;
 
     @Autowired
-    public DdtAcquistoService(final DdtAcquistoRepository ddtAcquistoRepository, final DdtAcquistoArticoloService ddtAcquistoArticoloService){
+    public DdtAcquistoService(final DdtAcquistoRepository ddtAcquistoRepository, final DdtAcquistoArticoloService ddtAcquistoArticoloService, final GiacenzaService giacenzaService){
         this.ddtAcquistoRepository = ddtAcquistoRepository;
         this.ddtAcquistoArticoloService = ddtAcquistoArticoloService;
+        this.giacenzaService = giacenzaService;
     }
 
     public Set<DdtAcquisto> getAll(){
@@ -65,11 +68,15 @@ public class DdtAcquistoService {
             daa.getId().setDdtAcquistoId(createdDdtAcquisto.getId());
             daa.getId().setUuid(UUID.randomUUID().toString());
             ddtAcquistoArticoloService.create(daa);
+
+            // compute 'giacenza'
+            giacenzaService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita());
         });
 
         computeTotali(createdDdtAcquisto, createdDdtAcquisto.getDdtAcquistoArticoli());
 
         ddtAcquistoRepository.save(createdDdtAcquisto);
+
         LOGGER.info("Created 'ddt acquisto' '{}'", createdDdtAcquisto);
         return createdDdtAcquisto;
     }
@@ -91,6 +98,9 @@ public class DdtAcquistoService {
             daa.getId().setDdtAcquistoId(updatedDdtAcquisto.getId());
             daa.getId().setUuid(UUID.randomUUID().toString());
             ddtAcquistoArticoloService.create(daa);
+
+            // compute 'giacenza'
+            giacenzaService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita());
         });
 
         computeTotali(updatedDdtAcquisto, ddtAcquistoArticoli);
@@ -103,8 +113,16 @@ public class DdtAcquistoService {
     @Transactional
     public void delete(Long ddtAcquistoId){
         LOGGER.info("Deleting 'ddt acquisto' '{}'", ddtAcquistoId);
+        Set<DdtAcquistoArticolo> ddtAcquistoArticoli = ddtAcquistoArticoloService.findByDdtAcquistoId(ddtAcquistoId);
+
         ddtAcquistoArticoloService.deleteByDdtAcquistoId(ddtAcquistoId);
         ddtAcquistoRepository.deleteById(ddtAcquistoId);
+
+        for (DdtAcquistoArticolo ddtAcquistoArticolo:ddtAcquistoArticoli) {
+            // compute 'giacenza'
+            giacenzaService.computeGiacenza(ddtAcquistoArticolo.getId().getArticoloId(), ddtAcquistoArticolo.getLotto(), ddtAcquistoArticolo.getDataScadenza(), ddtAcquistoArticolo.getQuantita());
+        }
+
         LOGGER.info("Deleted 'ddt acquisto' '{}'", ddtAcquistoId);
     }
 

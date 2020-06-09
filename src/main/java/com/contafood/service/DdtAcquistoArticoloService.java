@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DdtAcquistoArticoloService {
@@ -33,6 +35,13 @@ public class DdtAcquistoArticoloService {
     public Set<DdtAcquistoArticolo> findAll(){
         LOGGER.info("Retrieving the list of 'ddt acquisto articoli'");
         Set<DdtAcquistoArticolo> ddtAcquistoArticoli = ddtAcquistoArticoloRepository.findAll();
+        LOGGER.info("Retrieved {} 'ddt acquisto articoli'", ddtAcquistoArticoli.size());
+        return ddtAcquistoArticoli;
+    }
+
+    public Set<DdtAcquistoArticolo> findByDdtAcquistoId(Long idDdtAcquisto){
+        LOGGER.info("Retrieving the list of 'ddt acquisto articoli' of 'ddtAcquisto' {}", idDdtAcquisto);
+        Set<DdtAcquistoArticolo> ddtAcquistoArticoli = ddtAcquistoArticoloRepository.findByDdtAcquistoId(idDdtAcquisto);
         LOGGER.info("Retrieved {} 'ddt acquisto articoli'", ddtAcquistoArticoli.size());
         return ddtAcquistoArticoli;
     }
@@ -68,6 +77,18 @@ public class DdtAcquistoArticoloService {
     public Articolo getArticolo(DdtAcquistoArticolo ddtAcquistoArticolo){
         Long articoloId = ddtAcquistoArticolo.getId().getArticoloId();
         return articoloService.getOne(articoloId);
+    }
+
+    public Set<DdtAcquistoArticolo> getByArticoloIdAndLottoAndScadenza(Long idArticolo, String lotto, Date scadenza){
+        LOGGER.info("Retrieving 'ddt acquisto articoli' by 'idArticolo' '{}', 'lotto' '{}' and 'scadenza' '{}'", idArticolo, lotto, scadenza);
+        Set<DdtAcquistoArticolo> ddtAcquistoArticoli = ddtAcquistoArticoloRepository.findByArticoloIdAndLotto(idArticolo, lotto);
+        if(ddtAcquistoArticoli != null && !ddtAcquistoArticoli.isEmpty()){
+            if(scadenza != null){
+                ddtAcquistoArticoli = ddtAcquistoArticoli.stream().filter(daa -> daa.getDataScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0).collect(Collectors.toSet());
+            }
+        }
+        LOGGER.info("Retrieved '{}' 'ddt acquisto articoli'", ddtAcquistoArticoli.size());
+        return ddtAcquistoArticoli;
     }
 
     private BigDecimal computeImponibile(DdtAcquistoArticolo ddtAcquistoArticolo){

@@ -14,7 +14,11 @@ public interface FatturaAccompagnatoriaArticoloRepository extends CrudRepository
 
     Optional<FatturaAccompagnatoriaArticolo> findById(FatturaAccompagnatoriaArticoloKey id);
 
+    Set<FatturaAccompagnatoriaArticolo> findByFatturaAccompagnatoriaId(Long idFatturaAccompagnatoria);
+
     Set<FatturaAccompagnatoriaArticolo> findByArticoloId(Long articoloId);
+
+    Set<FatturaAccompagnatoriaArticolo> findByArticoloIdAndLotto(Long articoloId, String lotto);
 
     void deleteByFatturaAccompagnatoriaId(Long fatturaAccompagnatoriaId);
 

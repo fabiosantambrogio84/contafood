@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DdtArticoloService {
@@ -43,6 +45,13 @@ public class DdtArticoloService {
     public Set<DdtArticolo> findAll(){
         LOGGER.info("Retrieving the list of 'ddt articoli'");
         Set<DdtArticolo> ddtArticoli = ddtArticoloRepository.findAll();
+        LOGGER.info("Retrieved {} 'ddt articoli'", ddtArticoli.size());
+        return ddtArticoli;
+    }
+
+    public Set<DdtArticolo> findByDdtId(Long idDdt){
+        LOGGER.info("Retrieving the list of 'ddt articoli' of 'ddt' {}", idDdt);
+        Set<DdtArticolo> ddtArticoli = ddtArticoloRepository.findByDdtId(idDdt);
         LOGGER.info("Retrieved {} 'ddt articoli'", ddtArticoli.size());
         return ddtArticoli;
     }
@@ -106,6 +115,18 @@ public class DdtArticoloService {
     public Articolo getArticolo(DdtArticolo ddtArticolo){
         Long articoloId = ddtArticolo.getId().getArticoloId();
         return articoloService.getOne(articoloId);
+    }
+
+    public Set<DdtArticolo> getByArticoloIdAndLottoAndScadenza(Long idArticolo, String lotto, Date scadenza){
+        LOGGER.info("Retrieving 'ddt articoli' by 'idArticolo' '{}', 'lotto' '{}' and 'scadenza' '{}'", idArticolo, lotto, scadenza);
+        Set<DdtArticolo> ddtArticoli = ddtArticoloRepository.findByArticoloIdAndLotto(idArticolo, lotto);
+        if(ddtArticoli != null && !ddtArticoli.isEmpty()){
+            if(scadenza != null){
+                ddtArticoli = ddtArticoli.stream().filter(da -> da.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0).collect(Collectors.toSet());
+            }
+        }
+        LOGGER.info("Retrieved '{}' 'ddt articoli'", ddtArticoli.size());
+        return ddtArticoli;
     }
 
     @Transactional

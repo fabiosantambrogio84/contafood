@@ -18,6 +18,8 @@ public interface DdtAcquistoArticoloRepository extends CrudRepository<DdtAcquist
 
     Set<DdtAcquistoArticolo> findByArticoloId(Long articoloId);
 
+    Set<DdtAcquistoArticolo> findByArticoloIdAndLotto(Long articoloId, String lotto);
+
     void deleteByDdtAcquistoId(Long ddtAcquistoId);
 
     void deleteByArticoloId(Long articoloId);

@@ -2,10 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.AliquotaIva;
-import com.contafood.model.Articolo;
-import com.contafood.model.FatturaAccompagnatoria;
-import com.contafood.model.FatturaAccompagnatoriaArticolo;
+import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
 import com.contafood.repository.views.VFatturaRepository;
@@ -33,15 +30,23 @@ public class FatturaAccompagnatoriaService {
     private final StatoFatturaService statoFatturaService;
     private final TipoFatturaService tipoFatturaService;
     private final VFatturaRepository vFatturaRepository;
+    private final GiacenzaService giacenzaService;
 
     @Autowired
-    public FatturaAccompagnatoriaService(final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository, final FatturaAccompagnatoriaArticoloService fatturaAccompagnatoriaArticoloService, final FatturaAccompagnatoriaTotaleService fatturaAccompagnatoriaTotaleService, final StatoFatturaService statoFatturaService, final TipoFatturaService tipoFatturaService, final VFatturaRepository vFatturaRepository){
+    public FatturaAccompagnatoriaService(final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository,
+                                         final FatturaAccompagnatoriaArticoloService fatturaAccompagnatoriaArticoloService,
+                                         final FatturaAccompagnatoriaTotaleService fatturaAccompagnatoriaTotaleService,
+                                         final StatoFatturaService statoFatturaService,
+                                         final TipoFatturaService tipoFatturaService,
+                                         final VFatturaRepository vFatturaRepository,
+                                         final GiacenzaService giacenzaService){
         this.fatturaAccompagnatoriaRepository = fatturaAccompagnatoriaRepository;
         this.fatturaAccompagnatoriaArticoloService = fatturaAccompagnatoriaArticoloService;
         this.fatturaAccompagnatoriaTotaleService = fatturaAccompagnatoriaTotaleService;
         this.statoFatturaService = statoFatturaService;
         this.tipoFatturaService = tipoFatturaService;
         this.vFatturaRepository = vFatturaRepository;
+        this.giacenzaService = giacenzaService;
     }
 
     public Set<FatturaAccompagnatoria> getAll(){
@@ -101,6 +106,9 @@ public class FatturaAccompagnatoriaService {
             faa.getId().setFatturaAccompagnatoriaId(createdFatturaAccompagnatoria.getId());
             faa.getId().setUuid(UUID.randomUUID().toString());
             fatturaAccompagnatoriaArticoloService.create(faa);
+
+            // compute 'giacenza'
+            giacenzaService.computeGiacenza(faa.getId().getArticoloId(), faa.getLotto(), faa.getScadenza(), faa.getQuantita());
         });
 
         createdFatturaAccompagnatoria.getFatturaAccompagnatoriaTotali().stream().forEach(fat -> {
@@ -121,9 +129,17 @@ public class FatturaAccompagnatoriaService {
     public void delete(Long fatturaAccompagnatoriaId){
         LOGGER.info("Deleting 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
 
+        Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoloService.findByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
+
         fatturaAccompagnatoriaArticoloService.deleteByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
         fatturaAccompagnatoriaTotaleService.deleteByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
         fatturaAccompagnatoriaRepository.deleteById(fatturaAccompagnatoriaId);
+
+        for (FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo:fatturaAccompagnatoriaArticoli) {
+            // compute 'giacenza'
+            giacenzaService.computeGiacenza(fatturaAccompagnatoriaArticolo.getId().getArticoloId(), fatturaAccompagnatoriaArticolo.getLotto(), fatturaAccompagnatoriaArticolo.getScadenza(), fatturaAccompagnatoriaArticolo.getQuantita());
+        }
+
         LOGGER.info("Deleted 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
     }
 

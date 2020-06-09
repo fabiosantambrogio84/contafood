@@ -4,6 +4,7 @@ import com.contafood.exception.ArticoloBarcodeCannotStartWithZeroException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.ArticoloRepository;
+import com.contafood.repository.GiacenzaRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +27,20 @@ public class ArticoloService {
     private static Logger LOGGER = LoggerFactory.getLogger(ArticoloService.class);
 
     private final ArticoloRepository articoloRepository;
-
     private final ArticoloImmagineService articoloImmagineService;
-
     private final ListinoPrezzoService listinoPrezzoService;
-
     private final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService;
+    private final GiacenzaRepository giacenzaRepository;
 
     @Autowired
-    public ArticoloService(final ArticoloRepository articoloRepository, final ArticoloImmagineService articoloImmagineService, final ListinoPrezzoService listinoPrezzoService, final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService){
+    public ArticoloService(final ArticoloRepository articoloRepository, final ArticoloImmagineService articoloImmagineService,
+                           final ListinoPrezzoService listinoPrezzoService, final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService,
+                           final GiacenzaRepository giacenzaRepository){
         this.articoloRepository = articoloRepository;
         this.articoloImmagineService = articoloImmagineService;
         this.listinoPrezzoService = listinoPrezzoService;
         this.listinoPrezzoVariazioneService = listinoPrezzoVariazioneService;
+        this.giacenzaRepository = giacenzaRepository;
     }
 
     public Set<Articolo> getAll(){
@@ -161,6 +163,10 @@ public class ArticoloService {
         LOGGER.info("Deleting 'listiniPrezzi' of articolo '{}'", articoloId);
         listinoPrezzoService.deleteByArticoloId(articoloId);
         LOGGER.info("Deleted 'listiniPrezzi' of articolo '{}'", articoloId);
+
+        LOGGER.info("Deleting 'giacenze' of articolo '{}'", articoloId);
+        giacenzaRepository.deleteByArticoloId(articoloId);
+        LOGGER.info("Deleted 'giacenze' of articolo '{}'", articoloId);
 
         LOGGER.info("Deleting 'articolo' '{}'", articoloId);
         articoloImmagineService.deleteByArticoloId(articoloId);

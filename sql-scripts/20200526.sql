@@ -1,6 +1,7 @@
 DROP VIEW IF EXISTS v_ordine_cliente_stats_week;
 DROP VIEW IF EXISTS v_ordine_cliente_stats_month;
 DROP TABLE IF EXISTS ddt_articolo_ordine_cliente;
+DROP TABLE IF EXISTS giacenzaOLD;
 
 CREATE VIEW `v_ordine_cliente_stats_week` AS
     select
@@ -135,4 +136,16 @@ CREATE TABLE `ddt_articolo_ordine_cliente` (
 	id_ordine_cliente int(10) unsigned,
 	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (id_ddt, id_articolo, uuid, id_ordine_cliente)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+CREATE TABLE `giacenzaOLD` (
+	id int(10) unsigned auto_increment,
+	id_articolo int(10) unsigned,
+	lotto varchar(100),
+	scadenza date,
+	quantita decimal(10,3),
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
+	PRIMARY KEY (id),
+	CONSTRAINT `fk_giacenza_articolo` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;

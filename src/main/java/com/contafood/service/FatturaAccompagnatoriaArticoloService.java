@@ -2,6 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
+import com.contafood.model.DdtArticolo;
 import com.contafood.model.FatturaAccompagnatoriaArticolo;
 import com.contafood.repository.FatturaAccompagnatoriaArticoloRepository;
 import com.contafood.util.AccountingUtils;
@@ -11,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class FatturaAccompagnatoriaArticoloService {
@@ -33,6 +36,13 @@ public class FatturaAccompagnatoriaArticoloService {
     public Set<FatturaAccompagnatoriaArticolo> findAll(){
         LOGGER.info("Retrieving the list of 'fattura accompagnatoria articoli'");
         Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoloRepository.findAll();
+        LOGGER.info("Retrieved {} 'fattura accompagnatoria articoli'", fatturaAccompagnatoriaArticoli.size());
+        return fatturaAccompagnatoriaArticoli;
+    }
+
+    public Set<FatturaAccompagnatoriaArticolo> findByFatturaAccompagnatoriaId(Long idFatturaAccompagnatoria){
+        LOGGER.info("Retrieving the list of 'fattura accompagnatoria articoli' of 'fattura accompagnatoria' {}", idFatturaAccompagnatoria);
+        Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoloRepository.findByFatturaAccompagnatoriaId(idFatturaAccompagnatoria);
         LOGGER.info("Retrieved {} 'fattura accompagnatoria articoli'", fatturaAccompagnatoriaArticoli.size());
         return fatturaAccompagnatoriaArticoli;
     }
@@ -64,14 +74,26 @@ public class FatturaAccompagnatoriaArticoloService {
     }
 
     public void deleteByFatturaAccompagnatoriaId(Long fatturaAccompagnatoriaId){
-        LOGGER.info("Deleting 'fattura articolo' by 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
+        LOGGER.info("Deleting 'fattura accompagnatoria articolo' by 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
         fatturaAccompagnatoriaArticoloRepository.deleteByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
-        LOGGER.info("Deleted 'ddt articolo' by 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
+        LOGGER.info("Deleted 'fattura accompagnatoria articolo' by 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
     }
 
     public Articolo getArticolo(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo){
         Long articoloId = fatturaAccompagnatoriaArticolo.getId().getArticoloId();
         return articoloService.getOne(articoloId);
+    }
+
+    public Set<FatturaAccompagnatoriaArticolo> getByArticoloIdAndLottoAndScadenza(Long idArticolo, String lotto, Date scadenza){
+        LOGGER.info("Retrieving 'fattura accompagnatoria articoli' by 'idArticolo' '{}', 'lotto' '{}' and 'scadenza' '{}'", idArticolo, lotto, scadenza);
+        Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoloRepository.findByArticoloIdAndLotto(idArticolo, lotto);
+        if(fatturaAccompagnatoriaArticoli != null && !fatturaAccompagnatoriaArticoli.isEmpty()){
+            if(scadenza != null){
+                fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoli.stream().filter(da -> da.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0).collect(Collectors.toSet());
+            }
+        }
+        LOGGER.info("Retrieved '{}' 'fattura accompagnatoria articoli'", fatturaAccompagnatoriaArticoli.size());
+        return fatturaAccompagnatoriaArticoli;
     }
 
     private BigDecimal computeImponibile(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo){

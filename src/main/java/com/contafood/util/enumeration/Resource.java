@@ -2,9 +2,11 @@ package com.contafood.util.enumeration;
 
 public enum Resource {
 
-    FORNITORE("fornitore"),
     CLIENTE("cliente"),
     DDT("ddt"),
+    DDT_ACQUISTO("ddt acquisto"),
+    FATTURA_ACCOMPAGNATORIA("fattura accompagnatoria"),
+    FORNITORE("fornitore"),
     NOTA_ACCREDITO("nota accredito"),
     NOTA_RESO("nota reso");
 
