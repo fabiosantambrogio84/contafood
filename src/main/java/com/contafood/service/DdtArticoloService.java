@@ -122,7 +122,8 @@ public class DdtArticoloService {
         Set<DdtArticolo> ddtArticoli = ddtArticoloRepository.findByArticoloIdAndLotto(idArticolo, lotto);
         if(ddtArticoli != null && !ddtArticoli.isEmpty()){
             if(scadenza != null){
-                ddtArticoli = ddtArticoli.stream().filter(da -> da.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0).collect(Collectors.toSet());
+                ddtArticoli = ddtArticoli.stream()
+                        .filter(da -> (da.getScadenza() != null && da.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0)).collect(Collectors.toSet());
             }
         }
         LOGGER.info("Retrieved '{}' 'ddt articoli'", ddtArticoli.size());

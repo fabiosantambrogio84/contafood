@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Ricetta;
 import com.contafood.model.RicettaIngrediente;
+import com.contafood.repository.GiacenzaRepository;
 import com.contafood.repository.RicettaIngredienteRepository;
 import com.contafood.repository.RicettaRepository;
 import org.slf4j.Logger;
@@ -22,12 +23,17 @@ public class RicettaService {
     private final RicettaRepository ricettaRepository;
     private final RicettaIngredienteService ricettaIngredienteService;
     private final ProduzioneService produzioneService;
+    private final GiacenzaRepository giacenzaRepository;
 
     @Autowired
-    public RicettaService(final RicettaRepository ricettaRepository, final RicettaIngredienteService ricettaIngredienteService, final ProduzioneService produzioneService){
+    public RicettaService(final RicettaRepository ricettaRepository,
+                          final RicettaIngredienteService ricettaIngredienteService,
+                          final ProduzioneService produzioneService,
+                          final GiacenzaRepository giacenzaRepository){
         this.ricettaRepository = ricettaRepository;
         this.ricettaIngredienteService = ricettaIngredienteService;
         this.produzioneService = produzioneService;
+        this.giacenzaRepository = giacenzaRepository;
     }
 
     public Set<Ricetta> getAll(){
@@ -79,6 +85,11 @@ public class RicettaService {
     @Transactional
     public void delete(Long ricettaId){
         LOGGER.info("Deleting 'ricetta' '{}'", ricettaId);
+
+        LOGGER.info("Deleting 'giacenze' of ricetta '{}'", ricettaId);
+        giacenzaRepository.deleteByRicettaId(ricettaId);
+        LOGGER.info("Deleted 'giacenze' of ricetta '{}'", ricettaId);
+
         produzioneService.deleteByRicettaId(ricettaId);
         ricettaIngredienteService.deleteByRicettaId(ricettaId);
         ricettaRepository.deleteById(ricettaId);

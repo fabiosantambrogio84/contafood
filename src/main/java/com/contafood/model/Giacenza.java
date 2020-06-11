@@ -21,6 +21,13 @@ public class Giacenza {
     @JoinColumn(name="id_articolo")
     private Articolo articolo;
 
+    @ManyToOne
+    @JoinColumn(name="id_ricetta")
+    private Ricetta ricetta;
+
+    @Column(name = "codice_articolo_ricetta")
+    private String codiceArticoloRicetta;
+
     @Column(name = "lotto")
     private String lotto;
 
@@ -53,6 +60,22 @@ public class Giacenza {
 
     public void setArticolo(Articolo articolo) {
         this.articolo = articolo;
+    }
+
+    public Ricetta getRicetta() {
+        return ricetta;
+    }
+
+    public void setRicetta(Ricetta ricetta) {
+        this.ricetta = ricetta;
+    }
+
+    public String getCodiceArticoloRicetta() {
+        return codiceArticoloRicetta;
+    }
+
+    public void setCodiceArticoloRicetta(String codiceArticoloRicetta) {
+        this.codiceArticoloRicetta = codiceArticoloRicetta;
     }
 
     public String getLotto() {
@@ -110,6 +133,8 @@ public class Giacenza {
         result.append("{");
         result.append("id: " + id);
         result.append(", articolo: " + articolo);
+        result.append(", ricetta: " + ricetta);
+        result.append(", codiceArticoloRicetta: " + codiceArticoloRicetta);
         result.append(", lotto: " + lotto);
         result.append(", scadenza: " + scadenza);
         result.append(", quantita: " + quantita);

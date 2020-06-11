@@ -1,7 +1,7 @@
 DROP VIEW IF EXISTS v_ordine_cliente_stats_week;
 DROP VIEW IF EXISTS v_ordine_cliente_stats_month;
 DROP TABLE IF EXISTS ddt_articolo_ordine_cliente;
-DROP TABLE IF EXISTS giacenzaOLD;
+DROP TABLE IF EXISTS giacenza;
 
 CREATE VIEW `v_ordine_cliente_stats_week` AS
     select
@@ -138,7 +138,7 @@ CREATE TABLE `ddt_articolo_ordine_cliente` (
 	PRIMARY KEY (id_ddt, id_articolo, uuid, id_ordine_cliente)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
-CREATE TABLE `giacenzaOLD` (
+CREATE TABLE `giacenza` (
 	id int(10) unsigned auto_increment,
 	id_articolo int(10) unsigned,
 	lotto varchar(100),
@@ -149,3 +149,8 @@ CREATE TABLE `giacenzaOLD` (
 	PRIMARY KEY (id),
 	CONSTRAINT `fk_giacenza_articolo` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+-- 16/06/2020
+ALTER TABLE giacenza ADD COLUMN id_ricetta int(10) unsigned AFTER id_articolo;
+ALTER TABLE giacenza ADD COLUMN codice_articolo_ricetta varchar(100) AFTER id_ricetta;
+ALTER TABLE giacenza ADD CONSTRAINT fk_giacenza_ricetta FOREIGN KEY (`id_ricetta`) REFERENCES `ricetta` (`id`);

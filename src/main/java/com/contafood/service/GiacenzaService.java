@@ -4,7 +4,11 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
 import com.contafood.model.Giacenza;
 import com.contafood.model.Movimentazione;
+import com.contafood.model.Ricetta;
+import com.contafood.repository.ArticoloRepository;
 import com.contafood.repository.GiacenzaRepository;
+import com.contafood.repository.RicettaRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +27,18 @@ public class GiacenzaService {
     private static Logger LOGGER = LoggerFactory.getLogger(GiacenzaService.class);
 
     private final GiacenzaRepository giacenzaRepository;
+    private final ArticoloRepository articoloRepository;
+    private final RicettaRepository ricettaRepository;
     private final MovimentazioneService movimentazioneService;
 
     @Autowired
     public GiacenzaService(final GiacenzaRepository giacenzaRepository,
+                           final ArticoloRepository articoloRepository,
+                           final RicettaRepository ricettaRepository,
                            final MovimentazioneService movimentazioneService){
         this.giacenzaRepository = giacenzaRepository;
+        this.articoloRepository = articoloRepository;
+        this.ricettaRepository = ricettaRepository;
         this.movimentazioneService = movimentazioneService;
     }
 
@@ -57,13 +67,6 @@ public class GiacenzaService {
     }
 
     @Transactional
-    public void deleteByArticoloId(Long idArticolo){
-        LOGGER.info("Deleting 'giacenze' of articolo '{}'", idArticolo);
-        giacenzaRepository.deleteByArticoloId(idArticolo);
-        LOGGER.info("Deleted 'giacenze' of articolo '{}'", idArticolo);
-    }
-
-    @Transactional
     public void bulkDelete(List<Long> giacenzeIds){
         LOGGER.info("Bulk deleting all the specified 'giacenze (number of elements to delete: {})'", giacenzeIds.size());
         giacenzaRepository.deleteByIdIn(giacenzeIds);
@@ -74,27 +77,34 @@ public class GiacenzaService {
         LOGGER.info("Retrieving 'giacenza' with id {}", idGiacenza);
 
         Giacenza giacenza = giacenzaRepository.findById(idGiacenza).orElseThrow(ResourceNotFoundException::new);
-        List<Movimentazione> movimentazioni = movimentazioneService.getMovimentazioni(giacenza).stream().sorted((m1, m2) -> {
-            if (m1.getData() == null || m2.getData() == null)
-                return 0;
-            return m2.getData().toLocalDate().compareTo(m1.getData().toLocalDate());
-        }).collect(Collectors.toList());
+        List<Movimentazione> movimentazioni = movimentazioneService.getMovimentazioni(giacenza).stream().collect(Collectors.toList());
+        movimentazioni.sort(Comparator.comparing(Movimentazione::getData).reversed());
+
         giacenza.setMovimentazioni(movimentazioni);
 
         LOGGER.info("Retrieved 'giacenza' {}", giacenza);
         return giacenza;
     }
 
-    public void computeGiacenza(Long idArticolo, String lotto, Date scadenza, Float quantita){
-        LOGGER.info("Compute 'giacenza' for idArticolo '{}',lotto '{}',scadenza '{}',quantita '{}'", idArticolo, lotto, scadenza, quantita);
+    public void computeGiacenza(Long idArticolo, Long idRicetta, String lotto, Date scadenza, Float quantita, Resource resource){
+        LOGGER.info("Compute 'giacenza' for idArticolo '{}',idRicetta '{}', lotto '{}',scadenza '{}',quantita '{}'",
+                idArticolo, idRicetta, lotto, scadenza, quantita);
 
-        LOGGER.info("Retrieving 'giacenza' of idArticolo '{}' and lotto '{}'", idArticolo, lotto);
+        String codiceArticoloRicetta = null;
+        if(idArticolo != null){
+            codiceArticoloRicetta = articoloRepository.findById(idArticolo).get().getCodice();
+        } else if(idRicetta != null){
+            codiceArticoloRicetta = ricettaRepository.findById(idRicetta).get().getCodice();
+            codiceArticoloRicetta = "UR"+codiceArticoloRicetta;
+        }
+
+        LOGGER.info("Retrieving 'giacenza' of codiceArticoloRicetta '{}' and lotto '{}'", codiceArticoloRicetta, lotto);
         Optional<Giacenza> giacenzaOptional = Optional.empty();
         Giacenza giacenza;
-        Set<Giacenza> giacenze = giacenzaRepository.findByArticoloIdAndLotto(idArticolo, lotto);
+        Set<Giacenza> giacenze = giacenzaRepository.findByCodiceArticoloRicettaAndLotto(codiceArticoloRicetta, lotto);
         if(giacenze != null && !giacenze.isEmpty()){
             if(scadenza != null){
-                giacenzaOptional = giacenze.stream().filter(g -> g.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0).findFirst();
+                giacenzaOptional = giacenze.stream().filter(g -> g.getScadenza() != null && g.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0).findFirst();
             } else {
                 giacenzaOptional = giacenze.stream().findFirst();
             }
@@ -120,18 +130,41 @@ public class GiacenzaService {
                 newQuantita = quantitaInput - quantitaOutput;
             }
             giacenza.setQuantita(newQuantita);
+
+            if(idRicetta != null){
+                Ricetta ricetta = new Ricetta();
+                ricetta.setId(idRicetta);
+                giacenza.setRicetta(ricetta);
+            } else if(idArticolo != null){
+                Articolo articolo = new Articolo();
+                articolo.setId(idArticolo);
+                giacenza.setArticolo(articolo);
+            }
+
             giacenza = giacenzaRepository.save(giacenza);
             LOGGER.info("Updated 'giacenza' {}", giacenza);
 
         } else {
             LOGGER.info("Creating a new 'giacenza'");
-            Articolo articolo = new Articolo();
-            articolo.setId(idArticolo);
+            Float newQuantita = quantita;
+            if(resource.equals(Resource.DDT) || resource.equals(Resource.FATTURA_ACCOMPAGNATORIA)){
+                newQuantita = newQuantita * -1;
+            }
+
             giacenza = new Giacenza();
-            giacenza.setArticolo(articolo);
+            if(idRicetta != null){
+                Ricetta ricetta = new Ricetta();
+                ricetta.setId(idRicetta);
+                giacenza.setRicetta(ricetta);
+            } else if(idArticolo != null){
+                Articolo articolo = new Articolo();
+                articolo.setId(idArticolo);
+                giacenza.setArticolo(articolo);
+            }
+            giacenza.setCodiceArticoloRicetta(codiceArticoloRicetta);
             giacenza.setLotto(lotto);
             giacenza.setScadenza(scadenza);
-            giacenza.setQuantita(quantita);
+            giacenza.setQuantita(newQuantita);
             giacenza.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
             giacenza = giacenzaRepository.save(giacenza);
             LOGGER.info("Created a new 'giacenza' {}", giacenza);

@@ -11,4 +11,6 @@ public interface FornitoreRepository extends CrudRepository<Fornitore, Long> {
     Set<Fornitore> findAll();
 
     Set<Fornitore> findAllByOrderByRagioneSocialeAsc();
+
+    Fornitore findByRagioneSociale(String ragioneSociale);
 }

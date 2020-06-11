@@ -94,6 +94,9 @@ public class Ddt {
     @Transient
     private String scannerLog;
 
+    @Transient
+    private Boolean modificaGiacenze;
+
     @OneToMany(mappedBy = "ddt")
     @JsonIgnoreProperties("ddt")
     private Set<DdtArticolo> ddtArticoli = new HashSet<>();
@@ -298,6 +301,14 @@ public class Ddt {
         this.scannerLog = scannerLog;
     }
 
+    public Boolean getModificaGiacenze() {
+        return modificaGiacenze;
+    }
+
+    public void setModificaGiacenze(Boolean modificaGiacenze) {
+        this.modificaGiacenze = modificaGiacenze;
+    }
+
     public Set<DdtArticolo> getDdtArticoli() {
         return ddtArticoli;
     }
@@ -347,6 +358,7 @@ public class Ddt {
         result.append(", totale: " + totale);
         result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", note: " + note);
+        result.append(", modificaGiacenze: " + modificaGiacenze);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

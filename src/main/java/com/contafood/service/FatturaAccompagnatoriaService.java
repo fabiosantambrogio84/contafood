@@ -6,6 +6,7 @@ import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
 import com.contafood.repository.views.VFatturaRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,7 @@ public class FatturaAccompagnatoriaService {
             fatturaAccompagnatoriaArticoloService.create(faa);
 
             // compute 'giacenza'
-            giacenzaService.computeGiacenza(faa.getId().getArticoloId(), faa.getLotto(), faa.getScadenza(), faa.getQuantita());
+            giacenzaService.computeGiacenza(faa.getId().getArticoloId(), null, faa.getLotto(), faa.getScadenza(), faa.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA);
         });
 
         createdFatturaAccompagnatoria.getFatturaAccompagnatoriaTotali().stream().forEach(fat -> {
@@ -137,7 +138,7 @@ public class FatturaAccompagnatoriaService {
 
         for (FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo:fatturaAccompagnatoriaArticoli) {
             // compute 'giacenza'
-            giacenzaService.computeGiacenza(fatturaAccompagnatoriaArticolo.getId().getArticoloId(), fatturaAccompagnatoriaArticolo.getLotto(), fatturaAccompagnatoriaArticolo.getScadenza(), fatturaAccompagnatoriaArticolo.getQuantita());
+            giacenzaService.computeGiacenza(fatturaAccompagnatoriaArticolo.getId().getArticoloId(), null, fatturaAccompagnatoriaArticolo.getLotto(), fatturaAccompagnatoriaArticolo.getScadenza(), fatturaAccompagnatoriaArticolo.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA);
         }
 
         LOGGER.info("Deleted 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);

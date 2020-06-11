@@ -1,9 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql-scripts/20200526.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql-scripts/20200526.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FornitoreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FornitoreController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/GiacenzaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/GiacenzaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Ddt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Ddt.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Giacenza.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Giacenza.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Ricetta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Ricetta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/FornitoreRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/FornitoreRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/GiacenzaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/GiacenzaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ProduzioneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ProduzioneRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicettaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicettaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,26 +74,28 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/sql-scripts" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../AwsRdsMigration" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.contafood.service" />
+      <recent name="com.contafood.util.enumeration" />
+      <recent name="com.contafood.repository.views" />
       <recent name="com.contafood.model.views" />
       <recent name="com.contafood.model.stats" />
-      <recent name="com.contafood.model" />
-      <recent name="com.contafood" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.contafood.controller" />
-      <recent name="com.contafood.exception" />
+      <recent name="com.contafood.model" />
       <recent name="com.contafood.service" />
       <recent name="com.contafood.repository" />
-      <recent name="com.contafood.model" />
+      <recent name="com.contafood.controller" />
+      <recent name="com.contafood.service.views" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\sql-scripts" />
@@ -66,20 +105,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ResourceAlreadyExistingException">
-    <configuration name="ResourceAlreadyExistingException" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.contafood.exception.ResourceAlreadyExistingException" />
-      <module name="contafood" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.contafood.exception.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Maven.contafood [clean,package]">
     <configuration name="contafood [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -138,16 +164,10 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.ResourceAlreadyExistingException" />
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Remote.Contafood-remote" />
       <item itemvalue="Spring Boot.Application" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.ResourceAlreadyExistingException" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -221,34 +241,27 @@
       <workItem from="1589185458366" duration="5337000" />
       <workItem from="1589379694122" duration="3370000" />
       <workItem from="1589528377593" duration="8672000" />
-    </task>
-    <task id="LOCAL-00023" summary="Move Pagamento methods to DdtService">
-      <created>1580994177920</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1580994177920</updated>
-    </task>
-    <task id="LOCAL-00024" summary="Compute Ddt.stato and refresh totali">
-      <created>1581429012501</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1581429012501</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Add DdtArticolo.lotto">
-      <created>1581435351493</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1581435351493</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Add filters to GET DDts">
-      <created>1581667831160</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1581667831161</updated>
+      <workItem from="1590477275441" duration="103000" />
+      <workItem from="1590477400997" duration="7241000" />
+      <workItem from="1590563931172" duration="6748000" />
+      <workItem from="1590650093238" duration="8488000" />
+      <workItem from="1590736451777" duration="11928000" />
+      <workItem from="1590996163305" duration="13547000" />
+      <workItem from="1591167986278" duration="1178000" />
+      <workItem from="1591253295527" duration="5553000" />
+      <workItem from="1591358883737" duration="4965000" />
+      <workItem from="1591602194384" duration="42000" />
+      <workItem from="1591602299470" duration="5283000" />
+      <workItem from="1591609830973" duration="8442000" />
+      <workItem from="1591685661163" duration="13561000" />
+      <workItem from="1591771730950" duration="2521000" />
+      <workItem from="1591861343261" duration="3528000" />
+      <workItem from="1591945473674" duration="762000" />
+      <workItem from="1592204659706" duration="1719000" />
+      <workItem from="1592214553571" duration="4983000" />
+      <workItem from="1592291436831" duration="7782000" />
+      <workItem from="1592380392921" duration="67000" />
+      <workItem from="1592380590043" duration="1034000" />
     </task>
     <task id="LOCAL-00027" summary="Fix filters to GET DDts and fix PUT">
       <created>1582023082284</created>
@@ -565,7 +578,35 @@
       <option name="project" value="LOCAL" />
       <updated>1589532101334</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="Add stats on OrdineCliente. Add load OrdiniClienti on DDT creation">
+      <created>1590768794644</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1590768794644</updated>
+    </task>
+    <task id="LOCAL-00073" summary="Fix delete Ddt with DdtArticoloOrdineCliente. Fix Serializable">
+      <created>1591027113201</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1591027113202</updated>
+    </task>
+    <task id="LOCAL-00074" summary="Add logic for managing giacenze">
+      <created>1591714811409</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1591714811410</updated>
+    </task>
+    <task id="LOCAL-00075" summary="Fix bugs on Giacenza">
+      <created>1591872483577</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1591872483577</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -574,11 +615,19 @@
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.sql" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add RicercaLotto on Ddt, DdtAcquisto and Produzione" />
-    <MESSAGE value="Fix DdtAcquisto: remove Stato, Numero as String" />
-    <MESSAGE value="Fix DB collation for case sensitive queries" />
-    <MESSAGE value="Fix Ricerca Lotti Produzione.lotto film chiusura" />
     <MESSAGE value="Add TipoFattura, filter Fattura.tipoFattura" />
     <MESSAGE value="Add controller,repository,service for FatturaAccompagnatoria" />
     <MESSAGE value="Add FatturaAccompagnatoria" />
@@ -600,113 +649,172 @@
     <MESSAGE value="Add check on Articolo.barcode starting with zero" />
     <MESSAGE value="Fix sort Articolo" />
     <MESSAGE value="Add sql script for step 12" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add sql script for step 12" />
+    <MESSAGE value="Add stats on OrdineCliente. Add load OrdiniClienti on DDT creation" />
+    <MESSAGE value="Fix delete Ddt with DdtArticoloOrdineCliente. Fix Serializable" />
+    <MESSAGE value="Add logic for managing giacenze" />
+    <MESSAGE value="Fix bugs on Giacenza" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix bugs on Giacenza" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="181" key="#Auto_Import" timestamp="1583751849983">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="181" key="#Auto_Import/0.0.1920.1040@0.0.1920.1040" timestamp="1583751849983" />
-    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1588929909779">
+    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1591005420168">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1588929909779" />
-    <state x="765" y="214" key="#com.intellij.ide.util.MemberChooser" timestamp="1589538593363">
+    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591005420168" />
+    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser" timestamp="1592299997795">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592299997795" />
+    <state x="544" y="95" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1591274010928" />
+    <state x="765" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1591686641471" />
+    <state x="708" y="297" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1590488506012">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="544" y="95" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1587308587165" />
-    <state x="765" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1589538593363" />
-    <state x="761" y="411" width="398" height="221" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1585302325783">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="708" y="297" key="#com.intellij.ide.util.PackageChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1590488506012" />
+    <state x="2006" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1592380420661">
+      <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="761" y="411" width="398" height="221" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1585302325783" />
-    <state x="50" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1585302839809">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="50" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585302839809" />
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1589533462890">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589533462890" />
-    <state x="568" y="119" key="CommitChangelistDialog2" timestamp="1590391849596">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="404" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1588148163454" />
-    <state x="568" y="119" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1590391849596" />
-    <state width="183" height="244" key="Git.Branch.Popup" timestamp="1590391820469">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="183" height="244" key="Git.Branch.Popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590391820469" />
-    <state width="1877" height="293" key="GridCell.Tab.0.bottom" timestamp="1589538024355">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="154" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1587308671692" />
-    <state width="1877" height="293" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1589538024355" />
-    <state width="1877" height="293" key="GridCell.Tab.0.center" timestamp="1589538024355">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="154" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1587308671692" />
-    <state width="1877" height="293" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1589538024355" />
-    <state width="1877" height="293" key="GridCell.Tab.0.left" timestamp="1589538024355">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="154" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1587308671691" />
-    <state width="1877" height="293" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1589538024355" />
-    <state width="1877" height="293" key="GridCell.Tab.0.right" timestamp="1589538024355">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="1323" height="154" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1587308671692" />
-    <state width="1877" height="293" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1589538024355" />
-    <state width="1323" height="223" key="GridCell.Tab.1.bottom" timestamp="1587308595443">
+    <state x="2006" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592380420661" />
+    <state x="541" y="288" width="561" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1590500687872">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="223" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
-    <state width="1323" height="223" key="GridCell.Tab.1.center" timestamp="1587308595443">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state x="541" y="288" width="561" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1366.728@0.0.1366.728" timestamp="1590500687872" />
+    <state x="761" y="411" width="433" height="221" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1590488507532" />
+    <state x="50" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1591686710354">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1323" height="223" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
-    <state width="1323" height="223" key="GridCell.Tab.1.left" timestamp="1587308595443">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state x="50" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591686710354" />
+    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1591686974764">
+      <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1323" height="223" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
-    <state width="1323" height="223" key="GridCell.Tab.1.right" timestamp="1587308595443">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591686974764" />
+    <state x="2373" y="268" width="749" height="587" key="#xdebugger.evaluate" timestamp="1592215946717">
+      <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1323" height="223" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1587308595443" />
+    <state x="2373" y="268" key="#xdebugger.evaluate/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592215946717" />
+    <state x="1007" y="268" width="749" height="587" key="#xdebugger.evaluate/0.0.1920.1040@0.0.1920.1040" timestamp="1591696297025" />
+    <state x="568" y="119" key="CommitChangelistDialog2" timestamp="1591872482692">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="404" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1591714810380" />
+    <state x="568" y="119" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1591872482692" />
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1591186442000">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1591186442000" />
+    <state width="187" height="248" key="Git.Branch.Popup" timestamp="1590392677853">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="187" height="248" key="Git.Branch.Popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590392677853" />
+    <state width="1877" height="240" key="GridCell.Tab.0.bottom" timestamp="1592304080202">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="240" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592304080202" />
+    <state width="1323" height="260" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1592207365875" />
+    <state width="1877" height="260" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
+    <state width="1877" height="240" key="GridCell.Tab.0.center" timestamp="1592304080201">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="240" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592304080201" />
+    <state width="1323" height="260" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1592207365874" />
+    <state width="1877" height="260" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
+    <state width="1877" height="240" key="GridCell.Tab.0.left" timestamp="1592304080201">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="240" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592304080201" />
+    <state width="1323" height="260" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1592207365874" />
+    <state width="1877" height="260" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
+    <state width="1877" height="240" key="GridCell.Tab.0.right" timestamp="1592304080202">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="240" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592304080202" />
+    <state width="1323" height="260" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1592207365874" />
+    <state width="1877" height="260" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
+    <state width="1877" height="361" key="GridCell.Tab.1.bottom" timestamp="1592228211675">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="361" key="GridCell.Tab.1.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592228211675" />
+    <state width="1323" height="260" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1592207365875" />
+    <state width="1877" height="260" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592204752067" />
+    <state width="1877" height="361" key="GridCell.Tab.1.center" timestamp="1592228211675">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="361" key="GridCell.Tab.1.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592228211675" />
+    <state width="1323" height="260" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1592207365875" />
+    <state width="1877" height="260" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592204752067" />
+    <state width="1877" height="361" key="GridCell.Tab.1.left" timestamp="1592228211675">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="361" key="GridCell.Tab.1.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592228211675" />
+    <state width="1323" height="260" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1592207365875" />
+    <state width="1877" height="260" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592204752066" />
+    <state width="1877" height="361" key="GridCell.Tab.1.right" timestamp="1592228211675">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="361" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592228211675" />
+    <state width="1323" height="260" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1592207365875" />
+    <state width="1877" height="260" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592204752067" />
     <state x="701" y="234" key="RollbackChangesDialog" timestamp="1585064934042">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="701" y="234" key="RollbackChangesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1585064934042" />
-    <state x="461" y="164" key="SettingsEditor" timestamp="1589532379079">
+    <state x="461" y="164" key="SettingsEditor" timestamp="1591016575001">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1589532379079" />
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1591016575001" />
     <state x="846" y="434" key="VCS.EditChangelistDialog" timestamp="1589532442911">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="846" y="434" key="VCS.EditChangelistDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1589532442911" />
-    <state x="552" y="257" key="Vcs.Push.Dialog.v2" timestamp="1590391832564">
+    <state x="552" y="257" key="Vcs.Push.Dialog.v2" timestamp="1591872485418">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="393" y="180" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1588148167366" />
-    <state x="552" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1590391832564" />
+    <state x="393" y="167" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1591714814286" />
+    <state x="552" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591872485418" />
+    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1591017751452">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="968" height="528" key="XDebugger.FullValuePopup/0.0.1920.1040@0.0.1920.1040" timestamp="1591017751452" />
+    <state x="1458" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1592232344345">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1458" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1592232344345" />
+    <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591014222057" />
+    <state x="514" y="248" width="892" height="630" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1591019479304">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="514" y="248" width="892" height="630" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040@0.0.1920.1040" timestamp="1591019479304" />
     <state x="535" y="0" width="586" height="728" key="find.popup" timestamp="1585556478010">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="535" y="0" width="586" height="728" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1585556478010" />
-    <state x="752" y="141" width="710" height="732" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1583251518106" />
     <state x="342" y="146" key="new project wizard" timestamp="1585571640410">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="342" y="146" key="new project wizard/0.0.1920.1040@0.0.1920.1040" timestamp="1585571640410" />
-    <state x="616" y="240" key="run.anything.popup" timestamp="1589534719649">
+    <state x="616" y="240" key="run.anything.popup" timestamp="1591359456235">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1589534719649" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1589381611479">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1591359456235" />
+    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1592384366892">
+      <screen x="1366" y="0" width="1920" height="1040" />
     </state>
+    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592384366892" />
     <state x="443" y="158" width="672" height="475" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1585145873782" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1589381611479" />
+    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1592204691336" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java</url>
+          <line>173</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

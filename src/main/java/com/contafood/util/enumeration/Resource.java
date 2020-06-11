@@ -8,7 +8,8 @@ public enum Resource {
     FATTURA_ACCOMPAGNATORIA("fattura accompagnatoria"),
     FORNITORE("fornitore"),
     NOTA_ACCREDITO("nota accredito"),
-    NOTA_RESO("nota reso");
+    NOTA_RESO("nota reso"),
+    PRODUZIONE("produzione");
 
     private String label;
 

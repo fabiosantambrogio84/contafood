@@ -39,6 +39,13 @@ public class FornitoreService {
         return fornitore;
     }
 
+    public Fornitore getByRagioneSociale(String ragioneSociale){
+        LOGGER.info("Retrieving 'fornitore' with ragioneSociale '{}'", ragioneSociale);
+        Fornitore fornitore = fornitoreRepository.findByRagioneSociale(ragioneSociale);
+        LOGGER.info("Retrieved 'fornitore' '{}'", fornitore);
+        return fornitore;
+    }
+
     public Fornitore create(Fornitore fornitore){
         LOGGER.info("Creating 'fornitore'");
         Fornitore createdFornitore = fornitoreRepository.save(fornitore);

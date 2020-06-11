@@ -89,7 +89,8 @@ public class FatturaAccompagnatoriaArticoloService {
         Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoloRepository.findByArticoloIdAndLotto(idArticolo, lotto);
         if(fatturaAccompagnatoriaArticoli != null && !fatturaAccompagnatoriaArticoli.isEmpty()){
             if(scadenza != null){
-                fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoli.stream().filter(da -> da.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0).collect(Collectors.toSet());
+                fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoli.stream()
+                        .filter(faa -> (faa.getScadenza() != null && faa.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0)).collect(Collectors.toSet());
             }
         }
         LOGGER.info("Retrieved '{}' 'fattura accompagnatoria articoli'", fatturaAccompagnatoriaArticoli.size());

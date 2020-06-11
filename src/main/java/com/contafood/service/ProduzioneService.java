@@ -6,12 +6,14 @@ import com.contafood.model.ProduzioneConfezione;
 import com.contafood.model.ProduzioneIngrediente;
 import com.contafood.repository.ProduzioneRepository;
 import com.contafood.util.LottoUtils;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -30,12 +32,17 @@ public class ProduzioneService {
     private final ProduzioneRepository produzioneRepository;
     private final ProduzioneIngredienteService produzioneIngredienteService;
     private final ProduzioneConfezioneService produzioneConfezioneService;
+    private final GiacenzaService giacenzaService;
 
     @Autowired
-    public ProduzioneService(final ProduzioneRepository produzioneRepository, final ProduzioneIngredienteService produzioneIngredienteService, final ProduzioneConfezioneService produzioneConfezioneService){
+    public ProduzioneService(final ProduzioneRepository produzioneRepository,
+                             final ProduzioneIngredienteService produzioneIngredienteService,
+                             final ProduzioneConfezioneService produzioneConfezioneService,
+                             final GiacenzaService giacenzaService){
         this.produzioneRepository = produzioneRepository;
         this.produzioneIngredienteService = produzioneIngredienteService;
         this.produzioneConfezioneService = produzioneConfezioneService;
+        this.giacenzaService = giacenzaService;
     }
 
     public Set<Produzione> getAll(){
@@ -99,6 +106,9 @@ public class ProduzioneService {
         createdProduzione.setNumeroConfezioni(numeroConfezioni);
         createdProduzione = produzioneRepository.save(produzione);
 
+        // compute 'giacenza'
+        //giacenzaService.computeGiacenza(null, createdProduzione.getRicetta().getId(), createdProduzione.getLotto(), createdProduzione.getScadenza(), createdProduzione.getQuantitaTotale(), Resource.PRODUZIONE);
+
         LOGGER.info("Created 'produzione' '{}'", createdProduzione);
         return createdProduzione;
     }
@@ -136,6 +146,9 @@ public class ProduzioneService {
         updatedProduzione.setNumeroConfezioni(numeroConfezioni);
         updatedProduzione = produzioneRepository.save(produzione);
 
+        // compute 'giacenza'
+        //giacenzaService.computeGiacenza(null, updatedProduzione.getRicetta().getId(), updatedProduzione.getLotto(), updatedProduzione.getScadenza(), updatedProduzione.getQuantitaTotale(), Resource.PRODUZIONE);
+
         LOGGER.info("Updated 'produzione' '{}'", updatedProduzione);
         return updatedProduzione;
     }
@@ -143,6 +156,11 @@ public class ProduzioneService {
     @Transactional
     public void delete(Long produzioneId){
         LOGGER.info("Deleting 'produzione' '{}'", produzioneId);
+        Produzione produzione = produzioneRepository.findById(produzioneId).get();
+
+        // compute 'giacenza'
+        //giacenzaService.computeGiacenza(null, produzione.getRicetta().getId(), produzione.getLotto(), produzione.getScadenza(), produzione.getQuantitaTotale(), Resource.PRODUZIONE);
+
         produzioneIngredienteService.deleteByProduzioneId(produzioneId);
         produzioneConfezioneService.deleteByProduzioneId(produzioneId);
         produzioneRepository.deleteById(produzioneId);

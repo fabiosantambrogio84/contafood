@@ -63,6 +63,13 @@ public class FornitoreController {
         }
     }
 
+    @RequestMapping(method = GET, path = "/default")
+    @CrossOrigin
+    public Fornitore getByRagioneSociale() {
+        LOGGER.info("Performing GET request for retrieving default 'fornitore' (URBANI GIUSEPPE)");
+        return fornitoreService.getByRagioneSociale("URBANI GIUSEPPE");
+    }
+
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin

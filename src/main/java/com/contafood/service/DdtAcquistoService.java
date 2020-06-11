@@ -70,7 +70,7 @@ public class DdtAcquistoService {
             ddtAcquistoArticoloService.create(daa);
 
             // compute 'giacenza'
-            giacenzaService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita());
+            giacenzaService.computeGiacenza(daa.getId().getArticoloId(), null, daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
         });
 
         computeTotali(createdDdtAcquisto, createdDdtAcquisto.getDdtAcquistoArticoli());
@@ -100,7 +100,7 @@ public class DdtAcquistoService {
             ddtAcquistoArticoloService.create(daa);
 
             // compute 'giacenza'
-            giacenzaService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita());
+            giacenzaService.computeGiacenza(daa.getId().getArticoloId(), null, daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
         });
 
         computeTotali(updatedDdtAcquisto, ddtAcquistoArticoli);
@@ -120,7 +120,7 @@ public class DdtAcquistoService {
 
         for (DdtAcquistoArticolo ddtAcquistoArticolo:ddtAcquistoArticoli) {
             // compute 'giacenza'
-            giacenzaService.computeGiacenza(ddtAcquistoArticolo.getId().getArticoloId(), ddtAcquistoArticolo.getLotto(), ddtAcquistoArticolo.getDataScadenza(), ddtAcquistoArticolo.getQuantita());
+            giacenzaService.computeGiacenza(ddtAcquistoArticolo.getId().getArticoloId(), null, ddtAcquistoArticolo.getLotto(), ddtAcquistoArticolo.getDataScadenza(), ddtAcquistoArticolo.getQuantita(), Resource.DDT_ACQUISTO);
         }
 
         LOGGER.info("Deleted 'ddt acquisto' '{}'", ddtAcquistoId);

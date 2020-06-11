@@ -5,6 +5,7 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.DdtRepository;
 import com.contafood.repository.PagamentoRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +106,7 @@ public class DdtService {
             ddtArticoloService.create(da);
 
             // compute 'giacenza'
-            giacenzaService.computeGiacenza(da.getId().getArticoloId(), da.getLotto(), da.getScadenza(), da.getQuantita());
+            giacenzaService.computeGiacenza(da.getId().getArticoloId(), null, da.getLotto(), da.getScadenza(), da.getQuantita(), Resource.DDT);
         });
 
         // update 'pezzi-da-evadere' and 'stato-ordine' on OrdineCliente
@@ -123,6 +124,8 @@ public class DdtService {
     public Ddt update(Ddt ddt){
         LOGGER.info("Updating 'ddt'");
         checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), ddt.getId());
+
+        Boolean modificaGiacenze = ddt.getModificaGiacenze();
 
         Set<DdtArticolo> ddtArticoli = ddt.getDdtArticoli();
         ddt.setDdtArticoli(new HashSet<>());
@@ -142,8 +145,10 @@ public class DdtService {
             da.getId().setUuid(UUID.randomUUID().toString());
             ddtArticoloService.create(da);
 
-            // compute 'giacenza'
-            giacenzaService.computeGiacenza(da.getId().getArticoloId(), da.getLotto(), da.getScadenza(), da.getQuantita());
+            if(modificaGiacenze != null && modificaGiacenze.equals(Boolean.TRUE)){
+                // compute 'giacenza'
+                giacenzaService.computeGiacenza(da.getId().getArticoloId(), null, da.getLotto(), da.getScadenza(), da.getQuantita(), Resource.DDT);
+            }
         });
 
         computeTotali(updatedDdt, ddtArticoli);
@@ -183,8 +188,8 @@ public class DdtService {
     }
 
     @Transactional
-    public void delete(Long ddtId){
-        LOGGER.info("Deleting 'ddt' '{}'", ddtId);
+    public void delete(Long ddtId, Boolean modificaGiacenze){
+        LOGGER.info("Deleting 'ddt' '{}' ('modificaGiacenze={}')", ddtId, modificaGiacenze);
 
         Set<DdtArticolo> ddtArticoli = ddtArticoloService.findByDdtId(ddtId);
 
@@ -195,11 +200,12 @@ public class DdtService {
         ddtArticoloService.deleteByDdtId(ddtId);
         ddtRepository.deleteById(ddtId);
 
-        for (DdtArticolo ddtArticolo:ddtArticoli) {
-            // compute 'giacenza'
-            giacenzaService.computeGiacenza(ddtArticolo.getId().getArticoloId(), ddtArticolo.getLotto(), ddtArticolo.getScadenza(), ddtArticolo.getQuantita());
+        if(modificaGiacenze.equals(Boolean.TRUE)){
+            for (DdtArticolo ddtArticolo:ddtArticoli) {
+                // compute 'giacenza'
+                giacenzaService.computeGiacenza(ddtArticolo.getId().getArticoloId(), null, ddtArticolo.getLotto(), ddtArticolo.getScadenza(), ddtArticolo.getQuantita(), Resource.DDT);
+            }
         }
-
         LOGGER.info("Deleted 'ddt' '{}'", ddtId);
     }
 

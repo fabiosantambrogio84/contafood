@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"ricettaIngredienti", "produzioni"})
+@EqualsAndHashCode(exclude = {"ricettaIngredienti", "produzioni", "giacenze"})
 @Entity
 @Table(name = "ricetta")
 public class Ricetta {
@@ -66,6 +66,10 @@ public class Ricetta {
     @OneToMany(mappedBy = "ricetta")
     @JsonIgnore
     private List<Produzione> produzioni;
+
+    @OneToMany(mappedBy = "ricetta")
+    @JsonIgnore
+    private Set<Giacenza> giacenze = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -191,6 +195,14 @@ public class Ricetta {
 
     public void setProduzioni(List<Produzione> produzioni) {
         this.produzioni = produzioni;
+    }
+
+    public Set<Giacenza> getGiacenze() {
+        return giacenze;
+    }
+
+    public void setGiacenze(Set<Giacenza> giacenze) {
+        this.giacenze = giacenze;
     }
 
     @Override

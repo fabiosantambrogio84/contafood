@@ -11,11 +11,11 @@ public interface GiacenzaRepository extends CrudRepository<Giacenza, Long> {
     @Override
     Set<Giacenza> findAll();
 
-    Set<Giacenza> findByArticoloId(Long idArticolo);
-
-    Set<Giacenza> findByArticoloIdAndLotto(Long idArticolo, String lotto);
+    Set<Giacenza> findByCodiceArticoloRicettaAndLotto(String codiceArticoloRicetta, String lotto);
 
     void deleteByArticoloId(Long idArticolo);
+
+    void deleteByRicettaId(Long idRicetta);
 
     void deleteByIdIn(List<Long> ids);
 }

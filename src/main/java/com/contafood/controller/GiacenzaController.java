@@ -47,7 +47,7 @@ public class GiacenzaController {
             if(articolo != null){
                 Articolo giacenzaArticolo = giacenza.getArticolo();
                 if(giacenzaArticolo != null){
-                    if(giacenzaArticolo.getCodice().contains(articolo) || giacenzaArticolo.getDescrizione().contains(articolo)){
+                    if(giacenzaArticolo.getCodice().toLowerCase().contains(articolo.toLowerCase()) || giacenzaArticolo.getDescrizione().toLowerCase().contains(articolo.toLowerCase())){
                         return true;
                     } else {
                         return false;
@@ -90,14 +90,22 @@ public class GiacenzaController {
 
         Predicate<Giacenza> isGiacenzaArticoloLottoContains = giacenza -> {
             if(lotto != null){
-                return giacenza.getLotto().contains(lotto);
+                if(giacenza.getLotto() != null){
+                    return giacenza.getLotto().contains(lotto);
+                } else {
+                    return false;
+                }
             }
             return true;
         };
 
         Predicate<Giacenza> isGiacenzaScadenzaEquals = giacenza -> {
             if(scadenza != null){
-                return giacenza.getScadenza().compareTo(scadenza)==0;
+                if(giacenza.getScadenza() != null){
+                    return giacenza.getScadenza().compareTo(scadenza)==0;
+                } else {
+                    return false;
+                }
             }
             return true;
         };

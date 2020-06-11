@@ -22,4 +22,6 @@ public interface ProduzioneRepository extends CrudRepository<Produzione, Long> {
             value = "select distinct produzione.* from produzione join produzione_ingrediente on produzione.id = produzione_ingrediente.id_produzione join produzione_confezione on produzione.id = produzione_confezione.id_produzione where produzione_ingrediente.lotto = ?1 or produzione_confezione.lotto = ?1 or produzione.lotto = ?1 or produzione.lotto_film_chiusura  = ?1 order by produzione.lotto_anno desc, produzione.lotto_giorno desc, produzione.lotto_numero_progressivo desc"
     )
     Set<Produzione> findAllByLotto(String lotto);
+
+    Set<Produzione> findByRicettaIdAndLotto(Long idRicetta, String lotto);
 }
