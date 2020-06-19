@@ -9,7 +9,8 @@ public enum Resource {
     FORNITORE("fornitore"),
     NOTA_ACCREDITO("nota accredito"),
     NOTA_RESO("nota reso"),
-    PRODUZIONE("produzione");
+    PRODUZIONE("produzione"),
+    PRODUZIONE_INGREDIENTE("produzione ingrediente");
 
     private String label;
 

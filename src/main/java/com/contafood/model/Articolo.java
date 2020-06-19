@@ -113,7 +113,7 @@ public class Articolo {
 
     @OneToMany(mappedBy = "articolo")
     @JsonIgnore
-    private Set<Giacenza> giacenze = new HashSet<>();
+    private Set<GiacenzaArticolo> giacenze = new HashSet<>();
 
     public Long getId() {
         return id;

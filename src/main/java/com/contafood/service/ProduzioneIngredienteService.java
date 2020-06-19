@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProduzioneIngredienteService {
@@ -35,10 +37,16 @@ public class ProduzioneIngredienteService {
         return produzioneIngredienti;
     }
 
-    public Set<ProduzioneIngrediente> findByIngredienteId(Long ingredienteId){
-        LOGGER.info("Retrieving the list of 'produzione ingredienti' for 'ingrediente' '{}'", ingredienteId);
-        Set<ProduzioneIngrediente> produzioneIngredienti = produzioneIngredienteRepository.findByIngredienteId(ingredienteId);
-        LOGGER.info("Retrieved {} 'produzione ingredienti' for 'ingrediente' '{}'", produzioneIngredienti.size(), ingredienteId);
+    public Set<ProduzioneIngrediente> getByIngredienteIdAndLottoAndScadenza(Long idIngrediente, String lotto, Date scadenza){
+        LOGGER.info("Retrieving the list of 'produzione ingredienti' for 'idIngrediente' '{}', 'lotto' '{}' and 'scadenza' '{}'", idIngrediente, lotto, scadenza);
+        Set<ProduzioneIngrediente> produzioneIngredienti = produzioneIngredienteRepository.findByIngredienteIdAndLotto(idIngrediente, lotto);
+        if(produzioneIngredienti != null && !produzioneIngredienti.isEmpty()){
+            if(scadenza != null){
+                produzioneIngredienti = produzioneIngredienti.stream()
+                        .filter(pi -> (pi.getScadenza() != null && pi.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0)).collect(Collectors.toSet());
+            }
+        }
+        LOGGER.info("Retrieved {} 'produzione ingredienti'", produzioneIngredienti.size());
         return produzioneIngredienti;
     }
 

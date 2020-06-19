@@ -15,6 +15,10 @@ public class Fornitore {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name="id_tipo")
+    private TipoFornitore tipoFornitore;
+
     @Column(name = "codice")
     private Integer codice;
 
@@ -102,6 +106,14 @@ public class Fornitore {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public TipoFornitore getTipoFornitore() {
+        return tipoFornitore;
+    }
+
+    public void setTipoFornitore(TipoFornitore tipoFornitore) {
+        this.tipoFornitore = tipoFornitore;
     }
 
     public Integer getCodice() {
@@ -310,6 +322,7 @@ public class Fornitore {
 
         result.append("{");
         result.append("id: " + id);
+        result.append(", tipoFornitore: " + tipoFornitore);
         result.append(", codice: " + codice);
         result.append(", ragioneSociale: " + ragioneSociale);
         result.append(", ragioneSociale2: " + ragioneSociale2);

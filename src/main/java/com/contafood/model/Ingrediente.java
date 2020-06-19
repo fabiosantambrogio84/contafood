@@ -27,15 +27,23 @@ public class Ingrediente {
     @Column(name = "prezzo")
     private BigDecimal prezzo;
 
-    @Column(name = "unita_di_misura")
-    private String unitaDiMisura;
+    @ManyToOne
+    @JoinColumn(name = "id_unita_misura")
+    private UnitaMisura unitaMisura;
 
     @ManyToOne
     @JoinColumn(name="id_fornitore")
     private Fornitore fornitore;
 
+    @ManyToOne
+    @JoinColumn(name="id_aliquota_iva")
+    private AliquotaIva aliquotaIva;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
+
+    @Column(name = "attivo")
+    private Boolean attivo;
 
     @Column(name = "note")
     private String note;
@@ -76,12 +84,12 @@ public class Ingrediente {
         this.prezzo = prezzo;
     }
 
-    public String getUnitaDiMisura() {
-        return unitaDiMisura;
+    public UnitaMisura getUnitaMisura() {
+        return unitaMisura;
     }
 
-    public void setUnitaDiMisura(String unitaDiMisura) {
-        this.unitaDiMisura = unitaDiMisura;
+    public void setUnitaMisura(UnitaMisura unitaMisura) {
+        this.unitaMisura = unitaMisura;
     }
 
     public Fornitore getFornitore() {
@@ -92,12 +100,28 @@ public class Ingrediente {
         this.fornitore = fornitore;
     }
 
+    public AliquotaIva getAliquotaIva() {
+        return aliquotaIva;
+    }
+
+    public void setAliquotaIva(AliquotaIva aliquotaIva) {
+        this.aliquotaIva = aliquotaIva;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
 
     public void setDataInserimento(Timestamp dataInserimento) {
         this.dataInserimento = dataInserimento;
+    }
+
+    public Boolean getAttivo() {
+        return attivo;
+    }
+
+    public void setAttivo(Boolean attivo) {
+        this.attivo = attivo;
     }
 
     public String getNote() {
@@ -125,9 +149,11 @@ public class Ingrediente {
         result.append(", codice: " + codice);
         result.append(", descrizione: " + descrizione);
         result.append(", prezzo: " + prezzo);
-        result.append(", unitaDiMisura: " + unitaDiMisura);
+        result.append(", unitaMisura: " + unitaMisura);
         result.append(", fornitore: " + fornitore);
+        result.append(", fornitore: " + aliquotaIva);
         result.append(", dataInserimento: " + dataInserimento);
+        result.append(", attivo: " + attivo);
         result.append(", note: " + note);
         result.append("}");
 

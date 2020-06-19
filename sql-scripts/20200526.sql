@@ -1,7 +1,7 @@
 DROP VIEW IF EXISTS v_ordine_cliente_stats_week;
 DROP VIEW IF EXISTS v_ordine_cliente_stats_month;
 DROP TABLE IF EXISTS ddt_articolo_ordine_cliente;
-DROP TABLE IF EXISTS giacenza;
+DROP TABLE IF EXISTS giacenzaArticolo;
 
 CREATE VIEW `v_ordine_cliente_stats_week` AS
     select
@@ -151,6 +151,85 @@ CREATE TABLE `giacenza` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 -- 16/06/2020
-ALTER TABLE giacenza ADD COLUMN id_ricetta int(10) unsigned AFTER id_articolo;
-ALTER TABLE giacenza ADD COLUMN codice_articolo_ricetta varchar(100) AFTER id_ricetta;
-ALTER TABLE giacenza ADD CONSTRAINT fk_giacenza_ricetta FOREIGN KEY (`id_ricetta`) REFERENCES `ricetta` (`id`);
+-- ALTER TABLE giacenza ADD COLUMN id_ricetta int(10) unsigned AFTER id_articolo;
+-- ALTER TABLE giacenza ADD COLUMN codice_articolo_ricetta varchar(100) AFTER id_ricetta;
+-- ALTER TABLE giacenza ADD CONSTRAINT fk_giacenza_ricetta FOREIGN KEY (`id_ricetta`) REFERENCES `ricetta` (`id`);
+
+-- 17/06/2020
+DROP TABLE IF EXISTS giacenza;
+DROP TABLE IF EXISTS giacenza_articolo;
+DROP TABLE IF EXISTS giacenza_ingrediente;
+DROP TABLE IF EXISTS tipo_fornitore;
+DROP TABLE IF EXISTS ddt_acquisto_ingrediente;
+
+CREATE TABLE `giacenza_articolo` (
+	id int(10) unsigned auto_increment,
+	id_articolo int(10) unsigned,
+	lotto varchar(100),
+	scadenza date,
+	quantita decimal(10,3),
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
+	PRIMARY KEY (id),
+	CONSTRAINT `fk_giacenza_articolo_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+CREATE TABLE `giacenza_ingrediente` (
+	id int(10) unsigned auto_increment,
+	id_ingrediente int(10) unsigned,
+	lotto varchar(100),
+	scadenza date,
+	quantita decimal(10,3),
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
+	PRIMARY KEY (id),
+	CONSTRAINT `fk_giacenza_ingrediente_ing` FOREIGN KEY (`id_ingrediente`) REFERENCES `ingrediente` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+CREATE TABLE `tipo_fornitore` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `codice` varchar(100),
+  `descrizione` varchar(255),
+  `ordine` int(10),
+  `data_inserimento` timestamp DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+ALTER TABLE fornitore ADD COLUMN id_tipo int(10) unsigned AFTER id;
+ALTER TABLE fornitore ADD CONSTRAINT fk_fornitore_tipo FOREIGN KEY (`id_tipo`) REFERENCES `tipo_fornitore` (`id`);
+
+INSERT INTO contafood.tipo_fornitore(codice, descrizione, ordine, data_inserimento)
+VALUES('FORNITORE_ARTICOLI', 'Fornitore articoli', 0, CURRENT_TIMESTAMP);
+
+INSERT INTO contafood.tipo_fornitore(codice, descrizione, ordine, data_inserimento)
+VALUES('FORNITORE_INGREDIENTI', 'Fornitore ingredienti', 1, CURRENT_TIMESTAMP);
+
+UPDATE contafood.fornitore SET id_tipo = 1;
+
+
+CREATE TABLE `ddt_acquisto_ingrediente` (
+  `id_ddt_acquisto` int(10) unsigned NOT NULL DEFAULT '0',
+  `id_ingrediente` int(10) unsigned NOT NULL DEFAULT '0',
+  `uuid` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '',
+  `lotto` varchar(100) CHARACTER SET latin1 COLLATE latin1_general_cs DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `quantita` decimal(10,3) DEFAULT NULL,
+  `prezzo` decimal(10,3) DEFAULT NULL,
+  `sconto` decimal(10,3) DEFAULT NULL,
+  `imponibile` decimal(10,3) DEFAULT NULL,
+  `data_inserimento` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `data_aggiornamento` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id_ddt_acquisto`,`id_ingrediente`,`uuid`),
+  CONSTRAINT `fk_ddt_acq_ingrediente_ingr` FOREIGN KEY (`id_ingrediente`) REFERENCES `ingrediente` (`id`),
+  CONSTRAINT `fk_ddt_acq_ingrediente_ddt_acq` FOREIGN KEY (`id_ddt_acquisto`) REFERENCES `ddt_acquisto` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+ALTER TABLE ingrediente ADD COLUMN id_aliquota_iva int(10) unsigned AFTER id_fornitore;
+ALTER TABLE ingrediente ADD CONSTRAINT fk_ingrediente_iva FOREIGN KEY (`id_aliquota_iva`) REFERENCES `aliquota_iva` (`id`);
+
+UPDATE ingrediente set id_aliquota_iva=1;
+
+ALTER TABLE ingrediente DROP COLUMN unita_di_misura;
+ALTER TABLE ingrediente ADD COLUMN id_unita_misura int(10) unsigned AFTER prezzo;
+ALTER TABLE ingrediente ADD CONSTRAINT fk_ingrediente_udm FOREIGN KEY (`id_unita_misura`) REFERENCES `unita_misura` (`id`);
+

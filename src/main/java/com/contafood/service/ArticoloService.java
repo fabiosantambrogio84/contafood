@@ -4,7 +4,7 @@ import com.contafood.exception.ArticoloBarcodeCannotStartWithZeroException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.ArticoloRepository;
-import com.contafood.repository.GiacenzaRepository;
+import com.contafood.repository.GiacenzaArticoloRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +15,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,17 +27,17 @@ public class ArticoloService {
     private final ArticoloImmagineService articoloImmagineService;
     private final ListinoPrezzoService listinoPrezzoService;
     private final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService;
-    private final GiacenzaRepository giacenzaRepository;
+    private final GiacenzaArticoloRepository giacenzaArticoloRepository;
 
     @Autowired
     public ArticoloService(final ArticoloRepository articoloRepository, final ArticoloImmagineService articoloImmagineService,
                            final ListinoPrezzoService listinoPrezzoService, final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService,
-                           final GiacenzaRepository giacenzaRepository){
+                           final GiacenzaArticoloRepository giacenzaArticoloRepository){
         this.articoloRepository = articoloRepository;
         this.articoloImmagineService = articoloImmagineService;
         this.listinoPrezzoService = listinoPrezzoService;
         this.listinoPrezzoVariazioneService = listinoPrezzoVariazioneService;
-        this.giacenzaRepository = giacenzaRepository;
+        this.giacenzaArticoloRepository = giacenzaArticoloRepository;
     }
 
     public Set<Articolo> getAll(){
@@ -83,6 +80,17 @@ public class ArticoloService {
         return articolo;
     }
 
+    public Optional<Articolo> getByCodice(String codice){
+        LOGGER.info("Retrieving 'articolo' with codice '{}'", codice);
+        Optional<Articolo> articolo = articoloRepository.findByCodice(codice);
+        if(articolo.isPresent()){
+            LOGGER.info("Retrieved 'articolo' '{}'", articolo.get());
+        } else {
+            LOGGER.info("'articolo' with codice '{}' not existing", codice);
+        }
+        return articolo;
+    }
+
     public Articolo create(Articolo articolo){
         LOGGER.info("Creating 'articolo'");
 
@@ -102,7 +110,7 @@ public class ArticoloService {
         // compute 'listini prezzi'
         LOGGER.info("Computing 'listiniPrezzi' for 'articolo' '{}'", createdArticolo.getId());
         List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
-        Set<Listino> listini = listinoPrezzoService.getAll().stream().map(lp -> lp.getListino()).distinct().collect(Collectors.toSet());
+        Set<Listino> listini = listinoPrezzoService.getAll().stream().map(lp -> lp.getListino()).collect(Collectors.toSet());
         listini.forEach(l -> {
             ListinoPrezzo listinoPrezzo = new ListinoPrezzo();
             listinoPrezzo.setListino(l);
@@ -165,7 +173,7 @@ public class ArticoloService {
         LOGGER.info("Deleted 'listiniPrezzi' of articolo '{}'", articoloId);
 
         LOGGER.info("Deleting 'giacenze' of articolo '{}'", articoloId);
-        giacenzaRepository.deleteByArticoloId(articoloId);
+        giacenzaArticoloRepository.deleteByArticoloId(articoloId);
         LOGGER.info("Deleted 'giacenze' of articolo '{}'", articoloId);
 
         LOGGER.info("Deleting 'articolo' '{}'", articoloId);

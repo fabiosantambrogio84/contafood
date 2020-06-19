@@ -1,6 +1,8 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
+import com.contafood.model.Articolo;
+import com.contafood.model.Fornitore;
 import com.contafood.model.Ingrediente;
 import com.contafood.service.IngredienteService;
 import org.slf4j.Logger;
@@ -8,8 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -30,9 +36,35 @@ public class IngredienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Ingrediente> getAll() {
+    public List<Ingrediente> getAll(@RequestParam(name = "attivo", required = false) Boolean active,
+                                    @RequestParam(name = "idFornitore", required = false) Integer idFornitore) {
         LOGGER.info("Performing GET request for retrieving list of 'ingredienti'");
-        return ingredienteService.getAll();
+        LOGGER.info("Query parameter: 'attivo' '{}', 'idFornitore' '{}'", active, idFornitore);
+
+        Predicate<Ingrediente> isIngredienteActiveEquals = ingrediente -> {
+            if(active != null){
+                return ingrediente.getAttivo().equals(active);
+            }
+            return true;
+        };
+
+        Predicate<Ingrediente> isIngredienteIdFornitoreEquals = ingrediente -> {
+            if(idFornitore != null){
+                Fornitore ingredienteFornitore = ingrediente.getFornitore();
+                if(ingredienteFornitore != null){
+                    if(ingredienteFornitore.getId().equals(Long.valueOf(idFornitore))){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        };
+        Set<Ingrediente> ingredienti = ingredienteService.getAll().stream()
+                .filter(isIngredienteIdFornitoreEquals
+                        .and(isIngredienteActiveEquals))
+                .collect(Collectors.toSet());
+        return ingredienti.stream().sorted(Comparator.comparing(Ingrediente::getCodice)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = GET, path = "/{ingredienteId}")

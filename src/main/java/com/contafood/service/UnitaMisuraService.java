@@ -26,7 +26,7 @@ public class UnitaMisuraService {
 
     public Set<UnitaMisura> getAll(){
         LOGGER.info("Retrieving the list of 'unitaMisura'");
-        Set<UnitaMisura> unitaMisura = unitaMisuraRepository.findAll();
+        Set<UnitaMisura> unitaMisura = unitaMisuraRepository.findAllByOrderByEtichetta();
         LOGGER.info("Retrieved {} 'unitaMisura'", unitaMisura.size());
         return unitaMisura;
     }

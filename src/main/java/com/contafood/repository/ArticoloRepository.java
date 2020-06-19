@@ -4,6 +4,7 @@ import com.contafood.model.Articolo;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface ArticoloRepository extends CrudRepository<Articolo, Long> {
@@ -12,6 +13,8 @@ public interface ArticoloRepository extends CrudRepository<Articolo, Long> {
     Set<Articolo> findAll();
 
     Set<Articolo> findAllByOrderByCodiceAsc();
+
+    Optional<Articolo> findByCodice(String codice);
 
     Set<Articolo> findByAttivoOrderByCodiceAsc(Boolean attivo);
 

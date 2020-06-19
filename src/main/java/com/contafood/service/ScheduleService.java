@@ -1,6 +1,7 @@
 package com.contafood.service;
 
-import com.contafood.model.Giacenza;
+import com.contafood.model.GiacenzaArticolo;
+import com.contafood.model.GiacenzaIngrediente;
 import com.contafood.model.OrdineCliente;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +22,18 @@ public class ScheduleService {
 
     private final ScontoService scontoService;
     private final OrdineClienteService ordineClienteService;
-    private final GiacenzaService giacenzaService;
+    private final GiacenzaArticoloService giacenzaArticoloService;
+    private final GiacenzaIngredienteService giacenzaIngredienteService;
 
     @Autowired
-    public ScheduleService(final ScontoService scontoService, final OrdineClienteService ordineClienteService, final GiacenzaService giacenzaService){
+    public ScheduleService(final ScontoService scontoService,
+                           final OrdineClienteService ordineClienteService,
+                           final GiacenzaArticoloService giacenzaArticoloService,
+                           final GiacenzaIngredienteService giacenzaIngredienteService){
         this.scontoService = scontoService;
         this.ordineClienteService = ordineClienteService;
-        this.giacenzaService = giacenzaService;
+        this.giacenzaArticoloService = giacenzaArticoloService;
+        this.giacenzaIngredienteService = giacenzaIngredienteService;
     }
 
     @Scheduled(cron = "0 0 1 * * ?")
@@ -52,14 +58,26 @@ public class ScheduleService {
         LOGGER.info("Executing remove of expired and zero Giacenze");
         LocalDate yesterday = LocalDate.now().minusDays(1);
         LOGGER.info("Date to check: {}", yesterday);
-        Set<Giacenza> giacenze = giacenzaService.getAll();
-        if(giacenze != null && !giacenze.isEmpty()){
-            giacenze.stream()
+
+        Set<GiacenzaArticolo> giacenzeArticoli = giacenzaArticoloService.getAll();
+        if(giacenzeArticoli != null && !giacenzeArticoli.isEmpty()){
+            giacenzeArticoli.stream()
                     .filter(g -> (g.getQuantita().equals(0f) && g.getScadenza() == null)||(g.getQuantita().equals(0f) && g.getScadenza() != null && g.getScadenza().toLocalDate().compareTo(yesterday)<0))
                     .forEach(g -> {
-                        giacenzaService.delete(g.getId());
+                        giacenzaArticoloService.delete(g.getId());
                     });
         }
+        LOGGER.info("Deleted Giacenze Articoli");
+
+        Set<GiacenzaIngrediente> giacenzeIngredienti = giacenzaIngredienteService.getAll();
+        if(giacenzeIngredienti != null && !giacenzeIngredienti.isEmpty()){
+            giacenzeIngredienti.stream()
+                    .filter(g -> (g.getQuantita().equals(0f) && g.getScadenza() == null)||(g.getQuantita().equals(0f) && g.getScadenza() != null && g.getScadenza().toLocalDate().compareTo(yesterday)<0))
+                    .forEach(g -> {
+                        giacenzaIngredienteService.delete(g.getId());
+                    });
+        }
+        LOGGER.info("Deleted Giacenze Ingredienti");
         LOGGER.info("Executed remove of expired and zero Giacenze");
     }
 }

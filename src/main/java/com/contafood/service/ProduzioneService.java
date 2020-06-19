@@ -1,10 +1,9 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.Produzione;
-import com.contafood.model.ProduzioneConfezione;
-import com.contafood.model.ProduzioneIngrediente;
+import com.contafood.model.*;
 import com.contafood.repository.ProduzioneRepository;
+import com.contafood.util.Constants;
 import com.contafood.util.LottoUtils;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
@@ -13,15 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,17 +27,26 @@ public class ProduzioneService {
     private final ProduzioneRepository produzioneRepository;
     private final ProduzioneIngredienteService produzioneIngredienteService;
     private final ProduzioneConfezioneService produzioneConfezioneService;
-    private final GiacenzaService giacenzaService;
+    private final GiacenzaArticoloService giacenzaArticoloService;
+    private final GiacenzaIngredienteService giacenzaIngredienteService;
+    private final ArticoloService articoloService;
+    private final FornitoreService fornitoreService;
 
     @Autowired
     public ProduzioneService(final ProduzioneRepository produzioneRepository,
                              final ProduzioneIngredienteService produzioneIngredienteService,
                              final ProduzioneConfezioneService produzioneConfezioneService,
-                             final GiacenzaService giacenzaService){
+                             final GiacenzaArticoloService giacenzaArticoloService,
+                             final GiacenzaIngredienteService giacenzaIngredienteService,
+                             final ArticoloService articoloService,
+                             final FornitoreService fornitoreService){
         this.produzioneRepository = produzioneRepository;
         this.produzioneIngredienteService = produzioneIngredienteService;
         this.produzioneConfezioneService = produzioneConfezioneService;
-        this.giacenzaService = giacenzaService;
+        this.giacenzaArticoloService = giacenzaArticoloService;
+        this.giacenzaIngredienteService = giacenzaIngredienteService;
+        this.articoloService = articoloService;
+        this.fornitoreService = fornitoreService;
     }
 
     public Set<Produzione> getAll(){
@@ -95,6 +99,9 @@ public class ProduzioneService {
             pi.getId().setProduzioneId(produzioneId);
             pi.getId().setUuid(UUID.randomUUID().toString());
             produzioneIngredienteService.create(pi);
+
+            // compute 'giacenza ingrediente'
+            giacenzaIngredienteService.computeGiacenza(pi.getIngrediente().getId(), pi.getLotto(), pi.getScadenza(), pi.getQuantita(), Resource.PRODUZIONE_INGREDIENTE);
         });
         createdProduzione.getProduzioneConfezioni().stream().forEach(pc -> {
             pc.getId().setProduzioneId(produzioneId);
@@ -106,8 +113,30 @@ public class ProduzioneService {
         createdProduzione.setNumeroConfezioni(numeroConfezioni);
         createdProduzione = produzioneRepository.save(produzione);
 
-        // compute 'giacenza'
-        //giacenzaService.computeGiacenza(null, createdProduzione.getRicetta().getId(), createdProduzione.getLotto(), createdProduzione.getScadenza(), createdProduzione.getQuantitaTotale(), Resource.PRODUZIONE);
+        // create 'articolo', if not exists
+        LOGGER.info("Creating 'articolo' if not already exists...");
+        Fornitore fornitore = fornitoreService.getByRagioneSociale(Constants.DEFAULT_FORNITORE);
+        String codiceArticolo = Constants.DEFAULT_FORNITORE_INITIALS + createdProduzione.getRicetta().getCodice();
+        Optional<Articolo> optionalArticolo = articoloService.getByCodice(codiceArticolo);
+        Articolo articolo;
+        if(!optionalArticolo.isPresent()){
+            articolo = new Articolo();
+            articolo.setCodice(codiceArticolo);
+            articolo.setDescrizione(createdProduzione.getRicetta().getNome());
+            articolo.setFornitore(fornitore);
+            articolo.setData(createdProduzione.getDataProduzione());
+            articolo.setQuantitaPredefinita(createdProduzione.getQuantitaTotale());
+            articolo.setSitoWeb(Boolean.FALSE);
+            articolo.setAttivo(Boolean.TRUE);
+            articolo = articoloService.create(articolo);
+            LOGGER.info("Created 'articolo' '{}' from produzione", articolo);
+        } else {
+            LOGGER.info("The 'articolo' with 'codice' '{}' already exists", codiceArticolo);
+            articolo = optionalArticolo.get();
+        }
+
+        // compute 'giacenza articolo'
+        giacenzaArticoloService.computeGiacenza(articolo.getId(), createdProduzione.getLotto(), createdProduzione.getScadenza(), createdProduzione.getQuantitaTotale(), Resource.PRODUZIONE);
 
         LOGGER.info("Created 'produzione' '{}'", createdProduzione);
         return createdProduzione;
@@ -135,6 +164,9 @@ public class ProduzioneService {
             pi.getId().setProduzioneId(produzioneId);
             pi.getId().setUuid(UUID.randomUUID().toString());
             produzioneIngredienteService.create(pi);
+
+            // compute 'giacenza ingrediente'
+            giacenzaIngredienteService.computeGiacenza(pi.getIngrediente().getId(), pi.getLotto(), pi.getScadenza(), pi.getQuantita(), Resource.PRODUZIONE_INGREDIENTE);
         });
         produzioneConfezioni.stream().forEach(pc -> {
             pc.getId().setProduzioneId(produzioneId);
@@ -146,8 +178,30 @@ public class ProduzioneService {
         updatedProduzione.setNumeroConfezioni(numeroConfezioni);
         updatedProduzione = produzioneRepository.save(produzione);
 
-        // compute 'giacenza'
-        //giacenzaService.computeGiacenza(null, updatedProduzione.getRicetta().getId(), updatedProduzione.getLotto(), updatedProduzione.getScadenza(), updatedProduzione.getQuantitaTotale(), Resource.PRODUZIONE);
+        // create 'articolo', if not exists
+        LOGGER.info("Creating 'articolo' if not already exists...");
+        Fornitore fornitore = fornitoreService.getByRagioneSociale(Constants.DEFAULT_FORNITORE);
+        String codiceArticolo = Constants.DEFAULT_FORNITORE_INITIALS + updatedProduzione.getRicetta().getCodice();
+        Optional<Articolo> optionalArticolo = articoloService.getByCodice(codiceArticolo);
+        Articolo articolo;
+        if(!optionalArticolo.isPresent()){
+            articolo = new Articolo();
+            articolo.setCodice(codiceArticolo);
+            articolo.setDescrizione(updatedProduzione.getRicetta().getNome());
+            articolo.setFornitore(fornitore);
+            articolo.setData(updatedProduzione.getDataProduzione());
+            articolo.setQuantitaPredefinita(updatedProduzione.getQuantitaTotale());
+            articolo.setSitoWeb(Boolean.FALSE);
+            articolo.setAttivo(Boolean.TRUE);
+            articolo = articoloService.create(articolo);
+            LOGGER.info("Created 'articolo' '{}' from produzione", articolo);
+        } else {
+            LOGGER.info("The 'articolo' with 'codice' '{}' already exists", codiceArticolo);
+            articolo = optionalArticolo.get();
+        }
+
+        // compute 'giacenza articolo'
+        giacenzaArticoloService.computeGiacenza(articolo.getId(), updatedProduzione.getLotto(), updatedProduzione.getScadenza(), updatedProduzione.getQuantitaTotale(), Resource.PRODUZIONE);
 
         LOGGER.info("Updated 'produzione' '{}'", updatedProduzione);
         return updatedProduzione;
@@ -157,9 +211,21 @@ public class ProduzioneService {
     public void delete(Long produzioneId){
         LOGGER.info("Deleting 'produzione' '{}'", produzioneId);
         Produzione produzione = produzioneRepository.findById(produzioneId).get();
+        Set<ProduzioneIngrediente> produzioneIngredienti = produzioneIngredienteService.findByProduzioneId(produzioneId);
 
-        // compute 'giacenza'
-        //giacenzaService.computeGiacenza(null, produzione.getRicetta().getId(), produzione.getLotto(), produzione.getScadenza(), produzione.getQuantitaTotale(), Resource.PRODUZIONE);
+        String codiceArticolo = Constants.DEFAULT_FORNITORE_INITIALS + produzione.getRicetta().getCodice();
+        Optional<Articolo> optionalArticolo = articoloService.getByCodice(codiceArticolo);
+        if(optionalArticolo.isPresent()){
+            Articolo articolo = optionalArticolo.get();
+
+            // compute 'giacenza articolo'
+            giacenzaArticoloService.computeGiacenza(articolo.getId(), produzione.getLotto(), produzione.getScadenza(), produzione.getQuantitaTotale(), Resource.PRODUZIONE);
+        }
+
+        for(ProduzioneIngrediente produzioneIngrediente : produzioneIngredienti){
+            // compute 'giacenza ingrediente'
+            giacenzaIngredienteService.computeGiacenza(produzioneIngrediente.getId().getIngredienteId(), produzioneIngrediente.getLotto(), produzioneIngrediente.getScadenza(), produzioneIngrediente.getQuantita(), Resource.PRODUZIONE_INGREDIENTE);
+        }
 
         produzioneIngredienteService.deleteByProduzioneId(produzioneId);
         produzioneConfezioneService.deleteByProduzioneId(produzioneId);

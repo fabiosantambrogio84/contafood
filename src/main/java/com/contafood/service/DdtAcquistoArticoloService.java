@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
 import com.contafood.model.DdtAcquistoArticolo;
+import com.contafood.model.DdtAcquistoIngrediente;
 import com.contafood.repository.DdtAcquistoArticoloRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

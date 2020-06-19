@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Ddt;
 import com.contafood.model.Ingrediente;
+import com.contafood.repository.GiacenzaIngredienteRepository;
 import com.contafood.repository.IngredienteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,13 @@ public class IngredienteService {
     private static Logger LOGGER = LoggerFactory.getLogger(IngredienteService.class);
 
     private final IngredienteRepository ingredienteRepository;
+    private final GiacenzaIngredienteRepository giacenzaIngredienteRepository;
 
     @Autowired
-    public IngredienteService(final IngredienteRepository ingredienteRepository){
+    public IngredienteService(final IngredienteRepository ingredienteRepository,
+                              final GiacenzaIngredienteRepository giacenzaIngredienteRepository){
         this.ingredienteRepository = ingredienteRepository;
+        this.giacenzaIngredienteRepository = giacenzaIngredienteRepository;
     }
 
     public Set<Ingrediente> getAll(){
@@ -58,6 +62,10 @@ public class IngredienteService {
     }
 
     public void delete(Long ingredienteId){
+        LOGGER.info("Deleting 'giacenze' for 'ingrediente' '{}'", ingredienteId);
+        giacenzaIngredienteRepository.deleteByIngredienteId(ingredienteId);
+        LOGGER.info("Deleted 'giacenze' for 'ingrediente' '{}'", ingredienteId);
+
         LOGGER.info("Deleting 'ingrediente' '{}'", ingredienteId);
         ingredienteRepository.deleteById(ingredienteId);
         LOGGER.info("Deleted 'ingrediente' '{}'", ingredienteId);

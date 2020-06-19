@@ -23,5 +23,5 @@ public interface ProduzioneRepository extends CrudRepository<Produzione, Long> {
     )
     Set<Produzione> findAllByLotto(String lotto);
 
-    Set<Produzione> findByRicettaIdAndLotto(Long idRicetta, String lotto);
+    Set<Produzione> findByRicettaCodiceAndLotto(String codiceRicetta, String lotto);
 }

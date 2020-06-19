@@ -1,10 +1,7 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.AliquotaIva;
-import com.contafood.model.Articolo;
-import com.contafood.model.DdtAcquisto;
-import com.contafood.model.DdtAcquistoArticolo;
+import com.contafood.model.*;
 import com.contafood.repository.DdtAcquistoRepository;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
@@ -26,13 +23,21 @@ public class DdtAcquistoService {
 
     private final DdtAcquistoRepository ddtAcquistoRepository;
     private final DdtAcquistoArticoloService ddtAcquistoArticoloService;
-    private final GiacenzaService giacenzaService;
+    private final DdtAcquistoIngredienteService ddtAcquistoIngredienteService;
+    private final GiacenzaArticoloService giacenzaArticoloService;
+    private final GiacenzaIngredienteService giacenzaIngredienteService;
 
     @Autowired
-    public DdtAcquistoService(final DdtAcquistoRepository ddtAcquistoRepository, final DdtAcquistoArticoloService ddtAcquistoArticoloService, final GiacenzaService giacenzaService){
+    public DdtAcquistoService(final DdtAcquistoRepository ddtAcquistoRepository,
+                              final DdtAcquistoArticoloService ddtAcquistoArticoloService,
+                              final DdtAcquistoIngredienteService ddtAcquistoIngredienteService,
+                              final GiacenzaArticoloService giacenzaArticoloService,
+                              final GiacenzaIngredienteService giacenzaIngredienteService){
         this.ddtAcquistoRepository = ddtAcquistoRepository;
         this.ddtAcquistoArticoloService = ddtAcquistoArticoloService;
-        this.giacenzaService = giacenzaService;
+        this.ddtAcquistoIngredienteService = ddtAcquistoIngredienteService;
+        this.giacenzaArticoloService = giacenzaArticoloService;
+        this.giacenzaIngredienteService = giacenzaIngredienteService;
     }
 
     public Set<DdtAcquisto> getAll(){
@@ -69,11 +74,20 @@ public class DdtAcquistoService {
             daa.getId().setUuid(UUID.randomUUID().toString());
             ddtAcquistoArticoloService.create(daa);
 
-            // compute 'giacenza'
-            giacenzaService.computeGiacenza(daa.getId().getArticoloId(), null, daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
+            // compute 'giacenza articolo'
+            giacenzaArticoloService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
         });
 
-        computeTotali(createdDdtAcquisto, createdDdtAcquisto.getDdtAcquistoArticoli());
+        createdDdtAcquisto.getDdtAcquistoIngredienti().stream().forEach(dai -> {
+            dai.getId().setDdtAcquistoId(createdDdtAcquisto.getId());
+            dai.getId().setUuid(UUID.randomUUID().toString());
+            ddtAcquistoIngredienteService.create(dai);
+
+            // compute 'giacenza ingrediente'
+            giacenzaIngredienteService.computeGiacenza(dai.getIngrediente().getId(), dai.getLotto(), dai.getDataScadenza(), dai.getQuantita(), Resource.DDT_ACQUISTO);
+        });
+
+        computeTotali(createdDdtAcquisto, createdDdtAcquisto.getDdtAcquistoArticoli(), createdDdtAcquisto.getDdtAcquistoIngredienti());
 
         ddtAcquistoRepository.save(createdDdtAcquisto);
 
@@ -89,6 +103,10 @@ public class DdtAcquistoService {
         ddtAcquisto.setDdtAcquistoArticoli(new HashSet<>());
         ddtAcquistoArticoloService.deleteByDdtAcquistoId(ddtAcquisto.getId());
 
+        Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti = ddtAcquisto.getDdtAcquistoIngredienti();
+        ddtAcquisto.setDdtAcquistoIngredienti(new HashSet<>());
+        ddtAcquistoIngredienteService.deleteByDdtAcquistoId(ddtAcquisto.getId());
+
         DdtAcquisto ddtAcquistoCurrent = ddtAcquistoRepository.findById(ddtAcquisto.getId()).orElseThrow(ResourceNotFoundException::new);
         ddtAcquisto.setDataInserimento(ddtAcquistoCurrent.getDataInserimento());
         ddtAcquisto.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
@@ -99,11 +117,19 @@ public class DdtAcquistoService {
             daa.getId().setUuid(UUID.randomUUID().toString());
             ddtAcquistoArticoloService.create(daa);
 
-            // compute 'giacenza'
-            giacenzaService.computeGiacenza(daa.getId().getArticoloId(), null, daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
+            // compute 'giacenza articolo'
+            giacenzaArticoloService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
+        });
+        ddtAcquistoIngredienti.stream().forEach(dai -> {
+            dai.getId().setDdtAcquistoId(updatedDdtAcquisto.getId());
+            dai.getId().setUuid(UUID.randomUUID().toString());
+            ddtAcquistoIngredienteService.create(dai);
+
+            // compute 'giacenza ingrediente'
+            giacenzaIngredienteService.computeGiacenza(dai.getIngrediente().getId(), dai.getLotto(), dai.getDataScadenza(), dai.getQuantita(), Resource.DDT_ACQUISTO);
         });
 
-        computeTotali(updatedDdtAcquisto, ddtAcquistoArticoli);
+        computeTotali(updatedDdtAcquisto, ddtAcquistoArticoli, ddtAcquistoIngredienti);
 
         ddtAcquistoRepository.save(updatedDdtAcquisto);
         LOGGER.info("Updated 'ddt acquisto' '{}'", updatedDdtAcquisto);
@@ -114,19 +140,26 @@ public class DdtAcquistoService {
     public void delete(Long ddtAcquistoId){
         LOGGER.info("Deleting 'ddt acquisto' '{}'", ddtAcquistoId);
         Set<DdtAcquistoArticolo> ddtAcquistoArticoli = ddtAcquistoArticoloService.findByDdtAcquistoId(ddtAcquistoId);
+        Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti = ddtAcquistoIngredienteService.findByDdtAcquistoId(ddtAcquistoId);
 
         ddtAcquistoArticoloService.deleteByDdtAcquistoId(ddtAcquistoId);
+        ddtAcquistoIngredienteService.deleteByDdtAcquistoId(ddtAcquistoId);
         ddtAcquistoRepository.deleteById(ddtAcquistoId);
 
         for (DdtAcquistoArticolo ddtAcquistoArticolo:ddtAcquistoArticoli) {
-            // compute 'giacenza'
-            giacenzaService.computeGiacenza(ddtAcquistoArticolo.getId().getArticoloId(), null, ddtAcquistoArticolo.getLotto(), ddtAcquistoArticolo.getDataScadenza(), ddtAcquistoArticolo.getQuantita(), Resource.DDT_ACQUISTO);
+            // compute 'giacenza articolo'
+            giacenzaArticoloService.computeGiacenza(ddtAcquistoArticolo.getId().getArticoloId(), ddtAcquistoArticolo.getLotto(), ddtAcquistoArticolo.getDataScadenza(), ddtAcquistoArticolo.getQuantita(), Resource.DDT_ACQUISTO);
+        }
+        for (DdtAcquistoIngrediente ddtAcquistoIngrediente:ddtAcquistoIngredienti) {
+            // compute 'giacenza ingrediente'
+            giacenzaIngredienteService.computeGiacenza(ddtAcquistoIngrediente.getId().getIngredienteId(), ddtAcquistoIngrediente.getLotto(), ddtAcquistoIngrediente.getDataScadenza(), ddtAcquistoIngrediente.getQuantita(), Resource.DDT_ACQUISTO);
         }
 
         LOGGER.info("Deleted 'ddt acquisto' '{}'", ddtAcquistoId);
     }
 
-    private void computeTotali(DdtAcquisto ddtAcquisto, Set<DdtAcquistoArticolo> ddtAcquistoArticoli){
+    private void computeTotali(DdtAcquisto ddtAcquisto, Set<DdtAcquistoArticolo> ddtAcquistoArticoli, Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti){
+        // create and populate map for DdtAcquistoArticolo
         Map<AliquotaIva, Set<DdtAcquistoArticolo>> ivaDdtArticoliMap = new HashMap<>();
         ddtAcquistoArticoli.stream().forEach(da -> {
             Articolo articolo = ddtAcquistoArticoloService.getArticolo(da);
@@ -140,9 +173,28 @@ public class DdtAcquistoService {
             ddtArticoliByIva.add(da);
             ivaDdtArticoliMap.put(iva, ddtArticoliByIva);
         });
+
+        // create and populate map for DdtAcquistoIngrediente
+        Map<AliquotaIva, Set<DdtAcquistoIngrediente>> ivaDdtIngredientiMap = new HashMap<>();
+        ddtAcquistoIngredienti.stream().forEach(dai -> {
+            Ingrediente ingrediente = ddtAcquistoIngredienteService.getIngrediente(dai);
+            AliquotaIva iva = ingrediente.getAliquotaIva();
+            Set<DdtAcquistoIngrediente> ddtIngredientiByIva;
+            if(ivaDdtIngredientiMap.containsKey(iva)){
+                ddtIngredientiByIva = ivaDdtIngredientiMap.get(iva);
+            } else {
+                ddtIngredientiByIva = new HashSet<>();
+            }
+            ddtIngredientiByIva.add(dai);
+            ivaDdtIngredientiMap.put(iva, ddtIngredientiByIva);
+        });
+
+
         BigDecimal totaleImponibile = new BigDecimal(0);
         BigDecimal totaleIva = new BigDecimal(0);
         BigDecimal totale = new BigDecimal(0);
+
+        // compute 'totaleImponibile' and 'totale'
         for (Map.Entry<AliquotaIva, Set<DdtAcquistoArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
             BigDecimal iva = entry.getKey().getValore();
             BigDecimal totaleByIva = new BigDecimal(0);
@@ -157,6 +209,21 @@ public class DdtAcquistoService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
+        for (Map.Entry<AliquotaIva, Set<DdtAcquistoIngrediente>> entry : ivaDdtIngredientiMap.entrySet()) {
+            BigDecimal iva = entry.getKey().getValore();
+            BigDecimal totaleByIva = new BigDecimal(0);
+            Set<DdtAcquistoIngrediente> ddtAcquistoingredientiByIva = entry.getValue();
+            for(DdtAcquistoIngrediente DdtAcquistoIngrediente: ddtAcquistoingredientiByIva){
+                totaleImponibile = totaleImponibile.add(DdtAcquistoIngrediente.getImponibile());
+
+                BigDecimal partialIva = DdtAcquistoIngrediente.getImponibile().multiply(iva.divide(new BigDecimal(100)));
+                totaleIva = totaleIva.add(partialIva);
+
+                totaleByIva = totaleByIva.add(DdtAcquistoIngrediente.getImponibile());
+            }
+            totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
+        }
+
         ddtAcquisto.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
         ddtAcquisto.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
     }

@@ -28,17 +28,17 @@ public class DdtService {
     private final DdtArticoloService ddtArticoloService;
     private final StatoDdtService statoDdtService;
     private final PagamentoRepository pagamentoRepository;
-    private final GiacenzaService giacenzaService;
+    private final GiacenzaArticoloService giacenzaArticoloService;
 
     @Autowired
     public DdtService(final DdtRepository ddtRepository, final DdtArticoloService ddtArticoloService,
                       final StatoDdtService statoDdtService, final PagamentoRepository pagamentoRepository,
-                      final GiacenzaService giacenzaService){
+                      final GiacenzaArticoloService giacenzaArticoloService){
         this.ddtRepository = ddtRepository;
         this.ddtArticoloService = ddtArticoloService;
         this.statoDdtService = statoDdtService;
         this.pagamentoRepository = pagamentoRepository;
-        this.giacenzaService = giacenzaService;
+        this.giacenzaArticoloService = giacenzaArticoloService;
     }
 
     public Set<Ddt> getAll(){
@@ -105,8 +105,8 @@ public class DdtService {
             da.getId().setUuid(UUID.randomUUID().toString());
             ddtArticoloService.create(da);
 
-            // compute 'giacenza'
-            giacenzaService.computeGiacenza(da.getId().getArticoloId(), null, da.getLotto(), da.getScadenza(), da.getQuantita(), Resource.DDT);
+            // compute 'giacenza articolo'
+            giacenzaArticoloService.computeGiacenza(da.getId().getArticoloId(), da.getLotto(), da.getScadenza(), da.getQuantita(), Resource.DDT);
         });
 
         // update 'pezzi-da-evadere' and 'stato-ordine' on OrdineCliente
@@ -146,8 +146,8 @@ public class DdtService {
             ddtArticoloService.create(da);
 
             if(modificaGiacenze != null && modificaGiacenze.equals(Boolean.TRUE)){
-                // compute 'giacenza'
-                giacenzaService.computeGiacenza(da.getId().getArticoloId(), null, da.getLotto(), da.getScadenza(), da.getQuantita(), Resource.DDT);
+                // compute 'giacenza articolo'
+                giacenzaArticoloService.computeGiacenza(da.getId().getArticoloId(), da.getLotto(), da.getScadenza(), da.getQuantita(), Resource.DDT);
             }
         });
 
@@ -202,8 +202,8 @@ public class DdtService {
 
         if(modificaGiacenze.equals(Boolean.TRUE)){
             for (DdtArticolo ddtArticolo:ddtArticoli) {
-                // compute 'giacenza'
-                giacenzaService.computeGiacenza(ddtArticolo.getId().getArticoloId(), null, ddtArticolo.getLotto(), ddtArticolo.getScadenza(), ddtArticolo.getQuantita(), Resource.DDT);
+                // compute 'giacenza articolo'
+                giacenzaArticoloService.computeGiacenza(ddtArticolo.getId().getArticoloId(), ddtArticolo.getLotto(), ddtArticolo.getScadenza(), ddtArticolo.getQuantita(), Resource.DDT);
             }
         }
         LOGGER.info("Deleted 'ddt' '{}'", ddtId);

@@ -12,7 +12,7 @@ public interface ProduzioneIngredienteRepository extends CrudRepository<Produzio
 
     Set<ProduzioneIngrediente> findByProduzioneId(Long produzioneId);
 
-    Set<ProduzioneIngrediente> findByIngredienteId(Long ingredienteId);
+    Set<ProduzioneIngrediente> findByIngredienteIdAndLotto(Long ingredienteId, String lotto);
 
     void deleteByProduzioneId(Long produzioneId);
 

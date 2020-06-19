@@ -1,17 +1,18 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.Articolo;
-import com.contafood.model.Fornitore;
+import com.contafood.model.*;
 import com.contafood.service.FornitoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -33,9 +34,21 @@ public class FornitoreController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Fornitore> getAll() {
+    public List<Fornitore> getAll(@RequestParam(name = "codiceTipo", required = false) String codiceTipoFornitore) {
         LOGGER.info("Performing GET request for retrieving list of 'fornitori'");
-        return fornitoreService.getAll();
+        LOGGER.info("Request params: codiceTipoFornitore {}",codiceTipoFornitore);
+
+        Predicate<Fornitore> isFornitoreTipoFornitoreEquals = fornitore -> {
+            if(codiceTipoFornitore != null){
+                TipoFornitore tipoFornitore = fornitore.getTipoFornitore();
+                if(tipoFornitore != null){
+                    return tipoFornitore.getCodice().equals(codiceTipoFornitore);
+                }
+                return false;
+            }
+            return true;
+        };
+        return fornitoreService.getAll().stream().filter(isFornitoreTipoFornitoreEquals).sorted(Comparator.comparing(Fornitore::getRagioneSociale)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = GET, path = "/{fornitoreId}")

@@ -7,6 +7,5 @@ import java.util.Set;
 
 public interface UnitaMisuraRepository extends CrudRepository<UnitaMisura, Long> {
 
-    @Override
-    Set<UnitaMisura> findAll();
+    Set<UnitaMisura> findAllByOrderByEtichetta();
 }
