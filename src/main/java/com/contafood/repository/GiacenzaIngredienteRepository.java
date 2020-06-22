@@ -13,7 +13,11 @@ public interface GiacenzaIngredienteRepository extends CrudRepository<GiacenzaIn
 
     Set<GiacenzaIngrediente> findByIngredienteIdAndLotto(Long idIngrediente, String lotto);
 
+    Set<GiacenzaIngrediente> findByIngredienteId(Long idIngrediente);
+
     void deleteByIngredienteId(Long idIngrediente);
 
     void deleteByIdIn(List<Long> ids);
+
+    void deleteByIngredienteIdIn(List<Long> idIngredienti);
 }

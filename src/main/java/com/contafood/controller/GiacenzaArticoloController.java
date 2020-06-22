@@ -1,8 +1,7 @@
 package com.contafood.controller;
 
-import com.contafood.model.Articolo;
-import com.contafood.model.Fornitore;
 import com.contafood.model.GiacenzaArticolo;
+import com.contafood.model.views.VGiacenzaArticolo;
 import com.contafood.service.GiacenzaArticoloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -34,20 +34,24 @@ public class GiacenzaArticoloController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<GiacenzaArticolo> getAll(@RequestParam(name = "articolo", required = false) String articolo,
+    public Set<VGiacenzaArticolo> getAll(@RequestParam(name = "articolo", required = false) String articolo,
                                         @RequestParam(name = "attivo", required = false) Boolean attivo,
                                         @RequestParam(name = "idFornitore", required = false) Integer idFornitore,
                                         @RequestParam(name = "lotto", required = false) String lotto,
                                         @RequestParam(name = "scadenza", required = false) Date scadenza) {
-        LOGGER.info("Performing GET request for retrieving list of 'giacenze articoli'");
+        LOGGER.info("Performing GET request for retrieving list of 'giacenze articoli' (with quantita > 0)");
         LOGGER.info("Request params: articolo {}, attivo {}, idFornitore {}, lotto {}, scadenza {}",
                 articolo, attivo, idFornitore, lotto, scadenza);
 
-        Predicate<GiacenzaArticolo> isGiacenzaArticoloCodiceOrDescriptionContains = giacenza -> {
+        Predicate<VGiacenzaArticolo> isGiacenzaQuantitaGreaterOrLessThanZero = giacenza -> {
+            return giacenza.getQuantita() > 0 || giacenza.getQuantita() < 0;
+        };
+
+        Predicate<VGiacenzaArticolo> isGiacenzaArticoloCodiceOrDescriptionContains = giacenza -> {
             if(articolo != null){
-                Articolo giacenzaArticolo = giacenza.getArticolo();
+                String giacenzaArticolo = giacenza.getArticolo();
                 if(giacenzaArticolo != null){
-                    if(giacenzaArticolo.getCodice().toLowerCase().contains(articolo.toLowerCase()) || giacenzaArticolo.getDescrizione().toLowerCase().contains(articolo.toLowerCase())){
+                    if(giacenzaArticolo.toLowerCase().contains(articolo.toLowerCase())){
                         return true;
                     } else {
                         return false;
@@ -59,28 +63,18 @@ public class GiacenzaArticoloController {
             return true;
         };
 
-        Predicate<GiacenzaArticolo> isGiacenzaArticoloAttivoEquals = giacenza -> {
+        Predicate<VGiacenzaArticolo> isGiacenzaArticoloAttivoEquals = giacenza -> {
             if(attivo != null){
-                Articolo giacenzaArticolo = giacenza.getArticolo();
-                if(giacenzaArticolo != null){
-                    return giacenzaArticolo.getAttivo().equals(attivo);
-                } else {
-                    return false;
-                }
+                return giacenza.getAttivo().equals(attivo);
             }
             return true;
         };
 
-        Predicate<GiacenzaArticolo> isGiacenzaArticoloFornitoreEquals = giacenza -> {
+        Predicate<VGiacenzaArticolo> isGiacenzaArticoloFornitoreEquals = giacenza -> {
             if(idFornitore != null){
-                Articolo giacenzaArticolo = giacenza.getArticolo();
-                if(giacenzaArticolo != null){
-                    Fornitore fornitore = giacenzaArticolo.getFornitore();
-                    if(fornitore != null){
-                        return fornitore.getId().equals(idFornitore.longValue());
-                    } else {
-                        return false;
-                    }
+                Long idFornitoreGiacenza = giacenza.getIdFornitore();
+                if(idFornitoreGiacenza != null){
+                    return idFornitoreGiacenza.equals(idFornitore.longValue());
                 } else {
                     return false;
                 }
@@ -88,10 +82,10 @@ public class GiacenzaArticoloController {
             return true;
         };
 
-        Predicate<GiacenzaArticolo> isGiacenzaArticoloLottoContains = giacenza -> {
+        Predicate<VGiacenzaArticolo> isGiacenzaArticoloLottoContains = giacenza -> {
             if(lotto != null){
-                if(giacenza.getLotto() != null){
-                    return giacenza.getLotto().contains(lotto);
+                if(giacenza.getLottoGiacenze() != null){
+                    return giacenza.getLottoGiacenze().contains(lotto);
                 } else {
                     return false;
                 }
@@ -99,10 +93,10 @@ public class GiacenzaArticoloController {
             return true;
         };
 
-        Predicate<GiacenzaArticolo> isGiacenzaScadenzaEquals = giacenza -> {
+        Predicate<VGiacenzaArticolo> isGiacenzaScadenzaEquals = giacenza -> {
             if(scadenza != null){
-                if(giacenza.getScadenza() != null){
-                    return giacenza.getScadenza().compareTo(scadenza)==0;
+                if(giacenza.getScadenzaGiacenze() != null){
+                    return giacenza.getScadenzaGiacenze().contains(scadenza.toString());
                 } else {
                     return false;
                 }
@@ -110,22 +104,24 @@ public class GiacenzaArticoloController {
             return true;
         };
 
-        Set<GiacenzaArticolo> giacenze = giacenzaArticoloService.getAll().stream().filter(isGiacenzaArticoloCodiceOrDescriptionContains
-                .and(isGiacenzaArticoloAttivoEquals)
-                .and(isGiacenzaArticoloFornitoreEquals)
-                .and(isGiacenzaArticoloLottoContains)
-                .and(isGiacenzaScadenzaEquals))
+        Set<VGiacenzaArticolo> giacenze = giacenzaArticoloService.getAll().stream()
+                .filter(isGiacenzaQuantitaGreaterOrLessThanZero
+                        .and(isGiacenzaArticoloCodiceOrDescriptionContains)
+                        .and(isGiacenzaArticoloAttivoEquals)
+                        .and(isGiacenzaArticoloFornitoreEquals)
+                        .and(isGiacenzaArticoloLottoContains)
+                        .and(isGiacenzaScadenzaEquals))
                 .collect(Collectors.toSet());
 
         LOGGER.info("Retrieved {} 'giacenze'", giacenze.size());
         return giacenze;
     }
 
-    @RequestMapping(method = GET, path = "/{giacenzaId}")
+    @RequestMapping(method = GET, path = "/{idArticolo}")
     @CrossOrigin
-    public GiacenzaArticolo getOne(@PathVariable final Long giacenzaId) {
-        LOGGER.info("Performing GET request for retrieving 'giacenza articolo' '{}'", giacenzaId);
-        return giacenzaArticoloService.getOne(giacenzaId);
+    public Map<String, Object> getOne(@PathVariable final Long idArticolo) {
+        LOGGER.info("Performing GET request for retrieving 'giacenza articolo' of articolo '{}'", idArticolo);
+        return giacenzaArticoloService.getOne(idArticolo);
     }
 
     @RequestMapping(method = POST)
@@ -136,20 +132,12 @@ public class GiacenzaArticoloController {
         return giacenzaArticoloService.create(giacenzaArticolo);
     }
 
-    @RequestMapping(method = DELETE, path = "/{giacenzaId}")
-    @ResponseStatus(NO_CONTENT)
-    @CrossOrigin
-    public void delete(@PathVariable final Long giacenzaId){
-        LOGGER.info("Performing DELETE request for deleting 'giacenza articolo' '{}'", giacenzaId);
-        giacenzaArticoloService.delete(giacenzaId);
-    }
-
     @RequestMapping(method = POST, path = "/operations/delete")
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
-    public void bulkDelete(@RequestBody final List<Long> giacenzeIds){
-        LOGGER.info("Performing BULK DELETE operation on 'giacenze articoli' (number of elements to delete: {})", giacenzeIds.size());
-        giacenzaArticoloService.bulkDelete(giacenzeIds);
+    public void bulkDelete(@RequestBody final List<Long> idArticoli){
+        LOGGER.info("Performing BULK DELETE operation on 'giacenze articoli' by 'idArticolo' (number of elements to delete: {})", idArticoli.size());
+        giacenzaArticoloService.bulkDelete(idArticoli);
     }
 
 }

@@ -2,7 +2,9 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.repository.IngredienteRepository;
 import com.contafood.repository.ProduzioneRepository;
+import com.contafood.repository.RicettaRepository;
 import com.contafood.util.Constants;
 import com.contafood.util.LottoUtils;
 import com.contafood.util.enumeration.Resource;
@@ -31,6 +33,7 @@ public class ProduzioneService {
     private final GiacenzaIngredienteService giacenzaIngredienteService;
     private final ArticoloService articoloService;
     private final FornitoreService fornitoreService;
+    private final RicettaRepository ricettaRepository;
 
     @Autowired
     public ProduzioneService(final ProduzioneRepository produzioneRepository,
@@ -39,7 +42,8 @@ public class ProduzioneService {
                              final GiacenzaArticoloService giacenzaArticoloService,
                              final GiacenzaIngredienteService giacenzaIngredienteService,
                              final ArticoloService articoloService,
-                             final FornitoreService fornitoreService){
+                             final FornitoreService fornitoreService,
+                             final RicettaRepository ricettaRepository){
         this.produzioneRepository = produzioneRepository;
         this.produzioneIngredienteService = produzioneIngredienteService;
         this.produzioneConfezioneService = produzioneConfezioneService;
@@ -47,6 +51,7 @@ public class ProduzioneService {
         this.giacenzaIngredienteService = giacenzaIngredienteService;
         this.articoloService = articoloService;
         this.fornitoreService = fornitoreService;
+        this.ricettaRepository = ricettaRepository;
     }
 
     public Set<Produzione> getAll(){
@@ -101,7 +106,7 @@ public class ProduzioneService {
             produzioneIngredienteService.create(pi);
 
             // compute 'giacenza ingrediente'
-            giacenzaIngredienteService.computeGiacenza(pi.getIngrediente().getId(), pi.getLotto(), pi.getScadenza(), pi.getQuantita(), Resource.PRODUZIONE_INGREDIENTE);
+            giacenzaIngredienteService.computeGiacenza(pi.getId().getIngredienteId(), pi.getLotto(), pi.getScadenza(), pi.getQuantita(), Resource.PRODUZIONE_INGREDIENTE);
         });
         createdProduzione.getProduzioneConfezioni().stream().forEach(pc -> {
             pc.getId().setProduzioneId(produzioneId);
@@ -115,14 +120,15 @@ public class ProduzioneService {
 
         // create 'articolo', if not exists
         LOGGER.info("Creating 'articolo' if not already exists...");
+        Ricetta ricetta = ricettaRepository.findById(createdProduzione.getRicetta().getId()).orElse(null);
         Fornitore fornitore = fornitoreService.getByRagioneSociale(Constants.DEFAULT_FORNITORE);
-        String codiceArticolo = Constants.DEFAULT_FORNITORE_INITIALS + createdProduzione.getRicetta().getCodice();
+        String codiceArticolo = Constants.DEFAULT_FORNITORE_INITIALS + (ricetta != null ? ricetta.getCodice() : "");
         Optional<Articolo> optionalArticolo = articoloService.getByCodice(codiceArticolo);
         Articolo articolo;
         if(!optionalArticolo.isPresent()){
             articolo = new Articolo();
             articolo.setCodice(codiceArticolo);
-            articolo.setDescrizione(createdProduzione.getRicetta().getNome());
+            articolo.setDescrizione(ricetta.getNome());
             articolo.setFornitore(fornitore);
             articolo.setData(createdProduzione.getDataProduzione());
             articolo.setQuantitaPredefinita(createdProduzione.getQuantitaTotale());
@@ -166,7 +172,7 @@ public class ProduzioneService {
             produzioneIngredienteService.create(pi);
 
             // compute 'giacenza ingrediente'
-            giacenzaIngredienteService.computeGiacenza(pi.getIngrediente().getId(), pi.getLotto(), pi.getScadenza(), pi.getQuantita(), Resource.PRODUZIONE_INGREDIENTE);
+            giacenzaIngredienteService.computeGiacenza(pi.getId().getIngredienteId(), pi.getLotto(), pi.getScadenza(), pi.getQuantita(), Resource.PRODUZIONE_INGREDIENTE);
         });
         produzioneConfezioni.stream().forEach(pc -> {
             pc.getId().setProduzioneId(produzioneId);

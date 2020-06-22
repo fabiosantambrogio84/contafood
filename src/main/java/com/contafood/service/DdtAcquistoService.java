@@ -84,7 +84,7 @@ public class DdtAcquistoService {
             ddtAcquistoIngredienteService.create(dai);
 
             // compute 'giacenza ingrediente'
-            giacenzaIngredienteService.computeGiacenza(dai.getIngrediente().getId(), dai.getLotto(), dai.getDataScadenza(), dai.getQuantita(), Resource.DDT_ACQUISTO);
+            giacenzaIngredienteService.computeGiacenza(dai.getId().getIngredienteId(), dai.getLotto(), dai.getDataScadenza(), dai.getQuantita(), Resource.DDT_ACQUISTO);
         });
 
         computeTotali(createdDdtAcquisto, createdDdtAcquisto.getDdtAcquistoArticoli(), createdDdtAcquisto.getDdtAcquistoIngredienti());
@@ -98,6 +98,8 @@ public class DdtAcquistoService {
     @Transactional
     public DdtAcquisto update(DdtAcquisto ddtAcquisto){
         LOGGER.info("Updating 'ddt acquisto'");
+
+        Boolean modificaGiacenze = ddtAcquisto.getModificaGiacenze();
 
         Set<DdtAcquistoArticolo> ddtAcquistoArticoli = ddtAcquisto.getDdtAcquistoArticoli();
         ddtAcquisto.setDdtAcquistoArticoli(new HashSet<>());
@@ -115,18 +117,22 @@ public class DdtAcquistoService {
         ddtAcquistoArticoli.stream().forEach(daa -> {
             daa.getId().setDdtAcquistoId(updatedDdtAcquisto.getId());
             daa.getId().setUuid(UUID.randomUUID().toString());
-            ddtAcquistoArticoloService.create(daa);
 
-            // compute 'giacenza articolo'
-            giacenzaArticoloService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
+            if(modificaGiacenze != null && modificaGiacenze.equals(Boolean.TRUE)){
+                // compute 'giacenza articolo'
+                giacenzaArticoloService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
+            }
+            ddtAcquistoArticoloService.create(daa);
         });
         ddtAcquistoIngredienti.stream().forEach(dai -> {
             dai.getId().setDdtAcquistoId(updatedDdtAcquisto.getId());
             dai.getId().setUuid(UUID.randomUUID().toString());
-            ddtAcquistoIngredienteService.create(dai);
 
-            // compute 'giacenza ingrediente'
-            giacenzaIngredienteService.computeGiacenza(dai.getIngrediente().getId(), dai.getLotto(), dai.getDataScadenza(), dai.getQuantita(), Resource.DDT_ACQUISTO);
+            if(modificaGiacenze != null && modificaGiacenze.equals(Boolean.TRUE)){
+                // compute 'giacenza ingrediente'
+                giacenzaIngredienteService.computeGiacenza(dai.getIngrediente().getId(), dai.getLotto(), dai.getDataScadenza(), dai.getQuantita(), Resource.DDT_ACQUISTO);
+            }
+            ddtAcquistoIngredienteService.create(dai);
         });
 
         computeTotali(updatedDdtAcquisto, ddtAcquistoArticoli, ddtAcquistoIngredienti);
@@ -137,8 +143,8 @@ public class DdtAcquistoService {
     }
 
     @Transactional
-    public void delete(Long ddtAcquistoId){
-        LOGGER.info("Deleting 'ddt acquisto' '{}'", ddtAcquistoId);
+    public void delete(Long ddtAcquistoId, Boolean modificaGiacenze){
+        LOGGER.info("Deleting 'ddt acquisto' '{}' ('modificaGiacenze={}')", ddtAcquistoId, modificaGiacenze);
         Set<DdtAcquistoArticolo> ddtAcquistoArticoli = ddtAcquistoArticoloService.findByDdtAcquistoId(ddtAcquistoId);
         Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti = ddtAcquistoIngredienteService.findByDdtAcquistoId(ddtAcquistoId);
 
@@ -146,13 +152,15 @@ public class DdtAcquistoService {
         ddtAcquistoIngredienteService.deleteByDdtAcquistoId(ddtAcquistoId);
         ddtAcquistoRepository.deleteById(ddtAcquistoId);
 
-        for (DdtAcquistoArticolo ddtAcquistoArticolo:ddtAcquistoArticoli) {
-            // compute 'giacenza articolo'
-            giacenzaArticoloService.computeGiacenza(ddtAcquistoArticolo.getId().getArticoloId(), ddtAcquistoArticolo.getLotto(), ddtAcquistoArticolo.getDataScadenza(), ddtAcquistoArticolo.getQuantita(), Resource.DDT_ACQUISTO);
-        }
-        for (DdtAcquistoIngrediente ddtAcquistoIngrediente:ddtAcquistoIngredienti) {
-            // compute 'giacenza ingrediente'
-            giacenzaIngredienteService.computeGiacenza(ddtAcquistoIngrediente.getId().getIngredienteId(), ddtAcquistoIngrediente.getLotto(), ddtAcquistoIngrediente.getDataScadenza(), ddtAcquistoIngrediente.getQuantita(), Resource.DDT_ACQUISTO);
+        if(modificaGiacenze.equals(Boolean.TRUE)){
+            for (DdtAcquistoArticolo ddtAcquistoArticolo:ddtAcquistoArticoli) {
+                // compute 'giacenza articolo'
+                giacenzaArticoloService.computeGiacenza(ddtAcquistoArticolo.getId().getArticoloId(), ddtAcquistoArticolo.getLotto(), ddtAcquistoArticolo.getDataScadenza(), ddtAcquistoArticolo.getQuantita(), Resource.DDT_ACQUISTO);
+            }
+            for (DdtAcquistoIngrediente ddtAcquistoIngrediente:ddtAcquistoIngredienti) {
+                // compute 'giacenza ingrediente'
+                giacenzaIngredienteService.computeGiacenza(ddtAcquistoIngrediente.getId().getIngredienteId(), ddtAcquistoIngrediente.getLotto(), ddtAcquistoIngrediente.getDataScadenza(), ddtAcquistoIngrediente.getQuantita(), Resource.DDT_ACQUISTO);
+            }
         }
 
         LOGGER.info("Deleted 'ddt acquisto' '{}'", ddtAcquistoId);

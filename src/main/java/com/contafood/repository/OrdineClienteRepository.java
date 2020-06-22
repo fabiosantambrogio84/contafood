@@ -1,11 +1,10 @@
 package com.contafood.repository;
 
 import com.contafood.model.OrdineCliente;
-import com.contafood.model.Ricetta;
 import org.springframework.data.repository.CrudRepository;
 
-import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface OrdineClienteRepository extends CrudRepository<OrdineCliente, Long> {
@@ -18,6 +17,8 @@ public interface OrdineClienteRepository extends CrudRepository<OrdineCliente, L
     Set<OrdineCliente> findByStatoOrdineId(Long idStato);
 
     List<OrdineCliente> findByAnnoContabileOrderByProgressivoDesc(Integer annoContabile);
+
+    Optional<OrdineCliente> findByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idOrdineCliente);
 
     Set<OrdineCliente> findByClienteIdAndPuntoConsegnaId(Long idCliente, Long idPuntoConsegna);
 }

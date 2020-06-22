@@ -104,12 +104,16 @@ public class FatturaAccompagnatoriaService {
         FatturaAccompagnatoria createdFatturaAccompagnatoria = fatturaAccompagnatoriaRepository.save(fatturaAccompagnatoria);
 
         createdFatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().stream().forEach(faa -> {
-            faa.getId().setFatturaAccompagnatoriaId(createdFatturaAccompagnatoria.getId());
-            faa.getId().setUuid(UUID.randomUUID().toString());
-            fatturaAccompagnatoriaArticoloService.create(faa);
+            if(faa.getQuantita() != null && faa.getQuantita() != 0 && faa.getPrezzo() != null){
+                faa.getId().setFatturaAccompagnatoriaId(createdFatturaAccompagnatoria.getId());
+                faa.getId().setUuid(UUID.randomUUID().toString());
+                fatturaAccompagnatoriaArticoloService.create(faa);
 
-            // compute 'giacenza articolo'
-            giacenzaArticoloService.computeGiacenza(faa.getId().getArticoloId(), faa.getLotto(), faa.getScadenza(), faa.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA);
+                // compute 'giacenza articolo'
+                giacenzaArticoloService.computeGiacenza(faa.getId().getArticoloId(), faa.getLotto(), faa.getScadenza(), faa.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA);
+            } else {
+                LOGGER.info("FatturaAccompagnatoriaArticolo not saved because quantity null or zero ({}) or prezzo zero ({})", faa.getQuantita(), faa.getPrezzo());
+            }
         });
 
         createdFatturaAccompagnatoria.getFatturaAccompagnatoriaTotali().stream().forEach(fat -> {
@@ -147,7 +151,7 @@ public class FatturaAccompagnatoriaService {
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
         Optional<FatturaAccompagnatoria> fatturaAccompagnatoria = fatturaAccompagnatoriaRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);
         if(fatturaAccompagnatoria.isPresent()){
-            throw new ResourceAlreadyExistingException("fattura", anno, progressivo);
+            throw new ResourceAlreadyExistingException(Resource.FATTURA_ACCOMPAGNATORIA, anno, progressivo);
         }
     }
 
@@ -172,7 +176,8 @@ public class FatturaAccompagnatoriaService {
             BigDecimal totaleByIva = new BigDecimal(0);
             Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoliByIva = entry.getValue();
             for(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo: fatturaAccompagnatoriaArticoliByIva){
-                totaleByIva = totaleByIva.add(fatturaAccompagnatoriaArticolo.getImponibile());
+                BigDecimal imponibile = fatturaAccompagnatoriaArticolo.getImponibile() != null ? fatturaAccompagnatoriaArticolo.getImponibile() : BigDecimal.ZERO;
+                totaleByIva = totaleByIva.add(imponibile);
                 totaleQuantita = totaleQuantita + fatturaAccompagnatoriaArticolo.getQuantita();
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));

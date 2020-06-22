@@ -1,6 +1,9 @@
 package com.contafood.controller;
 
-import com.contafood.model.*;
+import com.contafood.model.Fornitore;
+import com.contafood.model.GiacenzaIngrediente;
+import com.contafood.model.Ingrediente;
+import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.service.GiacenzaIngredienteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -32,7 +36,7 @@ public class GiacenzaIngredienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<GiacenzaIngrediente> getAll(@RequestParam(name = "ingrediente", required = false) String ingrediente,
+    public Set<VGiacenzaIngrediente> getAll(@RequestParam(name = "ingrediente", required = false) String ingrediente,
                                            @RequestParam(name = "attivo", required = false) Boolean attivo,
                                            @RequestParam(name = "idFornitore", required = false) Integer idFornitore,
                                            @RequestParam(name = "lotto", required = false) String lotto,
@@ -41,11 +45,15 @@ public class GiacenzaIngredienteController {
         LOGGER.info("Request params: ingrediente {}, attivo {}, idFornitore {}, lotto {}, scadenza {}",
                 ingrediente, attivo, idFornitore, lotto, scadenza);
 
-        Predicate<GiacenzaIngrediente> isGiacenzaIngredienteCodiceOrDescriptionContains = giacenza -> {
+        Predicate<VGiacenzaIngrediente> isGiacenzaQuantitaGreaterOrLessThanZero = giacenza -> {
+            return giacenza.getQuantita() > 0 || giacenza.getQuantita() < 0;
+        };
+
+        Predicate<VGiacenzaIngrediente> isGiacenzaIngredienteCodiceOrDescriptionContains = giacenza -> {
             if(ingrediente != null){
-                Ingrediente giacenzaIngrediente = giacenza.getIngrediente();
+                String giacenzaIngrediente = giacenza.getIngrediente();
                 if(giacenzaIngrediente != null){
-                    if(giacenzaIngrediente.getCodice().toLowerCase().contains(ingrediente.toLowerCase()) || giacenzaIngrediente.getDescrizione().toLowerCase().contains(ingrediente.toLowerCase())){
+                    if(giacenzaIngrediente.toLowerCase().contains(ingrediente.toLowerCase())){
                         return true;
                     } else {
                         return false;
@@ -57,28 +65,18 @@ public class GiacenzaIngredienteController {
             return true;
         };
 
-        Predicate<GiacenzaIngrediente> isGiacenzaIngredienteAttivoEquals = giacenza -> {
+        Predicate<VGiacenzaIngrediente> isGiacenzaIngredienteAttivoEquals = giacenza -> {
             if(attivo != null){
-                Ingrediente giacenzaIngrediente = giacenza.getIngrediente();
-                if(giacenzaIngrediente != null){
-                    return giacenzaIngrediente.getAttivo().equals(attivo);
-                } else {
-                    return false;
-                }
+                return giacenza.getAttivo().equals(attivo);
             }
             return true;
         };
 
-        Predicate<GiacenzaIngrediente> isGiacenzaIngredienteFornitoreEquals = giacenza -> {
+        Predicate<VGiacenzaIngrediente> isGiacenzaIngredienteFornitoreEquals = giacenza -> {
             if(idFornitore != null){
-                Ingrediente giacenzaIngrediente = giacenza.getIngrediente();
-                if(giacenzaIngrediente != null){
-                    Fornitore fornitore = giacenzaIngrediente.getFornitore();
-                    if(fornitore != null){
-                        return fornitore.getId().equals(idFornitore.longValue());
-                    } else {
-                        return false;
-                    }
+                Long idFornitoreGiacenza = giacenza.getIdFornitore();
+                if(idFornitoreGiacenza != null){
+                    return idFornitoreGiacenza.equals(idFornitore.longValue());
                 } else {
                     return false;
                 }
@@ -86,10 +84,10 @@ public class GiacenzaIngredienteController {
             return true;
         };
 
-        Predicate<GiacenzaIngrediente> isGiacenzaIngredienteLottoContains = giacenza -> {
+        Predicate<VGiacenzaIngrediente> isGiacenzaIngredienteLottoContains = giacenza -> {
             if(lotto != null){
-                if(giacenza.getLotto() != null){
-                    return giacenza.getLotto().contains(lotto);
+                if(giacenza.getLottoGiacenze() != null){
+                    return giacenza.getLottoGiacenze().contains(lotto);
                 } else {
                     return false;
                 }
@@ -97,10 +95,10 @@ public class GiacenzaIngredienteController {
             return true;
         };
 
-        Predicate<GiacenzaIngrediente> isGiacenzaIngredienteEquals = giacenza -> {
+        Predicate<VGiacenzaIngrediente> isGiacenzaIngredienteEquals = giacenza -> {
             if(scadenza != null){
-                if(giacenza.getScadenza() != null){
-                    return giacenza.getScadenza().compareTo(scadenza)==0;
+                if(giacenza.getScadenzaGiacenze() != null){
+                    return giacenza.getScadenzaGiacenze().contains(scadenza.toString());
                 } else {
                     return false;
                 }
@@ -108,22 +106,24 @@ public class GiacenzaIngredienteController {
             return true;
         };
 
-        Set<GiacenzaIngrediente> giacenze = giacenzaIngredienteService.getAll().stream().filter(isGiacenzaIngredienteCodiceOrDescriptionContains
-                .and(isGiacenzaIngredienteAttivoEquals)
-                .and(isGiacenzaIngredienteFornitoreEquals)
-                .and(isGiacenzaIngredienteLottoContains)
-                .and(isGiacenzaIngredienteEquals))
+        Set<VGiacenzaIngrediente> giacenze = giacenzaIngredienteService.getAll().stream()
+                .filter(isGiacenzaQuantitaGreaterOrLessThanZero
+                        .and(isGiacenzaIngredienteCodiceOrDescriptionContains)
+                        .and(isGiacenzaIngredienteAttivoEquals)
+                        .and(isGiacenzaIngredienteFornitoreEquals)
+                        .and(isGiacenzaIngredienteLottoContains)
+                        .and(isGiacenzaIngredienteEquals))
                 .collect(Collectors.toSet());
 
         LOGGER.info("Retrieved {} 'giacenze ingredienti'", giacenze.size());
         return giacenze;
     }
 
-    @RequestMapping(method = GET, path = "/{giacenzaId}")
+    @RequestMapping(method = GET, path = "/{idIngrediente}")
     @CrossOrigin
-    public GiacenzaIngrediente getOne(@PathVariable final Long giacenzaId) {
-        LOGGER.info("Performing GET request for retrieving 'giacenza ingrediente' '{}'", giacenzaId);
-        return giacenzaIngredienteService.getOne(giacenzaId);
+    public Map<String, Object> getOne(@PathVariable final Long idIngrediente) {
+        LOGGER.info("Performing GET request for retrieving 'giacenza ingrediente' of ingrediente '{}'", idIngrediente);
+        return giacenzaIngredienteService.getOne(idIngrediente);
     }
 
     @RequestMapping(method = POST)
@@ -134,20 +134,12 @@ public class GiacenzaIngredienteController {
         return giacenzaIngredienteService.create(giacenzaIngrediente);
     }
 
-    @RequestMapping(method = DELETE, path = "/{giacenzaId}")
-    @ResponseStatus(NO_CONTENT)
-    @CrossOrigin
-    public void delete(@PathVariable final Long giacenzaId){
-        LOGGER.info("Performing DELETE request for deleting 'giacenza ingrediente' '{}'", giacenzaId);
-        giacenzaIngredienteService.delete(giacenzaId);
-    }
-
     @RequestMapping(method = POST, path = "/operations/delete")
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
-    public void bulkDelete(@RequestBody final List<Long> giacenzeIds){
-        LOGGER.info("Performing BULK DELETE operation on 'giacenze ingrediente' (number of elements to delete: {})", giacenzeIds.size());
-        giacenzaIngredienteService.bulkDelete(giacenzeIds);
+    public void bulkDelete(@RequestBody final List<Long> idIngredienti){
+        LOGGER.info("Performing BULK DELETE operation on 'giacenze ingrediente' by 'idIngrediente' (number of elements to delete: {})", idIngredienti.size());
+        giacenzaIngredienteService.bulkDelete(idIngredienti);
     }
 
 }

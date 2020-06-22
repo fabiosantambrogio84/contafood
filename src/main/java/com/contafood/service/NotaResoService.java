@@ -8,6 +8,7 @@ import com.contafood.model.NotaResoRiga;
 import com.contafood.model.NotaResoTotale;
 import com.contafood.repository.NotaResoRepository;
 import com.contafood.repository.PagamentoRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,7 +160,7 @@ public class NotaResoService {
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
         Optional<NotaReso> notaReso = notaResoRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);
         if(notaReso.isPresent()){
-            throw new ResourceAlreadyExistingException("nota reso", anno, progressivo);
+            throw new ResourceAlreadyExistingException(Resource.NOTA_RESO, anno, progressivo);
         }
     }
 

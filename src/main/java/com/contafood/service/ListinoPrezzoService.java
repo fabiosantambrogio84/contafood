@@ -147,6 +147,9 @@ public class ListinoPrezzoService {
     public BigDecimal computePrezzoInListinoCreation(Listino listino, Articolo articolo, String tipologiaVariazionePrezzo, Float variazionePrezzo){
         // retrieve the 'prezzoListinoBase' of the articolo
         BigDecimal newPrezzo = articolo.getPrezzoListinoBase();
+        if(newPrezzo == null){
+            newPrezzo = BigDecimal.ZERO;
+        }
 
         if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
             boolean applyVariazione = true;
@@ -157,11 +160,13 @@ public class ListinoPrezzoService {
             // retrieve the fornitore id on which the variation should be applied
             Long fornitoreId = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getFornitore() != null).map(lpv -> lpv.getFornitore().getId()).findFirst().orElse(null);
 
-            if(!CollectionUtils.isEmpty(articoliIds) || fornitoreId != null){
-                if(!CollectionUtils.isEmpty(articoliIds) && !articoliIds.contains(articolo.getId())){
+            if(!CollectionUtils.isEmpty(articoliIds)) {
+                if (!articoliIds.contains(articolo.getId())) {
                     applyVariazione = false;
                 }
-                if(fornitoreId != null && !fornitoreId.equals(articolo.getFornitore().getId())){
+            }
+            if(fornitoreId != null){
+                if(!fornitoreId.equals(articolo.getFornitore().getId())){
                     applyVariazione = false;
                 }
             }

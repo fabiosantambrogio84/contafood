@@ -41,6 +41,9 @@ public class DdtAcquisto {
     @Column(name = "note")
     private String note;
 
+    @Transient
+    private Boolean modificaGiacenze;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -119,6 +122,14 @@ public class DdtAcquisto {
         this.note = note;
     }
 
+    public Boolean getModificaGiacenze() {
+        return modificaGiacenze;
+    }
+
+    public void setModificaGiacenze(Boolean modificaGiacenze) {
+        this.modificaGiacenze = modificaGiacenze;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -164,6 +175,7 @@ public class DdtAcquisto {
         result.append(", totaleImponibile: " + totaleImponibile);
         result.append(", totale: " + totale);
         result.append(", note: " + note);
+        result.append(", modificaGiacenze: " + modificaGiacenze);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

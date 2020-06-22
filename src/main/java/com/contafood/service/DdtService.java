@@ -18,6 +18,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DdtService {
@@ -58,6 +59,10 @@ public class DdtService {
     public Ddt getOne(Long ddtId){
         LOGGER.info("Retrieving 'ddt' '{}'", ddtId);
         Ddt ddt = ddtRepository.findById(ddtId).orElseThrow(ResourceNotFoundException::new);
+
+        // filter DdtArticoli with qauntity not null and prezzo not null
+        ddt = filterDdtArticoli(ddt);
+
         LOGGER.info("Retrieved 'ddt' '{}'", ddt);
         return ddt;
     }
@@ -212,13 +217,13 @@ public class DdtService {
     private void checkExistsByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt){
         Optional<Ddt> ddt = ddtRepository.findByAnnoContabileAndProgressivoAndIdNot(annoContabile, progressivo, idDdt);
         if(ddt.isPresent()){
-            throw new ResourceAlreadyExistingException("ddt", annoContabile, progressivo);
+            throw new ResourceAlreadyExistingException(Resource.DDT, annoContabile, progressivo);
         }
     }
 
     private void computeTotali(Ddt ddt, Set<DdtArticolo> ddtArticoli){
         Map<AliquotaIva, Set<DdtArticolo>> ivaDdtArticoliMap = new HashMap<>();
-        ddtArticoli.stream().forEach(da -> {
+        ddtArticoli.stream().filter(da -> da.getQuantita() != null && da.getQuantita() != 0 && da.getPrezzo() != null).forEach(da -> {
             Articolo articolo = ddtArticoloService.getArticolo(da);
             AliquotaIva iva = articolo.getAliquotaIva();
             Set<DdtArticolo> ddtArticoliByIva;
@@ -240,14 +245,17 @@ public class DdtService {
             BigDecimal totaleByIva = new BigDecimal(0);
             Set<DdtArticolo> ddtArticoliByIva = entry.getValue();
             for(DdtArticolo ddtArticolo: ddtArticoliByIva){
-                totaleImponibile = totaleImponibile.add(ddtArticolo.getImponibile());
-                totaleCosto = totaleCosto.add(ddtArticolo.getCosto());
-                totaleQuantita = totaleQuantita + ddtArticolo.getQuantita();
+                BigDecimal imponibile = ddtArticolo.getImponibile() != null ? ddtArticolo.getImponibile() : BigDecimal.ZERO;
+                BigDecimal costo = ddtArticolo.getCosto() != null ? ddtArticolo.getCosto() : BigDecimal.ZERO;
 
-                BigDecimal partialIva = ddtArticolo.getImponibile().multiply(iva.divide(new BigDecimal(100)));
+                totaleImponibile = totaleImponibile.add(imponibile);
+                totaleCosto = totaleCosto.add(costo);
+                totaleQuantita = totaleQuantita + (ddtArticolo.getQuantita() != null ? ddtArticolo.getQuantita() : 0f);
+
+                BigDecimal partialIva = imponibile.multiply(iva.divide(new BigDecimal(100)));
                 totaleIva = totaleIva.add(partialIva);
 
-                totaleByIva = totaleByIva.add(ddtArticolo.getImponibile());
+                totaleByIva = totaleByIva.add(imponibile);
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
@@ -257,6 +265,12 @@ public class DdtService {
         ddt.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
         ddt.setTotaleAcconto(new BigDecimal(0));
         ddt.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.HALF_DOWN));
+    }
+
+    private Ddt filterDdtArticoli(Ddt ddt){
+        Set<DdtArticolo> ddtArticoli = ddt.getDdtArticoli().stream().filter(da -> da.getQuantita() != null && da.getQuantita() != 0 && da.getPrezzo() != null).collect(Collectors.toSet());
+        ddt.setDdtArticoli(ddtArticoli);
+        return ddt;
     }
 
     // PAGAMENTI

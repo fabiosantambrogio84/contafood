@@ -106,6 +106,13 @@ public class OrdineClienteController {
         return ordineClienteService.getOne(ordineClienteId);
     }
 
+    @RequestMapping(method = GET, path = "/progressivo")
+    @CrossOrigin
+    public Map<String, Integer> getAnnoContabileAndProgressivo() {
+        LOGGER.info("Performing GET request for retrieving 'annoContabile' and 'progressivo' for a new ordine-cliente");
+        return ordineClienteService.getAnnoContabileAndProgressivo();
+    }
+
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin

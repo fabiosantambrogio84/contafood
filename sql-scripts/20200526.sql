@@ -1,6 +1,7 @@
 DROP VIEW IF EXISTS v_ordine_cliente_stats_week;
 DROP VIEW IF EXISTS v_ordine_cliente_stats_month;
 DROP TABLE IF EXISTS ddt_articolo_ordine_cliente;
+DROP TABLE IF EXISTS fattura_accom_articolo_ordine_cliente;
 DROP TABLE IF EXISTS giacenzaArticolo;
 
 CREATE VIEW `v_ordine_cliente_stats_week` AS
@@ -233,3 +234,90 @@ ALTER TABLE ingrediente DROP COLUMN unita_di_misura;
 ALTER TABLE ingrediente ADD COLUMN id_unita_misura int(10) unsigned AFTER prezzo;
 ALTER TABLE ingrediente ADD CONSTRAINT fk_ingrediente_udm FOREIGN KEY (`id_unita_misura`) REFERENCES `unita_misura` (`id`);
 
+ALTER TABLE ordine_cliente ADD COLUMN data date after anno_contabile;
+
+ALTER TABLE contafood.giacenza_ingrediente MODIFY COLUMN data_aggiornamento timestamp NULL;
+ALTER TABLE contafood.giacenza_articolo MODIFY COLUMN data_aggiornamento timestamp NULL;
+ALTER TABLE contafood.produzione_ingrediente MODIFY COLUMN scadenza date NULL;
+
+-- 07/07/2020
+create or replace view contafood.v_giacenza_articolo as
+select
+	id_articolo,
+	concat(articolo.codice,' ',coalesce(articolo.descrizione,'')) articolo,
+	sum(quantita) quantita_tot,
+	GROUP_CONCAT(giacenza_articolo.id) id_giacenze,
+	GROUP_CONCAT(giacenza_articolo.lotto) lotto_giacenze,
+	GROUP_CONCAT(giacenza_articolo.scadenza) scadenza_giacenze,
+	articolo.attivo,
+	articolo.id_fornitore,
+	fornitore.ragione_sociale fornitore
+from
+	contafood.giacenza_articolo
+join contafood.articolo on
+	giacenza_articolo.id_articolo = articolo.id
+left join contafood.fornitore on
+	articolo.id_fornitore = fornitore.id
+group by
+	id_articolo
+;
+
+create or replace view contafood.v_giacenza_ingrediente as
+select
+	id_ingrediente,
+	concat(ingrediente.codice,' ',coalesce(ingrediente.descrizione,'')) ingrediente,
+	sum(quantita) quantita_tot,
+	GROUP_CONCAT(giacenza_ingrediente.id) id_giacenze,
+	GROUP_CONCAT(giacenza_ingrediente.lotto) lotto_giacenze,
+	GROUP_CONCAT(giacenza_ingrediente.scadenza) scadenza_giacenze,
+	ingrediente.attivo,
+	ingrediente.id_fornitore,
+	fornitore.ragione_sociale fornitore
+from
+	contafood.giacenza_ingrediente
+join contafood.ingrediente on
+	giacenza_ingrediente.id_ingrediente = ingrediente.id
+left join contafood.fornitore on
+	ingrediente.id_fornitore = fornitore.id
+group by
+	id_ingrediente
+;
+
+ALTER TABLE fattura_accom_articolo ADD COLUMN numero_pezzi_da_evadere int(10) AFTER numero_pezzi;
+
+CREATE TABLE `fattura_accom_articolo_ordine_cliente` (
+	id_fattura_accom int(10) unsigned,
+	id_articolo int(10) unsigned,
+	uuid varchar(255),
+	id_ordine_cliente int(10) unsigned,
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (id_fattura_accom, id_articolo, uuid, id_ordine_cliente)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+-- 13/07/2020
+DROP TABLE IF EXISTS movimentazione_manuale_articolo;
+DROP TABLE IF EXISTS movimentazione_manuale_ingrediente;
+
+CREATE TABLE `movimentazione_manuale_articolo` (
+	id int(10) unsigned auto_increment,
+	id_articolo int(10) unsigned,
+	lotto varchar(100),
+	scadenza date,
+	quantita decimal(10,3),
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
+	PRIMARY KEY (id),
+	CONSTRAINT `fk_mov_man_articolo_art` FOREIGN KEY (`id_articolo`) REFERENCES `articolo` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+
+CREATE TABLE `movimentazione_manuale_ingrediente` (
+	id int(10) unsigned auto_increment,
+	id_ingrediente int(10) unsigned,
+	lotto varchar(100),
+	scadenza date,
+	quantita decimal(10,3),
+	data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	data_aggiornamento TIMESTAMP,
+	PRIMARY KEY (id),
+	CONSTRAINT `fk_mov_man_ingrediente_ing` FOREIGN KEY (`id_ingrediente`) REFERENCES `ingrediente` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;

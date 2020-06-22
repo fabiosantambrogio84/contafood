@@ -9,16 +9,16 @@ import java.util.List;
 
 @EqualsAndHashCode
 @Entity
-@Table(name = "giacenza_ingrediente")
-public class GiacenzaIngrediente {
+@Table(name = "movimentazione_manuale_articolo")
+public class MovimentazioneManualeArticolo {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name="id_ingrediente")
-    private Ingrediente ingrediente;
+    @JoinColumn(name="id_articolo")
+    private Articolo articolo;
 
     @Column(name = "lotto")
     private String lotto;
@@ -46,12 +46,12 @@ public class GiacenzaIngrediente {
         this.id = id;
     }
 
-    public Ingrediente getIngrediente() {
-        return ingrediente;
+    public Articolo getArticolo() {
+        return articolo;
     }
 
-    public void setIngrediente(Ingrediente ingrediente) {
-        this.ingrediente = ingrediente;
+    public void setArticolo(Articolo articolo) {
+        this.articolo = articolo;
     }
 
     public String getLotto() {
@@ -108,7 +108,7 @@ public class GiacenzaIngrediente {
 
         result.append("{");
         result.append("id: " + id);
-        result.append(", ingrediente: " + ingrediente);
+        result.append(", articolo: " + articolo);
         result.append(", lotto: " + lotto);
         result.append(", scadenza: " + scadenza);
         result.append(", quantita: " + quantita);

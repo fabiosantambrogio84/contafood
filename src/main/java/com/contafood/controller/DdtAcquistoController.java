@@ -109,9 +109,11 @@ public class DdtAcquistoController {
     @RequestMapping(method = DELETE, path = "/{ddtAcquistoId}")
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
-    public void delete(@PathVariable final Long ddtAcquistoId){
+    public void delete(@PathVariable final Long ddtAcquistoId,
+                       @RequestParam(name = "modificaGiacenze", required = false) Boolean modificaGiacenze){
         LOGGER.info("Performing DELETE request for deleting 'ddt acquisto' '{}'", ddtAcquistoId);
-        ddtAcquistoService.delete(ddtAcquistoId);
+        LOGGER.info("Request params: modificaGiacenze={}", modificaGiacenze);
+        ddtAcquistoService.delete(ddtAcquistoId, (modificaGiacenze != null ? modificaGiacenze : Boolean.FALSE));
     }
 
 }

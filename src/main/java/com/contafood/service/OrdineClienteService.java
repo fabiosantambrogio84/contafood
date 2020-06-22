@@ -1,9 +1,11 @@
 package com.contafood.service;
 
+import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.DdtArticoloOrdineClienteRepository;
 import com.contafood.repository.OrdineClienteRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,13 +89,30 @@ public class OrdineClienteService {
         return ordiniClienti;
     }
 
+    public Map<String, Integer> getAnnoContabileAndProgressivo(){
+        Integer annoContabile = ZonedDateTime.now().getYear();
+        Integer progressivo = 1;
+        List<OrdineCliente> ordiniClienti = ordineClienteRepository.findByAnnoContabileOrderByProgressivoDesc(annoContabile);
+        if(ordiniClienti != null && !ordiniClienti.isEmpty()){
+            Optional<OrdineCliente> lastOrdineCliente = ordiniClienti.stream().findFirst();
+            if(lastOrdineCliente.isPresent()){
+                progressivo = lastOrdineCliente.get().getProgressivo() + 1;
+            }
+        }
+        HashMap<String, Integer> result = new HashMap<>();
+        result.put("annoContabile", annoContabile);
+        result.put("progressivo", progressivo);
+
+        return result;
+    }
+
     @Transactional
     public OrdineCliente create(OrdineCliente ordineCliente){
         LOGGER.info("Creating 'ordineCliente'");
+
+        checkExistsByAnnoContabileAndProgressivoAndIdNot(ordineCliente.getAnnoContabile(), ordineCliente.getProgressivo(), Long.valueOf(-1));
+
         ordineCliente.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
-        Integer annoContabile = ZonedDateTime.now().getYear();
-        ordineCliente.setAnnoContabile(annoContabile);
-        ordineCliente.setProgressivo(computeProgressivo(annoContabile));
 
         StatoOrdine statoOrdineDaEvadere = statoOrdineService.getDaEvadere();
         ordineCliente.setStatoOrdine(statoOrdineDaEvadere);
@@ -113,6 +132,9 @@ public class OrdineClienteService {
     @Transactional
     public OrdineCliente update(OrdineCliente ordineCliente){
         LOGGER.info("Updating 'ordineCliente'");
+
+        checkExistsByAnnoContabileAndProgressivoAndIdNot(ordineCliente.getAnnoContabile(), ordineCliente.getProgressivo(), ordineCliente.getId());
+
         Set<OrdineClienteArticolo> ordineClienteArticoli = ordineCliente.getOrdineClienteArticoli();
         ordineCliente.setOrdineClienteArticoli(new HashSet<>());
         ordineClienteArticoloService.deleteByOrdineClienteId(ordineCliente.getId());
@@ -160,6 +182,13 @@ public class OrdineClienteService {
         ordineClienteArticoloService.deleteByOrdineClienteId(ordineClienteId);
         ordineClienteRepository.deleteById(ordineClienteId);
         LOGGER.info("Deleted 'ordineCliente' '{}'", ordineClienteId);
+    }
+
+    private void checkExistsByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idOrdineCliente){
+        Optional<OrdineCliente> ordineCliente = ordineClienteRepository.findByAnnoContabileAndProgressivoAndIdNot(annoContabile, progressivo, idOrdineCliente);
+        if(ordineCliente.isPresent()){
+            throw new ResourceAlreadyExistingException(Resource.ORDINE_CLIENTE, annoContabile, progressivo);
+        }
     }
 
     public OrdineClienteArticolo getOrdineClienteArticolo(OrdineClienteArticoloKey ordineClienteArticoloKey){

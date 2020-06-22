@@ -6,6 +6,7 @@ import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaRepository;
 import com.contafood.repository.views.VFatturaRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,7 +245,7 @@ public class FatturaService {
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
         Optional<Fattura> fattura = fatturaRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);
         if(fattura.isPresent()){
-            throw new ResourceAlreadyExistingException("fattura", anno, progressivo);
+            throw new ResourceAlreadyExistingException(Resource.FATTURA, anno, progressivo);
         }
     }
 

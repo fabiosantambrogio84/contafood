@@ -5,6 +5,7 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.NotaAccreditoRepository;
 import com.contafood.repository.PagamentoRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,7 +157,7 @@ public class NotaAccreditoService {
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
         Optional<NotaAccredito> notaAccredito = notaAccreditoRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);
         if(notaAccredito.isPresent()){
-            throw new ResourceAlreadyExistingException("nota accredito", anno, progressivo);
+            throw new ResourceAlreadyExistingException(Resource.NOTA_ACCREDITO, anno, progressivo);
         }
     }
 

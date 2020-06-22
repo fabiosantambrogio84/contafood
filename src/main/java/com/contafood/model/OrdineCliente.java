@@ -24,6 +24,9 @@ public class OrdineCliente {
     @Column(name = "anno_contabile")
     private Integer annoContabile;
 
+    @Column(name = "data")
+    private Date data;
+
     @ManyToOne
     @JoinColumn(name="id_cliente")
     private Cliente cliente;
@@ -82,6 +85,14 @@ public class OrdineCliente {
 
     public void setAnnoContabile(Integer annoContabile) {
         this.annoContabile = annoContabile;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
     }
 
     public Cliente getCliente() {
@@ -172,6 +183,7 @@ public class OrdineCliente {
         result.append("id: " + id);
         result.append(", progressivo: " + progressivo);
         result.append(", annoContabile: " + annoContabile);
+        result.append(", data: " + data);
         result.append(", cliente: " + cliente);
         result.append(", puntoConsegna: " + puntoConsegna);
         result.append(", dataConsegna: " + dataConsegna);

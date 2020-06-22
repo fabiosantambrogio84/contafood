@@ -13,7 +13,9 @@ public interface GiacenzaArticoloRepository extends CrudRepository<GiacenzaArtic
 
     Set<GiacenzaArticolo> findByArticoloIdAndLotto(Long idArticolo, String lotto);
 
+    Set<GiacenzaArticolo> findByArticoloId(Long idArticolo);
+
     void deleteByArticoloId(Long idArticolo);
 
-    void deleteByIdIn(List<Long> ids);
+    void deleteByArticoloIdIn(List<Long> idArticoli);
 }

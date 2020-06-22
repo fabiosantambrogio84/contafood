@@ -9,8 +9,8 @@ import java.util.List;
 
 @EqualsAndHashCode
 @Entity
-@Table(name = "giacenza_ingrediente")
-public class GiacenzaIngrediente {
+@Table(name = "movimentazione_manuale_ingrediente")
+public class MovimentazioneManualeIngrediente {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

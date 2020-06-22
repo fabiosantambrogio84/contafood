@@ -1,13 +1,18 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+@EqualsAndHashCode(exclude = {"fatturaAccompagnatoriaArticoliOrdiniClienti"})
 @Entity
 @Table(name = "fattura_accom_articolo")
 public class FatturaAccompagnatoriaArticolo implements Serializable {
@@ -41,6 +46,9 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
     @Column(name = "numero_pezzi")
     private Integer numeroPezzi;
 
+    @Column(name = "numero_pezzi_da_evadere")
+    private Integer numeroPezziDaEvadere;
+
     @Column(name = "prezzo")
     private BigDecimal prezzo;
 
@@ -61,6 +69,13 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
 
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
+
+    @Transient
+    private List<Long> idOrdiniClienti;
+
+    @OneToMany(mappedBy = "fatturaAccompagnatoriaArticolo")
+    @JsonIgnoreProperties("fatturaAccompagnatoriaArticolo")
+    private Set<FatturaAccompagnatoriaArticoloOrdineCliente> fatturaAccompagnatoriaArticoliOrdiniClienti = new HashSet<>();
 
     public FatturaAccompagnatoriaArticoloKey getId() {
         return id;
@@ -116,6 +131,14 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
 
     public void setNumeroPezzi(Integer numeroPezzi) {
         this.numeroPezzi = numeroPezzi;
+    }
+
+    public Integer getNumeroPezziDaEvadere() {
+        return numeroPezziDaEvadere;
+    }
+
+    public void setNumeroPezziDaEvadere(Integer numeroPezziDaEvadere) {
+        this.numeroPezziDaEvadere = numeroPezziDaEvadere;
     }
 
     public BigDecimal getPrezzo() {
@@ -174,6 +197,22 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
         this.dataAggiornamento = dataAggiornamento;
     }
 
+    public List<Long> getIdOrdiniClienti() {
+        return idOrdiniClienti;
+    }
+
+    public void setIdOrdiniClienti(List<Long> idOrdiniClienti) {
+        this.idOrdiniClienti = idOrdiniClienti;
+    }
+
+    public Set<FatturaAccompagnatoriaArticoloOrdineCliente> getFatturaAccompagnatoriaArticoliOrdiniClienti() {
+        return fatturaAccompagnatoriaArticoliOrdiniClienti;
+    }
+
+    public void setFatturaAccompagnatoriaArticoliOrdiniClienti(Set<FatturaAccompagnatoriaArticoloOrdineCliente> fatturaAccompagnatoriaArticoliOrdiniClienti) {
+        this.fatturaAccompagnatoriaArticoliOrdiniClienti = fatturaAccompagnatoriaArticoliOrdiniClienti;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -185,6 +224,7 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
         result.append(", scadenza: " + scadenza);
         result.append(", quantita: " + quantita);
         result.append(", numeroPezzi: " + numeroPezzi);
+        result.append(", numeroPezziDaEvadere: " + numeroPezziDaEvadere);
         result.append(", prezzo: " + prezzo);
         result.append(", sconto: " + sconto);
         result.append(", imponibile: " + imponibile);
@@ -192,6 +232,7 @@ public class FatturaAccompagnatoriaArticolo implements Serializable {
         result.append(", totale: " + totale);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
+        result.append(", idOrdiniClienti: " + idOrdiniClienti);
         result.append("}");
 
         return result.toString();
