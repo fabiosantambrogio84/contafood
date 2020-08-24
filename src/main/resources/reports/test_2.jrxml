@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.13.0.final utlizzo versione della libreria JasperReports6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="test_2" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="5" uuid="4633089e-5d6d-4d62-aee5-be492a434aeb">
+	<parameter name="logo" class="java.net.URL" isForPrompting="false"/>
+	<parameter name="bollino" class="java.net.URL" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="78" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="50" height="50" uuid="bb69aea0-5bb8-4d20-87d4-704c4ac37b1f"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="504" y="0" width="50" height="40" uuid="595dc3b5-150a-408b-8458-93801329340d"/>
+				<imageExpression><![CDATA[$P{bollino}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="150" y="0" width="100" height="20" uuid="a414342e-ae91-47eb-84bd-b1c7089fe521"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Urbani Giuseppe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="0" width="162" height="20" uuid="3960cf9c-8bfc-4ba7-ac7a-b6087857e3b8"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gastronomia - Pasta fresca]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="20" width="270" height="14" uuid="2c2a24e9-c6da-4477-9b96-6f9383a66d98"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[via 11 Settembre, 17 - 37035 S. Giovanni Ilarione (VR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="35" width="154" height="14" uuid="afe523ea-c3db-45c1-ae10-d04e2be00110">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Cod. Fisc. RBNGPP56A14L551I]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="35" width="96" height="14" uuid="4461cc11-344e-4b43-8364-87b979562532">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[P.iva 02471520243]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="35" width="82" height="14" uuid="e6074144-46ca-46e0-b9a8-dc117cceea44">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[REA Vr 373577]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="50" width="84" height="14" uuid="3326e1f3-5f01-4d29-aa0c-cf02cd71c586">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Tel: 045 6550993]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="234" y="50" width="86" height="14" uuid="94e0baa3-16f1-4fd9-915b-57361ecc50d5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Fax: 045 4853930]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="50" width="100" height="14" uuid="98bb01d5-94bb-4591-94da-789ab8459c87">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Cell: 328 4694654]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="64" width="120" height="14" uuid="3cbb33ad-5d4d-44d1-8c44-bdbf826ad948">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[www.urbanialimentari.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="64" width="122" height="14" uuid="2ada7831-088e-49f3-b89f-0180c2b2fc6d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[info@urbanialimentari.com]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement x="-20" y="0" width="595" height="1" uuid="ce6cba64-29e9-48a6-86ae-86a69ee52369">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="174" y="14" width="100" height="17" uuid="80a70d67-1e11-4239-99b9-4f4139f6ffbd"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="284" y="14" width="100" height="17" uuid="ae37eeab-a20d-41bf-89bc-9bc5ab7ef0eb"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="275" y="14" width="9" height="17" uuid="32427fe3-5e5f-4333-91ca-11cbde864f88">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[/]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
