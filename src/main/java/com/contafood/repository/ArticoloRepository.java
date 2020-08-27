@@ -23,4 +23,5 @@ public interface ArticoloRepository extends CrudRepository<Articolo, Long> {
     Set<Articolo> findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsTrue(Boolean attivo, String barcode);
 
     Set<Articolo> findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsFalse(Boolean attivo, String barcode);
+
 }

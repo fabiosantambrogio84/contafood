@@ -3,6 +3,7 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Produzione;
 import com.contafood.model.ProduzioneConfezione;
+import com.contafood.model.views.VProduzione;
 import com.contafood.service.ProduzioneService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class ProduzioneController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Produzione> getAll(@RequestParam(name = "lotto", required = false) String lotto) {
+    public Set<VProduzione> getAll(@RequestParam(name = "lotto", required = false) String lotto) {
         LOGGER.info("Performing GET request for retrieving list of 'produzioni'");
         LOGGER.info("Request params: lotto {}", lotto);
 

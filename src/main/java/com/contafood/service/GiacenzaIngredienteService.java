@@ -161,7 +161,7 @@ public class GiacenzaIngredienteService {
                 }
                 newQuantita = quantitaInput - quantitaOutput;
             } else {
-                newQuantita = (quantita != null ? quantita : 0f);
+                newQuantita = (quantita != null ? (quantita*-1) : 0f);
             }
             giacenzaIngrediente.setQuantita(newQuantita);
             Ingrediente ingrediente = new Ingrediente();

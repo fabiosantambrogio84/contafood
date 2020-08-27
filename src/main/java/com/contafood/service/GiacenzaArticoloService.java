@@ -113,7 +113,7 @@ public class GiacenzaArticoloService {
         result.put("quantita", giacenzaArticolo.getQuantita());
         result.put("movimentazioni", movimentazioni);
 
-        LOGGER.info("Retrieved 'giacenza articolo' of articolo {}", idArticolo);
+        LOGGER.info("Retrieved 'giacenza articolo' of 'articolo' {}", idArticolo);
         return result;
     }
 

@@ -35,6 +35,7 @@ public class MovimentazioneService {
     private final DdtRepository ddtRepository;
     private final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository;
     private final ProduzioneRepository produzioneRepository;
+    private final ProduzioneConfezioneRepository produzioneConfezioneRepository;
     private final MovimentazioneManualeArticoloService movimentazioneManualeArticoloService;
     private final MovimentazioneManualeIngredienteService movimentazioneManualeIngredienteService;
 
@@ -51,6 +52,7 @@ public class MovimentazioneService {
                                  final DdtRepository ddtRepository,
                                  final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository,
                                  final ProduzioneRepository produzioneRepository,
+                                 final ProduzioneConfezioneRepository produzioneConfezioneRepository,
                                  final MovimentazioneManualeArticoloService movimentazioneManualeArticoloService,
                                  final MovimentazioneManualeIngredienteService movimentazioneManualeIngredienteService){
         this.ddtAcquistoArticoloService = ddtAcquistoArticoloService;
@@ -65,6 +67,7 @@ public class MovimentazioneService {
         this.ddtRepository = ddtRepository;
         this.fatturaAccompagnatoriaRepository = fatturaAccompagnatoriaRepository;
         this.produzioneRepository = produzioneRepository;
+        this.produzioneConfezioneRepository = produzioneConfezioneRepository;
         this.movimentazioneManualeArticoloService = movimentazioneManualeArticoloService;
         this.movimentazioneManualeIngredienteService = movimentazioneManualeIngredienteService;
     }
@@ -75,7 +78,7 @@ public class MovimentazioneService {
         Set<DdtAcquistoArticolo> ddtAcquistoArticoli = new HashSet<>();
         Set<DdtArticolo> ddtArticoli = new HashSet<>();
         Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = new HashSet<>();
-        Set<Produzione> produzioni = new HashSet<>();
+        Set<ProduzioneConfezione> produzioneConfezioni = new HashSet<>();
         Set<MovimentazioneManualeArticolo> movimentazioniManualiArticoli = new HashSet<>();
 
         Articolo articolo = articoloRepository.findById(giacenzaArticolo.getArticolo().getId()).get();
@@ -92,13 +95,22 @@ public class MovimentazioneService {
         // retrieve the 'Ricetta' associated to the 'Articolo'
         String codiceRicetta = articolo.getCodice().substring(2);
 
-        // retrieve the set of 'Produzioni'
-        produzioni = produzioneRepository.findByRicettaCodiceAndLotto(codiceRicetta, giacenzaArticolo.getLotto());
-        if(produzioni != null && !produzioni.isEmpty()){
-            if(giacenzaArticolo.getScadenza() != null){
-                produzioni = produzioni.stream()
-                        .filter(p -> (p.getScadenza() != null && p.getScadenza().toLocalDate().compareTo(giacenzaArticolo.getScadenza().toLocalDate())==0)).collect(Collectors.toSet());
-            }
+        // retrieve the set of 'ProduzioniConfezioni'
+        produzioneConfezioni = produzioneConfezioneRepository.findByArticoloIdAndLotto(articolo.getId(), giacenzaArticolo.getLotto());
+        if(produzioneConfezioni != null && !produzioneConfezioni.isEmpty()){
+            Set<Long> produzioniIds = new HashSet<>();
+            produzioneConfezioni.forEach(pc -> {
+                Produzione produzione = produzioneRepository.findById(pc.getId().getProduzioneId()).get();
+                if(giacenzaArticolo.getScadenza() != null){
+                    if(produzione.getScadenza() != null && produzione.getScadenza().toLocalDate().compareTo(giacenzaArticolo.getScadenza().toLocalDate())==0){
+                        produzioniIds.add(produzione.getId());
+                    }
+                } else {
+                    produzioniIds.add(produzione.getId());
+                }
+            });
+            produzioneConfezioni = produzioneConfezioni.stream().filter(pc -> (produzioniIds.contains(pc.getId().getProduzioneId()))).collect(Collectors.toSet());
+
         }
 
         // retrieve the set of 'MovimentazioniManualiArticoli'
@@ -152,15 +164,17 @@ public class MovimentazioneService {
             });
         }
 
-        // Create 'movimentazione' from 'Produzione'
-        if(produzioni != null && !produzioni.isEmpty()){
-            produzioni.forEach(p -> {
+        // Create 'movimentazione' from 'ProduzioneConfezione'
+        if(produzioneConfezioni != null && !produzioneConfezioni.isEmpty()){
+            produzioneConfezioni.forEach(pc -> {
+                Produzione produzione = produzioneRepository.findById(pc.getId().getProduzioneId()).get();
+
                 Movimentazione movimentazione = new Movimentazione();
                 movimentazione.setIdGiacenza(giacenzaArticolo.getId());
                 movimentazione.setInputOutput(INPUT);
-                movimentazione.setData(p.getDataProduzione());
-                movimentazione.setQuantita(p.getQuantitaTotale());
-                movimentazione.setDescrizione(createDescrizione(p, giacenzaArticolo.getLotto(), giacenzaArticolo.getScadenza(), p.getQuantitaTotale()));
+                movimentazione.setData(produzione.getDataProduzione());
+                movimentazione.setQuantita(pc.getNumConfezioniProdotte() != null ? pc.getNumConfezioniProdotte().floatValue() : 0f);
+                movimentazione.setDescrizione(createDescrizione(produzione, giacenzaArticolo.getLotto(), giacenzaArticolo.getScadenza(), (pc.getNumConfezioniProdotte() != null ? pc.getNumConfezioniProdotte().floatValue() : 0f)));
 
                 movimentazioni.add(movimentazione);
             });
@@ -335,7 +349,7 @@ public class MovimentazioneService {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("Prodotto/i <b>").append(quantita).append("</b> Kg");
+        stringBuilder.append("Prodotto/i <b>").append(quantita).append("</b> pz");
         stringBuilder.append(" il ").append(simpleDateFormat.format(produzione.getDataProduzione()));
         stringBuilder.append(" lotto <b>").append(lotto).append("</b>");
         stringBuilder.append(" scadenza <b>");
