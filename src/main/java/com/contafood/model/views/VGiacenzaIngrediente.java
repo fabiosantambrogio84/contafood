@@ -34,6 +34,9 @@ public class VGiacenzaIngrediente {
     @Column(name = "attivo")
     private Boolean attivo;
 
+    @Column(name = "udm")
+    private String udm;
+
     @Column(name = "id_fornitore")
     private Long idFornitore;
 
@@ -96,6 +99,14 @@ public class VGiacenzaIngrediente {
         this.attivo = attivo;
     }
 
+    public String getUdm() {
+        return udm;
+    }
+
+    public void setUdm(String udm) {
+        this.udm = udm;
+    }
+
     public Long getIdFornitore() {
         return idFornitore;
     }
@@ -124,6 +135,7 @@ public class VGiacenzaIngrediente {
         result.append(", lottoGiacenze: " + lottoGiacenze);
         result.append(", scadenzaGiacenze: " + scadenzaGiacenze);
         result.append(", attivo: " + attivo);
+        result.append(", udm: " + udm);
         result.append(", idFornitore: " + idFornitore);
         result.append(", fornitore: " + fornitore);
         result.append("}");

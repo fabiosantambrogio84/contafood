@@ -88,22 +88,6 @@ public class ProduzioneService {
     public Produzione create(Produzione produzione){
         LOGGER.info("Creating 'produzione'");
 
-        if(produzione.getScopo().equalsIgnoreCase("vendita")){
-            LocalDate today = LocalDate.now();
-            Integer anno = today.getYear();
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uu");
-            String yearTwoDigits = dateTimeFormatter.format(today);
-            Integer giorno = today.getDayOfYear();
-            Integer numeroProgressivo = produzioneRepository.findNextNumeroProgressivoByLottoAnnoAndLottoGiorno(anno, giorno).orElse(1);
-            String lotto = LottoUtils.createLottoProduzione(yearTwoDigits, giorno, numeroProgressivo);
-
-            LOGGER.info("Anno {}, giorno {}, numero progressivo {}, lotto {}", anno, giorno, numeroProgressivo, lotto);
-
-            produzione.setLottoAnno(anno);
-            produzione.setLottoGiorno(giorno);
-            produzione.setLottoNumeroProgressivo(numeroProgressivo);
-            produzione.setLotto(lotto);
-        }
         produzione.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         Produzione createdProduzione = produzioneRepository.save(produzione);
@@ -111,6 +95,25 @@ public class ProduzioneService {
         Date dataProduzione = createdProduzione.getDataProduzione();
         Date scadenzaProduzione = createdProduzione.getScadenza();
         Long idRicetta = createdProduzione.getRicetta().getId();
+
+        if(produzione.getScopo().equalsIgnoreCase("vendita")){
+            LocalDate today = LocalDate.now();
+            Integer anno = today.getYear();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("uu");
+            String yearTwoDigits = dateTimeFormatter.format(today);
+            Integer giorno = today.getDayOfYear();
+            Integer codice = produzioneRepository.findNextCodiceByLottoAnno(anno).orElse(1);
+            String lotto = LottoUtils.createLottoProduzione(yearTwoDigits, codice);
+
+            LOGGER.info("Anno {}, codice {}, lotto {}", anno, codice, lotto);
+
+            createdProduzione.setCodice(codice);
+            createdProduzione.setLottoAnno(anno);
+            createdProduzione.setLottoGiorno(giorno);
+            createdProduzione.setLottoNumeroProgressivo(codice);
+            createdProduzione.setLotto(lotto);
+        }
+        final String createdLotto = createdProduzione.getLotto();
 
         createdProduzione.getProduzioneIngredienti().stream().forEach(pi -> {
             pi.getId().setProduzioneId(produzioneId);
@@ -123,19 +126,19 @@ public class ProduzioneService {
         });
         createdProduzione.getProduzioneConfezioni().stream().forEach(pc -> {
             pc.getId().setProduzioneId(produzioneId);
+            pc.setLottoProduzione(createdLotto);
 
             // create, or retrieve, the associated Articolo
             Articolo articolo = getOrCreateArticolo(pc, idRicetta, dataProduzione);
             pc.setArticolo(articolo);
 
             // compute 'giacenza articolo'
-            giacenzaArticoloService.computeGiacenza(articolo.getId(), pc.getLotto(), scadenzaProduzione, pc.getNumConfezioniProdotte().floatValue(), Resource.PRODUZIONE);
+            giacenzaArticoloService.computeGiacenza(articolo.getId(), createdLotto, scadenzaProduzione, pc.getNumConfezioniProdotte().floatValue(), Resource.PRODUZIONE);
 
             produzioneConfezioneService.create(pc);
         });
         Integer numeroConfezioni = createdProduzione.getProduzioneConfezioni().stream().collect(Collectors.summingInt(pc -> pc.getNumConfezioni()));
 
-        createdProduzione.setCodice(produzioneId.intValue());
         createdProduzione.setNumeroConfezioni(numeroConfezioni);
         createdProduzione = produzioneRepository.save(produzione);
 

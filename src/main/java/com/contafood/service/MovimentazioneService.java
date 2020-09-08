@@ -96,7 +96,7 @@ public class MovimentazioneService {
         String codiceRicetta = articolo.getCodice().substring(2);
 
         // retrieve the set of 'ProduzioniConfezioni'
-        produzioneConfezioni = produzioneConfezioneRepository.findByArticoloIdAndLotto(articolo.getId(), giacenzaArticolo.getLotto());
+        produzioneConfezioni = produzioneConfezioneRepository.findByArticoloIdAndLottoProduzione(articolo.getId(), giacenzaArticolo.getLotto());
         if(produzioneConfezioni != null && !produzioneConfezioni.isEmpty()){
             Set<Long> produzioniIds = new HashSet<>();
             produzioneConfezioni.forEach(pc -> {
@@ -349,7 +349,7 @@ public class MovimentazioneService {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        stringBuilder.append("Prodotto/i <b>").append(quantita).append("</b> pz");
+        stringBuilder.append("Prodotto/i <b>").append(quantita).append("</b>");
         stringBuilder.append(" il ").append(simpleDateFormat.format(produzione.getDataProduzione()));
         stringBuilder.append(" lotto <b>").append(lotto).append("</b>");
         stringBuilder.append(" scadenza <b>");
@@ -393,18 +393,18 @@ public class MovimentazioneService {
     }
 
     private String createDescrizione(DdtAcquistoIngrediente ddtAcquistoIngrediente, GiacenzaIngrediente giacenzaIngrediente, Ingrediente ingrediente){
-        UnitaMisura unitaMisura = ingrediente.getUnitaMisura();
+        //UnitaMisura unitaMisura = ingrediente.getUnitaMisura();
         Fornitore fornitore = ingrediente.getFornitore();
         DdtAcquisto ddtAcquisto = ddtAcquistoRepository.findById(ddtAcquistoIngrediente.getId().getDdtAcquistoId()).get();
 
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append("Acquistato/i <b>").append(ddtAcquistoIngrediente.getQuantita()).append("</b>");
-        if(unitaMisura != null){
+        /*if(unitaMisura != null){
             stringBuilder.append(" ").append(unitaMisura.getEtichetta());
         } else {
             stringBuilder.append("ND");
-        }
+        }*/
         stringBuilder.append(" il ").append(simpleDateFormat.format(ddtAcquisto.getData()));
         stringBuilder.append(" lotto <b>").append(giacenzaIngrediente.getLotto()).append("</b>");
         stringBuilder.append(" scadenza <b>");
@@ -413,7 +413,7 @@ public class MovimentazioneService {
         } else {
             stringBuilder.append("ND");
         }
-        stringBuilder.append(" (DDT acquisto n. ").append(ddtAcquisto.getNumero());
+        stringBuilder.append("</b> (DDT acquisto n. ").append(ddtAcquisto.getNumero());
         if(fornitore != null){
             stringBuilder.append(" da ");
             stringBuilder.append(fornitore.getRagioneSociale());
@@ -424,14 +424,14 @@ public class MovimentazioneService {
     }
 
     private String createDescrizione(MovimentazioneManualeIngrediente movimentazioneManualeIngrediente, GiacenzaIngrediente giacenzaIngrediente, Ingrediente ingrediente){
-        UnitaMisura unitaMisura = ingrediente.getUnitaMisura();
+        //UnitaMisura unitaMisura = ingrediente.getUnitaMisura();
 
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append("Inserito/i <b>").append(movimentazioneManualeIngrediente.getQuantita()).append("</b>");
-        if(unitaMisura != null){
+        /*if(unitaMisura != null){
             stringBuilder.append(" ").append(unitaMisura.getEtichetta());
-        }
+        }*/
         stringBuilder.append(" il ").append(simpleDateFormat.format(new Date(movimentazioneManualeIngrediente.getDataInserimento().getTime())));
         stringBuilder.append(" lotto <b>").append(giacenzaIngrediente.getLotto()).append("</b>");
         stringBuilder.append(" scadenza <b>");

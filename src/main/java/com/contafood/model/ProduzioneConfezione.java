@@ -32,6 +32,9 @@ public class ProduzioneConfezione implements Serializable {
     @Column(name = "lotto")
     private String lotto;
 
+    @Column(name = "lotto_produzione")
+    private String lottoProduzione;
+
     @Column(name = "num_confezioni_prodotte")
     private Integer numConfezioniProdotte;
 
@@ -79,6 +82,14 @@ public class ProduzioneConfezione implements Serializable {
         this.lotto = lotto;
     }
 
+    public String getLottoProduzione() {
+        return lottoProduzione;
+    }
+
+    public void setLottoProduzione(String lottoProduzione) {
+        this.lottoProduzione = lottoProduzione;
+    }
+
     public Integer getNumConfezioniProdotte() {
         return numConfezioniProdotte;
     }
@@ -104,6 +115,7 @@ public class ProduzioneConfezione implements Serializable {
         result.append(", confezioneId: " + id.confezioneId);
         result.append(", numConfezioni: " + numConfezioni);
         result.append(", lotto: " + lotto);
+        result.append(", lottoProduzione: " + lottoProduzione);
         result.append(", numConfezioniProdotte: " + numConfezioniProdotte);
         result.append(", articolo: " + articolo);
         result.append("}");

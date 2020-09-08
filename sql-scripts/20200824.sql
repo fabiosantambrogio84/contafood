@@ -16,7 +16,7 @@ CREATE VIEW `v_produzione` AS
     	produzione.codice as codice_produzione,
         produzione.data_produzione,
         produzione_confezione.id_confezione,
-        produzione_confezione.lotto,
+        produzione.lotto,
         produzione.scadenza,
         produzione_confezione.id_articolo,
         articolo.codice as codice_articolo,
@@ -30,4 +30,28 @@ CREATE VIEW `v_produzione` AS
         produzione_confezione.id_articolo = articolo.id
 ;
 
+ALTER TABLE produzione_confezione ADD COLUMN lotto_produzione varchar(100) after lotto;
 
+create or replace view contafood.v_giacenza_ingrediente as
+select
+	id_ingrediente,
+	concat(ingrediente.codice,' ',coalesce(ingrediente.descrizione,'')) ingrediente,
+	sum(quantita) quantita_tot,
+	GROUP_CONCAT(giacenza_ingrediente.id) id_giacenze,
+	GROUP_CONCAT(giacenza_ingrediente.lotto) lotto_giacenze,
+	GROUP_CONCAT(giacenza_ingrediente.scadenza) scadenza_giacenze,
+	ingrediente.attivo,
+	unita_misura.etichetta udm,
+	ingrediente.id_fornitore,
+	fornitore.ragione_sociale fornitore
+from
+	contafood.giacenza_ingrediente
+join contafood.ingrediente on
+	giacenza_ingrediente.id_ingrediente = ingrediente.id
+left join contafood.unita_misura on
+    ingrediente.id_unita_misura = unita_misura.id
+left join contafood.fornitore on
+	ingrediente.id_fornitore = fornitore.id
+group by
+	id_ingrediente
+;

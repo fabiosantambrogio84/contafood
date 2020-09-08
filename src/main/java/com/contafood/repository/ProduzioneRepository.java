@@ -13,8 +13,8 @@ public interface ProduzioneRepository extends CrudRepository<Produzione, Long> {
     @Override
     Set<Produzione> findAll();
 
-    @Query(value = "SELECT MAX(lotto_numero_progressivo) + 1 FROM produzione WHERE lotto_anno = ?1 AND lotto_giorno = ?2", nativeQuery = true)
-    Optional<Integer> findNextNumeroProgressivoByLottoAnnoAndLottoGiorno(Integer lottoAnno, Integer lottoGiorno);
+    @Query(value = "SELECT MAX(codice) + 1 FROM produzione WHERE lotto_anno = ?1", nativeQuery = true)
+    Optional<Integer> findNextCodiceByLottoAnno(Integer lottoAnno);
 
     List<Produzione> findByRicettaId(Long idRicetta);
 

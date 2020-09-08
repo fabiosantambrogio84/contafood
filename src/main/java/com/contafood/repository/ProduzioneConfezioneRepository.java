@@ -14,7 +14,7 @@ public interface ProduzioneConfezioneRepository extends CrudRepository<Produzion
 
     Set<ProduzioneConfezione> findByConfezioneId(Long confezioneId);
 
-    Set<ProduzioneConfezione> findByArticoloIdAndLotto(Long articoloId, String lotto);
+    Set<ProduzioneConfezione> findByArticoloIdAndLottoProduzione(Long articoloId, String lottoProduzione);
 
     void deleteByProduzioneId(Long produzioneId);
 

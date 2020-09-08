@@ -108,6 +108,7 @@ public class GiacenzaIngredienteService {
 
         result.put("ingrediente", giacenzaIngrediente.getIngrediente());
         result.put("quantita", giacenzaIngrediente.getQuantita());
+        result.put("udm", giacenzaIngrediente.getUdm());
         result.put("movimentazioni", movimentazioni);
 
         LOGGER.info("Retrieved 'giacenza ingrediente' of ingrediente {}", idIngrediente);

@@ -25,6 +25,9 @@
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Add GiacenzaIngrediente, fix bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/sql-scripts/20200824.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql-scripts/20200824.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VGiacenzaIngrediente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VGiacenzaIngrediente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -306,7 +309,14 @@
       <workItem from="1598425378233" duration="704000" />
       <workItem from="1598431249995" duration="1717000" />
       <workItem from="1598512534328" duration="2257000" />
-      <workItem from="1598967703052" duration="3000" />
+      <workItem from="1598967703052" duration="684000" />
+      <workItem from="1599048490961" duration="1925000" />
+      <workItem from="1599052354326" duration="1418000" />
+      <workItem from="1599117104390" duration="4028000" />
+      <workItem from="1599493544890" duration="600000" />
+      <workItem from="1599550177105" duration="1642000" />
+      <workItem from="1599581177785" duration="309000" />
+      <workItem from="1599635940456" duration="2085000" />
     </task>
     <task id="LOCAL-00029" summary="Add scheduled job for deleting expired Sconti. Add filters on Sconti">
       <created>1582820866575</created>
@@ -714,25 +724,16 @@
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2084" y="321" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1597326367023" />
-    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser" timestamp="1598367391756">
+    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser" timestamp="1599636416842">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598367391756" />
+    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636416842" />
     <state x="544" y="95" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1592741546731" />
     <state x="765" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1591686641471" />
-    <state x="708" y="297" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1590488506012">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="708" y="297" key="#com.intellij.ide.util.PackageChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1590488506012" />
     <state x="2006" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1592380420661">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2006" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592380420661" />
-    <state x="541" y="288" width="561" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1590500687872">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="541" y="288" width="561" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1366.728@0.0.1366.728" timestamp="1590500687872" />
-    <state x="761" y="411" width="433" height="221" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040@0.0.1920.1040" timestamp="1590488507532" />
     <state x="1416" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1592493846246">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
@@ -759,32 +760,28 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1591186442000" />
-    <state width="187" height="248" key="Git.Branch.Popup" timestamp="1590392677853">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="187" height="248" key="Git.Branch.Popup/0.0.1920.1040@0.0.1920.1040" timestamp="1590392677853" />
-    <state width="1877" height="286" key="GridCell.Tab.0.bottom" timestamp="1598431656111">
+    <state width="1877" height="286" key="GridCell.Tab.0.bottom" timestamp="1599636819922">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="286" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598431656111" />
+    <state width="1877" height="286" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636819922" />
     <state width="1323" height="231" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1592743176661" />
     <state width="1877" height="260" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
-    <state width="1877" height="286" key="GridCell.Tab.0.center" timestamp="1598431656111">
+    <state width="1877" height="286" key="GridCell.Tab.0.center" timestamp="1599636819922">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="286" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598431656111" />
+    <state width="1877" height="286" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636819922" />
     <state width="1323" height="231" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1592743176660" />
     <state width="1877" height="260" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
-    <state width="1877" height="286" key="GridCell.Tab.0.left" timestamp="1598431656111">
+    <state width="1877" height="286" key="GridCell.Tab.0.left" timestamp="1599636819922">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="286" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598431656111" />
+    <state width="1877" height="286" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636819922" />
     <state width="1323" height="231" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1592743176660" />
     <state width="1877" height="260" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
-    <state width="1877" height="286" key="GridCell.Tab.0.right" timestamp="1598431656111">
+    <state width="1877" height="286" key="GridCell.Tab.0.right" timestamp="1599636819922">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="286" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598431656111" />
+    <state width="1877" height="286" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636819922" />
     <state width="1323" height="231" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1592743176661" />
     <state width="1877" height="260" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
     <state width="1877" height="316" key="GridCell.Tab.1.bottom" timestamp="1598365810249">
@@ -920,7 +917,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java</url>
-          <line>142</line>
+          <line>143</line>
           <option name="timeStamp" value="40" />
         </line-breakpoint>
       </breakpoints>
