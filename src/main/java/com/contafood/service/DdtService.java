@@ -104,7 +104,7 @@ public class DdtService {
 
         Ddt createdDdt = ddtRepository.save(ddt);
 
-        // create 'ddt-articoli' and 'ddt-articoli-ordini-clienti'
+        // create 'ddt-articoli'
         createdDdt.getDdtArticoli().stream().forEach(da -> {
             da.getId().setDdtId(createdDdt.getId());
             da.getId().setUuid(UUID.randomUUID().toString());
@@ -115,7 +115,7 @@ public class DdtService {
         });
 
         // update 'pezzi-da-evadere' and 'stato-ordine' on OrdineCliente
-        ddtArticoloService.updateOrdineClienteFromCreateDdt(createdDdt.getId());
+        //ddtArticoloService.updateOrdineClienteFromCreateDdt(createdDdt.getId());
 
         // compute totali on Ddt
         computeTotali(createdDdt, createdDdt.getDdtArticoli());

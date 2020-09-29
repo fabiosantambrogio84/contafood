@@ -6,6 +6,7 @@ import com.contafood.model.*;
 import com.contafood.repository.DdtArticoloOrdineClienteRepository;
 import com.contafood.repository.OrdineClienteRepository;
 import com.contafood.util.enumeration.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,6 +183,80 @@ public class OrdineClienteService {
         ordineClienteArticoloService.deleteByOrdineClienteId(ordineClienteId);
         ordineClienteRepository.deleteById(ordineClienteId);
         LOGGER.info("Deleted 'ordineCliente' '{}'", ordineClienteId);
+    }
+
+    @Transactional
+    public List<OrdineClienteAggregate> updateAggregate(List<OrdineClienteAggregate> ordiniClientiAggregati){
+        LOGGER.info("Updating {} 'ordini-clienti aggregate'", ordiniClientiAggregati.size());
+
+        if(ordiniClientiAggregati != null && !ordiniClientiAggregati.isEmpty()){
+
+            // update pezzi da evadere
+            for(OrdineClienteAggregate ordineClienteAggregate : ordiniClientiAggregati){
+                Set<Long> idOrdiniClienti = new HashSet<>();
+                if(ordineClienteAggregate.getIdsOrdiniClienti() != null && !StringUtils.isEmpty(ordineClienteAggregate.getIdsOrdiniClienti())){
+                    Arrays.stream(ordineClienteAggregate.getIdsOrdiniClienti().split(",")).forEach(id -> {
+                        idOrdiniClienti.add(Long.valueOf(id));
+                    });
+                }
+                Integer numPezziEvasi = ordineClienteAggregate.getNumeroPezziDaEvadere();
+                numPezziEvasi = numPezziEvasi != null ? numPezziEvasi : 0;
+
+                for(Long idOrdineCliente : idOrdiniClienti){
+
+                    // create 'OrdineClienteArticoloKey'
+                    OrdineClienteArticoloKey ordineClienteArticoloKey = new OrdineClienteArticoloKey();
+                    ordineClienteArticoloKey.setOrdineClienteId(idOrdineCliente);
+                    ordineClienteArticoloKey.setArticoloId(ordineClienteAggregate.getIdArticolo());
+
+                    // retrieve the 'OrdineClienteArticolo'
+                    OrdineClienteArticolo ordineClienteArticolo = null;
+                    try{
+                        ordineClienteArticolo = getOrdineClienteArticolo(ordineClienteArticoloKey);
+                        LOGGER.info("Retrieved 'ordineClienteArticolo' {}", ordineClienteArticolo);
+                    } catch(Exception e){
+                        LOGGER.error("Unable to retrieve 'OrdineClienteArticolo' from key '{}'", ordineClienteArticoloKey);
+                        throw e;
+                    }
+
+                    Integer numPezziOrdinati = ordineClienteArticolo.getNumeroPezziOrdinati();
+
+                    LOGGER.info("Numero pezzi ordinati: {}, numero pezzi evasi {}", numPezziOrdinati, numPezziEvasi);
+
+                    Integer newNumPezziDaEvadere = numPezziOrdinati - numPezziEvasi;
+                    if(newNumPezziDaEvadere > 0){
+                        //numPezziEvasi = (numPezziOrdinati - numPezziEvasi);
+                        numPezziEvasi = 0;
+                    } else if(newNumPezziDaEvadere < 0){
+                        numPezziEvasi = Math.abs(numPezziOrdinati - numPezziEvasi);
+                        newNumPezziDaEvadere = 0;
+                    } else {
+                        numPezziEvasi = 0;
+                    }
+                    ordineClienteArticolo.setNumeroPezziDaEvadere(newNumPezziDaEvadere);
+                    LOGGER.info("Updating ordine cliente {}, articolo {} setting 'numPezziDaEvadere'={}", idOrdineCliente, ordineClienteAggregate.getIdArticolo(), newNumPezziDaEvadere);
+                    saveOrdineClienteArticolo(ordineClienteArticolo);
+                }
+            }
+
+            // computeStatoOrdineCliente
+            Set<Long> idOrdiniClienti = new HashSet<>();
+            ordiniClientiAggregati.forEach(oca -> {
+                String idsOrdiniClienti = oca.getIdsOrdiniClienti();
+                if(idsOrdiniClienti != null && !StringUtils.isEmpty(idsOrdiniClienti)){
+                    Arrays.stream(idsOrdiniClienti.split(",")).forEach(id -> {
+                        idOrdiniClienti.add(Long.valueOf(id));
+                    });
+                }
+            });
+            if(idOrdiniClienti != null && !idOrdiniClienti.isEmpty()){
+                for(Long idOrdineCliente : idOrdiniClienti){
+                    computeStatoOrdineCliente(idOrdineCliente);
+                }
+            }
+        }
+        LOGGER.info("Updated {} 'ordini-clienti aggregate'", ordiniClientiAggregati.size());
+        return ordiniClientiAggregati;
     }
 
     private void checkExistsByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idOrdineCliente){

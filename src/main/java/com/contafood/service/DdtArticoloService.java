@@ -64,11 +64,11 @@ public class DdtArticoloService {
         ddtArticolo.setCosto(computeCosto(ddtArticolo));
         ddtArticolo.setTotale(computeTotale(ddtArticolo));
 
-        List<Long> idOrdiniClienti = ddtArticolo.getIdOrdiniClienti();
+        //List<Long> idOrdiniClienti = ddtArticolo.getIdOrdiniClienti();
 
         DdtArticolo createdDdtArticolo = ddtArticoloRepository.save(ddtArticolo);
 
-        if(idOrdiniClienti != null && !idOrdiniClienti.isEmpty()){
+        /*if(idOrdiniClienti != null && !idOrdiniClienti.isEmpty()){
             LOGGER.info("Creating 'ddt articoli ordini clienti'");
             for (Long idOrdineCliente: idOrdiniClienti) {
                 DdtArticoloOrdineClienteKey ddtArticoloOrdineClienteKey = new DdtArticoloOrdineClienteKey();
@@ -84,7 +84,7 @@ public class DdtArticoloService {
                 ddtArticoloOrdineClienteRepository.save(ddtArticoloOrdineCliente);
             }
             LOGGER.info("Created 'ddt articoli ordini clienti'");
-        }
+        }*/
 
         LOGGER.info("Created 'ddt articolo' '{}'", createdDdtArticolo);
         return createdDdtArticolo;

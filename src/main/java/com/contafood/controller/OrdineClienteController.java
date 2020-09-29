@@ -3,12 +3,14 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
 import com.contafood.service.OrdineClienteService;
+import com.contafood.service.jpa.NativeQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -27,9 +29,12 @@ public class OrdineClienteController {
 
     private final OrdineClienteService ordineClienteService;
 
+    private final NativeQueryService nativeQueryService;
+
     @Autowired
-    public OrdineClienteController(final OrdineClienteService ordineClienteService){
+    public OrdineClienteController(final OrdineClienteService ordineClienteService, final NativeQueryService nativeQueryService){
         this.ordineClienteService = ordineClienteService;
+        this.nativeQueryService = nativeQueryService;
     }
 
     @RequestMapping(method = GET)
@@ -99,6 +104,19 @@ public class OrdineClienteController {
         }
     }
 
+    @RequestMapping(method = GET, path = "/aggregate")
+    @CrossOrigin
+    public List<OrdineClienteAggregate> getAllAggregate(@RequestParam(name = "idCliente", required = false) Integer idCliente,
+                                                        @RequestParam(name = "idPuntoConsegna", required = false) Integer idPuntoConsegna,
+                                                        @RequestParam(name = "dataConsegnaLessOrEqual", required = false) Date dataConsegnaLessOrEqual,
+                                                        @RequestParam(name = "idStatoNot", required = false) Integer idStatoNot) {
+        LOGGER.info("Performing GET request for retrieving list of 'ordini-clienti aggregate'");
+        LOGGER.info("Request params: idCliente {}, idPuntoConsegna {}, dataConsegnaLessOrEqual {}, idStatoNot {}",
+                idCliente, idPuntoConsegna, dataConsegnaLessOrEqual, idStatoNot);
+
+        return nativeQueryService.getOrdiniClientiAggregate(idCliente, idPuntoConsegna, dataConsegnaLessOrEqual, idStatoNot);
+    }
+
     @RequestMapping(method = GET, path = "/{ordineClienteId}")
     @CrossOrigin
     public OrdineCliente getOne(@PathVariable final Long ordineClienteId) {
@@ -140,6 +158,16 @@ public class OrdineClienteController {
             throw new CannotChangeResourceIdException();
         }
         return ordineClienteService.patch(patchOrdineCliente);
+    }
+
+    @RequestMapping(method = POST, path = "/aggregate")
+    @ResponseStatus(CREATED)
+    @CrossOrigin
+    public List<OrdineClienteAggregate> updateAggregate(@RequestBody final List<OrdineClienteAggregate> ordiniClientiAggregati) {
+        LOGGER.info("Performing POST request for updating list of 'ordini-clienti aggregate'");
+        LOGGER.info("Updating {} 'ordini-clienti aggregate'", ordiniClientiAggregati.size());
+
+        return ordineClienteService.updateAggregate(ordiniClientiAggregati);
     }
 
     @RequestMapping(method = DELETE, path = "/{ordineClienteId}")

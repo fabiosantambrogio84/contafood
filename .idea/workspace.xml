@@ -24,10 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Add GiacenzaIngrediente, fix bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql-scripts/20200824.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql-scripts/20200824.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VGiacenzaIngrediente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VGiacenzaIngrediente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtArticoloService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,11 +84,11 @@
       <recent name="com.contafood.model.stats" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.contafood.model" />
       <recent name="com.contafood.repository.views" />
       <recent name="com.contafood.model.views" />
       <recent name="com.contafood.controller" />
       <recent name="com.contafood.service" />
-      <recent name="com.contafood.repository" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\sql-scripts" />
@@ -317,6 +315,23 @@
       <workItem from="1599550177105" duration="1642000" />
       <workItem from="1599581177785" duration="309000" />
       <workItem from="1599635940456" duration="2085000" />
+      <workItem from="1599661141340" duration="634000" />
+      <workItem from="1600157843816" duration="634000" />
+      <workItem from="1600242473706" duration="623000" />
+      <workItem from="1600326478442" duration="1907000" />
+      <workItem from="1600337336429" duration="659000" />
+      <workItem from="1600416199678" duration="4475000" />
+      <workItem from="1600432775197" duration="604000" />
+      <workItem from="1600676421679" duration="607000" />
+      <workItem from="1600762761059" duration="1846000" />
+      <workItem from="1600844631159" duration="1272000" />
+      <workItem from="1600931996244" duration="7782000" />
+      <workItem from="1601018380623" duration="2587000" />
+      <workItem from="1601295325164" duration="3620000" />
+      <workItem from="1601375571658" duration="1234000" />
+      <workItem from="1601449911604" duration="616000" />
+      <workItem from="1601625585907" duration="2581000" />
+      <workItem from="1601887052361" duration="2275000" />
     </task>
     <task id="LOCAL-00029" summary="Add scheduled job for deleting expired Sconti. Add filters on Sconti">
       <created>1582820866575</created>
@@ -711,214 +726,82 @@
     <option name="LAST_COMMIT_MESSAGE" value="Add GiacenzaIngrediente, fix bugs" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="413" y="118" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog" timestamp="1592742943156">
-      <screen x="0" y="0" width="1366" height="728" />
-    </state>
-    <state x="413" y="118" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/0.0.1366.728@0.0.1366.728" timestamp="1592742943156" />
     <state x="1780" y="178" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1598278827465">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="1780" y="178" width="1092" height="715" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598278827465" />
-    <state x="414" y="178" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591005420168" />
     <state x="2084" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597326367023">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2084" y="321" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1597326367023" />
-    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser" timestamp="1599636416842">
+    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser" timestamp="1601299993992">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636416842" />
-    <state x="544" y="95" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1592741546731" />
-    <state x="765" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1591686641471" />
-    <state x="2006" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1592380420661">
-      <screen x="1366" y="0" width="1920" height="1040" />
-    </state>
-    <state x="2006" y="255" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592380420661" />
-    <state x="1416" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1592493846246">
-      <screen x="1366" y="0" width="1920" height="1040" />
-    </state>
-    <state x="1416" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592493846246" />
-    <state x="50" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591686710354" />
+    <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601299993992" />
     <state x="2056" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1597327808926">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2056" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1597327808926" />
-    <state x="690" y="270" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591686974764" />
     <state x="2373" y="268" width="608" height="587" key="#xdebugger.evaluate" timestamp="1598280854018">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2373" y="268" width="608" height="587" key="#xdebugger.evaluate/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598280854018" />
-    <state x="716" y="188" key="#xdebugger.evaluate/0.0.1366.728@0.0.1366.728" timestamp="1592740103949" />
-    <state x="1007" y="268" width="749" height="587" key="#xdebugger.evaluate/0.0.1920.1040@0.0.1920.1040" timestamp="1591696297025" />
-    <state x="1934" y="119" key="CommitChangelistDialog2" timestamp="1592811431039">
+    <state width="1877" height="286" key="GridCell.Tab.0.bottom" timestamp="1601888740923">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="1934" y="119" key="CommitChangelistDialog2/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592811431039" />
-    <state x="404" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1591714810380" />
-    <state x="568" y="119" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1591872482692" />
-    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1591186442000">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1591186442000" />
-    <state width="1877" height="286" key="GridCell.Tab.0.bottom" timestamp="1599636819922">
+    <state width="1877" height="286" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601888740923" />
+    <state width="1877" height="286" key="GridCell.Tab.0.center" timestamp="1601888740923">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="286" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636819922" />
-    <state width="1323" height="231" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1592743176661" />
-    <state width="1877" height="260" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
-    <state width="1877" height="286" key="GridCell.Tab.0.center" timestamp="1599636819922">
+    <state width="1877" height="286" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601888740923" />
+    <state width="1877" height="286" key="GridCell.Tab.0.left" timestamp="1601888740923">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="286" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636819922" />
-    <state width="1323" height="231" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1592743176660" />
-    <state width="1877" height="260" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
-    <state width="1877" height="286" key="GridCell.Tab.0.left" timestamp="1599636819922">
+    <state width="1877" height="286" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601888740923" />
+    <state width="1877" height="286" key="GridCell.Tab.0.right" timestamp="1601888740923">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="286" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636819922" />
-    <state width="1323" height="231" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1592743176660" />
-    <state width="1877" height="260" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
-    <state width="1877" height="286" key="GridCell.Tab.0.right" timestamp="1599636819922">
+    <state width="1877" height="286" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601888740923" />
+    <state width="1877" height="316" key="GridCell.Tab.1.bottom" timestamp="1601888701630">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="286" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599636819922" />
-    <state width="1323" height="231" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1592743176661" />
-    <state width="1877" height="260" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592204746840" />
-    <state width="1877" height="316" key="GridCell.Tab.1.bottom" timestamp="1598365810249">
+    <state width="1877" height="316" key="GridCell.Tab.1.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601888701630" />
+    <state width="1877" height="316" key="GridCell.Tab.1.center" timestamp="1601888701630">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="316" key="GridCell.Tab.1.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598365810249" />
-    <state width="1323" height="231" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1592743176662" />
-    <state width="1877" height="260" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1592204752067" />
-    <state width="1877" height="316" key="GridCell.Tab.1.center" timestamp="1598365810249">
+    <state width="1877" height="316" key="GridCell.Tab.1.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601888701630" />
+    <state width="1877" height="316" key="GridCell.Tab.1.left" timestamp="1601888701630">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="316" key="GridCell.Tab.1.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598365810249" />
-    <state width="1323" height="231" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1592743176662" />
-    <state width="1877" height="260" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1592204752067" />
-    <state width="1877" height="316" key="GridCell.Tab.1.left" timestamp="1598365810249">
+    <state width="1877" height="316" key="GridCell.Tab.1.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601888701630" />
+    <state width="1877" height="316" key="GridCell.Tab.1.right" timestamp="1601888701630">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="316" key="GridCell.Tab.1.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598365810249" />
-    <state width="1323" height="231" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1592743176661" />
-    <state width="1877" height="260" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1592204752066" />
-    <state width="1877" height="316" key="GridCell.Tab.1.right" timestamp="1598365810249">
+    <state width="1877" height="316" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601888701630" />
+    <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1600420281296">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="316" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598365810249" />
-    <state width="1323" height="231" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1592743176662" />
-    <state width="1877" height="260" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1592204752067" />
-    <state x="2067" y="234" key="RollbackChangesDialog" timestamp="1592559528054">
+    <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1600420281296" />
+    <state x="1860" y="248" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1601643086933">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="2067" y="234" key="RollbackChangesDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592559528054" />
-    <state x="461" y="164" key="SettingsEditor" timestamp="1591016575001">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1591016575001" />
-    <state x="1918" y="257" key="Vcs.Push.Dialog.v2" timestamp="1592811500169">
-      <screen x="1366" y="0" width="1920" height="1040" />
-    </state>
-    <state x="1918" y="257" key="Vcs.Push.Dialog.v2/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592811500169" />
-    <state x="393" y="167" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1591714814286" />
-    <state x="552" y="257" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1591872485418" />
-    <state width="968" height="528" key="XDebugger.FullValuePopup" timestamp="1591017751452">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="968" height="528" key="XDebugger.FullValuePopup/0.0.1920.1040@0.0.1920.1040" timestamp="1591017751452" />
-    <state x="1458" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1592559654500">
-      <screen x="1366" y="0" width="1920" height="1040" />
-    </state>
-    <state x="1458" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728/1366.0.1920.1040@0.0.1366.728" timestamp="1592232344345" />
-    <state x="1458" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1592559654500" />
-    <state x="92" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1591014222057" />
-    <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1598431525964">
-      <screen x="1366" y="0" width="1920" height="1040" />
-    </state>
-    <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598431525964" />
-    <state x="514" y="248" width="892" height="630" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1591019479304">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="514" y="248" width="892" height="630" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1040@0.0.1920.1040" timestamp="1591019479304" />
+    <state x="1860" y="248" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601643086933" />
     <state x="1982" y="240" key="run.anything.popup" timestamp="1594133674715">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="1982" y="240" key="run.anything.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1594133674715" />
-    <state x="616" y="240" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1591359456235" />
     <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1595232593658">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1595232593658" />
-    <state x="443" y="158" width="672" height="475" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1592742426158" />
-    <state x="623" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1592204691336" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java</url>
-          <line>88</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java</url>
-          <line>117</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtArticoloService.java</url>
-          <line>207</line>
-          <option name="timeStamp" value="28" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java</url>
-          <line>202</line>
-          <option name="timeStamp" value="29" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java</url>
-          <line>120</line>
-          <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java</url>
-          <line>224</line>
-          <option name="timeStamp" value="31" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java</url>
-          <line>99</line>
-          <option name="timeStamp" value="32" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java</url>
-          <line>122</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaArticoloService.java</url>
-          <line>123</line>
-          <option name="timeStamp" value="35" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java</url>
-          <line>75</line>
-          <option name="timeStamp" value="37" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaArticoloService.java</url>
-          <line>139</line>
-          <option name="timeStamp" value="38" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/TestController.java</url>
-          <line>42</line>
-          <option name="timeStamp" value="39" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java</url>
-          <line>143</line>
-          <option name="timeStamp" value="40" />
+          <line>201</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
