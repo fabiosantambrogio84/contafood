@@ -43,6 +43,12 @@ public class VGiacenzaIngrediente {
     @Column(name = "fornitore")
     private String fornitore;
 
+    @Column(name = "codice_ingrediente")
+    private String codiceIngrediente;
+
+    @Column(name = "descrizione_ingrediente")
+    private String descrizioneIngrediente;
+
     public Long getIdIngrediente() {
         return idIngrediente;
     }
@@ -123,6 +129,22 @@ public class VGiacenzaIngrediente {
         this.fornitore = fornitore;
     }
 
+    public String getCodiceIngrediente() {
+        return codiceIngrediente;
+    }
+
+    public void setCodiceIngrediente(String codiceIngrediente) {
+        this.codiceIngrediente = codiceIngrediente;
+    }
+
+    public String getDescrizioneIngrediente() {
+        return descrizioneIngrediente;
+    }
+
+    public void setDescrizioneIngrediente(String descrizioneIngrediente) {
+        this.descrizioneIngrediente = descrizioneIngrediente;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -138,6 +160,8 @@ public class VGiacenzaIngrediente {
         result.append(", udm: " + udm);
         result.append(", idFornitore: " + idFornitore);
         result.append(", fornitore: " + fornitore);
+        result.append(", codiceIngrediente: " + codiceIngrediente);
+        result.append(", descrizioneIngrediente: " + descrizioneIngrediente);
         result.append("}");
 
         return result.toString();

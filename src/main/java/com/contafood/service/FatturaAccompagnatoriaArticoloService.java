@@ -63,11 +63,11 @@ public class FatturaAccompagnatoriaArticoloService {
         fatturaAccompagnatoriaArticolo.setCosto(computeCosto(fatturaAccompagnatoriaArticolo));
         fatturaAccompagnatoriaArticolo.setTotale(computeTotale(fatturaAccompagnatoriaArticolo));
 
-        List<Long> idOrdiniClienti = fatturaAccompagnatoriaArticolo.getIdOrdiniClienti();
+        //List<Long> idOrdiniClienti = fatturaAccompagnatoriaArticolo.getIdOrdiniClienti();
 
         FatturaAccompagnatoriaArticolo createdFatturaAccompagnatoriaArticolo = fatturaAccompagnatoriaArticoloRepository.save(fatturaAccompagnatoriaArticolo);
 
-        if(idOrdiniClienti != null && !idOrdiniClienti.isEmpty()){
+        /*if(idOrdiniClienti != null && !idOrdiniClienti.isEmpty()){
             LOGGER.info("Creating 'fattura accompagnatoria articoli ordini clienti'");
             for (Long idOrdineCliente: idOrdiniClienti) {
                 FatturaAccompagnatoriaArticoloOrdineClienteKey fatturaAccompagnatoriaArticoloOrdineClienteKey = new FatturaAccompagnatoriaArticoloOrdineClienteKey();
@@ -83,7 +83,7 @@ public class FatturaAccompagnatoriaArticoloService {
                 fatturaAccompagnatoriaArticoloOrdineClienteRepository.save(fatturaAccompagnatoriaArticoloOrdineCliente);
             }
             LOGGER.info("Created 'ddt articoli ordini clienti'");
-        }
+        }*/
 
         LOGGER.info("Created 'fattura accompagnatoria articolo' '{}'", createdFatturaAccompagnatoriaArticolo);
         return createdFatturaAccompagnatoriaArticolo;
@@ -127,6 +127,7 @@ public class FatturaAccompagnatoriaArticoloService {
         return fatturaAccompagnatoriaArticoli;
     }
 
+    /*
     @Transactional
     public void updateOrdineClienteFromCreateFatturaAccompagnatoria(Long idFatturaAccompagnatoria){
         updateOrdineCliente(idFatturaAccompagnatoria, CONTEXT_CREATE_FATTURA_ACCOMPAGNATORIA);
@@ -208,7 +209,7 @@ public class FatturaAccompagnatoriaArticoloService {
             }
         }
 
-    }
+    }*/
 
     private Integer computeOrdineClienteArticoloNewPezziDaEvadere(String context, Integer pezzi, Integer pezziDaEvadere, Integer pezziOrdinati, Map<FatturaAccompagnatoriaArticoloKey, Integer> fatturaAccompagnatoriaArticoliPezziRemaining, FatturaAccompagnatoriaArticoloKey fatturaAccompagnatoriaArticoloKey){
         LOGGER.info("Computing 'newPezziDaEvadere' for context {}, pezzi {}, pezziDaEvadere {}, pezziOrdinati {}", context, pezzi, pezziDaEvadere, pezziOrdinati);

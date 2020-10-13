@@ -60,7 +60,7 @@ public class DdtService {
         LOGGER.info("Retrieving 'ddt' '{}'", ddtId);
         Ddt ddt = ddtRepository.findById(ddtId).orElseThrow(ResourceNotFoundException::new);
 
-        // filter DdtArticoli with qauntity not null and prezzo not null
+        // filter DdtArticoli with quantity not null and prezzo not null
         ddt = filterDdtArticoli(ddt);
 
         LOGGER.info("Retrieved 'ddt' '{}'", ddt);

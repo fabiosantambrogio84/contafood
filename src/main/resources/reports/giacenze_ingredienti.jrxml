@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.13.0.final utlizzo versione della libreria JasperReports6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="giacenze_ingredienti" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="5" uuid="4633089e-5d6d-4d62-aee5-be492a434aeb">
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="GiacenzeIngredientiDataset" uuid="82408251-0c0d-46ad-910d-59f1e6c6043c">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="codiceIngrediente" class="java.lang.String"/>
+		<field name="descrizioneIngrediente" class="java.lang.String"/>
+		<field name="attivo" class="java.lang.Boolean"/>
+		<field name="fornitore" class="java.lang.String"/>
+		<field name="quantita" class="java.lang.Float"/>
+	</subDataset>
+	<parameter name="logo" class="java.net.URL" isForPrompting="false"/>
+	<parameter name="bollino" class="java.net.URL" isForPrompting="false"/>
+	<parameter name="CollectionBeanParam" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="78" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="50" height="50" uuid="bb69aea0-5bb8-4d20-87d4-704c4ac37b1f"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="504" y="0" width="50" height="40" uuid="595dc3b5-150a-408b-8458-93801329340d"/>
+				<imageExpression><![CDATA[$P{bollino}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="150" y="0" width="100" height="20" uuid="a414342e-ae91-47eb-84bd-b1c7089fe521"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Urbani Giuseppe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="0" width="162" height="20" uuid="3960cf9c-8bfc-4ba7-ac7a-b6087857e3b8"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gastronomia - Pasta fresca]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="20" width="270" height="14" uuid="2c2a24e9-c6da-4477-9b96-6f9383a66d98"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[via 11 Settembre, 17 - 37035 S. Giovanni Ilarione (VR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="35" width="154" height="14" uuid="afe523ea-c3db-45c1-ae10-d04e2be00110">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Cod. Fisc. RBNGPP56A14L551I]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="35" width="96" height="14" uuid="4461cc11-344e-4b43-8364-87b979562532">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[P.iva 02471520243]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="35" width="82" height="14" uuid="e6074144-46ca-46e0-b9a8-dc117cceea44">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[REA Vr 373577]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="50" width="84" height="14" uuid="3326e1f3-5f01-4d29-aa0c-cf02cd71c586">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Tel: 045 6550993]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="234" y="50" width="86" height="14" uuid="94e0baa3-16f1-4fd9-915b-57361ecc50d5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Fax: 045 4853930]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="50" width="100" height="14" uuid="98bb01d5-94bb-4591-94da-789ab8459c87">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[Cell: 328 4694654]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="64" width="120" height="14" uuid="3cbb33ad-5d4d-44d1-8c44-bdbf826ad948">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[www.urbanialimentari.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="64" width="122" height="14" uuid="2ada7831-088e-49f3-b89f-0180c2b2fc6d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<text><![CDATA[info@urbanialimentari.com]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="699" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="10" width="555" height="30" uuid="f31717ab-b00a-4a7d-83b0-51ba8df01406"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Elenco giacenze ingredienti]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="20" y="64" width="509" height="616" uuid="359aef9f-7d78-44cc-b66b-88e45181310d">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="GiacenzeIngredientiDataset" uuid="627441a4-5978-4fad-a672-cba32f03455c">
+						<dataSourceExpression><![CDATA[$P{CollectionBeanParam}]]></dataSourceExpression>
+					</datasetRun>
+					<jr:column width="80" uuid="dbc4705a-ff2c-4711-94ac-56ef48f5c6df">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna1"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="30" uuid="ed95097c-9010-46b3-a792-6b7c4ad1a3b3"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Codice]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField textAdjust="ScaleFont">
+								<reportElement x="0" y="0" width="80" height="30" uuid="87942a63-306f-44cc-989f-373024b6097c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{codiceIngrediente}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="160" uuid="4b967abd-50f0-41ec-b760-6347ea8711f2">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna2"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="160" height="30" uuid="4e7cd70b-02b9-4ab5-9022-9a4ad25ea45c"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Descrizione]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField textAdjust="ScaleFont">
+								<reportElement x="0" y="0" width="160" height="30" uuid="306567fd-5ca8-4132-b5fb-37d50fa46d42"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{descrizioneIngrediente}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="cb789fc0-0d6e-4141-b259-74717132bf4e">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna3"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="30" uuid="2304c366-86b6-4a63-8453-5fc2d2b1da04"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Attivo]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="80" height="30" uuid="9a5d4c57-fdaf-4a5e-a916-711d5c4d6b8b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{attivo} != null && $F{attivo} ? "Si":"No"]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="110" uuid="ee4412c0-953b-435a-a9e2-8fb29b86317f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="110" height="30" uuid="57f5b58f-f611-467f-95dd-4de6bba57e0e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Fornitore]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="110" height="30" uuid="33bd698a-6c9d-44e5-85e2-39631c062733"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{fornitore}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="c12b337f-b8aa-40b8-86e9-89433a29dace">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna5"/>
+						<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="30" uuid="72603d37-e630-4583-8256-ec4ccc8f8d86"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="14" isBold="true"/>
+								</textElement>
+								<text><![CDATA[Quantità]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="80" height="30" uuid="50bb6968-471d-4474-ab47-afa0682ff469"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{quantita}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement x="-20" y="0" width="595" height="1" uuid="ce6cba64-29e9-48a6-86ae-86a69ee52369">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="174" y="14" width="100" height="17" uuid="80a70d67-1e11-4239-99b9-4f4139f6ffbd"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="284" y="14" width="100" height="17" uuid="ae37eeab-a20d-41bf-89bc-9bc5ab7ef0eb"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="275" y="14" width="9" height="17" uuid="32427fe3-5e5f-4333-91ca-11cbde864f88">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[/]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

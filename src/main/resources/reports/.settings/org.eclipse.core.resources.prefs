@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-encoding/footer.jrxml=UTF-8
-encoding/header.jrxml=UTF-8
-encoding/test.jrxml=UTF-8
-encoding/test_2.jrxml=UTF-8
+encoding/ddt.jrxml=UTF-8
+encoding/giacenze_ingredienti.jrxml=UTF-8
+encoding/ordini_autisti.jrxml=UTF-8
+encoding/pagamenti.jrxml=UTF-8
