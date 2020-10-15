@@ -23,27 +23,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Add GiacenzaIngrediente, fix bugs">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20201005.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampeController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/DdtArticoloDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/DdtDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/OrdineAutistaArticoloDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/OrdineAutistaDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/PagamentoDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VGiacenzaIngrediente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VGiacenzaIngrediente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/Invoice.jrxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/footer.jrxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/header.jrxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/invoice_logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/test.jrxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/test_2.jrxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Pagamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Pagamento.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/giacenze_ingredienti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/giacenze_ingredienti.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/pagamenti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/pagamenti.jrxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,6 +103,19 @@
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
+    <configuration name="Pagamento" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.contafood.model.Pagamento" />
+      <module name="contafood" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.contafood.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="StampeController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.contafood.controller.StampeController" />
       <module name="contafood" />
@@ -130,15 +129,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -213,9 +210,11 @@
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Remote.Contafood-remote" />
       <item itemvalue="Spring Boot.Application" />
+      <item itemvalue="Application.Pagamento" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Pagamento" />
         <item itemvalue="Application.StampeController" />
       </list>
     </recent_temporary>
@@ -387,7 +386,8 @@
       <workItem from="1602141820365" duration="2822000" />
       <workItem from="1602227912431" duration="2945000" />
       <workItem from="1602488383082" duration="7893000" />
-      <workItem from="1602574689509" duration="9190000" />
+      <workItem from="1602574689509" duration="9212000" />
+      <workItem from="1602745806576" duration="5367000" />
     </task>
     <task id="LOCAL-00029" summary="Add scheduled job for deleting expired Sconti. Add filters on Sconti">
       <created>1582820866575</created>
@@ -802,22 +802,22 @@
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2373" y="268" width="608" height="587" key="#xdebugger.evaluate/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1598280854018" />
-    <state width="1877" height="297" key="GridCell.Tab.0.bottom" timestamp="1602585542309">
+    <state width="1877" height="297" key="GridCell.Tab.0.bottom" timestamp="1602777116449">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1602585542309" />
-    <state width="1877" height="297" key="GridCell.Tab.0.center" timestamp="1602585542309">
+    <state width="1877" height="297" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1602777116449" />
+    <state width="1877" height="297" key="GridCell.Tab.0.center" timestamp="1602777116449">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1602585542309" />
-    <state width="1877" height="297" key="GridCell.Tab.0.left" timestamp="1602585542309">
+    <state width="1877" height="297" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1602777116448" />
+    <state width="1877" height="297" key="GridCell.Tab.0.left" timestamp="1602777116448">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1602585542309" />
-    <state width="1877" height="297" key="GridCell.Tab.0.right" timestamp="1602585542309">
+    <state width="1877" height="297" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1602777116448" />
+    <state width="1877" height="297" key="GridCell.Tab.0.right" timestamp="1602777116449">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1602585542309" />
+    <state width="1877" height="297" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1602777116449" />
     <state width="1877" height="248" key="GridCell.Tab.1.bottom" timestamp="1602519159807">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>

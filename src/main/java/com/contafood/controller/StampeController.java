@@ -20,12 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -135,7 +131,7 @@ public class StampeController {
         ddtDataSources.add(stampaService.getDdtDataSource(ddt));
 
         // create data parameters
-        String ddtTitleParam = ddt.getProgressivo()+"/"+ddt.getAnnoContabile();
+        String ddtTitleParam = ddt.getProgressivo()+"/"+ddt.getAnnoContabile()+" del "+simpleDateFormat.format(ddt.getData());
         String puntoConsegnaParam = "";
         String destinatarioParam = "";
 
@@ -378,3 +374,5 @@ public class StampeController {
     }
 
 }
+
+

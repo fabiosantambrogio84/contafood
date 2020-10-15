@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @EqualsAndHashCode
 @Entity
@@ -166,4 +167,5 @@ public class Pagamento {
         return result.toString();
 
     }
+
 }
