@@ -14,7 +14,9 @@ public interface Constants {
     String JASPER_PARAMETER_DDT_NOTA = "Assolve obblighi art.62,comm 1, del D.L. 24.01.12, n.1, convertito, con modificazioni, dalla legge 24.03.12, n.27. Contributo CONAI assolto dove dovuto";
     String JASPER_PARAMETER_DDT_CAUSALE = "Vendita";
     String JASPER_REPORT_GIACENZE_INGREDIENTI = "/reports/giacenze_ingredienti.jasper";
+    String JASPER_REPORT_DDTS = "/reports/ddts.jasper";
     String JASPER_REPORT_DDT = "/reports/ddt.jasper";
     String JASPER_REPORT_ORDINI_AUTISTI = "/reports/ordini_autisti.jasper";
     String JASPER_REPORT_PAGAMENTI = "/reports/pagamenti.jasper";
+    String JASPER_REPORT_NOTA_ACCREDITO = "/reports/nota_accredito.jasper";
 }

@@ -2,7 +2,7 @@ package com.contafood.model.reports;
 
 import java.math.BigDecimal;
 
-public class DdtArticoloDataSource {
+public class NotaAccreditoRigaDataSource {
 
     private String codiceArticolo;
 

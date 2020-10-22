@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,6 +116,53 @@ public class StampeController {
                 .body(resource);
     }
 
+    @RequestMapping(method = GET, path = "/ddts")
+    @CrossOrigin
+    public ResponseEntity<Resource> printDdts(@RequestParam(name = "ids") String ids) throws Exception{
+        LOGGER.info("Creating pdf for 'ddt' with ids {}", ids);
+
+        // retrieve the list of Ddt
+        List<DdtDataSource> ddts = stampaService.getDdtDataSources(ids);
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_DDTS);
+
+        // create report datasource
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(ddts);
+
+        // create report parameters
+        Map<String, Object> parameters = stampaService.createParameters();
+
+        BigDecimal totaleAcconto = new BigDecimal(0);
+        BigDecimal totale = new BigDecimal(0);
+        BigDecimal totaleDaPagare = new BigDecimal(0);
+
+        for(DdtDataSource ddt: ddts){
+            totaleAcconto = totaleAcconto.add(ddt.getAcconto());
+            totale = totale.add(ddt.getTotale());
+            totaleDaPagare = totaleDaPagare.add(ddt.getTotaleDaPagare());
+        }
+
+        // add data to parameters
+        parameters.put("totaleAcconto", totaleAcconto);
+        parameters.put("totale", totale);
+        parameters.put("totaleDaPagare", totaleDaPagare);
+        parameters.put("ddtsCollection", dataSource);
+
+        // create report
+        byte[] reportBytes = JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+
+        ByteArrayResource resource = new ByteArrayResource(reportBytes);
+
+        LOGGER.info("Successfully create pdf for 'ddts'");
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders("elenco_ddt.pdf"))
+                .contentLength(reportBytes.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
     @RequestMapping(method = GET, path = "/ddts/{idDdt}")
     @CrossOrigin
     public ResponseEntity<Resource> printDdt(@PathVariable final Long idDdt) throws Exception{
@@ -123,8 +172,6 @@ public class StampeController {
         Ddt ddt = stampaService.getDdt(idDdt);
         PuntoConsegna puntoConsegna = ddt.getPuntoConsegna();
         Cliente cliente = ddt.getCliente();
-        TipoPagamento tipoPagamento = cliente.getTipoPagamento();
-        Agente agente = cliente.getAgente();
 
         // create DdtDataSource
         List<DdtDataSource> ddtDataSources = new ArrayList<>();
@@ -201,13 +248,14 @@ public class StampeController {
         parameters.put("ddtTitle", ddtTitleParam);
         parameters.put("puntoConsegna", puntoConsegnaParam);
         parameters.put("destinatario", destinatarioParam);
+        parameters.put("note", ddt.getNote());
         parameters.put("nota", Constants.JASPER_PARAMETER_DDT_NOTA);
         parameters.put("ddtTrasportoTipo", ddt.getTipoTrasporto());
         parameters.put("ddtTrasportoDataOra", ddtTrasportoDataOraParam);
         parameters.put("ddtNumeroColli", ddt.getNumeroColli());
-        parameters.put("ddtTotImponibile", ddt.getTotaleImponibile());
-        parameters.put("ddtTotIva", ddt.getTotaleIva());
-        parameters.put("ddtTotDocumento", ddt.getTotale());
+        parameters.put("ddtTotImponibile", ddt.getTotaleImponibile().setScale(2, RoundingMode.CEILING));
+        parameters.put("ddtTotIva", ddt.getTotaleIva().setScale(2, RoundingMode.CEILING));
+        parameters.put("ddtTotDocumento", ddt.getTotale().setScale(2, RoundingMode.CEILING));
         parameters.put("ddtArticoliCollection", ddtArticoliCollectionDataSource);
         parameters.put("ddtCollection", ddtCollectionDataSource);
 
@@ -266,6 +314,108 @@ public class StampeController {
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("ordini-clienti-autista.pdf"))
+                .contentLength(reportBytes.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
+    @RequestMapping(method = GET, path = "/note-accredito/{idNotaAccredito}")
+    @CrossOrigin
+    public ResponseEntity<Resource> printNotaAccredito(@PathVariable final Long idNotaAccredito) throws Exception{
+        LOGGER.info("Creating pdf for 'nota accredito' with id '{}'", idNotaAccredito);
+
+        // retrieve the NotaAccredito
+        NotaAccredito notaAccredito = stampaService.getNotaAccredito(idNotaAccredito);
+        Cliente cliente = notaAccredito.getCliente();
+
+        // create data parameters
+        String notaAccreditoTitleParam = notaAccredito.getProgressivo()+"/"+notaAccredito.getAnno()+" del "+simpleDateFormat.format(notaAccredito.getData());
+        String destinatarioParam = "";
+
+        String riferimentoDocumento = "Riferimento "+notaAccredito.getTipoRiferimento();
+        if(!StringUtils.isEmpty(notaAccredito.getDocumentoRiferimento())){
+            riferimentoDocumento += " n. "+notaAccredito.getDocumentoRiferimento();
+        }
+        if(notaAccredito.getDataDocumentoRiferimento() != null){
+            riferimentoDocumento += " del "+simpleDateFormat.format(notaAccredito.getDataDocumentoRiferimento());
+        }
+
+        // create data parameters for Cliente
+        if(cliente != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
+                sb.append(cliente.getRagioneSociale()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getIndirizzo())){
+                sb.append(cliente.getIndirizzo()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getCap())){
+                sb.append(cliente.getCap()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getCitta())){
+                sb.append(cliente.getCitta()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getProvincia())){
+                sb.append(cliente.getProvincia());
+            }
+
+            destinatarioParam = sb.toString();
+        }
+
+        // create NotaAccreditoDataSource
+        List<NotaAccreditoDataSource> notaAccreditoDataSources = new ArrayList<>();
+        notaAccreditoDataSources.add(stampaService.getNotaAccreditoDataSource(notaAccredito));
+
+        // create list of NotaAccreditoRigheDataSource from NotaAccreditoRiga
+        List<NotaAccreditoRigaDataSource> notaAccreditoRigaDataSources = stampaService.getNotaAccreditoRigheDataSource(notaAccredito);
+
+        // create list of NotaAccreditoTotaliDataSource from NotaAccreditoTotale
+        List<NotaAccreditoTotaleDataSource> notaAccreditoTotaleDataSources = stampaService.getNotaAccreditoTotaliDataSource(notaAccredito);
+
+        BigDecimal totaleImponibile = new BigDecimal(0);
+        BigDecimal totaleIva = new BigDecimal(0);
+
+        for(NotaAccreditoTotaleDataSource notaAccreditoTotale: notaAccreditoTotaleDataSources){
+            totaleImponibile = totaleImponibile.add(notaAccreditoTotale.getTotaleImponibile());
+            totaleIva = totaleIva.add(notaAccreditoTotale.getTotaleIva());
+        }
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_NOTA_ACCREDITO);
+
+        // create report datasource for NotaAccredito
+        JRBeanCollectionDataSource notaAccreditoCollectionDataSource = new JRBeanCollectionDataSource(notaAccreditoDataSources);
+
+        // create report datasource for NotaAccreditoRighe
+        JRBeanCollectionDataSource notaAccreditoRigheCollectionDataSource = new JRBeanCollectionDataSource(notaAccreditoRigaDataSources);
+
+        // create report datasource for NotaAccreditoTotali
+        JRBeanCollectionDataSource notaAccreditoTotaliCollectionDataSource = new JRBeanCollectionDataSource(notaAccreditoTotaleDataSources);
+
+        // create report parameters
+        Map<String, Object> parameters = stampaService.createParameters();
+
+        // add data to parameters
+        parameters.put("notaAccreditoTitle", notaAccreditoTitleParam);
+        parameters.put("destinatario", destinatarioParam);
+        parameters.put("riferimentoDocumento", riferimentoDocumento);
+        parameters.put("totaleImponibile", totaleImponibile);
+        parameters.put("totaleIva", totaleIva);
+        parameters.put("notaAccreditoTotDocumento", notaAccredito.getTotale().setScale(2, RoundingMode.CEILING));
+        parameters.put("notaAccreditoCollection", notaAccreditoCollectionDataSource);
+        parameters.put("notaAccreditoRigheCollection", notaAccreditoRigheCollectionDataSource);
+        parameters.put("notaAccreditoTotaliCollection", notaAccreditoTotaliCollectionDataSource);
+
+
+        // create report
+        byte[] reportBytes = JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+
+        ByteArrayResource resource = new ByteArrayResource(reportBytes);
+
+        LOGGER.info("Successfully create pdf for 'nota accredito' with id '{}'", idNotaAccredito);
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders("nota-accredito-"+idNotaAccredito+".pdf"))
                 .contentLength(reportBytes.length)
                 .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
                 .body(resource);

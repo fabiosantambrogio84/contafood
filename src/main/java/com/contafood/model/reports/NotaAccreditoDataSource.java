@@ -1,8 +1,6 @@
 package com.contafood.model.reports;
 
-import java.math.BigDecimal;
-
-public class DdtDataSource {
+public class NotaAccreditoDataSource {
 
     private String numero;
 
@@ -14,17 +12,9 @@ public class DdtDataSource {
 
     private String clienteDescrizione;
 
-    private String causale;
-
     private String pagamento;
 
     private String agente;
-
-    private BigDecimal acconto;
-
-    private BigDecimal totale;
-
-    private BigDecimal totaleDaPagare;
 
     public String getNumero() {
         return numero;
@@ -66,14 +56,6 @@ public class DdtDataSource {
         this.clienteDescrizione = clienteDescrizione;
     }
 
-    public String getCausale() {
-        return causale;
-    }
-
-    public void setCausale(String causale) {
-        this.causale = causale;
-    }
-
     public String getPagamento() {
         return pagamento;
     }
@@ -90,27 +72,4 @@ public class DdtDataSource {
         this.agente = agente;
     }
 
-    public BigDecimal getAcconto() {
-        return acconto;
-    }
-
-    public void setAcconto(BigDecimal acconto) {
-        this.acconto = acconto;
-    }
-
-    public BigDecimal getTotale() {
-        return totale;
-    }
-
-    public void setTotale(BigDecimal totale) {
-        this.totale = totale;
-    }
-
-    public BigDecimal getTotaleDaPagare() {
-        return totaleDaPagare;
-    }
-
-    public void setTotaleDaPagare(BigDecimal totaleDaPagare) {
-        this.totaleDaPagare = totaleDaPagare;
-    }
 }

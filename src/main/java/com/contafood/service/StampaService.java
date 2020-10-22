@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,15 +34,19 @@ public class StampaService {
 
     private final OrdineClienteService ordineClienteService;
 
+    private final NotaAccreditoService notaAccreditoService;
+
     @Autowired
     public StampaService(final GiacenzaIngredienteService giacenzaIngredienteService, final DdtService ddtService, final PagamentoService pagamentoService,
                          final AutistaService autistaService,
-                         final OrdineClienteService ordineClienteService){
+                         final OrdineClienteService ordineClienteService,
+                         final NotaAccreditoService notaAccreditoService){
         this.giacenzaIngredienteService = giacenzaIngredienteService;
         this.ddtService = ddtService;
         this.pagamentoService = pagamentoService;
         this.autistaService = autistaService;
         this.ordineClienteService = ordineClienteService;
+        this.notaAccreditoService = notaAccreditoService;
     }
 
     public List<VGiacenzaIngrediente> getGiacenzeIngredienti(String ids){
@@ -168,15 +173,52 @@ public class StampaService {
                 ddtArticoloDataSource.setLotto(da.getLotto());
                 ddtArticoloDataSource.setUdm(da.getArticolo().getUnitaMisura().getEtichetta());
                 ddtArticoloDataSource.setQuantita(da.getQuantita());
-                ddtArticoloDataSource.setPrezzo(da.getPrezzo() != null ? da.getPrezzo() : new BigDecimal(0));
-                ddtArticoloDataSource.setSconto(da.getSconto() != null ? da.getSconto() : new BigDecimal(0));
-                ddtArticoloDataSource.setTotale(da.getTotale() != null ? da.getTotale() : new BigDecimal(0));
+                ddtArticoloDataSource.setPrezzo(da.getPrezzo() != null ? da.getPrezzo().setScale(2, RoundingMode.CEILING) : new BigDecimal(0));
+                ddtArticoloDataSource.setSconto(da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.CEILING) : new BigDecimal(0));
+                ddtArticoloDataSource.setImponibile(da.getImponibile() != null ? da.getImponibile().setScale(2, RoundingMode.CEILING) : new BigDecimal(0));
                 ddtArticoloDataSource.setIva(da.getArticolo().getAliquotaIva().getValore().intValue());
 
                 ddtArticoloDataSources.add(ddtArticoloDataSource);
             });
         }
         return ddtArticoloDataSources;
+    }
+
+    public List<DdtDataSource> getDdtDataSources(String ids){
+        LOGGER.info("Retrieving the list of 'ddts' with id in '{}' for creating pdf file", ids);
+
+        List<DdtDataSource> ddtDataSources = new ArrayList<>();
+
+        List<Ddt> ddts = ddtService.getAll().stream()
+                .filter(ddt -> ids.contains(ddt.getId().toString()))
+                .sorted(Comparator.comparing(Ddt::getProgressivo).reversed())
+                .collect(Collectors.toList());
+
+        if(ddts != null && !ddts.isEmpty()){
+            ddts.forEach(ddt -> {
+                DdtDataSource ddtDataSource = new DdtDataSource();
+                ddtDataSource.setNumero(ddt.getProgressivo().toString());
+                ddtDataSource.setData(simpleDateFormat.format(ddt.getData()));
+                Cliente cliente = ddt.getCliente();
+                if(cliente != null){
+                    if(!cliente.getDittaIndividuale()){
+                        ddtDataSource.setClienteDescrizione(cliente.getRagioneSociale());
+                    } else {
+                        ddtDataSource.setClienteDescrizione(cliente.getNome()+" "+cliente.getCognome());
+                    }
+                }
+                BigDecimal totaleAcconto = ddt.getTotaleAcconto() != null ? ddt.getTotaleAcconto().setScale(2, RoundingMode.CEILING) : new BigDecimal(0);
+                BigDecimal totale = ddt.getTotale() != null ? ddt.getTotale().setScale(2, RoundingMode.CEILING) : new BigDecimal(0);
+                ddtDataSource.setAcconto(totaleAcconto);
+                ddtDataSource.setTotale(totale);
+                ddtDataSource.setTotaleDaPagare(totale.subtract(totaleAcconto));
+
+                ddtDataSources.add(ddtDataSource);
+            });
+        }
+
+        LOGGER.info("Retrieved {} 'ddts'", ddtDataSources.size());
+        return ddtDataSources;
     }
 
     public Autista getAutista(Long idAutista){
@@ -238,6 +280,88 @@ public class StampaService {
 
         LOGGER.info("Retrieved {} 'ordini-clienti'", ordiniAutistaDataSource.size());
         return ordiniAutistaDataSource;
+    }
+
+    public NotaAccredito getNotaAccredito(Long idNotaAccredito){
+        LOGGER.info("Retrieving 'nota-accredito' with id '{}' for creating pdf file", idNotaAccredito);
+        NotaAccredito notaAccredito = notaAccreditoService.getOne(idNotaAccredito);
+        LOGGER.info("Retrieved 'nota-accredito' with id '{}'", idNotaAccredito);
+        return notaAccredito;
+    }
+
+    public NotaAccreditoDataSource getNotaAccreditoDataSource(NotaAccredito notaAccredito){
+        Cliente cliente = notaAccredito.getCliente();
+        TipoPagamento tipoPagamento = cliente.getTipoPagamento();
+        Agente agente = cliente.getAgente();
+
+        NotaAccreditoDataSource notaAccreditoDataSource = new NotaAccreditoDataSource();
+        notaAccreditoDataSource.setNumero(notaAccredito.getProgressivo()+"/"+notaAccredito.getAnno());
+        notaAccreditoDataSource.setData(simpleDateFormat.format(notaAccredito.getData()));
+        notaAccreditoDataSource.setClientePartitaIva("");
+        notaAccreditoDataSource.setClienteCodiceFiscale("");
+        notaAccreditoDataSource.setPagamento("");
+        notaAccreditoDataSource.setAgente("");
+        if(cliente != null){
+            if(!StringUtils.isEmpty(cliente.getPartitaIva())){
+                notaAccreditoDataSource.setClientePartitaIva(cliente.getPartitaIva());
+            }
+            if(!StringUtils.isEmpty(cliente.getCodiceFiscale())){
+                notaAccreditoDataSource.setClienteCodiceFiscale(cliente.getCodiceFiscale());
+            }
+        }
+        if(tipoPagamento != null){
+            if(!StringUtils.isEmpty(tipoPagamento.getDescrizione())){
+                notaAccreditoDataSource.setPagamento(tipoPagamento.getDescrizione());
+            }
+        }
+        if(agente != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(agente.getNome())){
+                sb.append(agente.getNome()+" ");
+            }
+            if(!StringUtils.isEmpty(agente.getCognome())){
+                sb.append(agente.getCognome());
+            }
+            notaAccreditoDataSource.setAgente(sb.toString());
+        }
+        return notaAccreditoDataSource;
+    }
+
+    public List<NotaAccreditoRigaDataSource> getNotaAccreditoRigheDataSource(NotaAccredito notaAccredito){
+        List<NotaAccreditoRigaDataSource> notaAccreditoRigaDataSources = new ArrayList<>();
+        if(notaAccredito.getNotaAccreditoRighe() != null && !notaAccredito.getNotaAccreditoRighe().isEmpty()){
+            notaAccredito.getNotaAccreditoRighe().stream().forEach(na -> {
+                NotaAccreditoRigaDataSource notaAccreditoRigaDataSource = new NotaAccreditoRigaDataSource();
+                notaAccreditoRigaDataSource.setCodiceArticolo(na.getArticolo() != null ? na.getArticolo().getCodice() : "");
+                notaAccreditoRigaDataSource.setDescrizioneArticolo(na.getDescrizione());
+                notaAccreditoRigaDataSource.setLotto(na.getLotto());
+                notaAccreditoRigaDataSource.setUdm(na.getArticolo() != null ? (na.getArticolo().getUnitaMisura() != null ? na.getArticolo().getUnitaMisura().getEtichetta() : "") : "");
+                notaAccreditoRigaDataSource.setQuantita(na.getQuantita());
+                notaAccreditoRigaDataSource.setPrezzo(na.getPrezzo() != null ? na.getPrezzo().setScale(2, RoundingMode.CEILING) : new BigDecimal(0));
+                notaAccreditoRigaDataSource.setSconto(na.getSconto() != null ? na.getSconto().setScale(2, RoundingMode.CEILING) : new BigDecimal(0));
+                notaAccreditoRigaDataSource.setImponibile(na.getImponibile() != null ? na.getImponibile().setScale(2, RoundingMode.CEILING) : new BigDecimal(0));
+                notaAccreditoRigaDataSource.setIva(na.getArticolo() != null ? na.getArticolo().getAliquotaIva().getValore().intValue() : null);
+
+                notaAccreditoRigaDataSources.add(notaAccreditoRigaDataSource);
+            });
+        }
+        return notaAccreditoRigaDataSources;
+    }
+
+    public List<NotaAccreditoTotaleDataSource> getNotaAccreditoTotaliDataSource(NotaAccredito notaAccredito){
+        List<NotaAccreditoTotaleDataSource> notaAccreditoTotaleDataSources = new ArrayList<>();
+        if(notaAccredito.getNotaAccreditoTotali() != null && !notaAccredito.getNotaAccreditoTotali().isEmpty()){
+            notaAccredito.getNotaAccreditoTotali().stream().forEach(na -> {
+                NotaAccreditoTotaleDataSource notaAccreditoTotaleDataSource = new NotaAccreditoTotaleDataSource();
+                notaAccreditoTotaleDataSource.setAliquotaIva(na.getAliquotaIva().getValore().intValue());
+                notaAccreditoTotaleDataSource.setTotaleImponibile(na.getTotaleImponibile() != null ? na.getTotaleImponibile().setScale(2, RoundingMode.CEILING) : new BigDecimal(0));
+                notaAccreditoTotaleDataSource.setTotaleIva(na.getTotaleIva() != null ? na.getTotaleIva().setScale(2, RoundingMode.CEILING) : new BigDecimal(0));
+
+                notaAccreditoTotaleDataSources.add(notaAccreditoTotaleDataSource);
+            });
+        }
+        return notaAccreditoTotaleDataSources.stream().sorted(Comparator.comparing(NotaAccreditoTotaleDataSource::getAliquotaIva))
+                .collect(Collectors.toList());
     }
 
     public static HttpHeaders createHttpHeaders(String fileName){

@@ -51,6 +51,15 @@ public class NotaAccredito {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "tipo_riferimento")
+    private String tipoRiferimento;
+
+    @Column(name = "documento_riferimento")
+    private String documentoRiferimento;
+
+    @Column(name = "data_documento_riferimento")
+    private Date dataDocumentoRiferimento;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -149,6 +158,30 @@ public class NotaAccredito {
         this.totaleQuantita = totaleQuantita;
     }
 
+    public String getTipoRiferimento() {
+        return tipoRiferimento;
+    }
+
+    public void setTipoRiferimento(String tipoRiferimento) {
+        this.tipoRiferimento = tipoRiferimento;
+    }
+
+    public String getDocumentoRiferimento() {
+        return documentoRiferimento;
+    }
+
+    public void setDocumentoRiferimento(String documentoRiferimento) {
+        this.documentoRiferimento = documentoRiferimento;
+    }
+
+    public Date getDataDocumentoRiferimento() {
+        return dataDocumentoRiferimento;
+    }
+
+    public void setDataDocumentoRiferimento(Date dataDocumentoRiferimento) {
+        this.dataDocumentoRiferimento = dataDocumentoRiferimento;
+    }
+
     public String getNote() {
         return note;
     }
@@ -213,6 +246,9 @@ public class NotaAccredito {
         result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", totaleQuantita: " + totaleQuantita);
         result.append(", note: " + note);
+        result.append(", tipoRiferimento: " + tipoRiferimento);
+        result.append(", documentoRiferimento: " + documentoRiferimento);
+        result.append(", dataDocumentoRiferimento: " + dataDocumentoRiferimento);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

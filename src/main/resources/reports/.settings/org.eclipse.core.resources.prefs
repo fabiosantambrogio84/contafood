@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 encoding/ddt.jrxml=UTF-8
+encoding/ddts.jrxml=UTF-8
 encoding/giacenze_ingredienti.jrxml=UTF-8
+encoding/nota_accredito.jrxml=UTF-8
 encoding/ordini_autisti.jrxml=UTF-8
 encoding/pagamenti.jrxml=UTF-8
