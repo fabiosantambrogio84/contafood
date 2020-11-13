@@ -2,6 +2,7 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Cliente;
+import com.contafood.model.Ddt;
 import com.contafood.model.ListinoAssociato;
 import com.contafood.model.PuntoConsegna;
 import com.contafood.service.ClienteService;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -33,13 +36,29 @@ public class ClienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Cliente> getAll(@RequestParam(required = false) Boolean bloccaDdt) {
+    public Set<Cliente> getAll(@RequestParam(required = false) Boolean bloccaDdt,
+                               @RequestParam(required = false) Boolean privato) {
         LOGGER.info("Performing GET request for retrieving list of 'clienti'");
-        if(bloccaDdt != null){
-            LOGGER.info("Filtering 'clienti' by bloccaDdt {}", bloccaDdt);
-            return clienteService.getAllWithBloccaDdt(bloccaDdt);
-        }
-        return clienteService.getAll();
+        LOGGER.info("Request params: bloccaDdt {}", bloccaDdt, privato);
+
+        Predicate<Cliente> isClienteBloccaDdtEquals = cliente -> {
+            if(bloccaDdt != null){
+                return cliente.getBloccaDdt().equals(bloccaDdt);
+            }
+            return true;
+        };
+
+        Predicate<Cliente> isClientePrivatoEquals = cliente -> {
+            if(privato != null){
+                return cliente.getPrivato().equals(privato);
+            }
+            return true;
+        };
+
+        Set<Cliente> clienti = clienteService.getAll();
+        return clienti.stream().filter(isClienteBloccaDdtEquals
+                .and(isClientePrivatoEquals))
+                .collect(Collectors.toSet());
     }
 
     @RequestMapping(method = GET, path = "/{clienteId}")

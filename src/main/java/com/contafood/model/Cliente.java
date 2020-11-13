@@ -22,6 +22,9 @@ public class Cliente {
     @Column(name = "codice")
     private Integer codice;
 
+    @Column(name = "privato")
+    private Boolean privato;
+
     @Column(name = "ragione_sociale")
     private String ragioneSociale;
 
@@ -137,6 +140,14 @@ public class Cliente {
 
     public void setCodice(Integer codice) {
         this.codice = codice;
+    }
+
+    public Boolean getPrivato() {
+        return privato;
+    }
+
+    public void setPrivato(Boolean privato) {
+        this.privato = privato;
     }
 
     public String getRagioneSociale() {
@@ -394,6 +405,7 @@ public class Cliente {
         result.append("{");
         result.append("id: " + id);
         result.append(", codice: " + codice);
+        result.append(", privato: " + privato);
         result.append(", ragioneSociale: " + ragioneSociale);
         result.append(", ragioneSociale2: " + ragioneSociale2);
         result.append(", dittaIndividuale: " + dittaIndividuale);

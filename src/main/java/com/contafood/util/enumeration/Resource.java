@@ -14,7 +14,8 @@ public enum Resource {
     NOTA_RESO("nota reso"),
     ORDINE_CLIENTE("ordine cliente"),
     PRODUZIONE("produzione"),
-    PRODUZIONE_INGREDIENTE("produzione ingrediente");
+    PRODUZIONE_INGREDIENTE("produzione ingrediente"),
+    RICEVUTA_PRIVATO("ricevuta privato");
 
     private String label;
 

@@ -59,6 +59,9 @@ public class NotaAccreditoRiga implements Serializable {
     @JoinColumn(name="id_articolo")
     private Articolo articolo;
 
+    @Column(name = "num_riga")
+    private Integer numRiga;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -169,6 +172,14 @@ public class NotaAccreditoRiga implements Serializable {
         this.articolo = articolo;
     }
 
+    public Integer getNumRiga() {
+        return numRiga;
+    }
+
+    public void setNumRiga(Integer numRiga) {
+        this.numRiga = numRiga;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -202,6 +213,7 @@ public class NotaAccreditoRiga implements Serializable {
         result.append(", imponibile: " + imponibile);
         result.append(", totale: " + totale);
         result.append(", articolo: " + articolo);
+        result.append(", numRiga: " + numRiga);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

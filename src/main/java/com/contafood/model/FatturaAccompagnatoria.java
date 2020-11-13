@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"fatturaAccompagnatoriaArticoli", "fatturaAccompagnatoriaTotali"})
+@EqualsAndHashCode(exclude = {"fatturaAccompagnatoriaArticoli", "fatturaAccompagnatoriaTotali", "fatturaAccompagnatoriaPagamenti"})
 @Entity
 @Table(name = "fattura_accom")
 public class FatturaAccompagnatoria {
@@ -91,6 +91,10 @@ public class FatturaAccompagnatoria {
     @OneToMany(mappedBy = "fatturaAccompagnatoria")
     @JsonIgnoreProperties("fatturaAccompagnatoria")
     private Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali = new HashSet<>();
+
+    @OneToMany(mappedBy = "fatturaAccompagnatoria")
+    @JsonIgnoreProperties("fatturaAccompagnatoria")
+    private Set<Pagamento> fatturaAccompagnatoriaPagamenti = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -274,6 +278,14 @@ public class FatturaAccompagnatoria {
 
     public void setFatturaAccompagnatoriaTotali(Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali) {
         this.fatturaAccompagnatoriaTotali = fatturaAccompagnatoriaTotali;
+    }
+
+    public Set<Pagamento> getFatturaAccompagnatoriaPagamenti() {
+        return fatturaAccompagnatoriaPagamenti;
+    }
+
+    public void setFatturaAccompagnatoriaPagamenti(Set<Pagamento> fatturaAccompagnatoriaPagamenti) {
+        this.fatturaAccompagnatoriaPagamenti = fatturaAccompagnatoriaPagamenti;
     }
 
     @Override

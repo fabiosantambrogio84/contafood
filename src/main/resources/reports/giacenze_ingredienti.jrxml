@@ -50,85 +50,93 @@
 	<pageHeader>
 		<band height="78" splitType="Stretch">
 			<image>
-				<reportElement x="0" y="0" width="50" height="50" uuid="0ece32e1-b831-430a-a8d5-fab2e5306c79"/>
+				<reportElement x="0" y="0" width="50" height="50" uuid="eb2becc2-ac84-402c-ac15-e98fb82d79f5"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="504" y="0" width="50" height="40" uuid="8270f924-08af-48e1-803e-30c7d7a64dbd"/>
+				<reportElement x="504" y="0" width="50" height="40" uuid="9c4d5341-bb40-4809-9a79-2612d5b5d0e1"/>
 				<imageExpression><![CDATA[$P{bollino}]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="150" y="0" width="100" height="20" uuid="33f2806c-ba8b-4083-b4be-ab3b70399fb6"/>
-				<textElement>
-					<font size="12" isBold="true"/>
+				<reportElement x="90" y="0" width="160" height="20" uuid="57d58b12-7b12-4d0b-ad45-5ba4b1861463"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Urbani Giuseppe]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="250" y="0" width="162" height="20" uuid="ed4202be-1046-4491-b0fb-f7d6f3516375"/>
-				<textElement>
+				<reportElement x="250" y="0" width="220" height="20" uuid="a6e19f17-0348-4323-9123-bae3769011df"/>
+				<textElement textAlignment="Center">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Gastronomia - Pasta fresca]]></text>
+				<text><![CDATA[pasta fresca - gastronomia]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="150" y="20" width="270" height="14" uuid="7408bf86-4f8c-4fc1-a910-69845cb94965"/>
+				<reportElement x="110" y="20" width="310" height="14" uuid="53aa6580-4627-4167-ab79-a60a09ca7d8e"/>
 				<textElement textAlignment="Center"/>
-				<text><![CDATA[via 11 Settembre, 17 - 37035 S. Giovanni Ilarione (VR)]]></text>
+				<text><![CDATA[37035 SAN GIOVANNI ILARIONE / VR - Via 11 Settembre, 17]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="35" width="154" height="14" uuid="1efdc107-74ad-470d-b216-d4c0c8e3b956">
+				<reportElement x="195" y="36" width="164" height="14" uuid="61cd42a9-353e-456a-abcd-0f294782b411">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Cod. Fisc. RBNGPP56A14L551I]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="260" y="35" width="96" height="14" uuid="4ef18db0-3716-43b3-8fc1-9fa95d190b64">
+				<reportElement x="70" y="36" width="124" height="14" uuid="d7c31b4a-7f68-41be-929d-9bcaad1abd61">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<text><![CDATA[P.iva 02471520243]]></text>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[P.Iva 02471520243]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="360" y="35" width="82" height="14" uuid="9af99759-b9f0-4926-9cad-220e73198b3a">
+				<reportElement x="359" y="36" width="92" height="14" uuid="99420d5a-f3d4-4b96-b558-2d56b8c1173b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<text><![CDATA[REA Vr 373577]]></text>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[REA VR 373577]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="150" y="50" width="84" height="14" uuid="e9344d63-023c-4b3c-a043-e2f6583063d0">
+				<reportElement x="150" y="50" width="114" height="14" uuid="c81fcf69-1c55-4d03-94e5-0258f5c2c67b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Tel: 045 6550993]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="234" y="50" width="86" height="14" uuid="1908ea2d-64bf-4720-9815-31cb5fafb297">
+				<reportElement x="264" y="50" width="118" height="14" uuid="4ec05c95-6921-4a15-b16b-3f94408c75d6">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<text><![CDATA[Fax: 045 4853930]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="320" y="50" width="100" height="14" uuid="5d4be1ac-e466-4d4b-b714-346fa6519015">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Cell: 328 4694654]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="80" y="64" width="120" height="14" uuid="9b86f8dd-9b42-4f12-8bd1-010b1c2a5050">
+				<reportElement x="30" y="64" width="170" height="14" uuid="2c5cf2a1-7f27-4f7a-9c95-7bf261f55091">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<text><![CDATA[www.urbanialimentari.com]]></text>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Website www.urbanialimentari.com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="210" y="64" width="122" height="14" uuid="22497370-87b0-4bf0-aeec-faf7e0a68542">
+				<reportElement x="200" y="64" width="168" height="14" uuid="76bc831d-f6a9-4b7b-bab1-09c202054af0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<text><![CDATA[info@urbanialimentari.com]]></text>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[E-mail info@urbanialimentari.com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="340" y="64" width="134" height="14" uuid="558947c4-eec9-4b35-af87-7c88eaa11925">
+				<reportElement x="369" y="64" width="164" height="14" uuid="f2459b78-9060-448e-bd9e-ef68168ff074">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<text><![CDATA[urbanialimentari@legalmail.it]]></text>
+				<textElement textAlignment="Left">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Pec urbanialimentari@legalmail.it]]></text>
 			</staticText>
 		</band>
 	</pageHeader>

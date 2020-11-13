@@ -113,4 +113,5 @@ public class DdtDataSource {
     public void setTotaleDaPagare(BigDecimal totaleDaPagare) {
         this.totaleDaPagare = totaleDaPagare;
     }
+
 }

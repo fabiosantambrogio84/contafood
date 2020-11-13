@@ -178,7 +178,7 @@ public class FatturaAccompagnatoriaService {
             for(FatturaAccompagnatoriaArticolo fatturaAccompagnatoriaArticolo: fatturaAccompagnatoriaArticoliByIva){
                 BigDecimal imponibile = fatturaAccompagnatoriaArticolo.getImponibile() != null ? fatturaAccompagnatoriaArticolo.getImponibile() : BigDecimal.ZERO;
                 totaleByIva = totaleByIva.add(imponibile);
-                totaleQuantita = totaleQuantita + fatturaAccompagnatoriaArticolo.getQuantita();
+                totaleQuantita = totaleQuantita + (fatturaAccompagnatoriaArticolo.getQuantita() != null ? fatturaAccompagnatoriaArticolo.getQuantita() : 0f);
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }

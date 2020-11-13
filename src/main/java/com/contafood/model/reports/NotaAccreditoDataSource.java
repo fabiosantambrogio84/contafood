@@ -1,5 +1,7 @@
 package com.contafood.model.reports;
 
+import java.math.BigDecimal;
+
 public class NotaAccreditoDataSource {
 
     private String numero;
@@ -15,6 +17,12 @@ public class NotaAccreditoDataSource {
     private String pagamento;
 
     private String agente;
+
+    private BigDecimal acconto;
+
+    private BigDecimal totale;
+
+    private BigDecimal totaleDaPagare;
 
     public String getNumero() {
         return numero;
@@ -72,4 +80,27 @@ public class NotaAccreditoDataSource {
         this.agente = agente;
     }
 
+    public BigDecimal getAcconto() {
+        return acconto;
+    }
+
+    public void setAcconto(BigDecimal acconto) {
+        this.acconto = acconto;
+    }
+
+    public BigDecimal getTotale() {
+        return totale;
+    }
+
+    public void setTotale(BigDecimal totale) {
+        this.totale = totale;
+    }
+
+    public BigDecimal getTotaleDaPagare() {
+        return totaleDaPagare;
+    }
+
+    public void setTotaleDaPagare(BigDecimal totaleDaPagare) {
+        this.totaleDaPagare = totaleDaPagare;
+    }
 }

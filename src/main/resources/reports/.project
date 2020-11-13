@@ -8,21 +8,4 @@
 	</buildSpec>
 	<natures>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>DDT-prezzi.jrxml</name>
-			<type>1</type>
-			<location>C:/Users/FabioAndreaSantambro/git/contaweb/ContaWeb/WebContent/stampe/DDT-prezzi.jrxml</location>
-		</link>
-		<link>
-			<name>Listino.jrxml</name>
-			<type>1</type>
-			<location>C:/Users/FabioAndreaSantambro/git/contaweb/ContaWeb/WebContent/stampe/Listino.jrxml</location>
-		</link>
-		<link>
-			<name>Listino_articoli.jrxml</name>
-			<type>1</type>
-			<location>C:/Users/FabioAndreaSantambro/git/contaweb/ContaWeb/WebContent/stampe/Listino_articoli.jrxml</location>
-		</link>
-	</linkedResources>
 </projectDescription>

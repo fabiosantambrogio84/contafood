@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"fatturaDdts"})
+@EqualsAndHashCode(exclude = {"fatturaDdts", "fatturaPagamenti"})
 @Entity
 @Table(name = "fattura")
 public class Fattura {
@@ -71,6 +71,10 @@ public class Fattura {
     @OneToMany(mappedBy = "fattura")
     @JsonIgnoreProperties("fattura")
     private Set<FatturaDdt> fatturaDdts = new HashSet<>();
+
+    @OneToMany(mappedBy = "fattura")
+    @JsonIgnoreProperties("fattura")
+    private Set<Pagamento> fatturaPagamenti = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -206,6 +210,14 @@ public class Fattura {
 
     public void setFatturaDdts(Set<FatturaDdt> fatturaDdts) {
         this.fatturaDdts = fatturaDdts;
+    }
+
+    public Set<Pagamento> getFatturaPagamenti() {
+        return fatturaPagamenti;
+    }
+
+    public void setFatturaPagamenti(Set<Pagamento> fatturaPagamenti) {
+        this.fatturaPagamenti = fatturaPagamenti;
     }
 
     @Override

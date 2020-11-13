@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -39,12 +40,15 @@ public class PagamentoController {
                                           @RequestParam(name = "fornitore", required = false) String fornitore,
                                           @RequestParam(name = "importo", required = false) Double importo,
                                           @RequestParam(name = "tipologia", required = false) String tipologia,
-                                          @RequestParam(name = "idDdt", required = false)  Integer idDdt,
-                                          @RequestParam(name = "idNotaAccredito", required = false)  Integer idNotaAccredito,
-                                          @RequestParam(name = "idNotaReso", required = false)  Integer idNotaReso) {
+                                          @RequestParam(name = "idDdt", required = false) Integer idDdt,
+                                          @RequestParam(name = "idNotaAccredito", required = false) Integer idNotaAccredito,
+                                          @RequestParam(name = "idNotaReso", required = false) Integer idNotaReso,
+                                          @RequestParam(name = "idRicevutaPrivato", required = false) Integer idRicevutaPrivato,
+                                          @RequestParam(name = "idFattura", required = false) Integer idFattura,
+                                          @RequestParam(name = "idFatturaAccompagnatoria", required = false) Integer idFatturaAccompagnatoria) {
         LOGGER.info("Performing GET request for retrieving all 'pagamenti'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, cliente {}, fornitore {}, importo {}, tipologia {}, idDdt {}, notaAccredito {}, notaReso {}",
-                dataDa, dataA, cliente, fornitore, importo, tipologia, idDdt, idNotaAccredito, idNotaReso);
+        LOGGER.info("Request params: dataDa {}, dataA {}, cliente {}, fornitore {}, importo {}, tipologia {}, idDdt {}, notaAccredito {}, notaReso {}, ricevutaPrivato {}, fattura {}, fatturaAccompagnatoria {}",
+                dataDa, dataA, cliente, fornitore, importo, tipologia, idDdt, idNotaAccredito, idNotaReso, idRicevutaPrivato, idFattura, idFatturaAccompagnatoria);
 
         Predicate<Pagamento> isPagamentoDataDaGreaterOrEquals = pagamento -> {
             if(dataDa != null){
@@ -62,6 +66,9 @@ public class PagamentoController {
             if(cliente != null){
                 Ddt ddt = pagamento.getDdt();
                 NotaAccredito notaAccredito = pagamento.getNotaAccredito();
+                RicevutaPrivato ricevutaPrivato = pagamento.getRicevutaPrivato();
+                Fattura fattura = pagamento.getFattura();
+                FatturaAccompagnatoria fatturaAccompagnatoria = pagamento.getFatturaAccompagnatoria();
                 if(ddt != null){
                     Cliente ddtCliente = ddt.getCliente();
                     if(ddtCliente != null){
@@ -90,6 +97,42 @@ public class PagamentoController {
                             }
                         }
                     }
+                } else if(ricevutaPrivato != null){
+                    Cliente ricevutaPrivatoCliente = ricevutaPrivato.getCliente();
+                    if(ricevutaPrivatoCliente != null){
+                        String clienteNomeCognome = ricevutaPrivatoCliente.getNome().concat(" ").concat(ricevutaPrivatoCliente.getCognome());
+                        if(clienteNomeCognome.contains(cliente)){
+                            return true;
+                        }
+                    }
+                } else if(fattura != null){
+                    Cliente fatturaCliente = fattura.getCliente();
+                    if(fatturaCliente != null){
+                        if(fatturaCliente.getDittaIndividuale() != null && Boolean.TRUE.equals(fatturaCliente.getDittaIndividuale())){
+                            String clienteNomeCognome = fatturaCliente.getNome().concat(" ").concat(fatturaCliente.getCognome());
+                            if(clienteNomeCognome.contains(cliente)){
+                                return true;
+                            }
+                        }else {
+                            if(fatturaCliente.getRagioneSociale().contains(cliente)){
+                                return true;
+                            }
+                        }
+                    }
+                } else if(fatturaAccompagnatoria != null){
+                    Cliente fatturaAccompagnatoriaCliente = fatturaAccompagnatoria.getCliente();
+                    if(fatturaAccompagnatoriaCliente != null){
+                        if(fatturaAccompagnatoriaCliente.getDittaIndividuale() != null && Boolean.TRUE.equals(fatturaAccompagnatoriaCliente.getDittaIndividuale())){
+                            String clienteNomeCognome = fatturaAccompagnatoriaCliente.getNome().concat(" ").concat(fatturaAccompagnatoriaCliente.getCognome());
+                            if(clienteNomeCognome.contains(cliente)){
+                                return true;
+                            }
+                        }else {
+                            if(fatturaAccompagnatoriaCliente.getRagioneSociale().contains(cliente)){
+                                return true;
+                            }
+                        }
+                    }
                 }
                 return false;
             }
@@ -112,7 +155,7 @@ public class PagamentoController {
         };
         Predicate<Pagamento> isPagamentoImportoEquals = pagamento -> {
             if(importo != null){
-                return pagamento.getImporto().compareTo(new BigDecimal(importo))==0;
+                return pagamento.getImporto().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.HALF_DOWN))==0;
             }
             return true;
         };
@@ -137,6 +180,15 @@ public class PagamentoController {
         } else if(idNotaReso != null){
             LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'notaReso' '{}'", idNotaReso);
             return pagamentoService.getNotaResoPagamentiByIdNotaReso(idNotaReso.longValue());
+        } else if(idRicevutaPrivato != null){
+            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'ricevutaPrivato' '{}'", idRicevutaPrivato);
+            return pagamentoService.getRicevutaPrivatoPagamentiByIdRicevutaPrivato(idRicevutaPrivato.longValue());
+        } else if(idFattura != null){
+            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'fattura' '{}'", idFattura);
+            return pagamentoService.getFatturaPagamentiByIdRicevutaPrivato(idFattura.longValue());
+        } else if(idFatturaAccompagnatoria != null){
+            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'fatturaAccompagnatoria' '{}'", idFatturaAccompagnatoria);
+            return pagamentoService.getFatturaAccompagnatoriaPagamentiByIdRicevutaPrivato(idFatturaAccompagnatoria.longValue());
         } else {
             Set<Pagamento> pagamenti = pagamentoService.getPagamenti();
             return pagamenti.stream().filter(isPagamentoDataDaGreaterOrEquals

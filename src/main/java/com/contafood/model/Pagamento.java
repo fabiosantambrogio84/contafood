@@ -39,6 +39,18 @@ public class Pagamento {
     @JoinColumn(name="id_nota_reso")
     private NotaReso notaReso;
 
+    @ManyToOne
+    @JoinColumn(name="id_ricevuta_privato")
+    private RicevutaPrivato ricevutaPrivato;
+
+    @ManyToOne
+    @JoinColumn(name="id_fattura")
+    private Fattura fattura;
+
+    @ManyToOne
+    @JoinColumn(name="id_fattura_accom")
+    private FatturaAccompagnatoria fatturaAccompagnatoria;
+
     @Column(name = "descrizione")
     private String descrizione;
 
@@ -108,6 +120,30 @@ public class Pagamento {
 
     public void setNotaReso(NotaReso notaReso) {
         this.notaReso = notaReso;
+    }
+
+    public RicevutaPrivato getRicevutaPrivato() {
+        return ricevutaPrivato;
+    }
+
+    public void setRicevutaPrivato(RicevutaPrivato ricevutaPrivato) {
+        this.ricevutaPrivato = ricevutaPrivato;
+    }
+
+    public Fattura getFattura() {
+        return fattura;
+    }
+
+    public void setFattura(Fattura fattura) {
+        this.fattura = fattura;
+    }
+
+    public FatturaAccompagnatoria getFatturaAccompagnatoria() {
+        return fatturaAccompagnatoria;
+    }
+
+    public void setFatturaAccompagnatoria(FatturaAccompagnatoria fatturaAccompagnatoria) {
+        this.fatturaAccompagnatoria = fatturaAccompagnatoria;
     }
 
     public String getDescrizione() {

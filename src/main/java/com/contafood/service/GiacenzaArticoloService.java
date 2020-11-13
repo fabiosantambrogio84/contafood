@@ -165,6 +165,9 @@ public class GiacenzaArticoloService {
                     case PRODUZIONE:
                         quantitaInput = quantitaInput + quantita;
                         break;
+                    case RICEVUTA_PRIVATO:
+                        quantitaOutput = quantitaOutput + quantita;
+                        break;
                     default:
                         break;
                 }
