@@ -23,77 +23,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Add GiacenzaIngrediente, fix bugs">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20201029.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/RicevutaPrivatoController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StatoRicevutaPrivatoController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/RicevutaPrivato.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/RicevutaPrivatoArticolo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/RicevutaPrivatoArticoloKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/RicevutaPrivatoArticoloOrdineCliente.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/RicevutaPrivatoArticoloOrdineClienteKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/RicevutaPrivatoTotale.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/RicevutaPrivatoTotaleKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/StatoRicevutaPrivato.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaAccompagnatoriaDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaAccompagnatoriaRigaDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaAccompagnatoriaTotaleDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaRigaDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaTotaleDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/NotaResoDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/NotaResoRigaDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/NotaResoTotaleDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/RicevutaPrivatoArticoloDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/RicevutaPrivatoDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/RicevutaPrivatoArticoloOrdineClienteRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/RicevutaPrivatoArticoloRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/RicevutaPrivatoRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/RicevutaPrivatoTotaleRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/StatoRicevutaPrivatoRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoArticoloService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoTotaleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StatoRicevutaPrivatoService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/fattura.jrxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/fattura_accompagnatoria.jrxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture.jrxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/nota_reso.jrxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/note_accredito.jrxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/ricevuta_privato.jrxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/ricevute_privati.jrxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ClienteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ClienteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/PagamentoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/PagamentoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampeController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Cliente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Cliente.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fattura.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fattura.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/FatturaAccompagnatoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/FatturaAccompagnatoria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccreditoRiga.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccreditoRiga.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Pagamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Pagamento.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/DdtDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/DdtDataSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/NotaAccreditoDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/NotaAccreditoDataSource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/PagamentoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/PagamentoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ClienteService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaArticoloService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Provincia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Provincia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/TipologiaPagamento.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/TipologiaPagamento.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.project" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.project" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddts.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddts.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/giacenze_ingredienti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/giacenze_ingredienti.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/nota_accredito.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/nota_accredito.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/pagamenti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/pagamenti.jrxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -197,15 +133,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -276,11 +210,11 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Application.AccountingUtils" />
+      <item itemvalue="Application.StampaController" />
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Remote.Contafood-remote" />
       <item itemvalue="Spring Boot.Application" />
-      <item itemvalue="Application.AccountingUtils" />
-      <item itemvalue="Application.StampaController" />
     </list>
     <recent_temporary>
       <list>
@@ -478,7 +412,10 @@
       <workItem from="1605083053145" duration="9028000" />
       <workItem from="1605169051356" duration="657000" />
       <workItem from="1605170783024" duration="2284000" />
-      <workItem from="1605255348455" duration="4809000" />
+      <workItem from="1605255348455" duration="5742000" />
+      <workItem from="1605516236479" duration="2056000" />
+      <workItem from="1605602054898" duration="3751000" />
+      <workItem from="1605775373826" duration="5739000" />
     </task>
     <task id="LOCAL-00029" summary="Add scheduled job for deleting expired Sconti. Add filters on Sconti">
       <created>1582820866575</created>
@@ -898,42 +835,42 @@
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2373" y="268" width="608" height="587" key="#xdebugger.evaluate/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605200136282" />
-    <state width="1877" height="297" key="GridCell.Tab.0.bottom" timestamp="1605275882694">
+    <state width="1877" height="297" key="GridCell.Tab.0.bottom" timestamp="1605796197725">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605275882694" />
-    <state width="1877" height="297" key="GridCell.Tab.0.center" timestamp="1605275882694">
+    <state width="1877" height="297" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605796197725" />
+    <state width="1877" height="297" key="GridCell.Tab.0.center" timestamp="1605796197723">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605275882694" />
-    <state width="1877" height="297" key="GridCell.Tab.0.left" timestamp="1605275882694">
+    <state width="1877" height="297" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605796197723" />
+    <state width="1877" height="297" key="GridCell.Tab.0.left" timestamp="1605796197723">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605275882694" />
-    <state width="1877" height="297" key="GridCell.Tab.0.right" timestamp="1605275882694">
+    <state width="1877" height="297" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605796197723" />
+    <state width="1877" height="297" key="GridCell.Tab.0.right" timestamp="1605796197724">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605275882694" />
-    <state width="1877" height="248" key="GridCell.Tab.1.bottom" timestamp="1605202166559">
+    <state width="1877" height="297" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605796197724" />
+    <state width="1877" height="248" key="GridCell.Tab.1.bottom" timestamp="1605519277679">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="248" key="GridCell.Tab.1.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605202166559" />
-    <state width="1877" height="248" key="GridCell.Tab.1.center" timestamp="1605202166558">
+    <state width="1877" height="248" key="GridCell.Tab.1.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605519277679" />
+    <state width="1877" height="248" key="GridCell.Tab.1.center" timestamp="1605519277679">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="248" key="GridCell.Tab.1.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605202166558" />
-    <state width="1877" height="248" key="GridCell.Tab.1.left" timestamp="1605202166558">
+    <state width="1877" height="248" key="GridCell.Tab.1.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605519277679" />
+    <state width="1877" height="248" key="GridCell.Tab.1.left" timestamp="1605519277679">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="248" key="GridCell.Tab.1.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605202166558" />
-    <state width="1877" height="248" key="GridCell.Tab.1.right" timestamp="1605202166559">
+    <state width="1877" height="248" key="GridCell.Tab.1.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605519277679" />
+    <state width="1877" height="248" key="GridCell.Tab.1.right" timestamp="1605519277679">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="248" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605202166559" />
-    <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1604409778338">
+    <state width="1877" height="248" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605519277679" />
+    <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1605795083645">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1604409778338" />
+    <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605795083645" />
     <state x="2143" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1603291151328">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
@@ -946,9 +883,9 @@
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="1982" y="240" key="run.anything.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605275853157" />
-    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1605275955826">
+    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1605795880842">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605275955826" />
+    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605795880842" />
   </component>
 </project>

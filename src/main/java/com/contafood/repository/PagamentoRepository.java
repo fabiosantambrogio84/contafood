@@ -28,4 +28,10 @@ public interface PagamentoRepository extends CrudRepository<Pagamento, Long> {
 
     void deleteByNotaResoId(Long notaResoId);
 
+    void deleteByFatturaId(Long fatturaId);
+
+    void deleteByFatturaAccompagnatoriaId(Long fatturaAccompagnatoriaId);
+
+    void deleteByRicevutaPrivatoId(Long ricevutaPrivatoId);
+
 }

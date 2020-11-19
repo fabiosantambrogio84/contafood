@@ -5,6 +5,7 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaRepository;
+import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
@@ -33,9 +34,17 @@ public class FatturaService {
     private final DdtService ddtService;
     private final TipoFatturaService tipoFatturaService;
     private final VFatturaRepository vFatturaRepository;
+    private final PagamentoRepository pagamentoRepository;
 
     @Autowired
-    public FatturaService(final FatturaRepository fatturaRepository, final FatturaDdtService fatturaDdtService, final StatoFatturaService statoFatturaService, final StatoDdtService statoDdtService, final DdtService ddtService, final TipoFatturaService tipoFatturaService, final VFatturaRepository vFatturaRepository){
+    public FatturaService(final FatturaRepository fatturaRepository,
+                          final FatturaDdtService fatturaDdtService,
+                          final StatoFatturaService statoFatturaService,
+                          final StatoDdtService statoDdtService,
+                          final DdtService ddtService,
+                          final TipoFatturaService tipoFatturaService,
+                          final VFatturaRepository vFatturaRepository,
+                          final PagamentoRepository pagamentoRepository){
         this.fatturaRepository = fatturaRepository;
         this.fatturaDdtService = fatturaDdtService;
         this.statoFatturaService = statoFatturaService;
@@ -43,6 +52,7 @@ public class FatturaService {
         this.ddtService = ddtService;
         this.tipoFatturaService = tipoFatturaService;
         this.vFatturaRepository = vFatturaRepository;
+        this.pagamentoRepository = pagamentoRepository;
     }
 
     public Set<VFattura> getAll(){
@@ -237,6 +247,7 @@ public class FatturaService {
         Fattura fattura = fatturaRepository.findById(fatturaId).orElseThrow(ResourceNotFoundException::new);
         setFatturaDdtsFatturato(fattura, false);
 
+        pagamentoRepository.deleteByFatturaId(fatturaId);
         fatturaDdtService.deleteByFatturaId(fatturaId);
         fatturaRepository.deleteById(fatturaId);
         LOGGER.info("Deleted 'fattura' '{}'", fatturaId);

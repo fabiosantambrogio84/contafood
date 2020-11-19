@@ -843,7 +843,7 @@ public class StampaService {
                 BigDecimal iva = rpa.getArticolo().getAliquotaIva().getValore();
 
                 BigDecimal totale = imponibile.add(imponibile.multiply(iva.divide(new BigDecimal(100))));
-                BigDecimal prezzoConIva = totale.divide(BigDecimal.valueOf(quantita));
+                BigDecimal prezzoConIva = totale.divide(BigDecimal.valueOf(quantita), 2, RoundingMode.HALF_DOWN);
 
                 ricevutaPrivatoArticoloDataSource.setCodiceArticolo(rpa.getArticolo().getCodice());
                 ricevutaPrivatoArticoloDataSource.setDescrizioneArticolo(rpa.getArticolo().getDescrizione());

@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -247,7 +249,7 @@ public class PagamentoService {
             case DDT:
                 LOGGER.info("Updating 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
                 ddt.setTotaleAcconto(newTotaleAcconto);
-                computeStato(ddt);
+                computeStato(ddt, true, importo, "CREATE_PAGAMENTO");
                 ddtRepository.save(ddt);
                 LOGGER.info("Updated 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
                 break;
@@ -275,7 +277,7 @@ public class PagamentoService {
             case FATTURA:
                 LOGGER.info("Updating 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
                 fattura.setTotaleAcconto(newTotaleAcconto);
-                computeStato(fattura);
+                computeStato(fattura, true, importo, "CREATE_PAGAMENTO");
                 fatturaRepository.save(fattura);
                 LOGGER.info("Updated 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
                 break;
@@ -363,7 +365,7 @@ public class PagamentoService {
             case DDT:
                 LOGGER.info("Updating 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
                 ddt.setTotaleAcconto(newTotaleAcconto);
-                computeStato(ddt);
+                computeStato(ddt, true, importo, "DELETE_PAGAMENTO");
                 ddtRepository.save(ddt);
                 LOGGER.info("Updated 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
                 break;
@@ -391,7 +393,7 @@ public class PagamentoService {
             case FATTURA:
                 LOGGER.info("Updating 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
                 fattura.setTotaleAcconto(newTotaleAcconto);
-                computeStato(fattura);
+                computeStato(fattura, true, importo, "DELETE_PAGAMENTO");
                 fatturaRepository.save(fattura);
                 LOGGER.info("Updated 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
                 break;
@@ -409,7 +411,7 @@ public class PagamentoService {
         LOGGER.info("Deleted 'pagamento' '{}'", pagamentoId);
     }
 
-    private void computeStato(Ddt ddt){
+    private void computeStato(Ddt ddt, boolean aggiornaFatture, BigDecimal importoPagamento, String context){
         BigDecimal totaleAcconto = ddt.getTotaleAcconto();
         if(totaleAcconto == null){
             totaleAcconto = new BigDecimal(0);
@@ -428,6 +430,97 @@ public class PagamentoService {
                 ddt.setStatoDdt(statoDdtService.getParzialmentePagato());
             }
         }
+
+        if(aggiornaFatture){
+
+            BigDecimal newImportoPagamento = importoPagamento;
+
+            // compute stato for associated Fatture
+            List<Fattura> fatture = new ArrayList<>();
+            fatturaRepository.findAll().forEach(f -> {
+                Set<FatturaDdt> fatturaDdts = f.getFatturaDdts();
+                if(fatturaDdts != null && ! fatturaDdts.isEmpty()){
+                    for(FatturaDdt fatturaDdt: fatturaDdts){
+                        Ddt d = fatturaDdt.getDdt();
+                        if(d != null && d.getId().equals(ddt.getId())){
+                            fatture.add(f);
+                        }
+                    }
+                }
+            });
+
+            if(context.equals("CREATE_PAGAMENTO")) {
+                // newImportoPagamento = importoPagamento
+                // per ogni fattura associata al DDT
+                // prendo il totaleAcconto
+                // caso 1) totaleAcconto+newImportoPagamento > totaleFattura
+                //          newTotaleAcconto = totaleFattura-totaleAcconto
+                //          newImportoPagamento = newImportoPagamento-newTotaleAcconto
+                // caso 2) totaleAcconto+newImportoPagamento <= totaleFattura
+                //          newTotaleAcconto = totaleAcconto+importoPagamento
+                //          newImportoPagamento = 0
+                // aggiorno Fattura.totaleAcconto=newTotaleAcconto
+                // calcolo statoFattura
+
+                // compute totaleAcconto and stato for associated Fatture
+                if(fatture != null && !fatture.isEmpty()){
+                    for(Fattura fattura: fatture){
+                        LOGGER.info("Updating totaleAcconto for fattura '{}' associated to ddt '{}'", fattura.getId(), ddt.getId());
+                        BigDecimal newFatturaTotaleAcconto = BigDecimal.ZERO;
+                        BigDecimal fatturaTotaleAcconto = fattura.getTotaleAcconto();
+                        BigDecimal fatturaTotale = fattura.getTotale();
+                        BigDecimal accontoPlusPagamento = fatturaTotaleAcconto.add(newImportoPagamento);
+                        if(accontoPlusPagamento.compareTo(fatturaTotale) == 1){
+                            newFatturaTotaleAcconto = fatturaTotale.subtract(fatturaTotaleAcconto);
+                            newImportoPagamento = newImportoPagamento.subtract(newFatturaTotaleAcconto);
+                        } else {
+                            newFatturaTotaleAcconto = fatturaTotaleAcconto.add(newImportoPagamento);
+                            newImportoPagamento = BigDecimal.ZERO;
+                        }
+                        LOGGER.info("Update 'totaleAcconto' with value={} for fattura '{}'", newFatturaTotaleAcconto, fattura.getId());
+                        fattura.setTotaleAcconto(newFatturaTotaleAcconto);
+                        fatturaRepository.save(fattura);
+
+                        computeStato(fattura, false, null, null);
+                    }
+                }
+
+            } else {
+                // newImportoPagamento = importoPagamento
+                // per ogni fattura associata al DDT
+                // prendo il totaleAcconto
+                // caso 1) totaleAcconto-newImportoPagamento <= 0
+                //          newTotaleAcconto = 0
+                //          newImportoPagamento = newImportoPagamento-totaleAcconto
+                // caso 2) totaleAcconto-newImportoPagamento > 0
+                //          newTotaleAcconto = totaleAcconto-importoPagamento
+                //          newImportoPagamento = 0
+                // aggiorno Fattura.totaleAcconto=newTotaleAcconto
+                // calcolo statoFattura
+                if(fatture != null && !fatture.isEmpty()) {
+                    for (Fattura fattura : fatture) {
+                        LOGGER.info("Updating totaleAcconto for fattura '{}' associated to ddt '{}'", fattura.getId(), ddt.getId());
+                        BigDecimal newFatturaTotaleAcconto = BigDecimal.ZERO;
+                        BigDecimal fatturaTotaleAcconto = ddt.getTotaleAcconto();
+                        BigDecimal accontoMinusPagamento = fatturaTotaleAcconto.subtract(newImportoPagamento);
+                        if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) == 1){
+                            newFatturaTotaleAcconto = fatturaTotaleAcconto.subtract(newImportoPagamento);
+                            newImportoPagamento = BigDecimal.ZERO;
+                        } else {
+                            newFatturaTotaleAcconto = BigDecimal.ZERO;
+                            newImportoPagamento = newImportoPagamento.subtract(fatturaTotaleAcconto);
+                        }
+                        LOGGER.info("Update 'totaleAcconto' with value={} for fattura '{}'", newFatturaTotaleAcconto, fattura.getId());
+                        fattura.setTotaleAcconto(newFatturaTotaleAcconto);
+                        fatturaRepository.save(fattura);
+
+                        computeStato(fattura, false, null, null);
+                    }
+                }
+            }
+
+        }
+
     }
 
     private void computeStato(NotaAccredito notaAccredito){
@@ -493,7 +586,7 @@ public class PagamentoService {
         }
     }
 
-    private void computeStato(Fattura fattura){
+    private void computeStato(Fattura fattura, boolean aggiornaDdt, BigDecimal importoPagamento, String context){
         BigDecimal totaleAcconto = fattura.getTotaleAcconto();
         if(totaleAcconto == null){
             totaleAcconto = new BigDecimal(0);
@@ -512,6 +605,94 @@ public class PagamentoService {
                 fattura.setStatoFattura(statoFatturaService.getParzialmentePagata());
             }
         }
+
+
+        if(aggiornaDdt){
+            BigDecimal newImportoPagamento = importoPagamento;
+            Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
+
+            if(context.equals("CREATE_PAGAMENTO")){
+                // newImportoPagamento = importoPagamento
+                // per ogni ddt associato alla fattura
+                // prendo il totaleAcconto
+                // caso 1) totaleAcconto+newImportoPagamento > totaleDdt
+                //          newTotaleAcconto = totaleDdt-totaleAcconto
+                //          newImportoPagamento = newImportoPagamento-newTotaleAcconto
+                // caso 2) totaleAcconto+newImportoPagamento <= totaleDdt
+                //          newTotaleAcconto = totaleAcconto+importoPagamento
+                //          newImportoPagamento = 0
+                // aggiorno DDT.totaleAcconto=newTotaleAcconto
+                // calcolo statoDdt
+
+                // compute totaleAcconto and stato for associated DDTs
+
+                if(fatturaDdts != null && ! fatturaDdts.isEmpty()){
+                    for(FatturaDdt fatturaDdt: fatturaDdts){
+                        BigDecimal newDdtTotaleAcconto = BigDecimal.ZERO;
+
+                        Ddt ddt = fatturaDdt.getDdt();
+                        if(ddt != null){
+                            LOGGER.info("Updating 'totaleAcconto' for ddt '{}' associated to fattura '{}'", ddt.getId(), fattura.getId());
+                            BigDecimal ddtTotaleAcconto = ddt.getTotaleAcconto();
+                            BigDecimal ddtTotale = ddt.getTotale();
+                            BigDecimal accontoPlusPagamento = ddtTotaleAcconto.add(newImportoPagamento);
+                            if(accontoPlusPagamento.compareTo(ddtTotale) == 1){
+                                newDdtTotaleAcconto = ddtTotale.subtract(ddtTotaleAcconto);
+                                newImportoPagamento = newImportoPagamento.subtract(newDdtTotaleAcconto);
+                            } else {
+                                newDdtTotaleAcconto = ddtTotaleAcconto.add(newImportoPagamento);
+                                newImportoPagamento = BigDecimal.ZERO;
+                            }
+                            LOGGER.info("Update 'totaleAcconto' with value={} for ddt '{}'", newDdtTotaleAcconto, ddt.getId());
+                            ddt.setTotaleAcconto(newDdtTotaleAcconto);
+                            ddtRepository.save(ddt);
+
+                            computeStato(ddt, false, null, null);
+                        }
+                    }
+                }
+
+            } else {
+                // newImportoPagamento = importoPagamento
+                // per ogni ddt associato alla fattura
+                // prendo il totaleAcconto
+                // caso 1) totaleAcconto-newImportoPagamento <= 0
+                //          newTotaleAcconto = 0
+                //          newImportoPagamento = newImportoPagamento-totaleAcconto
+                // caso 2) totaleAcconto-newImportoPagamento > 0
+                //          newTotaleAcconto = totaleAcconto-importoPagamento
+                //          newImportoPagamento = 0
+                // aggiorno DDT.totaleAcconto=newTotaleAcconto
+                // calcolo statoDdt
+
+                if(fatturaDdts != null && ! fatturaDdts.isEmpty()){
+                    for(FatturaDdt fatturaDdt: fatturaDdts){
+                        BigDecimal newDdtTotaleAcconto = BigDecimal.ZERO;
+
+                        Ddt ddt = fatturaDdt.getDdt();
+                        if(ddt != null){
+                            LOGGER.info("Updating 'totaleAcconto' for ddt '{}' associated to fattura '{}'", ddt.getId(), fattura.getId());
+                            BigDecimal ddtTotaleAcconto = ddt.getTotaleAcconto();
+                            BigDecimal accontoMinusPagamento = ddtTotaleAcconto.subtract(newImportoPagamento);
+                            if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) == 1){
+                                newDdtTotaleAcconto = ddtTotaleAcconto.subtract(newImportoPagamento);
+                                newImportoPagamento = BigDecimal.ZERO;
+                            } else {
+                                newDdtTotaleAcconto = BigDecimal.ZERO;
+                                newImportoPagamento = newImportoPagamento.subtract(ddtTotaleAcconto);
+                            }
+                            LOGGER.info("Update 'totaleAcconto' with value={} for ddt '{}'", newDdtTotaleAcconto, ddt.getId());
+                            ddt.setTotaleAcconto(newDdtTotaleAcconto);
+                            ddtRepository.save(ddt);
+
+                            computeStato(ddt, false, null, null);
+                        }
+                    }
+                }
+            }
+
+        }
+
     }
 
     private void computeStato(FatturaAccompagnatoria fatturaAccompagnatoria){

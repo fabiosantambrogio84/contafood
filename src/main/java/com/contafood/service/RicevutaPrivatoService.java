@@ -6,6 +6,7 @@ import com.contafood.model.AliquotaIva;
 import com.contafood.model.Articolo;
 import com.contafood.model.RicevutaPrivato;
 import com.contafood.model.RicevutaPrivatoArticolo;
+import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.RicevutaPrivatoRepository;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
@@ -31,18 +32,21 @@ public class RicevutaPrivatoService {
     private final RicevutaPrivatoTotaleService ricevutaPrivatoTotaleService;
     private final StatoRicevutaPrivatoService statoRicevutaPrivatoService;
     private final GiacenzaArticoloService giacenzaArticoloService;
+    private final PagamentoRepository pagamentoRepository;
 
     @Autowired
     public RicevutaPrivatoService(final RicevutaPrivatoRepository ricevutaPrivatoRepository,
                                   final RicevutaPrivatoArticoloService ricevutaPrivatoArticoloService,
                                   final RicevutaPrivatoTotaleService ricevutaPrivatoTotaleService,
                                   final StatoRicevutaPrivatoService statoRicevutaPrivatoService,
-                                  final GiacenzaArticoloService giacenzaArticoloService){
+                                  final GiacenzaArticoloService giacenzaArticoloService,
+                                  final PagamentoRepository pagamentoRepository){
         this.ricevutaPrivatoRepository = ricevutaPrivatoRepository;
         this.ricevutaPrivatoArticoloService = ricevutaPrivatoArticoloService;
         this.ricevutaPrivatoTotaleService = ricevutaPrivatoTotaleService;
         this.statoRicevutaPrivatoService = statoRicevutaPrivatoService;
         this.giacenzaArticoloService = giacenzaArticoloService;
+        this.pagamentoRepository = pagamentoRepository;
     }
 
     public Set<RicevutaPrivato> getAll(){
@@ -130,6 +134,7 @@ public class RicevutaPrivatoService {
 
         Set<RicevutaPrivatoArticolo> ricevutaPrivatoArticoli = ricevutaPrivatoArticoloService.findByRicevutaPrivatoId(ricevutaPrivatoId);
 
+        pagamentoRepository.deleteByRicevutaPrivatoId(ricevutaPrivatoId);
         ricevutaPrivatoArticoloService.deleteByRicevutaPrivatoId(ricevutaPrivatoId);
         ricevutaPrivatoTotaleService.deleteByRicevutaPrivatoId(ricevutaPrivatoId);
         ricevutaPrivatoRepository.deleteById(ricevutaPrivatoId);

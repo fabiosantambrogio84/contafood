@@ -5,6 +5,7 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
+import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class FatturaAccompagnatoriaService {
     private final TipoFatturaService tipoFatturaService;
     private final VFatturaRepository vFatturaRepository;
     private final GiacenzaArticoloService giacenzaArticoloService;
+    private final PagamentoRepository pagamentoRepository;
 
     @Autowired
     public FatturaAccompagnatoriaService(final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository,
@@ -40,7 +42,8 @@ public class FatturaAccompagnatoriaService {
                                          final StatoFatturaService statoFatturaService,
                                          final TipoFatturaService tipoFatturaService,
                                          final VFatturaRepository vFatturaRepository,
-                                         final GiacenzaArticoloService giacenzaArticoloService){
+                                         final GiacenzaArticoloService giacenzaArticoloService,
+                                         final PagamentoRepository pagamentoRepository){
         this.fatturaAccompagnatoriaRepository = fatturaAccompagnatoriaRepository;
         this.fatturaAccompagnatoriaArticoloService = fatturaAccompagnatoriaArticoloService;
         this.fatturaAccompagnatoriaTotaleService = fatturaAccompagnatoriaTotaleService;
@@ -48,6 +51,7 @@ public class FatturaAccompagnatoriaService {
         this.tipoFatturaService = tipoFatturaService;
         this.vFatturaRepository = vFatturaRepository;
         this.giacenzaArticoloService = giacenzaArticoloService;
+        this.pagamentoRepository = pagamentoRepository;
     }
 
     public Set<FatturaAccompagnatoria> getAll(){
@@ -136,6 +140,7 @@ public class FatturaAccompagnatoriaService {
 
         Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoloService.findByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
 
+        pagamentoRepository.deleteByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
         fatturaAccompagnatoriaArticoloService.deleteByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
         fatturaAccompagnatoriaTotaleService.deleteByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
         fatturaAccompagnatoriaRepository.deleteById(fatturaAccompagnatoriaId);
