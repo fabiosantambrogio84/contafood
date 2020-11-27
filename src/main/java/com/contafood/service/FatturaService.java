@@ -125,6 +125,10 @@ public class FatturaService {
             fatturaDdtService.create(fd);
         });
 
+        // compute acconto
+        computeTotaleAcconto(createdFattura);
+
+        // compute stato
         computeStato(createdFattura);
 
         fatturaRepository.save(createdFattura);
@@ -282,6 +286,29 @@ public class FatturaService {
             return;
         }
         fattura.setStatoFattura(statoFatturaService.getParzialmentePagata());
+    }
+
+    private void computeTotaleAcconto(Fattura fattura){
+        LOGGER.info("Computing totaleAcconto...");
+
+        BigDecimal totaleAcconto = BigDecimal.ZERO;
+
+        Set<Ddt> ddts = new HashSet<>();
+        fattura.getFatturaDdts().forEach(fd -> {
+            Long idDdt = fd.getId().getDdtId();
+            ddts.add(ddtService.getOne(idDdt));
+        });
+        LOGGER.info("Fattura ddts size {}", ddts.size());
+
+        for(Ddt ddt: ddts){
+            BigDecimal ddtTotaleAcconto = ddt.getTotaleAcconto();
+            if(ddtTotaleAcconto == null){
+                ddtTotaleAcconto = BigDecimal.ZERO;
+            }
+            totaleAcconto = totaleAcconto.add(ddtTotaleAcconto);
+        }
+        fattura.setTotaleAcconto(totaleAcconto);
+
     }
 
     private void setFatturaDdtsFatturato(Fattura fattura, boolean fatturato){

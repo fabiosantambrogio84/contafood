@@ -24,12 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Add GiacenzaIngrediente, fix bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/PagamentoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/PagamentoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,17 +125,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -415,7 +400,11 @@
       <workItem from="1605255348455" duration="5742000" />
       <workItem from="1605516236479" duration="2056000" />
       <workItem from="1605602054898" duration="3751000" />
-      <workItem from="1605775373826" duration="5739000" />
+      <workItem from="1605775373826" duration="6515000" />
+      <workItem from="1606144702217" duration="2088000" />
+      <workItem from="1606209560589" duration="2375000" />
+      <workItem from="1606294010504" duration="3430000" />
+      <workItem from="1606386838618" duration="1779000" />
     </task>
     <task id="LOCAL-00029" summary="Add scheduled job for deleting expired Sconti. Add filters on Sconti">
       <created>1582820866575</created>
@@ -815,10 +804,6 @@
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="1780" y="178" width="1092" height="763" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605107818636" />
-    <state x="2084" y="321" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597326367023">
-      <screen x="1366" y="0" width="1920" height="1040" />
-    </state>
-    <state x="2084" y="321" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1597326367023" />
     <state x="2131" y="214" key="#com.intellij.ide.util.MemberChooser" timestamp="1605257708852">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
@@ -835,38 +820,38 @@
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2373" y="268" width="608" height="587" key="#xdebugger.evaluate/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605200136282" />
-    <state width="1877" height="297" key="GridCell.Tab.0.bottom" timestamp="1605796197725">
+    <state width="1877" height="297" key="GridCell.Tab.0.bottom" timestamp="1606400175910">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605796197725" />
-    <state width="1877" height="297" key="GridCell.Tab.0.center" timestamp="1605796197723">
+    <state width="1877" height="297" key="GridCell.Tab.0.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606400175910" />
+    <state width="1877" height="297" key="GridCell.Tab.0.center" timestamp="1606400175910">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605796197723" />
-    <state width="1877" height="297" key="GridCell.Tab.0.left" timestamp="1605796197723">
+    <state width="1877" height="297" key="GridCell.Tab.0.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606400175910" />
+    <state width="1877" height="297" key="GridCell.Tab.0.left" timestamp="1606400175910">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605796197723" />
-    <state width="1877" height="297" key="GridCell.Tab.0.right" timestamp="1605796197724">
+    <state width="1877" height="297" key="GridCell.Tab.0.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606400175910" />
+    <state width="1877" height="297" key="GridCell.Tab.0.right" timestamp="1606400175910">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="297" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605796197724" />
-    <state width="1877" height="248" key="GridCell.Tab.1.bottom" timestamp="1605519277679">
+    <state width="1877" height="297" key="GridCell.Tab.0.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606400175910" />
+    <state width="1877" height="248" key="GridCell.Tab.1.bottom" timestamp="1606323754853">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="248" key="GridCell.Tab.1.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605519277679" />
-    <state width="1877" height="248" key="GridCell.Tab.1.center" timestamp="1605519277679">
+    <state width="1877" height="248" key="GridCell.Tab.1.bottom/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606323754853" />
+    <state width="1877" height="248" key="GridCell.Tab.1.center" timestamp="1606323754853">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="248" key="GridCell.Tab.1.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605519277679" />
-    <state width="1877" height="248" key="GridCell.Tab.1.left" timestamp="1605519277679">
+    <state width="1877" height="248" key="GridCell.Tab.1.center/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606323754853" />
+    <state width="1877" height="248" key="GridCell.Tab.1.left" timestamp="1606323754852">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="248" key="GridCell.Tab.1.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605519277679" />
-    <state width="1877" height="248" key="GridCell.Tab.1.right" timestamp="1605519277679">
+    <state width="1877" height="248" key="GridCell.Tab.1.left/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606323754852" />
+    <state width="1877" height="248" key="GridCell.Tab.1.right" timestamp="1606323754853">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="248" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605519277679" />
+    <state width="1877" height="248" key="GridCell.Tab.1.right/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606323754853" />
     <state x="1955" y="130" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1605795083645">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
@@ -875,17 +860,28 @@
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="2143" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1603291151328" />
-    <state x="1860" y="248" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1601643086933">
+    <state x="1860" y="248" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1606148365395">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="1860" y="248" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1601643086933" />
+    <state x="1860" y="248" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606148365395" />
     <state x="1982" y="240" key="run.anything.popup" timestamp="1605275853157">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="1982" y="240" key="run.anything.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605275853157" />
-    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1605795880842">
+    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1606399742613">
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
-    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1605795880842" />
+    <state x="1989" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1606399742613" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

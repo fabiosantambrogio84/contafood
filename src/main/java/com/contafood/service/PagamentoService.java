@@ -478,6 +478,9 @@ public class PagamentoService {
                             newImportoPagamento = BigDecimal.ZERO;
                         }
                         LOGGER.info("Update 'totaleAcconto' with value={} for fattura '{}'", newFatturaTotaleAcconto, fattura.getId());
+                        if(newFatturaTotaleAcconto.compareTo(BigDecimal.ZERO) == -1){
+                            newFatturaTotaleAcconto = BigDecimal.ZERO;
+                        }
                         fattura.setTotaleAcconto(newFatturaTotaleAcconto);
                         fatturaRepository.save(fattura);
 
@@ -501,7 +504,7 @@ public class PagamentoService {
                     for (Fattura fattura : fatture) {
                         LOGGER.info("Updating totaleAcconto for fattura '{}' associated to ddt '{}'", fattura.getId(), ddt.getId());
                         BigDecimal newFatturaTotaleAcconto = BigDecimal.ZERO;
-                        BigDecimal fatturaTotaleAcconto = ddt.getTotaleAcconto();
+                        BigDecimal fatturaTotaleAcconto = fattura.getTotaleAcconto();
                         BigDecimal accontoMinusPagamento = fatturaTotaleAcconto.subtract(newImportoPagamento);
                         if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) == 1){
                             newFatturaTotaleAcconto = fatturaTotaleAcconto.subtract(newImportoPagamento);
@@ -511,6 +514,9 @@ public class PagamentoService {
                             newImportoPagamento = newImportoPagamento.subtract(fatturaTotaleAcconto);
                         }
                         LOGGER.info("Update 'totaleAcconto' with value={} for fattura '{}'", newFatturaTotaleAcconto, fattura.getId());
+                        if(newFatturaTotaleAcconto.compareTo(BigDecimal.ZERO) == -1){
+                            newFatturaTotaleAcconto = BigDecimal.ZERO;
+                        }
                         fattura.setTotaleAcconto(newFatturaTotaleAcconto);
                         fatturaRepository.save(fattura);
 
@@ -639,11 +645,15 @@ public class PagamentoService {
                             if(accontoPlusPagamento.compareTo(ddtTotale) == 1){
                                 newDdtTotaleAcconto = ddtTotale.subtract(ddtTotaleAcconto);
                                 newImportoPagamento = newImportoPagamento.subtract(newDdtTotaleAcconto);
+                                newDdtTotaleAcconto = ddtTotaleAcconto.add(newDdtTotaleAcconto);
                             } else {
                                 newDdtTotaleAcconto = ddtTotaleAcconto.add(newImportoPagamento);
                                 newImportoPagamento = BigDecimal.ZERO;
                             }
                             LOGGER.info("Update 'totaleAcconto' with value={} for ddt '{}'", newDdtTotaleAcconto, ddt.getId());
+                            if(newDdtTotaleAcconto.compareTo(BigDecimal.ZERO) == -1){
+                                newDdtTotaleAcconto = BigDecimal.ZERO;
+                            }
                             ddt.setTotaleAcconto(newDdtTotaleAcconto);
                             ddtRepository.save(ddt);
 
@@ -682,6 +692,9 @@ public class PagamentoService {
                                 newImportoPagamento = newImportoPagamento.subtract(ddtTotaleAcconto);
                             }
                             LOGGER.info("Update 'totaleAcconto' with value={} for ddt '{}'", newDdtTotaleAcconto, ddt.getId());
+                            if(newDdtTotaleAcconto.compareTo(BigDecimal.ZERO) == -1){
+                                newDdtTotaleAcconto = BigDecimal.ZERO;
+                            }
                             ddt.setTotaleAcconto(newDdtTotaleAcconto);
                             ddtRepository.save(ddt);
 
