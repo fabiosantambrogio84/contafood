@@ -44,6 +44,10 @@ public class Fattura {
     @JoinColumn(name="id_stato")
     private StatoFattura statoFattura;
 
+    @ManyToOne
+    @JoinColumn(name="id_causale")
+    private Causale causale;
+
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
 
@@ -140,6 +144,14 @@ public class Fattura {
         this.statoFattura = statoFattura;
     }
 
+    public Causale getCausale() {
+        return causale;
+    }
+
+    public void setCausale(Causale causale) {
+        this.causale = causale;
+    }
+
     public Boolean getSpeditoAde() {
         return speditoAde;
     }
@@ -233,6 +245,7 @@ public class Fattura {
         result.append(", cliente: " + cliente);
         result.append(", agente: " + agente);
         result.append(", statoFattura: " + statoFattura);
+        result.append(", causale: " + causale);
         result.append(", speditoAde: " + speditoAde);
         result.append(", totaleImponibile: " + totaleImponibile);
         result.append(", totaleAcconto: " + totaleAcconto);

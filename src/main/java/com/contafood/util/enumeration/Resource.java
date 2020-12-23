@@ -2,6 +2,7 @@ package com.contafood.util.enumeration;
 
 public enum Resource {
 
+    CAUSALE("causale"),
     CLIENTE("cliente"),
     DDT("ddt"),
     DDT_ACQUISTO("ddt acquisto"),

@@ -1,5 +1,6 @@
 package com.contafood.controller;
 
+import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.service.FatturaService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -204,6 +206,17 @@ public class FatturaController {
         return fatturaService.update(fattura);
     }
      */
+
+    @RequestMapping(method = PATCH, path = "/{fatturaId}")
+    @CrossOrigin
+    public Fattura patch(@PathVariable final Long fatturaId, @RequestBody final Map<String,Object> patchFattura){
+        LOGGER.info("Performing PATCH request for updating 'fattura' '{}'", fatturaId);
+        Long id = Long.valueOf((Integer) patchFattura.get("id"));
+        if (!Objects.equals(fatturaId, id)) {
+            throw new CannotChangeResourceIdException();
+        }
+        return fatturaService.patch(patchFattura);
+    }
 
     @RequestMapping(method = DELETE, path = "/{fatturaId}")
     @ResponseStatus(NO_CONTENT)

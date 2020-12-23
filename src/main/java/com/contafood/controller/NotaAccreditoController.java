@@ -1,10 +1,11 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.*;
-import com.contafood.model.views.VFattura;
+import com.contafood.model.Agente;
+import com.contafood.model.Cliente;
+import com.contafood.model.NotaAccredito;
+import com.contafood.model.StatoNotaAccredito;
 import com.contafood.service.NotaAccreditoService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -153,6 +153,17 @@ public class NotaAccreditoController {
             throw new CannotChangeResourceIdException();
         }
         return notaAccreditoService.update(notaAccredito);
+    }
+
+    @RequestMapping(method = PATCH, path = "/{notaAccreditoId}")
+    @CrossOrigin
+    public NotaAccredito patch(@PathVariable final Long notaAccreditoId, @RequestBody final Map<String,Object> patchNotaAccredito){
+        LOGGER.info("Performing PATCH request for updating 'notaAccredito' '{}'", notaAccreditoId);
+        Long id = Long.valueOf((Integer) patchNotaAccredito.get("id"));
+        if (!Objects.equals(notaAccreditoId, id)) {
+            throw new CannotChangeResourceIdException();
+        }
+        return notaAccreditoService.patch(patchNotaAccredito);
     }
 
     @RequestMapping(method = DELETE, path = "/{notaAccreditoId}")

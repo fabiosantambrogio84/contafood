@@ -45,6 +45,10 @@ public class RicevutaPrivato {
     @JoinColumn(name="id_stato")
     private StatoRicevutaPrivato statoRicevutaPrivato;
 
+    @ManyToOne
+    @JoinColumn(name="id_causale")
+    private Causale causale;
+
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
 
@@ -167,6 +171,14 @@ public class RicevutaPrivato {
 
     public void setStatoRicevutaPrivato(StatoRicevutaPrivato statoRicevutaPrivato) {
         this.statoRicevutaPrivato = statoRicevutaPrivato;
+    }
+
+    public Causale getCausale() {
+        return causale;
+    }
+
+    public void setCausale(Causale causale) {
+        this.causale = causale;
     }
 
     public Boolean getSpeditoAde() {
@@ -334,6 +346,7 @@ public class RicevutaPrivato {
         result.append(", puntoConsegna: " + puntoConsegna);
         result.append(", autista: " + autista);
         result.append(", statoRicevutaPrivato: " + statoRicevutaPrivato);
+        result.append(", causale: " + causale);
         result.append(", speditoAde: " + speditoAde);
         result.append(", numeroColli: " + numeroColli);
         result.append(", tipoTrasporto: " + tipoTrasporto);

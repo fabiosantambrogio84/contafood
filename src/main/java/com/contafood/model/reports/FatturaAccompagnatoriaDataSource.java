@@ -12,6 +12,8 @@ public class FatturaAccompagnatoriaDataSource {
 
     private String clienteDescrizione;
 
+    private String causale;
+
     private String pagamento;
 
     private String agente;
@@ -54,6 +56,14 @@ public class FatturaAccompagnatoriaDataSource {
 
     public void setClienteDescrizione(String clienteDescrizione) {
         this.clienteDescrizione = clienteDescrizione;
+    }
+
+    public String getCausale() {
+        return causale;
+    }
+
+    public void setCausale(String causale) {
+        this.causale = causale;
     }
 
     public String getPagamento() {

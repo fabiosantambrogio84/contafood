@@ -102,6 +102,7 @@
 		</queryString>
 		<field name="clientePartitaIva" class="java.lang.String"/>
 		<field name="clienteCodiceFiscale" class="java.lang.String"/>
+		<field name="causale" class="java.lang.String"/>
 		<field name="pagamento" class="java.lang.String"/>
 		<field name="agente" class="java.lang.String"/>
 	</subDataset>
@@ -553,13 +554,32 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="120" uuid="9048d699-0905-4bf7-96c7-ba44fff343d2">
+					<jr:column width="100" uuid="879699e7-4bc9-4343-8e53-f661498f2c6a">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna3"/>
+						<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="20" uuid="eb15e237-ce07-44f8-b8e8-b4a18868acd7"/>
+								<textElement verticalAlignment="Middle">
+									<font size="8" isBold="true" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Causale]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="30">
+							<textField textAdjust="ScaleFont">
+								<reportElement x="0" y="0" width="100" height="30" uuid="e2a9a3b6-2772-4d6c-88bb-ad9dfa716af0"/>
+								<textFieldExpression><![CDATA[$F{causale}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="9048d699-0905-4bf7-96c7-ba44fff343d2">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
 						<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<staticText>
-								<reportElement x="0" y="0" width="120" height="20" uuid="e88f0796-a42f-48cc-b663-3ccf903c5c21"/>
+								<reportElement x="0" y="0" width="100" height="20" uuid="e88f0796-a42f-48cc-b663-3ccf903c5c21"/>
 								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8" isBold="true" isItalic="true"/>
 								</textElement>
@@ -568,14 +588,14 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table 1_TD" height="30">
 							<textField textAdjust="ScaleFont">
-								<reportElement x="0" y="0" width="120" height="30" uuid="12e633cc-a11e-4ec7-938b-98c2e0a1f938"/>
+								<reportElement x="0" y="0" width="100" height="30" uuid="12e633cc-a11e-4ec7-938b-98c2e0a1f938"/>
 								<textElement textAlignment="Left" verticalAlignment="Top"/>
 								<textFieldExpression><![CDATA[$F{pagamento}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="100" uuid="21032d91-c88e-4a11-afff-baeb8b794210">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna5"/>
 						<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>

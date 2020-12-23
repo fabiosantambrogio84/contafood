@@ -1,5 +1,6 @@
 package com.contafood.controller;
 
+import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.FatturaAccompagnatoria;
 import com.contafood.service.FatturaAccompagnatoriaService;
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -46,6 +48,17 @@ public class FatturaAccompagnatoriaController {
     public FatturaAccompagnatoria create(@RequestBody final FatturaAccompagnatoria fatturaAccompagnatoria){
         LOGGER.info("Performing POST request for creating 'fattura accompagnatoria'");
         return fatturaAccompagnatoriaService.create(fatturaAccompagnatoria);
+    }
+
+    @RequestMapping(method = PATCH, path = "/{fatturaAccompagnatoriaId}")
+    @CrossOrigin
+    public FatturaAccompagnatoria patch(@PathVariable final Long fatturaAccompagnatoriaId, @RequestBody final Map<String,Object> patchFatturaAccompagnatoria){
+        LOGGER.info("Performing PATCH request for updating 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
+        Long id = Long.valueOf((Integer)patchFatturaAccompagnatoria.get("id"));
+        if (!Objects.equals(fatturaAccompagnatoriaId, id)) {
+            throw new CannotChangeResourceIdException();
+        }
+        return fatturaAccompagnatoriaService.patch(patchFatturaAccompagnatoria);
     }
 
     @RequestMapping(method = DELETE, path = "/{fatturaAccompagnatoriaId}")

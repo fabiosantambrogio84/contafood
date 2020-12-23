@@ -46,6 +46,10 @@ public class Ddt {
     @JoinColumn(name="id_stato")
     private StatoDdt statoDdt;
 
+    @ManyToOne
+    @JoinColumn(name="id_causale")
+    private Causale causale;
+
     @Column(name = "numero_colli")
     private Integer numeroColli;
 
@@ -171,6 +175,14 @@ public class Ddt {
 
     public void setStatoDdt(StatoDdt statoDdt) {
         this.statoDdt = statoDdt;
+    }
+
+    public Causale getCausale() {
+        return causale;
+    }
+
+    public void setCausale(Causale causale) {
+        this.causale = causale;
     }
 
     public Integer getNumeroColli() {
@@ -346,6 +358,7 @@ public class Ddt {
         result.append(", puntoConsegna: " + puntoConsegna);
         result.append(", autista: " + autista);
         result.append(", statoDdt: " + statoDdt);
+        result.append(", causale: " + causale);
         result.append(", numeroColli: " + numeroColli);
         result.append(", tipoTrasporto: " + tipoTrasporto);
         result.append(", dataTrasporto: " + dataTrasporto);

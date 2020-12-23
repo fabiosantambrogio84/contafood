@@ -1,5 +1,6 @@
 package com.contafood;
 
+import com.contafood.properties.AdeExportProperties;
 import com.contafood.properties.FileStorageProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
-    FileStorageProperties.class
+    FileStorageProperties.class,
+    AdeExportProperties.class
 })
 @EnableScheduling
 public class Application extends SpringBootServletInitializer {

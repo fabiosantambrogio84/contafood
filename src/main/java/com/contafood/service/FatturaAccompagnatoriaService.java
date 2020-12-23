@@ -20,6 +20,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class FatturaAccompagnatoriaService {
@@ -92,6 +94,47 @@ public class FatturaAccompagnatoriaService {
         return fattureAccompagnatorie;
     }
 
+    public Map<Cliente, List<FatturaAccompagnatoria>> getFattureAccompagnatorieByCliente(Date dateFrom, Date dateTo){
+        LOGGER.info("Retrieving the list of fatture_acompagnatorie, grouped by cliente, with speditoAde 'false', dateFrom '{}' and dateTo '{}'", dateFrom, dateTo);
+
+        Map<Cliente, List<FatturaAccompagnatoria>> fattureAccompagnatorieByCliente = new HashMap<>();
+
+        Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaSpeditoAdeFalse = fattura -> fattura.getSpeditoAde().equals(Boolean.FALSE);
+
+        Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaDataDaGreaterOrEquals = fattura -> {
+            if(dateFrom != null){
+                return fattura.getData().compareTo(dateFrom)>=0;
+            }
+            return true;
+        };
+        Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaDataALessOrEquals = fattura -> {
+            if(dateTo != null){
+                return fattura.getData().compareTo(dateTo)<=0;
+            }
+            return true;
+        };
+
+        Set<FatturaAccompagnatoria> fattureAccompagnatorie = fatturaAccompagnatoriaRepository.findAll().stream()
+                .filter(isFatturaAccompagnatoriaDataDaGreaterOrEquals
+                .and(isFatturaAccompagnatoriaDataALessOrEquals)
+                .and(isFatturaAccompagnatoriaSpeditoAdeFalse)).collect(Collectors.toSet());
+
+        if(fattureAccompagnatorie != null && !fattureAccompagnatorie.isEmpty()){
+            for(FatturaAccompagnatoria fatturaAccompagnatoria : fattureAccompagnatorie){
+                Cliente cliente = fatturaAccompagnatoria.getCliente();
+
+                List<FatturaAccompagnatoria> fattureAccompagnatorieList = fattureAccompagnatorieByCliente.getOrDefault(cliente, new ArrayList<>());
+                fattureAccompagnatorieList.add(fatturaAccompagnatoria);
+
+                fattureAccompagnatorieByCliente.put(cliente, fattureAccompagnatorieList);
+            }
+        }
+
+        LOGGER.info("Successfully retrieved the list of fatture_acompagnatorie grouped by cliente");
+
+        return fattureAccompagnatorieByCliente;
+    }
+
     @Transactional
     public FatturaAccompagnatoria create(FatturaAccompagnatoria fatturaAccompagnatoria){
         LOGGER.info("Creating 'fattura accompagnatoria'");
@@ -132,6 +175,48 @@ public class FatturaAccompagnatoriaService {
         LOGGER.info("Created 'fattura accompagnatoria' '{}'", createdFatturaAccompagnatoria);
 
         return createdFatturaAccompagnatoria;
+    }
+
+    @Transactional
+    public FatturaAccompagnatoria patch(Map<String,Object> patchFatturaAccompagnatoria){
+        LOGGER.info("Patching 'fatturaAccompagnatoria'");
+
+        Long id = Long.valueOf((Integer) patchFatturaAccompagnatoria.get("id"));
+        FatturaAccompagnatoria fatturaAccompagnatoria = fatturaAccompagnatoriaRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        patchFatturaAccompagnatoria.forEach((key, value) -> {
+            if(key.equals("id")){
+                fatturaAccompagnatoria.setId(Long.valueOf((Integer)value));
+            } else if(key.equals("speditoAde")){
+                if(value != null){
+                    fatturaAccompagnatoria.setSpeditoAde((boolean)value);
+                } else {
+                    fatturaAccompagnatoria.setSpeditoAde(Boolean.FALSE);
+                }
+            }
+        });
+        FatturaAccompagnatoria patchedFatturaAccompagnatoria = fatturaAccompagnatoriaRepository.save(fatturaAccompagnatoria);
+
+        LOGGER.info("Patched 'fatturaAccompagnatoria' '{}'", patchedFatturaAccompagnatoria);
+        return patchedFatturaAccompagnatoria;
+    }
+
+    @Transactional
+    public void patchSpeditoAdeFattureAccompagnatorieByCliente(Map<Cliente, List<FatturaAccompagnatoria>> fattureAccompagnatorieByCliente, boolean speditoAde){
+        LOGGER.info("Updating fatture accompagnatorie setting speditoAde='{}'", speditoAde);
+
+        if(fattureAccompagnatorieByCliente != null && !fattureAccompagnatorieByCliente.isEmpty()){
+            for(Cliente cliente : fattureAccompagnatorieByCliente.keySet()){
+                for(FatturaAccompagnatoria fatturaAccompagnatoria : fattureAccompagnatorieByCliente.get(cliente)){
+                    Map<String, Object> patchFatturaAccompagnatoria = new HashMap<>();
+                    patchFatturaAccompagnatoria.put("id", fatturaAccompagnatoria.getId());
+                    patchFatturaAccompagnatoria.put("speditoAde", speditoAde);
+
+                    patch(patchFatturaAccompagnatoria);
+                }
+            }
+        }
+
+        LOGGER.info("Successfully updated fatture accompagnatorie setting speditoAde={}", speditoAde);
     }
 
     @Transactional

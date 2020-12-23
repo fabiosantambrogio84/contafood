@@ -2,10 +2,14 @@ package com.contafood.util;
 
 public interface Constants {
 
+    String DEFAULT_ENCODING = "UTF-8";
+
     String DEFAULT_FORNITORE = "URBANI GIUSEPPE";
     String DEFAULT_FORNITORE_INITIALS = "UR";
 
     String MEDIA_TYPE_APPLICATION_PDF = "application/pdf";
+    String MEDIA_TYPE_APPLICATION_XML = "application/xml";
+    String MEDIA_TYPE_APPLICATION_ZIP = "application/zip";
 
     String HTTP_HEADER_PRAGMA_VALUE = "no-cache";
     String HTTP_HEADER_EXPIRES_VALUE = "0";
@@ -15,7 +19,6 @@ public interface Constants {
     String JASPER_PARAMETER_FATTURA_NOTA = "Assolve obblighi art.62,comm 1, del D.L. 24.01.12, n.1, convertito, con modificazioni, dalla legge 24.03.12, n.27. Contributo CONAI assolto dove dovuto";
     String JASPER_PARAMETER_FATTURA_ACCOMPAGNATORIA_NOTA = "Assolve obblighi art.62,comm 1, del D.L. 24.01.12, n.1, convertito, con modificazioni, dalla legge 24.03.12, n.27. Contributo CONAI assolto dove dovuto";
     String JASPER_PARAMETER_RICEVUTA_PRIVATO_NOTA = "Assolve obblighi art.62,comm 1, del D.L. 24.01.12, n.1, convertito, con modificazioni, dalla legge 24.03.12, n.27. Contributo CONAI assolto dove dovuto";
-    String JASPER_PARAMETER_DDT_CAUSALE = "Vendita";
     String JASPER_REPORT_GIACENZE_INGREDIENTI = "/reports/giacenze_ingredienti.jasper";
     String JASPER_REPORT_DDTS = "/reports/ddts.jasper";
     String JASPER_REPORT_DDT = "/reports/ddt.jasper";

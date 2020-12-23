@@ -4,6 +4,8 @@ import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
+import com.contafood.repository.AliquotaIvaRepository;
+import com.contafood.repository.ArticoloRepository;
 import com.contafood.repository.FatturaRepository;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
@@ -20,6 +22,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,6 +107,47 @@ public class FatturaService {
             ddtArticoli.addAll(fd.getDdt().getDdtArticoli());
         });
         return ddtArticoli;
+    }
+
+    public Map<Cliente, List<Fattura>> getFattureByCliente(Date dateFrom, Date dateTo){
+        LOGGER.info("Retrieving the list of fatture, grouped by cliente, with speditoAde 'false', dateFrom '{}' and dateTo '{}'", dateFrom, dateTo);
+
+        Map<Cliente, List<Fattura>> fattureByCliente = new HashMap<>();
+
+        Predicate<Fattura> isFatturaSpeditoAdeFalse = fattura -> fattura.getSpeditoAde().equals(Boolean.FALSE);
+
+        Predicate<Fattura> isFatturaDataDaGreaterOrEquals = fattura -> {
+            if(dateFrom != null){
+                return fattura.getData().compareTo(dateFrom)>=0;
+            }
+            return true;
+        };
+        Predicate<Fattura> isFatturaDataALessOrEquals = fattura -> {
+            if(dateTo != null){
+                return fattura.getData().compareTo(dateTo)<=0;
+            }
+            return true;
+        };
+
+        Set<Fattura> fatture = fatturaRepository.findAll().stream()
+                .filter(isFatturaDataDaGreaterOrEquals
+                .and(isFatturaDataALessOrEquals)
+                .and(isFatturaSpeditoAdeFalse)).collect(Collectors.toSet());
+
+        if(fatture != null && !fatture.isEmpty()){
+            for(Fattura fattura : fatture){
+                Cliente cliente = fattura.getCliente();
+
+                List<Fattura> fattureList = fattureByCliente.getOrDefault(cliente, new ArrayList<>());
+                fattureList.add(fattura);
+
+                fattureByCliente.put(cliente, fattureList);
+            }
+        }
+
+        LOGGER.info("Successfully retrieved the list of fatture grouped by cliente");
+
+        return fattureByCliente;
     }
 
     @Transactional
@@ -243,6 +287,48 @@ public class FatturaService {
         return updatedFattura;
     }
     */
+
+    @Transactional
+    public Fattura patch(Map<String,Object> patchFattura){
+        LOGGER.info("Patching 'fattura'");
+
+        Long id = Long.valueOf((Integer) patchFattura.get("id"));
+        Fattura fattura = fatturaRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        patchFattura.forEach((key, value) -> {
+            if(key.equals("id")){
+                fattura.setId(Long.valueOf((Integer)value));
+            } else if(key.equals("speditoAde")){
+                if(value != null){
+                    fattura.setSpeditoAde((boolean)value);
+                } else {
+                    fattura.setSpeditoAde(Boolean.FALSE);
+                }
+            }
+        });
+        Fattura patchedFattura = fatturaRepository.save(fattura);
+
+        LOGGER.info("Patched 'fattura' '{}'", patchedFattura);
+        return patchedFattura;
+    }
+
+    @Transactional
+    public void patchSpeditoAdeFattureByCliente(Map<Cliente, List<Fattura>> fattureByCliente, boolean speditoAde){
+        LOGGER.info("Updating fatture setting speditoAde='{}'", speditoAde);
+
+        if(fattureByCliente != null && !fattureByCliente.isEmpty()){
+            for(Cliente cliente : fattureByCliente.keySet()){
+                for(Fattura fattura : fattureByCliente.get(cliente)){
+                    Map<String, Object> patchFattura = new HashMap<>();
+                    patchFattura.put("id", fattura.getId());
+                    patchFattura.put("speditoAde", speditoAde);
+
+                    patch(patchFattura);
+                }
+            }
+        }
+
+        LOGGER.info("Successfully updated fatture setting speditoAde={}", speditoAde);
+    }
 
     @Transactional
     public void delete(Long fatturaId){

@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,12 @@ public class NativeQueryService {
             "and ordine_cliente.data_consegna <= ?4 \n" +
             "and ordine_cliente_articolo.num_da_evadere > 0 \n" +
             "group by ordine_cliente_articolo.id_articolo";
+
+    private static final String ADE_NEXT_ID_EXPORT_QUERY = "SELECT nextval('seq_e_fatturazione') as SEQ from dual;";
+
+    private static final String ADE_PROGRESSIVO_XML_FILE_QUERY = "SELECT nextval('seq_e_fatturazione_file') as SEQ from dual;";
+
+    private static final String ADE_PROGRESSIVO_ZIP_FILE_QUERY = "SELECT nextval('seq_e_fatturazione_file_zip') as SEQ from dual;";
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -79,4 +86,34 @@ public class NativeQueryService {
         LOGGER.info("Retrieved {} 'ordini clienti aggregate'", ordiniClientiAggregate.size());
         return ordiniClientiAggregate;
     }
+
+    public Integer getAdeNextId(String operation){
+        LOGGER.info("Performing native query for retrieving next progressivo for operation '{}'...", operation);
+        Query query;
+        switch(operation){
+            case "export":
+                query = entityManager.createNativeQuery(ADE_NEXT_ID_EXPORT_QUERY);
+                break;
+            case "xml_file":
+                query = entityManager.createNativeQuery(ADE_PROGRESSIVO_XML_FILE_QUERY);
+                break;
+            case "zip_file":
+                query = entityManager.createNativeQuery(ADE_PROGRESSIVO_ZIP_FILE_QUERY);
+                break;
+            default:
+                String errorMessage = "Operation '"+operation+"' not expected";
+                throw new RuntimeException(errorMessage);
+        }
+
+        BigInteger result;
+        try{
+            result = (BigInteger)query.getSingleResult();
+        } catch(Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+        LOGGER.info("Result is: {}", result);
+        return result.intValue();
+    }
+
 }

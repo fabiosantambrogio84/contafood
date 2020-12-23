@@ -111,6 +111,7 @@
 		</queryString>
 		<field name="clientePartitaIva" class="java.lang.String"/>
 		<field name="clienteCodiceFiscale" class="java.lang.String"/>
+		<field name="causale" class="java.lang.String"/>
 		<field name="pagamento" class="java.lang.String"/>
 		<field name="agente" class="java.lang.String"/>
 	</subDataset>
@@ -138,6 +139,9 @@
 	<parameter name="puntoConsegna" class="java.lang.String"/>
 	<parameter name="trasportatore" class="java.lang.String"/>
 	<parameter name="nota" class="java.lang.String"/>
+	<parameter name="tipoTrasporto" class="java.lang.String"/>
+	<parameter name="numeroColli" class="java.lang.Integer"/>
+	<parameter name="dataOraTrasporto" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
@@ -590,13 +594,32 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="120" uuid="9048d699-0905-4bf7-96c7-ba44fff343d2">
+					<jr:column width="100" uuid="c3e37fac-fb56-458a-84cc-1cceeb4dca61">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna3"/>
+						<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="20" uuid="8bcac2b6-878b-49da-abbc-ac6115512a3a"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
+									<font size="8" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Causale]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<textField textAdjust="ScaleFont">
+								<reportElement x="0" y="0" width="100" height="20" uuid="3de265d6-4efb-42be-a88e-56c98431a90a"/>
+								<textFieldExpression><![CDATA[$F{causale}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100" uuid="9048d699-0905-4bf7-96c7-ba44fff343d2">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
 						<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<staticText>
-								<reportElement x="0" y="0" width="120" height="20" uuid="e88f0796-a42f-48cc-b663-3ccf903c5c21"/>
+								<reportElement x="0" y="0" width="100" height="20" uuid="e88f0796-a42f-48cc-b663-3ccf903c5c21"/>
 								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8" isBold="false" isItalic="true"/>
 								</textElement>
@@ -606,14 +629,14 @@
 						<jr:detailCell style="Table 1_TD" height="20">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<textField textAdjust="ScaleFont">
-								<reportElement x="0" y="0" width="120" height="20" uuid="12e633cc-a11e-4ec7-938b-98c2e0a1f938"/>
+								<reportElement x="0" y="0" width="100" height="20" uuid="12e633cc-a11e-4ec7-938b-98c2e0a1f938"/>
 								<textElement textAlignment="Left" verticalAlignment="Top"/>
 								<textFieldExpression><![CDATA[$F{pagamento}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="100" uuid="21032d91-c88e-4a11-afff-baeb8b794210">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna5"/>
 						<jr:columnHeader style="Table 1_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -841,6 +864,62 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{nota}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="560" width="100" height="14" uuid="62015d88-9242-4dde-99c0-e7d78ef75150">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Trasporto a cura del]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont">
+				<reportElement positionType="Float" x="0" y="575" width="100" height="20" uuid="4f6671da-6c2d-4e02-a739-74139cf5b9fc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tipoTrasporto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="110" y="560" width="50" height="14" uuid="20788a82-b74b-41d5-9b0e-bf507f43d7c6">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Num. colli]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont">
+				<reportElement positionType="Float" x="110" y="575" width="50" height="20" uuid="242d54b5-6b0b-4cd5-96da-928a12cc2219">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numeroColli}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement positionType="Float" x="170" y="575" width="100" height="20" uuid="dfc1d054-4c00-4c2d-a61a-a063c443b99c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataOraTrasporto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="170" y="560" width="100" height="14" uuid="60024afa-38d2-422c-a493-eb944075cfa8">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Inizio trasporto]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<pageFooter>

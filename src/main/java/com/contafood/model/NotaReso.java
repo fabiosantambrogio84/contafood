@@ -36,6 +36,10 @@ public class NotaReso {
     @JoinColumn(name="id_stato")
     private StatoNotaReso statoNotaReso;
 
+    @ManyToOne
+    @JoinColumn(name="id_causale")
+    private Causale causale;
+
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
 
@@ -115,6 +119,14 @@ public class NotaReso {
 
     public void setStatoNotaReso(StatoNotaReso statoNotaReso) {
         this.statoNotaReso = statoNotaReso;
+    }
+
+    public Causale getCausale() {
+        return causale;
+    }
+
+    public void setCausale(Causale causale) {
+        this.causale = causale;
     }
 
     public Boolean getSpeditoAde() {
@@ -208,6 +220,7 @@ public class NotaReso {
         result.append(", data: " + data);
         result.append(", fornitore: " + fornitore);
         result.append(", stato: " + statoNotaReso);
+        result.append(", causale: " + causale);
         result.append(", speditoAde: " + speditoAde);
         result.append(", totale: " + totale);
         result.append(", totaleAcconto: " + totaleAcconto);

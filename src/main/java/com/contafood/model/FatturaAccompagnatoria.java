@@ -45,6 +45,10 @@ public class FatturaAccompagnatoria {
     @JoinColumn(name="id_stato")
     private StatoFattura statoFattura;
 
+    @ManyToOne
+    @JoinColumn(name="id_causale")
+    private Causale causale;
+
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
 
@@ -158,6 +162,14 @@ public class FatturaAccompagnatoria {
 
     public void setStatoFattura(StatoFattura statoFattura) {
         this.statoFattura = statoFattura;
+    }
+
+    public Causale getCausale() {
+        return causale;
+    }
+
+    public void setCausale(Causale causale) {
+        this.causale = causale;
     }
 
     public Boolean getSpeditoAde() {
@@ -301,6 +313,7 @@ public class FatturaAccompagnatoria {
         result.append(", cliente: " + cliente);
         result.append(", puntoConsegna: " + puntoConsegna);
         result.append(", statoFattura: " + statoFattura);
+        result.append(", causale: " + causale);
         result.append(", speditoAde: " + speditoAde);
         result.append(", numeroColli: " + numeroColli);
         result.append(", tipoTrasporto: " + tipoTrasporto);

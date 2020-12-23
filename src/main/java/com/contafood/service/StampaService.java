@@ -5,6 +5,10 @@ import com.contafood.model.reports.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.util.Constants;
+import com.contafood.util.enumeration.Provincia;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -157,7 +162,7 @@ public class StampaService {
         ddtDataSource.setData(simpleDateFormat.format(ddt.getData()));
         ddtDataSource.setClientePartitaIva("");
         ddtDataSource.setClienteCodiceFiscale("");
-        ddtDataSource.setCausale(Constants.JASPER_PARAMETER_DDT_CAUSALE);
+        ddtDataSource.setCausale(ddt.getCausale() != null ? ddt.getCausale().getDescrizione() : "");
         ddtDataSource.setPagamento("");
         ddtDataSource.setAgente("");
         if(cliente != null){
@@ -322,6 +327,7 @@ public class StampaService {
         notaAccreditoDataSource.setData(simpleDateFormat.format(notaAccredito.getData()));
         notaAccreditoDataSource.setClientePartitaIva("");
         notaAccreditoDataSource.setClienteCodiceFiscale("");
+        notaAccreditoDataSource.setCausale(notaAccredito.getCausale() != null ? notaAccredito.getCausale().getDescrizione() : "");
         notaAccreditoDataSource.setPagamento("");
         notaAccreditoDataSource.setAgente("");
         if(cliente != null){
@@ -485,6 +491,7 @@ public class StampaService {
         fatturaAccompagnatoriaDataSource.setData(simpleDateFormat.format(fatturaAccompagnatoria.getData()));
         fatturaAccompagnatoriaDataSource.setClientePartitaIva("");
         fatturaAccompagnatoriaDataSource.setClienteCodiceFiscale("");
+        fatturaAccompagnatoriaDataSource.setCausale(fatturaAccompagnatoria.getCausale() != null ? fatturaAccompagnatoria.getCausale().getDescrizione() : "");
         fatturaAccompagnatoriaDataSource.setPagamento("");
         fatturaAccompagnatoriaDataSource.setAgente("");
         if(cliente != null){
@@ -561,6 +568,7 @@ public class StampaService {
         fatturaDataSource.setData(simpleDateFormat.format(fattura.getData()));
         fatturaDataSource.setClientePartitaIva("");
         fatturaDataSource.setClienteCodiceFiscale("");
+        fatturaDataSource.setCausale(fattura.getCausale() != null ? fattura.getCausale().getDescrizione() : "");
         fatturaDataSource.setPagamento("");
         fatturaDataSource.setAgente("");
         if(cliente != null){
@@ -705,6 +713,7 @@ public class StampaService {
         notaResoDataSource.setData(simpleDateFormat.format(notaReso.getData()));
         notaResoDataSource.setFornitorePartitaIva("");
         notaResoDataSource.setFornitoreCodiceFiscale("");
+        notaResoDataSource.setCausale(notaReso.getCausale() != null ? notaReso.getCausale().getDescrizione() : "");
         notaResoDataSource.setPagamento(tipoPagamento);
         notaResoDataSource.setAgente("");
         if(fornitore != null){
@@ -773,7 +782,7 @@ public class StampaService {
         ricevutaPrivatoDataSource.setData(simpleDateFormat.format(ricevutaPrivato.getData()));
         ricevutaPrivatoDataSource.setClientePartitaIva("");
         ricevutaPrivatoDataSource.setClienteCodiceFiscale("");
-        ricevutaPrivatoDataSource.setCausale(Constants.JASPER_PARAMETER_DDT_CAUSALE);
+        ricevutaPrivatoDataSource.setCausale(ricevutaPrivato.getCausale() != null ? ricevutaPrivato.getCausale().getDescrizione() : "");
         ricevutaPrivatoDataSource.setPagamento("");
         ricevutaPrivatoDataSource.setAgente("");
         if(cliente != null){
@@ -861,6 +870,343 @@ public class StampaService {
             });
         }
         return ricevutaPrivatoArticoloDataSources;
+    }
+
+    public byte[] generateFattura(Long idFattura) throws Exception{
+
+        // retrieve the Fattura
+        Fattura fattura = getFattura(idFattura);
+        Cliente cliente = fattura.getCliente();
+
+        // create data parameters
+        String fatturaTitleParam = fattura.getProgressivo()+"/"+fattura.getAnno()+" del "+simpleDateFormat.format(fattura.getData());
+        String destinatarioParam = "";
+
+        // create data parameters for Cliente
+        if(cliente != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
+                sb.append(cliente.getRagioneSociale()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getIndirizzo())){
+                sb.append(cliente.getIndirizzo()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getCap())){
+                sb.append(cliente.getCap()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getCitta())){
+                sb.append(cliente.getCitta()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getProvincia())){
+                sb.append("("+ Provincia.getByLabel(cliente.getProvincia()).getSigla()+")");
+            }
+
+            destinatarioParam = sb.toString();
+        }
+
+        // create FatturaDataSource
+        List<FatturaDataSource> fatturaDataSources = new ArrayList<>();
+        fatturaDataSources.add(getFatturaDataSource(fattura));
+
+        // create list of FatturaRigheDataSource from FatturaDdts
+        List<FatturaRigaDataSource> fatturaRigaDataSources = getFatturaRigheDataSource(fattura);
+
+        // create list of FatturaAccompagnatoriaTotaliDataSource from FatturaAccompagnatoriaTotale
+        List<FatturaTotaleDataSource> fatturaTotaleDataSources = getFatturaTotaliDataSource(fattura);
+
+        BigDecimal totaleImponibile = new BigDecimal(0);
+        BigDecimal totaleIva = new BigDecimal(0);
+
+        for(FatturaTotaleDataSource fatturaTotale: fatturaTotaleDataSources){
+            totaleImponibile = totaleImponibile.add(fatturaTotale.getTotaleImponibile());
+            totaleIva = totaleIva.add(fatturaTotale.getTotaleIva());
+        }
+
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_FATTURA);
+
+        // create report datasource for Fattura
+        JRBeanCollectionDataSource fatturaCollectionDataSource = new JRBeanCollectionDataSource(fatturaDataSources);
+
+        // create report datasource for FatturaRighe
+        JRBeanCollectionDataSource fatturaRigheCollectionDataSource = new JRBeanCollectionDataSource(fatturaRigaDataSources);
+
+        // create report datasource for FatturaTotali
+        JRBeanCollectionDataSource fatturaTotaliCollectionDataSource = new JRBeanCollectionDataSource(fatturaTotaleDataSources);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("fatturaTitle", fatturaTitleParam);
+        parameters.put("destinatario", destinatarioParam);
+        parameters.put("note", fattura.getNote());
+        parameters.put("nota", Constants.JASPER_PARAMETER_FATTURA_NOTA);
+        parameters.put("totaleImponibile", totaleImponibile);
+        parameters.put("totaleIva", totaleIva);
+        parameters.put("fatturaTotDocumento", totaleImponibile.add(totaleIva).setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("fatturaCollection", fatturaCollectionDataSource);
+        parameters.put("fatturaRigheCollection", fatturaRigheCollectionDataSource);
+        parameters.put("fatturaTotaliCollection", fatturaTotaliCollectionDataSource);
+
+        // create report
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+    }
+
+    public byte[] generateFatturaAccompagnatoria(Long idFatturaAccompagnatoria) throws Exception{
+
+        // retrieve the FatturaAccompagnatoria
+        FatturaAccompagnatoria fatturaAccompagnatoria = getFatturaAccompagnatoria(idFatturaAccompagnatoria);
+        PuntoConsegna puntoConsegna = fatturaAccompagnatoria.getPuntoConsegna();
+        Cliente cliente = fatturaAccompagnatoria.getCliente();
+
+        // create data parameters
+        String fatturaAccompagnatoriaTitleParam = fatturaAccompagnatoria.getProgressivo()+"/"+fatturaAccompagnatoria.getAnno()+" del "+simpleDateFormat.format(fatturaAccompagnatoria.getData());
+        String puntoConsegnaParam = "";
+        String destinatarioParam = "";
+
+        // create data parameters for PuntoConsegna
+        if(puntoConsegna != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(puntoConsegna.getNome())){
+                sb.append(puntoConsegna.getNome()+"\n");
+            }
+            if(!StringUtils.isEmpty(puntoConsegna.getIndirizzo())){
+                sb.append(puntoConsegna.getIndirizzo()+"\n");
+            }
+            if(!StringUtils.isEmpty(puntoConsegna.getCap())){
+                sb.append(puntoConsegna.getCap()+" ");
+            }
+            if(!StringUtils.isEmpty(puntoConsegna.getLocalita())){
+                sb.append(puntoConsegna.getLocalita()+" ");
+            }
+            if(!StringUtils.isEmpty(puntoConsegna.getProvincia())){
+                sb.append("("+Provincia.getByLabel(puntoConsegna.getProvincia()).getSigla()+")");
+            }
+
+            puntoConsegnaParam = sb.toString();
+        }
+
+        // create data parameters for Cliente
+        if(cliente != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
+                sb.append(cliente.getRagioneSociale()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getIndirizzo())){
+                sb.append(cliente.getIndirizzo()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getCap())){
+                sb.append(cliente.getCap()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getCitta())){
+                sb.append(cliente.getCitta()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getProvincia())){
+                sb.append(cliente.getProvincia());
+            }
+
+            destinatarioParam = sb.toString();
+        }
+
+        // create FatturaAccompagnatoriaDataSource
+        List<FatturaAccompagnatoriaDataSource> fatturaAccompagnatoriaDataSources = new ArrayList<>();
+        fatturaAccompagnatoriaDataSources.add(getFatturaAccompagnatoriaDataSource(fatturaAccompagnatoria));
+
+        // create list of FatturaAccompagnatoriaRigheDataSource from FatturaAccompagnatoriaRiga
+        List<FatturaAccompagnatoriaRigaDataSource> fatturaAccompagnatoriaRigaDataSources = getFatturaAccompagnatoriaRigheDataSource(fatturaAccompagnatoria);
+
+        // create list of FatturaAccompagnatoriaTotaliDataSource from FatturaAccompagnatoriaTotale
+        List<FatturaAccompagnatoriaTotaleDataSource> fatturaAccompagnatoriaTotaleDataSources = getFatturaAccompagnatoriaTotaliDataSource(fatturaAccompagnatoria);
+
+        BigDecimal totaleImponibile = new BigDecimal(0);
+        BigDecimal totaleIva = new BigDecimal(0);
+
+        for(FatturaAccompagnatoriaTotaleDataSource fatturaAccompagnatoriaTotale: fatturaAccompagnatoriaTotaleDataSources){
+            totaleImponibile = totaleImponibile.add(fatturaAccompagnatoriaTotale.getTotaleImponibile());
+            totaleIva = totaleIva.add(fatturaAccompagnatoriaTotale.getTotaleIva());
+        }
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_FATTURA_ACCOMPAGNATORIA);
+
+        // create report datasource for FatturaAccompagnatoria
+        JRBeanCollectionDataSource fatturaAccompagnatoriaCollectionDataSource = new JRBeanCollectionDataSource(fatturaAccompagnatoriaDataSources);
+
+        // create report datasource for FatturaAccompagnatoriaRighe
+        JRBeanCollectionDataSource fatturaAccompagnatoriaRigheCollectionDataSource = new JRBeanCollectionDataSource(fatturaAccompagnatoriaRigaDataSources);
+
+        // create report datasource for FatturaAccompagnatoriaTotali
+        JRBeanCollectionDataSource fatturaAccompagnatoriaTotaliCollectionDataSource = new JRBeanCollectionDataSource(fatturaAccompagnatoriaTotaleDataSources);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("fatturaAccompagnatoriaTitle", fatturaAccompagnatoriaTitleParam);
+        parameters.put("destinatario", destinatarioParam);
+        parameters.put("puntoConsegna", puntoConsegnaParam);
+        parameters.put("note", fatturaAccompagnatoria.getNote());
+        parameters.put("nota", Constants.JASPER_PARAMETER_FATTURA_ACCOMPAGNATORIA_NOTA);
+        parameters.put("trasportatore", fatturaAccompagnatoria.getTrasportatore());
+        parameters.put("tipoTrasporto", fatturaAccompagnatoria.getTipoTrasporto());
+        parameters.put("numeroColli", fatturaAccompagnatoria.getNumeroColli());
+        parameters.put("dataOraTrasporto", simpleDateFormat.format(fatturaAccompagnatoria.getDataTrasporto())+" "+fatturaAccompagnatoria.getOraTrasporto());
+        parameters.put("totaleImponibile", totaleImponibile);
+        parameters.put("totaleIva", totaleIva);
+        parameters.put("fatturaAccompagnatoriaTotDocumento", totaleImponibile.add(totaleIva).setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("fatturaAccompagnatoriaCollection", fatturaAccompagnatoriaCollectionDataSource);
+        parameters.put("fatturaAccompagnatoriaRigheCollection", fatturaAccompagnatoriaRigheCollectionDataSource);
+        parameters.put("fatturaAccompagnatoriaTotaliCollection", fatturaAccompagnatoriaTotaliCollectionDataSource);
+
+
+        // create report
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+    }
+
+    public byte[] generateNotaAccredito(Long idNotaAccredito) throws Exception {
+
+        // retrieve the NotaAccredito
+        NotaAccredito notaAccredito = getNotaAccredito(idNotaAccredito);
+        Cliente cliente = notaAccredito.getCliente();
+
+        // create data parameters
+        String notaAccreditoTitleParam = notaAccredito.getProgressivo()+"/"+notaAccredito.getAnno()+" del "+simpleDateFormat.format(notaAccredito.getData());
+        String destinatarioParam = "";
+
+        String riferimentoDocumento = "Riferimento "+notaAccredito.getTipoRiferimento();
+        if(!StringUtils.isEmpty(notaAccredito.getDocumentoRiferimento())){
+            riferimentoDocumento += " n. "+notaAccredito.getDocumentoRiferimento();
+        }
+        if(notaAccredito.getDataDocumentoRiferimento() != null){
+            riferimentoDocumento += " del "+simpleDateFormat.format(notaAccredito.getDataDocumentoRiferimento());
+        }
+
+        // create data parameters for Cliente
+        if(cliente != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
+                sb.append(cliente.getRagioneSociale()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getIndirizzo())){
+                sb.append(cliente.getIndirizzo()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getCap())){
+                sb.append(cliente.getCap()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getCitta())){
+                sb.append(cliente.getCitta()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getProvincia())){
+                sb.append(cliente.getProvincia());
+            }
+
+            destinatarioParam = sb.toString();
+        }
+
+        // create NotaAccreditoDataSource
+        List<NotaAccreditoDataSource> notaAccreditoDataSources = new ArrayList<>();
+        notaAccreditoDataSources.add(getNotaAccreditoDataSource(notaAccredito));
+
+        // create list of NotaAccreditoRigheDataSource from NotaAccreditoRiga
+        List<NotaAccreditoRigaDataSource> notaAccreditoRigaDataSources = getNotaAccreditoRigheDataSource(notaAccredito);
+
+        // create list of NotaAccreditoTotaliDataSource from NotaAccreditoTotale
+        List<NotaAccreditoTotaleDataSource> notaAccreditoTotaleDataSources = getNotaAccreditoTotaliDataSource(notaAccredito);
+
+        BigDecimal totaleImponibile = new BigDecimal(0);
+        BigDecimal totaleIva = new BigDecimal(0);
+
+        for(NotaAccreditoTotaleDataSource notaAccreditoTotale: notaAccreditoTotaleDataSources){
+            totaleImponibile = totaleImponibile.add(notaAccreditoTotale.getTotaleImponibile());
+            totaleIva = totaleIva.add(notaAccreditoTotale.getTotaleIva());
+        }
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_NOTA_ACCREDITO);
+
+        // create report datasource for NotaAccredito
+        JRBeanCollectionDataSource notaAccreditoCollectionDataSource = new JRBeanCollectionDataSource(notaAccreditoDataSources);
+
+        // create report datasource for NotaAccreditoRighe
+        JRBeanCollectionDataSource notaAccreditoRigheCollectionDataSource = new JRBeanCollectionDataSource(notaAccreditoRigaDataSources);
+
+        // create report datasource for NotaAccreditoTotali
+        JRBeanCollectionDataSource notaAccreditoTotaliCollectionDataSource = new JRBeanCollectionDataSource(notaAccreditoTotaleDataSources);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("notaAccreditoTitle", notaAccreditoTitleParam);
+        parameters.put("destinatario", destinatarioParam);
+        parameters.put("riferimentoDocumento", riferimentoDocumento);
+        parameters.put("note", notaAccredito.getNote());
+        parameters.put("totaleImponibile", totaleImponibile);
+        parameters.put("totaleIva", totaleIva);
+        parameters.put("notaAccreditoTotDocumento", totaleImponibile.add(totaleIva).setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("notaAccreditoCollection", notaAccreditoCollectionDataSource);
+        parameters.put("notaAccreditoRigheCollection", notaAccreditoRigheCollectionDataSource);
+        parameters.put("notaAccreditoTotaliCollection", notaAccreditoTotaliCollectionDataSource);
+
+
+        // create report
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+    }
+
+    public Map<AliquotaIva, BigDecimal> createFatturaTotaliImponibiliByIva(Fattura fattura) {
+
+        Map<AliquotaIva, BigDecimal> ivaImponibileMap = new HashMap<>();
+        Map<AliquotaIva, Set<DdtArticolo>> ivaDdtArticoliMap = new HashMap<>();
+
+        Set<AliquotaIva> aliquoteIva = aliquotaIvaService.getAll();
+        for(AliquotaIva aliquotaIva : aliquoteIva){
+            ivaImponibileMap.put(aliquotaIva, BigDecimal.ZERO);
+            ivaDdtArticoliMap.put(aliquotaIva, new HashSet<>());
+        }
+
+        Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
+        if(fatturaDdts != null && !fatturaDdts.isEmpty()){
+            // retrieve the list of all DdtArticolo
+            Set<DdtArticolo> ddtArticoli = new HashSet<>();
+            for(FatturaDdt fatturaDdt: fatturaDdts){
+                Ddt ddt = fatturaDdt.getDdt();
+                if(ddt != null){
+                    ddtArticoli.addAll(ddt.getDdtArticoli());
+                }
+            }
+
+            // group DdtArticolo by Iva
+            if(!ddtArticoli.isEmpty()){
+                ddtArticoli.stream().forEach(ddtArticolo -> {
+                    Articolo articolo = ddtArticolo.getArticolo();
+                    AliquotaIva iva = articolo.getAliquotaIva();
+
+                    Set<DdtArticolo> ddtArticoliByIva = ivaDdtArticoliMap.getOrDefault(iva, new HashSet<>());
+                    ddtArticoliByIva.add(ddtArticolo);
+
+                    ivaDdtArticoliMap.put(iva, ddtArticoliByIva);
+                });
+            }
+
+            // compute totaleImponibile for all AliquotaIva
+            for (Map.Entry<AliquotaIva, Set<DdtArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
+                AliquotaIva aliquotaIva = entry.getKey();
+                BigDecimal totaleImponibile = new BigDecimal(0);
+
+                Set<DdtArticolo> ddtArticoliByIva = entry.getValue();
+                for(DdtArticolo ddtArticoloByIva : ddtArticoliByIva){
+                    BigDecimal imponibile = ddtArticoloByIva.getImponibile() != null ? ddtArticoloByIva.getImponibile() : BigDecimal.ZERO;
+                    totaleImponibile = totaleImponibile.add(imponibile);
+                }
+                ivaImponibileMap.put(aliquotaIva, totaleImponibile);
+
+            }
+
+        }
+        return ivaImponibileMap;
+
     }
 
     public static HttpHeaders createHttpHeaders(String fileName){

@@ -14,9 +14,12 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 public class NotaAccreditoService {
@@ -69,6 +72,47 @@ public class NotaAccreditoService {
         result.put("progressivo", progressivo);
 
         return result;
+    }
+
+    public Map<Cliente, List<NotaAccredito>> getNoteAccreditoByCliente(Date dateFrom, Date dateTo){
+        LOGGER.info("Retrieving the list of note_accredito, grouped by cliente, with speditoAde 'false', dateFrom '{}' and dateTo '{}'", dateFrom, dateTo);
+
+        Map<Cliente, List<NotaAccredito>> noteAccreditoByCliente = new HashMap<>();
+
+        Predicate<NotaAccredito> isNotaAccreditoSpeditoAdeFalse = notaAccredito -> notaAccredito.getSpeditoAde().equals(Boolean.FALSE);
+
+        Predicate<NotaAccredito> isNotaAccreditoDataDaGreaterOrEquals = notaAccredito -> {
+            if(dateFrom != null){
+                return notaAccredito.getData().compareTo(dateFrom)>=0;
+            }
+            return true;
+        };
+        Predicate<NotaAccredito> isNotaAccreditoDataALessOrEquals = notaAccredito -> {
+            if(dateTo != null){
+                return notaAccredito.getData().compareTo(dateTo)<=0;
+            }
+            return true;
+        };
+
+        Set<NotaAccredito> noteAccredito = notaAccreditoRepository.findAll().stream()
+                .filter(isNotaAccreditoDataDaGreaterOrEquals
+                .and(isNotaAccreditoDataALessOrEquals)
+                .and(isNotaAccreditoSpeditoAdeFalse)).collect(Collectors.toSet());
+
+        if(noteAccredito != null && !noteAccredito.isEmpty()){
+            for(NotaAccredito notaAccredito : noteAccredito){
+                Cliente cliente = notaAccredito.getCliente();
+
+                List<NotaAccredito> noteAccreditoList = noteAccreditoByCliente.getOrDefault(cliente, new ArrayList<>());
+                noteAccreditoList.add(notaAccredito);
+
+                noteAccreditoByCliente.put(cliente, noteAccreditoList);
+            }
+        }
+
+        LOGGER.info("Successfully retrieved the list of note_accredito grouped by cliente");
+
+        return noteAccreditoByCliente;
     }
 
     @Transactional
@@ -142,6 +186,48 @@ public class NotaAccreditoService {
         notaAccreditoRepository.save(updatedNotaAccredito);
         LOGGER.info("Updated 'nota accredito' '{}'", updatedNotaAccredito);
         return updatedNotaAccredito;
+    }
+
+    @Transactional
+    public NotaAccredito patch(Map<String,Object> patchNotaAccredito){
+        LOGGER.info("Patching 'notaAccredito'");
+
+        Long id = Long.valueOf((Integer) patchNotaAccredito.get("id"));
+        NotaAccredito notaAccredito = notaAccreditoRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        patchNotaAccredito.forEach((key, value) -> {
+            if(key.equals("id")){
+                notaAccredito.setId(Long.valueOf((Integer)value));
+            } else if(key.equals("speditoAde")){
+                if(value != null){
+                    notaAccredito.setSpeditoAde((boolean)value);
+                } else {
+                    notaAccredito.setSpeditoAde(Boolean.FALSE);
+                }
+            }
+        });
+        NotaAccredito patchedNotaAccredito = notaAccreditoRepository.save(notaAccredito);
+
+        LOGGER.info("Patched 'notaAccredito' '{}'", patchedNotaAccredito);
+        return patchedNotaAccredito;
+    }
+
+    @Transactional
+    public void patchSpeditoAdeNoteAccreditoByCliente(Map<Cliente, List<NotaAccredito>> noteAccreditoByCliente, boolean speditoAde){
+        LOGGER.info("Updating note accredito setting speditoAde='{}'", speditoAde);
+
+        if(noteAccreditoByCliente != null && !noteAccreditoByCliente.isEmpty()){
+            for(Cliente cliente : noteAccreditoByCliente.keySet()){
+                for(NotaAccredito notaAccredito : noteAccreditoByCliente.get(cliente)){
+                    Map<String, Object> patchNotaAccredito = new HashMap<>();
+                    patchNotaAccredito.put("id", notaAccredito.getId());
+                    patchNotaAccredito.put("speditoAde", speditoAde);
+
+                    patch(patchNotaAccredito);
+                }
+            }
+        }
+
+        LOGGER.info("Successfully updated note accredito setting speditoAde={}", speditoAde);
     }
 
     @Transactional

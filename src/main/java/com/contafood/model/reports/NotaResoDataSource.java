@@ -12,6 +12,8 @@ public class NotaResoDataSource {
 
     private String fornitoreDescrizione;
 
+    private String causale;
+
     private String pagamento;
 
     private String agente;
@@ -54,6 +56,14 @@ public class NotaResoDataSource {
 
     public void setFornitoreDescrizione(String fornitoreDescrizione) {
         this.fornitoreDescrizione = fornitoreDescrizione;
+    }
+
+    public String getCausale() {
+        return causale;
+    }
+
+    public void setCausale(String causale) {
+        this.causale = causale;
     }
 
     public String getPagamento() {
