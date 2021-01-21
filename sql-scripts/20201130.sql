@@ -59,7 +59,7 @@ CREATE TABLE `causale` (
     data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_aggiornamento TIMESTAMP NULL,
     PRIMARY KEY (id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 
 INSERT INTO causale(id,descrizione) VALUES(0,'Consulenza');
 INSERT INTO causale(id,descrizione) VALUES(1,'Conto lavorazione');

@@ -1,23 +1,18 @@
 package com.contafood.configuration;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth)
-            throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
         auth.inMemoryAuthentication()
                 .withUser("admin")
@@ -31,14 +26,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         //HTTP Basic authentication
         http
-                .httpBasic()
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/parametri/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/parametri/**").hasRole("ADMIN")
-                .and()
-                .csrf().disable()
-                .formLogin().disable();
+            .httpBasic()
+            .and()
+            .authorizeRequests()
+            .antMatchers(HttpMethod.GET, "/configurazione/parametri/**").hasRole("ADMIN")
+            .antMatchers(HttpMethod.PUT, "/configurazione/parametri/**").hasRole("ADMIN")
+            .antMatchers(HttpMethod.GET, "/configurazione/proprieta/**").hasRole("ADMIN")
+            .antMatchers(HttpMethod.PUT, "/configurazione/proprieta/**").hasRole("ADMIN")
+            .and()
+            .csrf().disable()
+            .formLogin().disable();
     }
 
     /*

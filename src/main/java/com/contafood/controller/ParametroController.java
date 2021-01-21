@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping(path="/parametri")
+@RequestMapping(path="/configurazione/parametri")
 public class ParametroController {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ParametroController.class);

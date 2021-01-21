@@ -1,16 +1,17 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @SuppressWarnings("ALL")
-@EqualsAndHashCode(exclude = {"puntiConsegna", "listiniAssociati", "sconti", "telefonate"})
+@EqualsAndHashCode(exclude = {"puntiConsegna", "listiniAssociati", "sconti", "telefonate", "clienteArticoli"})
 @Entity
 @Table(name = "cliente")
 public class Cliente {
@@ -89,6 +90,9 @@ public class Cliente {
     @Column(name = "estrazione_conad")
     private String estrazioneConad;
 
+    @Column(name = "modalita_invio_fatture")
+    private String modalitaInvioFatture;
+
     @Column(name = "blocca_ddt")
     private Boolean bloccaDdt;
 
@@ -125,6 +129,10 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente")
     @JsonIgnore
     private List<Telefonata> telefonate;
+
+    @OneToMany(mappedBy = "cliente")
+    @JsonIgnoreProperties("cliente")
+    private Set<ClienteArticolo> clienteArticoli = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -310,6 +318,14 @@ public class Cliente {
         this.estrazioneConad = estrazioneConad;
     }
 
+    public String getModalitaInvioFatture() {
+        return modalitaInvioFatture;
+    }
+
+    public void setModalitaInvioFatture(String modalitaInvioFatture) {
+        this.modalitaInvioFatture = modalitaInvioFatture;
+    }
+
     public Boolean getBloccaDdt() {
         return bloccaDdt;
     }
@@ -398,6 +414,14 @@ public class Cliente {
         this.telefonate = telefonate;
     }
 
+    public Set<ClienteArticolo> getClienteArticoli() {
+        return clienteArticoli;
+    }
+
+    public void setClienteArticoli(Set<ClienteArticolo> clienteArticoli) {
+        this.clienteArticoli = clienteArticoli;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -425,6 +449,7 @@ public class Cliente {
         result.append(", tipoPagamento: " + tipoPagamento);
         result.append(", agente: " + agente);
         result.append(", estrazioneConad: " + estrazioneConad);
+        result.append(", modalitaInvioFatture: " + modalitaInvioFatture);
         result.append(", bloccaDdt: " + bloccaDdt);
         result.append(", nascondiPrezzi: " + nascondiPrezzi);
         result.append(", raggruppaRiba: " + raggruppaRiba);
@@ -437,4 +462,5 @@ public class Cliente {
         return result.toString();
 
     }
+
 }

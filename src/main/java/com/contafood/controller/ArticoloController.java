@@ -1,10 +1,8 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.Articolo;
-import com.contafood.model.ArticoloImmagine;
-import com.contafood.model.Fornitore;
-import com.contafood.model.ListinoPrezzo;
+import com.contafood.model.*;
+import com.contafood.repository.ClienteArticoloRepository;
 import com.contafood.service.ArticoloService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,18 +26,23 @@ public class ArticoloController {
 
     private final ArticoloService articoloService;
 
+    private final ClienteArticoloRepository clienteArticoloRepository;
+
     @Autowired
-    public ArticoloController(final ArticoloService articoloService){
+    public ArticoloController(final ArticoloService articoloService,
+                              final ClienteArticoloRepository clienteArticoloRepository){
         this.articoloService = articoloService;
+        this.clienteArticoloRepository = clienteArticoloRepository;
     }
 
     @RequestMapping(method = GET)
     @CrossOrigin
     public List<Articolo> getAll(@RequestParam(name = "attivo", required = false) Boolean active,
                                 @RequestParam(name = "idFornitore", required = false) Integer idFornitore,
-                                @RequestParam(name = "barcode", required = false) String barcode) {
+                                @RequestParam(name = "barcode", required = false) String barcode,
+                                @RequestParam(name = "idCliente", required = false) Integer idCliente) {
         LOGGER.info("Performing GET request for retrieving list of 'articoli'");
-        LOGGER.info("Query parameter: 'attivo' '{}', 'idFornitore' '{}', 'barcode' '{}'", active, idFornitore, barcode);
+        LOGGER.info("Query parameter: 'attivo' '{}', 'idFornitore' '{}', 'barcode' '{}', 'idCliente' '{}'", active, idFornitore, barcode, idCliente);
 
         Predicate<Articolo> isArticoloIdFornitoreEquals = articolo -> {
             if(idFornitore != null){
@@ -58,7 +61,14 @@ public class ArticoloController {
         if(active != null && !StringUtils.isEmpty(barcode)){
             articoli = articoloService.getAllByAttivoAndBarcode(active, barcode);
         } else {
-            if(active != null){
+            if(idCliente != null){
+                Set<ClienteArticolo> clienteArticoli = clienteArticoloRepository.findByClienteId(idCliente.longValue());
+                if(clienteArticoli != null && !clienteArticoli.isEmpty()){
+                    articoli = clienteArticoli.stream().map(ca -> ca.getArticolo()).collect(Collectors.toSet());
+                } else {
+                    articoli = articoloService.getAllByAttivo(true);
+                }
+            } else if(active != null){
                 articoli = articoloService.getAllByAttivo(active);
             } else {
                 articoli = articoloService.getAll();

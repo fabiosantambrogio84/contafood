@@ -2,7 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Cliente;
-import com.contafood.model.Fornitore;
+import com.contafood.model.ClienteArticolo;
 import com.contafood.model.ListinoAssociato;
 import com.contafood.model.PuntoConsegna;
 import com.contafood.repository.ClienteRepository;
@@ -14,13 +14,15 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class ClienteService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ClienteService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClienteService.class);
 
     private final ClienteRepository clienteRepository;
 
@@ -30,12 +32,19 @@ public class ClienteService {
 
     private final TelefonataService telefonataService;
 
+    private final ClienteArticoloService clienteArticoloService;
+
     @Autowired
-    public ClienteService(final ClienteRepository clienteRepository, final PuntoConsegnaService puntoConsegnaService, final ListinoAssociatoService listinoAssociatoService, final TelefonataService telefonataService){
+    public ClienteService(final ClienteRepository clienteRepository,
+                          final PuntoConsegnaService puntoConsegnaService,
+                          final ListinoAssociatoService listinoAssociatoService,
+                          final TelefonataService telefonataService,
+                          final ClienteArticoloService clienteArticoloService){
         this.clienteRepository = clienteRepository;
         this.puntoConsegnaService = puntoConsegnaService;
         this.listinoAssociatoService = listinoAssociatoService;
         this.telefonataService = telefonataService;
+        this.clienteArticoloService = clienteArticoloService;
     }
 
     public Set<Cliente> getAll(){
@@ -45,12 +54,12 @@ public class ClienteService {
         return clienti;
     }
 
-    public Set<Cliente> getAllWithBloccaDdt(Boolean bloccaDdt){
+    /*public Set<Cliente> getAllWithBloccaDdt(Boolean bloccaDdt){
         LOGGER.info("Retrieving the list of 'clienti' with bloccaDdt {}", bloccaDdt);
         Set<Cliente> clienti = clienteRepository.findByBloccaDdt(bloccaDdt);
         LOGGER.info("Retrieved {} 'clienti'", clienti.size());
         return clienti;
-    }
+    }*/
 
     public Cliente getOne(Long clienteId){
         LOGGER.info("Retrieving 'cliente' '{}'", clienteId);
@@ -59,21 +68,44 @@ public class ClienteService {
         return cliente;
     }
 
+    @Transactional
     public Cliente create(Cliente cliente){
         LOGGER.info("Creating 'cliente'");
         cliente.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Cliente createdCliente = clienteRepository.save(cliente);
         createdCliente.setCodice(createdCliente.getId().intValue());
+
+        // create 'cliente-articoli'
+        createdCliente.getClienteArticoli().stream().forEach(ca -> {
+            ca.getId().setClienteId(createdCliente.getId());
+            ca.getId().setUuid(UUID.randomUUID().toString());
+            clienteArticoloService.create(ca);
+        });
+
         clienteRepository.save(createdCliente);
         LOGGER.info("Created 'cliente' '{}'", createdCliente);
         return createdCliente;
     }
 
+    @Transactional
     public Cliente update(Cliente cliente){
         LOGGER.info("Updating 'cliente'");
+
+        // delete current ClienteArticoli set
+        Set<ClienteArticolo> clienteArticoli = cliente.getClienteArticoli();
+        cliente.setClienteArticoli(new HashSet<>());
+        clienteArticoloService.deleteByClienteId(cliente.getId());
+
         Cliente currentCliente = clienteRepository.findById(cliente.getId()).orElseThrow(ResourceNotFoundException::new);
         cliente.setDataInserimento(currentCliente.getDataInserimento());
         Cliente updatedCliente = clienteRepository.save(cliente);
+
+        clienteArticoli.stream().forEach(ca -> {
+            ca.getId().setClienteId(updatedCliente.getId());
+            ca.getId().setUuid(UUID.randomUUID().toString());
+            clienteArticoloService.create(ca);
+        });
+
         LOGGER.info("Updated 'cliente' '{}'", updatedCliente);
         return updatedCliente;
     }
@@ -81,11 +113,11 @@ public class ClienteService {
     @Transactional
     public void delete(Long clienteId){
         LOGGER.info("Deleting 'cliente' '{}'", clienteId);
+        clienteArticoloService.deleteByClienteId(clienteId);
         telefonataService.deleteByClienteId(clienteId);
         clienteRepository.deleteById(clienteId);
         LOGGER.info("Deleted 'cliente' '{}'", clienteId);
     }
-
 
     public List<PuntoConsegna> getPuntiConsegna(Long clienteId){
         LOGGER.info("Retrieving the list of 'puntiConsegna' of the 'cliente' '{}'", clienteId);
