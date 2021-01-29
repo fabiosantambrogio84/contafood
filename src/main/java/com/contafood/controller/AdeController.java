@@ -9,21 +9,18 @@ import com.contafood.service.AdeService;
 import com.contafood.service.FatturaAccompagnatoriaService;
 import com.contafood.service.FatturaService;
 import com.contafood.service.NotaAccreditoService;
-import com.contafood.util.AdeConstants;
 import com.contafood.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileOutputStream;
 import java.nio.charset.Charset;
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

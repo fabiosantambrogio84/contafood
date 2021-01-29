@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -872,6 +873,7 @@ public class StampaService {
         return ricevutaPrivatoArticoloDataSources;
     }
 
+    @Transactional
     public byte[] generateFattura(Long idFattura) throws Exception{
 
         // retrieve the Fattura
@@ -1160,11 +1162,11 @@ public class StampaService {
         Map<AliquotaIva, BigDecimal> ivaImponibileMap = new HashMap<>();
         Map<AliquotaIva, Set<DdtArticolo>> ivaDdtArticoliMap = new HashMap<>();
 
-        Set<AliquotaIva> aliquoteIva = aliquotaIvaService.getAll();
+        /*Set<AliquotaIva> aliquoteIva = aliquotaIvaService.getAll();
         for(AliquotaIva aliquotaIva : aliquoteIva){
             ivaImponibileMap.put(aliquotaIva, BigDecimal.ZERO);
             ivaDdtArticoliMap.put(aliquotaIva, new HashSet<>());
-        }
+        }*/
 
         Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
         if(fatturaDdts != null && !fatturaDdts.isEmpty()){

@@ -10,6 +10,7 @@ public interface Constants {
     String MEDIA_TYPE_APPLICATION_PDF = "application/pdf";
     String MEDIA_TYPE_APPLICATION_XML = "application/xml";
     String MEDIA_TYPE_APPLICATION_ZIP = "application/zip";
+    String MEDIA_TYPE_APPLICATION_TXT = "application/text";
 
     String HTTP_HEADER_PRAGMA_VALUE = "no-cache";
     String HTTP_HEADER_EXPIRES_VALUE = "0";

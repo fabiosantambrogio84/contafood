@@ -10,6 +10,7 @@ import com.contafood.repository.FatturaRepository;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
 import com.contafood.util.enumeration.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,35 @@ public class FatturaService {
             ddtArticoli.addAll(fd.getDdt().getDdtArticoli());
         });
         return ddtArticoli;
+    }
+
+    public Set<Fattura> getFattureForReport(Date dateFrom, Date dateTo, Integer progressivoFrom, Integer annoFrom, Integer progressivoTo, Integer annoTo, String modalitaInvioFatture){
+        Set<Fattura> fatture = new HashSet<>();
+
+        Predicate<Fattura> isFatturaClienteModalitaInvioFatture = fattura -> {
+            if(!StringUtils.isEmpty(modalitaInvioFatture)) {
+                Cliente fatturaCliente = fattura.getCliente();
+                if(fatturaCliente != null){
+                    String clienteModalitaInvioFatture = fatturaCliente.getModalitaInvioFatture();
+                    if(!StringUtils.isEmpty(clienteModalitaInvioFatture) && fatturaCliente.getModalitaInvioFatture().equalsIgnoreCase(modalitaInvioFatture)){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return true;
+        };
+
+        if(dateFrom != null && dateTo != null){
+            fatture = fatturaRepository.findByDataGreaterThanEqualAndDataLessThanEqual(dateFrom, dateTo);
+        } else {
+            fatture = fatturaRepository.findByProgressivoGreaterThanEqualAndAnnoGreaterThanEqualAndProgressivoLessThanEqualAndAnnoLessThanEqual(progressivoFrom, annoFrom, progressivoTo, annoTo);
+        }
+        if(!fatture.isEmpty()){
+            fatture = fatture.stream().filter(isFatturaClienteModalitaInvioFatture).collect(Collectors.toSet());
+        }
+
+        return fatture;
     }
 
     public Map<Cliente, List<Fattura>> getFattureByCliente(Date dateFrom, Date dateTo){

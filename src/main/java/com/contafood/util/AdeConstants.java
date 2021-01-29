@@ -38,6 +38,8 @@ public interface AdeConstants {
 
     String COND_PAGAMENTO_COMPLETO = "TP02";
 
+    String NATURA_IVA_ZERO = "N2.2";
+
     String FILE_SEPARATOR = "/";
 
     long MAX_ZIP_FILE_SIZE = 5000000;

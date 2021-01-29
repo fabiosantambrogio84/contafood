@@ -1446,6 +1446,9 @@ public class AdeService {
                         if(quantita != null){
                             quantita_s = quantita.toString();
                         }
+                        if(quantita_s.endsWith(".0")){
+                            quantita_s += "00";
+                        }
                         xmlStreamWriter.writeCharacters(quantita_s);
                         xmlStreamWriter.writeEndElement();
 
@@ -1494,7 +1497,7 @@ public class AdeService {
 
                         // create node 'PrezzoTotale' 
                         xmlStreamWriter.writeStartElement("PrezzoTotale");
-                        BigDecimal prezzoTotale = ddtArticolo.getTotale();
+                        BigDecimal prezzoTotale = ddtArticolo.getPrezzo().multiply(BigDecimal.valueOf(ddtArticolo.getQuantita()));
                         String prezzoTotale_s = "";
                         if(prezzoTotale != null){
                             prezzoTotale_s = prezzoTotale.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
@@ -1545,6 +1548,13 @@ public class AdeService {
                 xmlStreamWriter.writeCharacters(iva_s);
                 xmlStreamWriter.writeEndElement();
 
+                // if IVA=0 create node 'Natura'
+                if(iva.compareTo(BigDecimal.ZERO) == 0){
+                    xmlStreamWriter.writeStartElement("Natura");
+                    xmlStreamWriter.writeCharacters(AdeConstants.NATURA_IVA_ZERO);
+                    xmlStreamWriter.writeEndElement();
+                }
+
                 // create node 'ImponibileImporto' 
                 xmlStreamWriter.writeStartElement("ImponibileImporto");
                 String imp_s = "";
@@ -1555,6 +1565,9 @@ public class AdeService {
 
                     if(imponibile != null){
                         imp_s = imponibile.toString();
+                        if(imp_s.endsWith("0")){
+                            imp_s = StringUtils.substringBeforeLast(imp_s, "0");
+                        }
                     }
                 }
                 xmlStreamWriter.writeCharacters(imp_s);
