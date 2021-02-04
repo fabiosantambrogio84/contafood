@@ -111,7 +111,7 @@ public class FatturaService {
     }
 
     public Set<Fattura> getFattureForReport(Date dateFrom, Date dateTo, Integer progressivoFrom, Integer annoFrom, Integer progressivoTo, Integer annoTo, String modalitaInvioFatture){
-        Set<Fattura> fatture = new HashSet<>();
+        Set<Fattura> fatture;
 
         Predicate<Fattura> isFatturaClienteModalitaInvioFatture = fattura -> {
             if(!StringUtils.isEmpty(modalitaInvioFatture)) {

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -34,9 +35,9 @@ public class ReportController {
         this.reportService = reportService;
     }
 
-    @RequestMapping(method = GET, path = "/zip", produces="application/zip")
+    @RequestMapping(method = GET, path = "/pdf", produces="application/pdf")
     @CrossOrigin
-    public ResponseEntity<Resource> reportZip(@RequestParam(name = "action") String action,
+    public ResponseEntity<Resource> reportPdf(@RequestParam(name = "action") String action,
                                               @RequestParam(name = "dataDa", required = false) Date dataDa,
                                               @RequestParam(name = "dataA", required = false) Date dataA,
                                               @RequestParam(name = "numeroDa", required = false) String numeroDa,
@@ -46,10 +47,15 @@ public class ReportController {
 
         reportService.checkRequestParams(dataDa, dataA, numeroDa, numeroA);
 
-        Map<String, Object> report;
+        Map<String, Object> report = new HashMap<>();
 
         try{
-            report = reportService.createReportZipFatture(action, dataDa, dataA, numeroDa, numeroA);
+            if(action.equals("stampaFatture")){
+                report = reportService.createReportPdfFatture(dataDa, dataA, numeroDa, numeroA);
+            } else if(action.equals("stampaFattureCommercianti")){
+                report = reportService.createReportPdfFattureCommercianti(dataDa, dataA, numeroDa, numeroA);
+            }
+
 
         } catch(Exception e){
             LOGGER.error("Error creating report file. "+e.getMessage());
@@ -65,25 +71,9 @@ public class ReportController {
         return ResponseEntity.ok()
                 .headers(ReportService.createHttpHeaders((String)report.get("fileName")))
                 .contentLength(zipContent.length)
-                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_ZIP))
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
                 .body(resource);
 
-    }
-
-    @RequestMapping(method = GET, path = "/pdf", produces="application/pdf")
-    @CrossOrigin
-    public ResponseEntity<Resource> reportPdf(@RequestParam(name = "action") String action,
-                                              @RequestParam(name = "dataDa", required = false) Date dataDa,
-                                              @RequestParam(name = "dataA", required = false) Date dataA,
-                                              @RequestParam(name = "numeroDa", required = false) String numeroDa,
-                                              @RequestParam(name = "numeroA", required = false) String numeroA) throws Exception{
-
-        LOGGER.info("Executing action '{}' for dataDa '{}', dataA '{}', numeroDa '{}', numeroA '{}'", action, dataDa, dataA, numeroDa, numeroA);
-
-
-        LOGGER.info("Successfully executed action '{}' for dataDa '{}', dataA '{}', numeroDa '{}', numeroA '{}'", action, dataDa, dataA, numeroDa, numeroA);
-
-        return null;
     }
 
     @RequestMapping(method = GET, path = "/email")

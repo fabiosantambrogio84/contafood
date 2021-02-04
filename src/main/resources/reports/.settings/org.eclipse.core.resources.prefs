@@ -2,6 +2,7 @@ eclipse.preferences.version=1
 encoding/ddt.jrxml=UTF-8
 encoding/fattura.jrxml=UTF-8
 encoding/fattura_accompagnatoria.jrxml=UTF-8
+encoding/fatture_commercianti.jrxml=UTF-8
 encoding/footer.jrxml=UTF-8
 encoding/giacenze_ingredienti.jrxml=UTF-8
 encoding/header.jrxml=UTF-8

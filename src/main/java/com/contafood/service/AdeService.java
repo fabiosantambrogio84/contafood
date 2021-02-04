@@ -1497,7 +1497,12 @@ public class AdeService {
 
                         // create node 'PrezzoTotale' 
                         xmlStreamWriter.writeStartElement("PrezzoTotale");
-                        BigDecimal prezzoTotale = ddtArticolo.getPrezzo().multiply(BigDecimal.valueOf(ddtArticolo.getQuantita()));
+                        BigDecimal prezzoTemp = ddtArticolo.getPrezzo().setScale(2, RoundingMode.HALF_DOWN);
+                        if(sconto != null && sconto.compareTo(BigDecimal.ZERO) != 0){
+                            BigDecimal scontoValue = prezzoTemp.multiply(sconto.divide(new BigDecimal(100)));
+                            prezzoTemp = prezzoTemp.subtract(scontoValue);
+                        }
+                        BigDecimal prezzoTotale = prezzoTemp.multiply(BigDecimal.valueOf(ddtArticolo.getQuantita()));
                         String prezzoTotale_s = "";
                         if(prezzoTotale != null){
                             prezzoTotale_s = prezzoTotale.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
@@ -2259,5 +2264,14 @@ public class AdeService {
         headers.add(HttpHeaders.PRAGMA, Constants.HTTP_HEADER_PRAGMA_VALUE);
         headers.add(HttpHeaders.EXPIRES, Constants.HTTP_HEADER_EXPIRES_VALUE);
         return headers;
+    }
+
+    public static void main(String[] args) {
+        BigDecimal prezzoTotale = new BigDecimal(18.495f).setScale(2, RoundingMode.HALF_DOWN).multiply(BigDecimal.valueOf(10f));
+        String prezzoTotale_s = "";
+        if(prezzoTotale != null){
+            prezzoTotale_s = prezzoTotale.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+        }
+        System.out.println(prezzoTotale_s);
     }
 }

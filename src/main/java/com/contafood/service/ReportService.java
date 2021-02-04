@@ -4,6 +4,10 @@ import com.contafood.component.AsyncExecutor;
 import com.contafood.exception.GenericException;
 import com.contafood.model.Fattura;
 import com.contafood.util.Constants;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfCopy;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.Session;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -74,17 +79,17 @@ public class ReportService {
         return fatture;
     }
 
-    public Map<String, Object> createReportZipFatture(String action, Date dataDa, Date dataA, String numeroDa, String numeroA) throws Exception{
+    public Map<String, Object> createReportPdfFatture(Date dataDa, Date dataA, String numeroDa, String numeroA) throws Exception{
 
         Map<String, Object> result = new HashMap<>();
 
-        LOGGER.info("Start creating report file for fatture...");
+        LOGGER.info("Start creating report file for 'fatture'...");
 
         try{
             Set<Fattura> fatture = getFatture(dataDa, dataA, numeroDa, numeroA, "cartaceo");
 
-            String zipFileName = "Fatture_##.zip";
-            byte[] zipContent = null;
+            String pdfFileName = "Fatture_##.pdf";
+            byte[] pdfContent = null;
 
             String replacePlaceholder = "";
             if(dataDa != null && dataA != null){
@@ -92,7 +97,7 @@ public class ReportService {
             } else {
                 replacePlaceholder = numeroDa + "_" + numeroA;
             }
-            zipFileName = zipFileName.replace("##", replacePlaceholder);
+            pdfFileName = pdfFileName.replace("##", replacePlaceholder);
 
             if(!fatture.isEmpty()){
 
@@ -115,11 +120,11 @@ public class ReportService {
                     }
                 }
 
-                zipContent = createZipByteArray(fatturaFiles);
+                pdfContent = createPdfByteArray(fatturaFiles);
             }
 
-            result.put("fileName", zipFileName);
-            result.put("content", zipContent);
+            result.put("fileName", pdfFileName);
+            result.put("content", pdfContent);
 
         } catch(Exception e){
             e.printStackTrace();
@@ -127,10 +132,59 @@ public class ReportService {
         }
 
         if(result.isEmpty()){
-            throw new RuntimeException("Error creating report file for fatture");
+            throw new RuntimeException("Error creating report file for 'fatture'");
         }
 
-        LOGGER.info("Successfully created report file for fatture");
+        LOGGER.info("Successfully created report file for 'fatture'");
+
+        return result;
+    }
+
+    public Map<String, Object> createReportPdfFattureCommercianti(Date dataDa, Date dataA, String numeroDa, String numeroA) throws Exception{
+
+        Map<String, Object> result = new HashMap<>();
+
+        LOGGER.info("Start creating report file for 'fatture per commercianti'...");
+
+        try{
+            Set<Fattura> fatture = getFatture(dataDa, dataA, numeroDa, numeroA, null);
+
+            String pdfFileName = "Fatture_commercianti_##.pdf";
+            byte[] pdfContent = null;
+
+            String replacePlaceholder = "";
+            String from = "";
+            String to = "";
+            if(dataDa != null && dataA != null){
+                replacePlaceholder = sdf.format(dataDa) + "_" + sdf.format(dataA);
+                sdf.applyPattern("dd/MM/YYYY");
+                from = sdf.format(dataDa);
+                to = sdf.format(dataA);
+            } else {
+                replacePlaceholder = numeroDa + "_" + numeroA;
+                from = numeroDa.replace("-","/");
+                to = numeroA.replace("-","/");
+            }
+            pdfFileName = pdfFileName.replace("##", replacePlaceholder);
+
+            if(!fatture.isEmpty()){
+
+                pdfContent = stampaService.generateFatturePerCommercianti(from, to , fatture);
+            }
+
+            result.put("fileName", pdfFileName);
+            result.put("content", pdfContent);
+
+        } catch(Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+
+        if(result.isEmpty()){
+            throw new RuntimeException("Error creating report file for 'fatture per commercianti'");
+        }
+
+        LOGGER.info("Successfully created report file for 'fatture per commercianti'");
 
         return result;
     }
@@ -234,7 +288,7 @@ public class ReportService {
         return headers;
     }
 
-    private byte[] createZipByteArray(List<FatturaFile> fatturaFiles) throws IOException {
+    /*private byte[] createZipByteArray(List<FatturaFile> fatturaFiles) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
         try {
@@ -248,10 +302,47 @@ public class ReportService {
             zipOutputStream.close();
         }
         return byteArrayOutputStream.toByteArray();
+    }*/
+
+    private byte[] createPdfByteArray(List<FatturaFile> fatturaFiles) throws IOException {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Document document = null;
+        PdfCopy writer = null;
+
+        // sort FatturaFile list by fileName
+        Collections.sort(fatturaFiles, (f1, f2) -> f1.fileName.compareToIgnoreCase(f2.fileName));
+
+        for(FatturaFile fatturaFile : fatturaFiles){
+            try {
+                PdfReader reader = new PdfReader(fatturaFile.content);
+                int numberOfPages = reader.getNumberOfPages();
+
+                if (document == null) {
+                    document = new Document(reader.getPageSizeWithRotation(1));
+                    writer = new PdfCopy(document, byteArrayOutputStream);
+                    document.open();
+                }
+                PdfImportedPage page;
+                for (int i = 0; i < numberOfPages;) {
+                    ++i;
+                    page = writer.getImportedPage(reader, i);
+                    writer.addPage(page);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(document != null){
+            document.close();
+        }
+        byteArrayOutputStream.close();
+        return byteArrayOutputStream.toByteArray();
     }
 
     public static class FatturaFile {
         public String fileName;
         public byte[] content;
     }
+
 }

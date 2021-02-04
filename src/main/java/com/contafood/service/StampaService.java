@@ -873,6 +873,105 @@ public class StampaService {
         return ricevutaPrivatoArticoloDataSources;
     }
 
+    public List<FatturaCommercianteDataSource> getFattureCommercianti(Set<Fattura> inputFatture){
+        LOGGER.info("Retrieving the list of 'fatture commercianti' for creating pdf file");
+
+        List<Fattura> fatture = inputFatture.stream()
+                .sorted(Comparator.comparing(Fattura::getProgressivo))
+                .collect(Collectors.toList());
+
+        List<FatturaCommercianteDataSource> fatturaCommercianteDataSources = new ArrayList<>();
+        if(fatture != null && !fatture.isEmpty()){
+            fatture.forEach(fattura -> {
+                String date = simpleDateFormat.format(fattura.getData());
+
+                String ragioneSociale = "";
+                String indirizzo = "";
+                String citta = "";
+                String partitaIva = "";
+                String codiceFiscale = "";
+
+                Cliente cliente = fattura.getCliente();
+                if(cliente != null){
+                    if(cliente.getDittaIndividuale()){
+                        ragioneSociale = cliente.getNome() + " " + cliente.getCognome();
+                    } else {
+                        ragioneSociale = cliente.getRagioneSociale();
+                    }
+                    indirizzo = cliente.getIndirizzo();
+                    citta = cliente.getCitta();
+                    if(!StringUtils.isEmpty(cliente.getProvincia())){
+                        Provincia provincia = Provincia.getByLabel(cliente.getProvincia());
+                        if(provincia != null){
+                            citta += " ("+provincia.getSigla()+")";
+                        }
+                    }
+                    partitaIva = "P.I. " + cliente.getPartitaIva();
+                    codiceFiscale = "C.F. " + cliente.getCodiceFiscale();
+                }
+
+                FatturaCommercianteDataSource fatturaCommercianteDataSource = new FatturaCommercianteDataSource();
+                fatturaCommercianteDataSource.setNumero(fattura.getProgressivo().toString());
+                fatturaCommercianteDataSource.setData(date);
+                fatturaCommercianteDataSource.setRagioneSociale(ragioneSociale);
+                fatturaCommercianteDataSource.setIndirizzo(indirizzo);
+                fatturaCommercianteDataSource.setCitta(citta);
+                fatturaCommercianteDataSource.setPartitaIva(partitaIva);
+                fatturaCommercianteDataSource.setCodiceFiscale(codiceFiscale);
+                fatturaCommercianteDataSource.setTotale(fattura.getTotale());
+
+                List<FatturaCommercianteTotaleDataSource> fatturaCommercianteTotaleDataSources = new ArrayList<>();
+                Map<AliquotaIva, Set<DdtArticolo>> ivaDdtArticoliMap = new HashMap<>();
+
+                // create a map with the list of DdtArticoli grouped by AliquotaIva
+                Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
+                if(fatturaDdts != null && !fatturaDdts.isEmpty()){
+                    for(FatturaDdt fatturaDdt : fatturaDdts){
+                        Ddt ddt = fatturaDdt.getDdt();
+                        if(ddt != null){
+                            if(ddt.getDdtArticoli() != null && !ddt.getDdtArticoli().isEmpty()){
+                                for(DdtArticolo ddtArticolo : ddt.getDdtArticoli()){
+                                    AliquotaIva aliquotaIva = ddtArticolo.getArticolo().getAliquotaIva();
+                                    Set<DdtArticolo> ddtArticoli = ivaDdtArticoliMap.getOrDefault(aliquotaIva, new HashSet<>());
+                                    ddtArticoli.add(ddtArticolo);
+                                    ivaDdtArticoliMap.put(aliquotaIva, ddtArticoli);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for (Map.Entry<AliquotaIva, Set<DdtArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
+                    BigDecimal iva = entry.getKey().getValore();
+                    BigDecimal totaleImponibile = BigDecimal.ZERO;
+                    BigDecimal totaleIva = BigDecimal.ZERO;
+
+                    for(DdtArticolo ddtArticolo : entry.getValue()){
+                        BigDecimal imponibile = ddtArticolo.getImponibile() != null ? ddtArticolo.getImponibile() : BigDecimal.ZERO;
+                        BigDecimal ddtArticoloIva = ddtArticolo.getImponibile() != null ? (imponibile.multiply(iva.divide(new BigDecimal(100)))) : BigDecimal.ZERO;
+                        totaleImponibile = totaleImponibile.add(imponibile);
+                        totaleIva = totaleIva.add(ddtArticoloIva);
+                    }
+
+                    FatturaCommercianteTotaleDataSource fatturaCommercianteTotaleDataSource = new FatturaCommercianteTotaleDataSource();
+                    fatturaCommercianteTotaleDataSource.setImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
+                    fatturaCommercianteTotaleDataSource.setIva(iva.intValue());
+                    fatturaCommercianteTotaleDataSource.setImposta(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
+
+                    fatturaCommercianteTotaleDataSources.add(fatturaCommercianteTotaleDataSource);
+                }
+
+                fatturaCommercianteDataSource.setFatturaCommercianteTotaleDataSources(fatturaCommercianteTotaleDataSources);
+
+                fatturaCommercianteDataSources.add(fatturaCommercianteDataSource);
+
+            });
+        }
+
+        LOGGER.info("Retrieved {} 'fatture commercianti'", fatturaCommercianteDataSources.size());
+        return fatturaCommercianteDataSources;
+    }
+
     @Transactional
     public byte[] generateFattura(Long idFattura) throws Exception{
 
@@ -1152,6 +1251,29 @@ public class StampaService {
         parameters.put("notaAccreditoRigheCollection", notaAccreditoRigheCollectionDataSource);
         parameters.put("notaAccreditoTotaliCollection", notaAccreditoTotaliCollectionDataSource);
 
+
+        // create report
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+    }
+
+    public byte[] generateFatturePerCommercianti(String from, String to, Set<Fattura> fatture) throws Exception{
+
+        // retrieve the list of FatturaCommercianti
+        List<FatturaCommercianteDataSource> fatturaCommercianteDataSource = getFattureCommercianti(fatture);
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_FATTURE_COMMERCIANTI);
+
+        // create report datasource
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(fatturaCommercianteDataSource);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("from", from);
+        parameters.put("to", to);
+        parameters.put("fatturaCommercianteCollection", dataSource);
 
         // create report
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
