@@ -9,7 +9,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 public class ZipNoResourceFoundException extends RuntimeException {
 
     public ZipNoResourceFoundException(Resource resource) {
-        super(String.format("Nessuna %s presente nelle date selezionate", resource.getLabel()));
+        super(String.format("Nessuna %s ancora da inviare presente nelle date selezionate", resource.getLabel()));
     }
 
 }

@@ -349,7 +349,7 @@ public class FatturaService {
             for(Cliente cliente : fattureByCliente.keySet()){
                 for(Fattura fattura : fattureByCliente.get(cliente)){
                     Map<String, Object> patchFattura = new HashMap<>();
-                    patchFattura.put("id", fattura.getId());
+                    patchFattura.put("id", fattura.getId().intValue());
                     patchFattura.put("speditoAde", speditoAde);
 
                     patch(patchFattura);
