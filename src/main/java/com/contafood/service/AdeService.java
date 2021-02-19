@@ -1302,7 +1302,7 @@ public class AdeService {
 
         // create node 'TipoDocumento'
         xmlStreamWriter.writeStartElement("TipoDocumento");
-        xmlStreamWriter.writeCharacters(AdeConstants.TIPO_DOCUMENTO);
+        xmlStreamWriter.writeCharacters(AdeConstants.TIPO_DOCUMENTO_NOTA_ACCREDITO);
         xmlStreamWriter.writeEndElement();
 
         // create node 'Divisa'

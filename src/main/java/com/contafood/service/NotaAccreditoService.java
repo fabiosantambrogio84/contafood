@@ -79,7 +79,7 @@ public class NotaAccreditoService {
 
         Map<Cliente, List<NotaAccredito>> noteAccreditoByCliente = new HashMap<>();
 
-        Predicate<NotaAccredito> isNotaAccreditoSpeditoAdeFalse = notaAccredito -> notaAccredito.getSpeditoAde().equals(Boolean.FALSE);
+        //Predicate<NotaAccredito> isNotaAccreditoSpeditoAdeFalse = notaAccredito -> notaAccredito.getSpeditoAde().equals(Boolean.FALSE);
 
         Predicate<NotaAccredito> isNotaAccreditoDataDaGreaterOrEquals = notaAccredito -> {
             if(dateFrom != null){
@@ -96,8 +96,7 @@ public class NotaAccreditoService {
 
         Set<NotaAccredito> noteAccredito = notaAccreditoRepository.findAll().stream()
                 .filter(isNotaAccreditoDataDaGreaterOrEquals
-                .and(isNotaAccreditoDataALessOrEquals)
-                .and(isNotaAccreditoSpeditoAdeFalse)).collect(Collectors.toSet());
+                .and(isNotaAccreditoDataALessOrEquals)).collect(Collectors.toSet());
 
         if(noteAccredito != null && !noteAccredito.isEmpty()){
             for(NotaAccredito notaAccredito : noteAccredito){

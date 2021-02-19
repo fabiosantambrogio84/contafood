@@ -51,7 +51,9 @@ public class ReportController {
 
         try{
             if(action.equals("stampaFatture")){
-                report = reportService.createReportPdfFatture(dataDa, dataA, numeroDa, numeroA);
+                report = reportService.createReportPdfFatture(dataDa, dataA, numeroDa, numeroA, null);
+            } else if(action.equals("stampaFattureCortesia")){
+                report = reportService.createReportPdfFatture(dataDa, dataA, numeroDa, numeroA, "cartaceo");
             } else if(action.equals("stampaFattureCommercianti")){
                 report = reportService.createReportPdfFattureCommercianti(dataDa, dataA, numeroDa, numeroA);
             }

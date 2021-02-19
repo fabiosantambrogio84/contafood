@@ -99,7 +99,7 @@ public class FatturaAccompagnatoriaService {
 
         Map<Cliente, List<FatturaAccompagnatoria>> fattureAccompagnatorieByCliente = new HashMap<>();
 
-        Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaSpeditoAdeFalse = fattura -> fattura.getSpeditoAde().equals(Boolean.FALSE);
+        //Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaSpeditoAdeFalse = fattura -> fattura.getSpeditoAde().equals(Boolean.FALSE);
 
         Predicate<FatturaAccompagnatoria> isFatturaAccompagnatoriaDataDaGreaterOrEquals = fattura -> {
             if(dateFrom != null){
@@ -116,8 +116,7 @@ public class FatturaAccompagnatoriaService {
 
         Set<FatturaAccompagnatoria> fattureAccompagnatorie = fatturaAccompagnatoriaRepository.findAll().stream()
                 .filter(isFatturaAccompagnatoriaDataDaGreaterOrEquals
-                .and(isFatturaAccompagnatoriaDataALessOrEquals)
-                .and(isFatturaAccompagnatoriaSpeditoAdeFalse)).collect(Collectors.toSet());
+                .and(isFatturaAccompagnatoriaDataALessOrEquals)).collect(Collectors.toSet());
 
         if(fattureAccompagnatorie != null && !fattureAccompagnatorie.isEmpty()){
             for(FatturaAccompagnatoria fatturaAccompagnatoria : fattureAccompagnatorie){

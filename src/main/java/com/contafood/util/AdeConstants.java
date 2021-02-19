@@ -34,6 +34,8 @@ public interface AdeConstants {
 
     String TIPO_DOCUMENTO = "TD01";
 
+    String TIPO_DOCUMENTO_NOTA_ACCREDITO = "TD04";
+
     String DIVISA = "EUR";
 
     String COND_PAGAMENTO_COMPLETO = "TP02";

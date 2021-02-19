@@ -144,7 +144,7 @@ public class FatturaService {
 
         Map<Cliente, List<Fattura>> fattureByCliente = new HashMap<>();
 
-        Predicate<Fattura> isFatturaSpeditoAdeFalse = fattura -> fattura.getSpeditoAde().equals(Boolean.FALSE);
+        //Predicate<Fattura> isFatturaSpeditoAdeFalse = fattura -> fattura.getSpeditoAde().equals(Boolean.FALSE);
 
         Predicate<Fattura> isFatturaDataDaGreaterOrEquals = fattura -> {
             if(dateFrom != null){
@@ -161,8 +161,7 @@ public class FatturaService {
 
         Set<Fattura> fatture = fatturaRepository.findAll().stream()
                 .filter(isFatturaDataDaGreaterOrEquals
-                .and(isFatturaDataALessOrEquals)
-                .and(isFatturaSpeditoAdeFalse)).collect(Collectors.toSet());
+                .and(isFatturaDataALessOrEquals)).collect(Collectors.toSet());
 
         if(fatture != null && !fatture.isEmpty()){
             for(Fattura fattura : fatture){

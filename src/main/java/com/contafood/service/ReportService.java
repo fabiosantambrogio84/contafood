@@ -79,16 +79,19 @@ public class ReportService {
         return fatture;
     }
 
-    public Map<String, Object> createReportPdfFatture(Date dataDa, Date dataA, String numeroDa, String numeroA) throws Exception{
+    public Map<String, Object> createReportPdfFatture(Date dataDa, Date dataA, String numeroDa, String numeroA, String modalitaInvioFatture) throws Exception{
 
         Map<String, Object> result = new HashMap<>();
 
         LOGGER.info("Start creating report file for 'fatture'...");
 
         try{
-            Set<Fattura> fatture = getFatture(dataDa, dataA, numeroDa, numeroA, "cartaceo");
+            Set<Fattura> fatture = getFatture(dataDa, dataA, numeroDa, numeroA, modalitaInvioFatture);
 
             String pdfFileName = "Fatture_##.pdf";
+            if(modalitaInvioFatture.equalsIgnoreCase("cartaceo")){
+                pdfFileName = "Fatture_cortesia_##.pdf";
+            }
             byte[] pdfContent = null;
 
             String replacePlaceholder = "";
