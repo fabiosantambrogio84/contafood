@@ -1890,6 +1890,13 @@ public class AdeService {
                 xmlStreamWriter.writeCharacters(iva_s);
                 xmlStreamWriter.writeEndElement();
 
+                // if IVA=0 create node 'Natura'
+                if(iva.compareTo(BigDecimal.ZERO) == 0){
+                    xmlStreamWriter.writeStartElement("Natura");
+                    xmlStreamWriter.writeCharacters(AdeConstants.NATURA_IVA_ZERO);
+                    xmlStreamWriter.writeEndElement();
+                }
+
                 // create node 'ImponibileImporto'
                 xmlStreamWriter.writeStartElement("ImponibileImporto");
                 String imp_s = "";

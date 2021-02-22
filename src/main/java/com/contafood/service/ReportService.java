@@ -89,7 +89,7 @@ public class ReportService {
             Set<Fattura> fatture = getFatture(dataDa, dataA, numeroDa, numeroA, modalitaInvioFatture);
 
             String pdfFileName = "Fatture_##.pdf";
-            if(modalitaInvioFatture.equalsIgnoreCase("cartaceo")){
+            if(!StringUtils.isEmpty(modalitaInvioFatture) && modalitaInvioFatture.equalsIgnoreCase("cartaceo")){
                 pdfFileName = "Fatture_cortesia_##.pdf";
             }
             byte[] pdfContent = null;
