@@ -6,7 +6,6 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 @EqualsAndHashCode
 @Entity
@@ -56,6 +55,10 @@ public class Pagamento {
 
     @Column(name = "importo")
     private BigDecimal importo;
+
+    @ManyToOne
+    @JoinColumn(name="id_pagamento_aggregato")
+    private PagamentoAggregato pagamentoAggregato;
 
     @Column(name = "note")
     private String note;
@@ -160,6 +163,14 @@ public class Pagamento {
 
     public void setImporto(BigDecimal importo) {
         this.importo = importo;
+    }
+
+    public PagamentoAggregato getPagamentoAggregato() {
+        return pagamentoAggregato;
+    }
+
+    public void setPagamentoAggregato(PagamentoAggregato pagamentoAggregato) {
+        this.pagamentoAggregato = pagamentoAggregato;
     }
 
     public String getNote() {

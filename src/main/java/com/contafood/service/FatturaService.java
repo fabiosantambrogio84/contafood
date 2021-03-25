@@ -1,19 +1,19 @@
 package com.contafood.service;
 
+import com.contafood.exception.GenericException;
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
-import com.contafood.repository.AliquotaIvaRepository;
-import com.contafood.repository.ArticoloRepository;
-import com.contafood.repository.FatturaRepository;
-import com.contafood.repository.PagamentoRepository;
+import com.contafood.repository.*;
 import com.contafood.repository.views.VFatturaRepository;
+import com.contafood.util.Constants;
 import com.contafood.util.enumeration.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -39,6 +39,7 @@ public class FatturaService {
     private final TipoFatturaService tipoFatturaService;
     private final VFatturaRepository vFatturaRepository;
     private final PagamentoRepository pagamentoRepository;
+    private final TipoPagamentoRepository tipoPagamentoRepository;
 
     @Autowired
     public FatturaService(final FatturaRepository fatturaRepository,
@@ -48,7 +49,8 @@ public class FatturaService {
                           final DdtService ddtService,
                           final TipoFatturaService tipoFatturaService,
                           final VFatturaRepository vFatturaRepository,
-                          final PagamentoRepository pagamentoRepository){
+                          final PagamentoRepository pagamentoRepository,
+                          final TipoPagamentoRepository tipoPagamentoRepository){
         this.fatturaRepository = fatturaRepository;
         this.fatturaDdtService = fatturaDdtService;
         this.statoFatturaService = statoFatturaService;
@@ -57,6 +59,7 @@ public class FatturaService {
         this.tipoFatturaService = tipoFatturaService;
         this.vFatturaRepository = vFatturaRepository;
         this.pagamentoRepository = pagamentoRepository;
+        this.tipoPagamentoRepository = tipoPagamentoRepository;
     }
 
     public Set<VFattura> getAll(){
@@ -64,6 +67,10 @@ public class FatturaService {
         Set<VFattura> fatture = vFatturaRepository.findAllByOrderByAnnoDescProgressivoDesc();
         LOGGER.info("Retrieved {} 'fatture vendita and fatture accompagnatorie'", fatture.size());
         return fatture;
+    }
+
+    public Set<Fattura> getAllVendite(){
+        return fatturaRepository.findAll();
     }
 
     public Fattura getOne(Long fatturaId){
@@ -372,6 +379,25 @@ public class FatturaService {
         LOGGER.info("Deleted 'fattura' '{}'", fatturaId);
     }
 
+    public void checkStatoFatturaDaPagare(Integer idStato){
+        StatoFattura statoFatturaDaPagare = statoFatturaService.getDaPagare();
+        if(idStato != statoFatturaDaPagare.getId().intValue()){
+            throw new GenericException("Stato diverso da '"+statoFatturaDaPagare.getDescrizione()+"'");
+        }
+    }
+
+    public void checkTipoPagamentoRicevutaBancaria(Long idTipoPagamento){
+        TipoPagamento tipoPagamento = tipoPagamentoRepository.findById(idTipoPagamento).orElseThrow(ResourceNotFoundException::new);
+        String descrizione = tipoPagamento.getDescrizione().toLowerCase().replace(" ","");
+        if(!descrizione.contains("ricevutabancaria")){
+            throw new GenericException("Tipo pagamento '"+tipoPagamento.getDescrizione()+"' non valido per RiBa");
+        }
+    }
+
+    /*public TipoFattura getTipoFatturaVendita(){
+        return tipoFatturaService.getVendita();
+    }*/
+
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
         Optional<Fattura> fattura = fatturaRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);
         if(fattura.isPresent()){
@@ -437,6 +463,15 @@ public class FatturaService {
         });
         LOGGER.info("Successfully set 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
 
+    }
+
+    public static HttpHeaders createHttpHeaders(String fileName){
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName);
+        headers.add(HttpHeaders.CACHE_CONTROL, Constants.HTTP_HEADER_CACHE_CONTROL_VALUE);
+        headers.add(HttpHeaders.PRAGMA, Constants.HTTP_HEADER_PRAGMA_VALUE);
+        headers.add(HttpHeaders.EXPIRES, Constants.HTTP_HEADER_EXPIRES_VALUE);
+        return headers;
     }
 
 }

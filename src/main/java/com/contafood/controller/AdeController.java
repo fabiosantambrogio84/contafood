@@ -49,7 +49,7 @@ public class AdeController {
         this.adeService = adeService;
     }
 
-    @RequestMapping(method = GET, produces="application/zip")
+    @RequestMapping(method = GET, produces=Constants.MEDIA_TYPE_APPLICATION_ZIP)
     @CrossOrigin
     public ResponseEntity<Resource> exportAde(@RequestParam(name = "tipo") String tipo,
                                               @RequestParam(name = "dataDa") Date dataDa,

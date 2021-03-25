@@ -4,16 +4,14 @@ import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.service.FatturaService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -40,7 +38,7 @@ public class FatturaController {
                                 @RequestParam(name = "dataA", required = false) Date dataA,
                                 @RequestParam(name = "progressivo", required = false) Integer progressivo,
                                 @RequestParam(name = "importo", required = false) Float importo,
-                                @RequestParam(name = "tipoPagamento", required = false) Integer idTipoPagamento,
+                                @RequestParam(name = "tipoPagamento", required = false) String idTipoPagamento,
                                 @RequestParam(name = "cliente", required = false) String cliente,
                                 @RequestParam(name = "agente", required = false) Integer idAgente,
                                 @RequestParam(name = "articolo", required = false) Integer idArticolo,
@@ -49,6 +47,11 @@ public class FatturaController {
         LOGGER.info("Performing GET request for retrieving list of 'fatture vendita and fatture accompagnatorie'");
         LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
                 dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
+
+        List<Long> idTipiPagamento = new ArrayList<>();
+        if(!StringUtils.isEmpty(idTipoPagamento)){
+            Arrays.stream(idTipoPagamento.split(",")).mapToLong(id -> Long.parseLong(id)).forEach(l -> idTipiPagamento.add(l));
+        }
 
         Predicate<VFattura> isFatturaDataDaGreaterOrEquals = fattura -> {
             if(dataDa != null){
@@ -81,14 +84,14 @@ public class FatturaController {
             return true;
         };
         Predicate<VFattura> isFatturaTipoPagamentoEquals = fattura -> {
-            LOGGER.info("Filter by idTipoPagamento '{}'", idTipoPagamento);
-            if(idTipoPagamento != null){
+            LOGGER.info("Filter by idTipoPagamento '{}'", idTipiPagamento);
+            if(idTipiPagamento != null){
                 Cliente fatturaCliente = fattura.getCliente();
                 if(fatturaCliente != null){
                     TipoPagamento tipoPagamento = fatturaCliente.getTipoPagamento();
                     if(tipoPagamento != null){
                         LOGGER.info("Cliente id '{}', TipoPagamento id '{}'", fatturaCliente.getId(), tipoPagamento.getId());
-                        return tipoPagamento.getId().equals(Long.valueOf(idTipoPagamento));
+                        return idTipiPagamento.contains(tipoPagamento.getId());
                     }
                 }
             }

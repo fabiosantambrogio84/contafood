@@ -2273,12 +2273,4 @@ public class AdeService {
         return headers;
     }
 
-    public static void main(String[] args) {
-        BigDecimal prezzoTotale = new BigDecimal(18.495f).setScale(2, RoundingMode.HALF_DOWN).multiply(BigDecimal.valueOf(10f));
-        String prezzoTotale_s = "";
-        if(prezzoTotale != null){
-            prezzoTotale_s = prezzoTotale.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
-        }
-        System.out.println(prezzoTotale_s);
-    }
 }

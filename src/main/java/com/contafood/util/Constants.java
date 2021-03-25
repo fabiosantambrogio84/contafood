@@ -7,6 +7,8 @@ public interface Constants {
     String DEFAULT_FORNITORE = "URBANI GIUSEPPE";
     String DEFAULT_FORNITORE_INITIALS = "UR";
 
+    String ZONE_ID_EUROPE_ROME = "Europe/Rome";
+
     String MEDIA_TYPE_APPLICATION_PDF = "application/pdf";
     String MEDIA_TYPE_APPLICATION_XML = "application/xml";
     String MEDIA_TYPE_APPLICATION_ZIP = "application/zip";
