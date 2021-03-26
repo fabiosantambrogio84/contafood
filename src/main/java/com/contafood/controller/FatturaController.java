@@ -85,7 +85,7 @@ public class FatturaController {
         };
         Predicate<VFattura> isFatturaTipoPagamentoEquals = fattura -> {
             LOGGER.info("Filter by idTipoPagamento '{}'", idTipiPagamento);
-            if(idTipiPagamento != null){
+            if(idTipiPagamento != null && !idTipiPagamento.isEmpty()){
                 Cliente fatturaCliente = fattura.getCliente();
                 if(fatturaCliente != null){
                     TipoPagamento tipoPagamento = fatturaCliente.getTipoPagamento();
