@@ -53,7 +53,6 @@ public class RibaService {
             int totale = 0;
             int idx = 1;
 
-
             // create list of Pagamento for fatture
             LOGGER.info("Creating list of 'Pagamento' for fatture...");
             pagamentiFatture = createPagamentiFatture(fatture);

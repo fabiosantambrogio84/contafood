@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS contafood.pagamento_aggregato;
 
 CREATE TABLE contafood.pagamento_aggregato (
-    id int(10) unsigned NOT NULL,
+    id int(10) unsigned NOT NULL AUTO_INCREMENT,
     descrizione text,
     note text,
     data_inserimento TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

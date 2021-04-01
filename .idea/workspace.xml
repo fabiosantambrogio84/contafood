@@ -24,7 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Add GiacenzaIngrediente, fix bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FatturaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FatturaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql-scripts/20210322.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql-scripts/20210322.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/RibaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RibaService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -481,7 +482,11 @@
       <workItem from="1616487319632" duration="4132000" />
       <workItem from="1616573891627" duration="5173000" />
       <workItem from="1616662936341" duration="2727000" />
-      <workItem from="1616747159573" duration="764000" />
+      <workItem from="1616747159573" duration="2658000" />
+      <workItem from="1617003487908" duration="605000" />
+      <workItem from="1617091784013" duration="607000" />
+      <workItem from="1617176242696" duration="592000" />
+      <workItem from="1617260827015" duration="1783000" />
     </task>
     <task id="LOCAL-00029" summary="Add scheduled job for deleting expired Sconti. Add filters on Sconti">
       <created>1582820866575</created>
