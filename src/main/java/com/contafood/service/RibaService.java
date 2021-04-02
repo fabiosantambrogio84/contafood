@@ -166,6 +166,8 @@ public class RibaService {
                             for(PagamentoFattura pagamentoFattura : pagamentoFatturaByPartitaIva){
                                 Pagamento pagamento = pagamentoFattura.getPagamento();
                                 pagamento.setPagamentoAggregato(pagamentoAggregato);
+                                Pagamento updatedPagamento = pagamentoService.updateSimple(pagamento);
+                                pagamentoFattura.setPagamento(updatedPagamento);
                             }
 
                             Banca banca = cliente.getBanca();
@@ -417,10 +419,7 @@ public class RibaService {
     }
 
     private ClienteSimple createClienteSimple(Cliente cliente){
-        ClienteSimple clienteSimple = new ClienteSimple();
-        clienteSimple.setPartitaIva(cliente.getPartitaIva());
-        clienteSimple.setRaggruppaRiba(cliente.getRaggruppaRiba());
-        return clienteSimple;
+        return new ClienteSimple(cliente.getPartitaIva(), cliente.getRaggruppaRiba());
     }
 
     private Map<ClienteSimple, Map<Date, List<PagamentoFattura>>> createMap(List<PagamentoFattura> pagamentiFatture){
@@ -615,26 +614,42 @@ public class RibaService {
         }
     }
 
-    private class ClienteSimple {
+    final private class ClienteSimple {
 
-        private String partitaIva;
+        final private String partitaIva;
 
-        private Boolean isRaggruppaRiba;
+        final private Boolean isRaggruppaRiba;
+
+        public ClienteSimple(String partitaIva, Boolean isRaggruppaRiba){
+            this.partitaIva = partitaIva;
+            this.isRaggruppaRiba = isRaggruppaRiba;
+        }
 
         public String getPartitaIva() {
             return partitaIva;
-        }
-
-        public void setPartitaIva(String partitaIva) {
-            this.partitaIva = partitaIva;
         }
 
         public Boolean getRaggruppaRiba() {
             return isRaggruppaRiba;
         }
 
-        public void setRaggruppaRiba(Boolean raggruppaRiba) {
-            isRaggruppaRiba = raggruppaRiba;
+        @Override
+        public int hashCode() {
+            return partitaIva.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            ClienteSimple other = (ClienteSimple) obj;
+            if (partitaIva != other.partitaIva)
+                return false;
+            return true;
         }
     }
 

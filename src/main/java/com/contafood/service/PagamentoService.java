@@ -294,6 +294,13 @@ public class PagamentoService {
         return createdPagamento;
     }
 
+    public Pagamento updateSimple(Pagamento pagamento){
+        LOGGER.info("Updating 'pagamento'");
+        Pagamento updatedPagamento = pagamentoRepository.save(pagamento);
+        LOGGER.info("Updated 'pagamento' '{}'", updatedPagamento);
+        return updatedPagamento;
+    }
+
     @Transactional
     public void deletePagamento(Long pagamentoId){
         LOGGER.info("Deleting 'pagamento' '{}'", pagamentoId);
