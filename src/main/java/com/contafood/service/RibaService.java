@@ -346,18 +346,7 @@ public class RibaService {
             sb.append(String.format("%1$5s", "")); // Campo non disponibile
             sb.append("\n");
 
-            // save each element of 'Pagamento' list
-            /*for(PagamentoFattura pagamentoFattura : pagamentiFatture){
-                pagamentoService.createPagamento(pagamentoFattura.getPagamento());
-            }*/
-
-            // save each element of 'PagamentoAggregato' list
-            /*for(PagamentoAggregato pagamentoAggregato : pagamentiAggregati){
-                pagamentoAggregatoService.createPagamentoAggregato(pagamentoAggregato);
-            }*/
-
             LOGGER.info("Successfully created RiBa file");
-
 
         } catch(Exception e){
             // delete created pagamenti
@@ -382,7 +371,7 @@ public class RibaService {
             e.printStackTrace();
             throw new GenericException("Error creating RiBa file. "+e.getMessage());
         }
-        return sb.toString();
+        return StringUtils.stripAccents(sb.toString());
     }
 
     private List<PagamentoFattura> createPagamentiFatture(Set<Fattura> fatture){
@@ -695,4 +684,5 @@ public class RibaService {
             this.dataScadenza = dataScadenza;
         }
     }
+
 }
