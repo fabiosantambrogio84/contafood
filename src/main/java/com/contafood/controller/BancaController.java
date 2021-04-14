@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ public class BancaController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Banca> getAll() {
+    public List<Banca> getAll() {
         LOGGER.info("Performing GET request for retrieving list of 'banche'");
         return bancaService.getAll();
     }

@@ -8,7 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class BancaService {
@@ -22,9 +25,11 @@ public class BancaService {
         this.bancaRepository = bancaRepository;
     }
 
-    public Set<Banca> getAll(){
+    public List<Banca> getAll(){
         LOGGER.info("Retrieving the list of 'banche'");
-        Set<Banca> banche = bancaRepository.findAll();
+        List<Banca> banche = bancaRepository.findAllByOrderByNomeAscAbiAscCabAsc();
+        //banche.sort(Comparator.comparing(Banca::getAbi));
+        //banche.sort(Comparator.comparing(Banca::getCab));
         LOGGER.info("Retrieved {} 'banche'", banche.size());
         return banche;
     }
@@ -38,6 +43,7 @@ public class BancaService {
 
     public Banca create(Banca banca){
         LOGGER.info("Creating 'banca'");
+        banca.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Banca createdBanca = bancaRepository.save(banca);
         LOGGER.info("Created 'banca' '{}'", createdBanca);
         return createdBanca;
@@ -45,6 +51,8 @@ public class BancaService {
 
     public Banca update(Banca banca){
         LOGGER.info("Updating 'banca'");
+        Banca currentBanca = bancaRepository.findById(banca.getId()).orElseThrow(ResourceNotFoundException::new);
+        banca.setDataInserimento(currentBanca.getDataInserimento());
         Banca updatedBanca = bancaRepository.save(banca);
         LOGGER.info("Updated 'banca' '{}'", updatedBanca);
         return updatedBanca;
