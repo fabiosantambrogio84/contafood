@@ -7,6 +7,8 @@ import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.util.Constants;
 import com.contafood.util.enumeration.Provincia;
 import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang3.StringUtils;
