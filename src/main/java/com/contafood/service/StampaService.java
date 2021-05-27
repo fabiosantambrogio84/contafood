@@ -972,6 +972,105 @@ public class StampaService {
         return fatturaCommercianteDataSources;
     }
 
+    public byte[] generateDdt(Long idDdt) throws Exception{
+
+        // retrieve the Ddt
+        Ddt ddt = getDdt(idDdt);
+        PuntoConsegna puntoConsegna = ddt.getPuntoConsegna();
+        Cliente cliente = ddt.getCliente();
+
+        // create DdtDataSource
+        List<DdtDataSource> ddtDataSources = new ArrayList<>();
+        ddtDataSources.add(getDdtDataSource(ddt));
+
+        // create data parameters
+        String ddtTitleParam = ddt.getProgressivo()+"/"+ddt.getAnnoContabile()+" del "+simpleDateFormat.format(ddt.getData());
+        String puntoConsegnaParam = "";
+        String destinatarioParam = "";
+
+        // create data parameters for PuntoConsegna
+        if(puntoConsegna != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(puntoConsegna.getNome())){
+                sb.append(puntoConsegna.getNome()+"\n");
+            }
+            if(!StringUtils.isEmpty(puntoConsegna.getIndirizzo())){
+                sb.append(puntoConsegna.getIndirizzo()+"\n");
+            }
+            if(!StringUtils.isEmpty(puntoConsegna.getCap())){
+                sb.append(puntoConsegna.getCap()+" ");
+            }
+            if(!StringUtils.isEmpty(puntoConsegna.getLocalita())){
+                sb.append(puntoConsegna.getLocalita()+" ");
+            }
+            if(!StringUtils.isEmpty(puntoConsegna.getProvincia())){
+                sb.append("("+Provincia.getByLabel(puntoConsegna.getProvincia()).getSigla()+")");
+            }
+
+            puntoConsegnaParam = sb.toString();
+        }
+
+        // create data parameters for Cliente
+        if(cliente != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
+                sb.append(cliente.getRagioneSociale()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getIndirizzo())){
+                sb.append(cliente.getIndirizzo()+"\n");
+            }
+            if(!StringUtils.isEmpty(cliente.getCap())){
+                sb.append(cliente.getCap()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getCitta())){
+                sb.append(cliente.getCitta()+" ");
+            }
+            if(!StringUtils.isEmpty(cliente.getProvincia())){
+                sb.append("("+Provincia.getByLabel(cliente.getProvincia()).getSigla()+")");
+            }
+
+            destinatarioParam = sb.toString();
+        }
+
+        // create 'ddtTrasportoDataOra' param
+        String ddtTrasportoDataOraParam = simpleDateFormat.format(ddt.getDataTrasporto())+" "+ddt.getOraTrasporto();
+
+        // create list of DdtArticoloDataSource from DdtArticolo
+        List<DdtArticoloDataSource> ddtArticoloDataSources = getDdtArticoliDataSource(ddt);
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_DDT);
+
+        // create report datasource for Ddt
+        JRBeanCollectionDataSource ddtCollectionDataSource = new JRBeanCollectionDataSource(ddtDataSources);
+
+        // create report datasource for DdtArticoli
+        JRBeanCollectionDataSource ddtArticoliCollectionDataSource = new JRBeanCollectionDataSource(ddtArticoloDataSources);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("ddtTitle", ddtTitleParam);
+        parameters.put("puntoConsegna", puntoConsegnaParam);
+        parameters.put("destinatario", destinatarioParam);
+        parameters.put("note", ddt.getNote());
+        parameters.put("trasportatore", ddt.getTrasportatore());
+        parameters.put("nota", Constants.JASPER_PARAMETER_DDT_NOTA);
+        parameters.put("ddtTrasportoTipo", ddt.getTipoTrasporto());
+        parameters.put("ddtTrasportoDataOra", ddtTrasportoDataOraParam);
+        parameters.put("ddtNumeroColli", ddt.getNumeroColli());
+        parameters.put("ddtTotImponibile", ddt.getTotaleImponibile().setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("ddtTotIva", ddt.getTotaleIva().setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("ddtTotDocumento", ddt.getTotale().setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("ddtArticoliCollection", ddtArticoliCollectionDataSource);
+        parameters.put("ddtCollection", ddtCollectionDataSource);
+
+        // create report
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+
+    }
+
     @Transactional
     public byte[] generateFattura(Long idFattura) throws Exception{
 

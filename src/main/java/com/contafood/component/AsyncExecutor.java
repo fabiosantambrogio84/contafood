@@ -2,7 +2,7 @@ package com.contafood.component;
 
 import com.contafood.model.Cliente;
 import com.contafood.model.Fattura;
-import com.contafood.service.EmailService;
+import com.contafood.service.EmailPecService;
 import com.contafood.service.ReportService;
 import com.contafood.service.StampaService;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ public class AsyncExecutor {
     }
 
     @Async("threadPoolTaskExecutorReport")
-    public CompletableFuture<String> executeAsyncSendFatturaReport(EmailService emailService, StampaService stampaService, Fattura fattura, Session session, boolean isPec) throws Exception{
+    public CompletableFuture<String> executeAsyncSendFatturaReport(EmailPecService emailPecService, StampaService stampaService, Fattura fattura, Session session, boolean isPec) throws Exception{
         long start = System.currentTimeMillis();
         String threadName = Thread.currentThread().getName();
         String prefix = "["+threadName+"] ";
@@ -55,7 +55,7 @@ public class AsyncExecutor {
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        Transport transport = emailService.connect(session);
+        Transport transport = emailPecService.connect(session);
 
         Integer progressivo = fattura.getProgressivo();
         Integer anno = fattura.getAnno();
@@ -77,8 +77,8 @@ public class AsyncExecutor {
 
         try{
             byte[] reportBytes = stampaService.generateFattura(fattura.getId());
-            Message message = emailService.createFatturaMessage(session, fattura, isPec, reportBytes);
-            emailService.sendMessage(transport, message);
+            Message message = emailPecService.createFatturaMessage(session, fattura, isPec, reportBytes);
+            emailPecService.sendMessage(transport, message);
 
             stringBuilder.append("OK");
 

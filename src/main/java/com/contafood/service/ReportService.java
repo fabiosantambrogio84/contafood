@@ -30,7 +30,7 @@ public class ReportService {
 
     private final FatturaService fatturaService;
     private final StampaService stampaService;
-    private final EmailService emailService;
+    private final EmailPecService emailPecService;
     private final AsyncExecutor asyncExecutor;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -41,11 +41,11 @@ public class ReportService {
     @Autowired
     public ReportService(final FatturaService fatturaService,
                          final StampaService stampaService,
-                         final EmailService emailService,
+                         final EmailPecService emailPecService,
                          final AsyncExecutor asyncExecutor
                       ){
         this.fatturaService = fatturaService;
-        this.emailService = emailService;
+        this.emailPecService = emailPecService;
         this.stampaService = stampaService;
         this.asyncExecutor = asyncExecutor;
     }
@@ -216,7 +216,7 @@ public class ReportService {
 
             if(!fatture.isEmpty()){
 
-                Session session = emailService.createSession();
+                Session session = emailPecService.createSession();
 
                 StringBuilder stringBuilder = new StringBuilder();
 
@@ -225,7 +225,7 @@ public class ReportService {
                 List<CompletableFuture<String>> completableFutures = new ArrayList<>();
 
                 for(Fattura fattura : fatture){
-                    completableFutures.add(asyncExecutor.executeAsyncSendFatturaReport(emailService, stampaService, fattura, session, isPec));
+                    completableFutures.add(asyncExecutor.executeAsyncSendFatturaReport(emailPecService, stampaService, fattura, session, isPec));
                 }
                 CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[completableFutures.size()]));
 
