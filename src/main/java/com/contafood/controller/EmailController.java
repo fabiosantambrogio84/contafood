@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+@SuppressWarnings({"unused"})
 @RestController
 @RequestMapping(path="/emails")
 public class EmailController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(EmailController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(EmailController.class);
 
     private final StampaService stampaService;
 

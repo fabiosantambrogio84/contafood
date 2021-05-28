@@ -14,8 +14,6 @@ public interface EmailConstants {
 
     Boolean AUTH = true;
 
-    String SSL_ENABLE = "true";
-
     String TIMEOUT = "20000";
 
     String CONNECTION_TIMEOUT = "20000";

@@ -25,16 +25,13 @@ public class EmailPecService {
 
     private final ProprietaService proprietaService;
 
-    private final String username;
+    private String username;
 
-    private final String password;
-
+    private String password;
 
     @Autowired
     public EmailPecService(final ProprietaService proprietaService){
         this.proprietaService = proprietaService;
-        this.username = proprietaService.findByNome(EmailPecConstants.PEC_SMTP_USER_PROPERTY_NAME).getValore();
-        this.password = proprietaService.findByNome(EmailPecConstants.PEC_SMTP_PASSWORD_PROPERTY_NAME).getValore();
     }
 
     private Properties getProperties(){
@@ -57,6 +54,9 @@ public class EmailPecService {
         LOGGER.info("Creating session for connecting to SMTPs server...");
 
         Properties properties = getProperties();
+
+        username = proprietaService.findByNome(EmailPecConstants.PEC_SMTP_USER_PROPERTY_NAME).getValore();
+        password = proprietaService.findByNome(EmailPecConstants.PEC_SMTP_PASSWORD_PROPERTY_NAME).getValore();
 
         Session session = Session.getInstance(properties, new Authenticator() {
             @Override

@@ -28,16 +28,13 @@ public class EmailService {
 
     private final ProprietaService proprietaService;
 
-    private final String username;
+    private String username;
 
-    private final String password;
-
+    private String password;
 
     @Autowired
     public EmailService(final ProprietaService proprietaService){
         this.proprietaService = proprietaService;
-        this.username = proprietaService.findByNome(EmailConstants.SMTP_USER_PROPERTY_NAME).getValore();
-        this.password = proprietaService.findByNome(EmailConstants.SMTP_PASSWORD_PROPERTY_NAME).getValore();
     }
 
     private Properties getProperties(){
@@ -56,6 +53,9 @@ public class EmailService {
 
     private Session createSession(){
         LOGGER.info("Creating session for connecting to SMTPs server...");
+
+        username = proprietaService.findByNome(EmailConstants.SMTP_USER_PROPERTY_NAME).getValore();
+        password = proprietaService.findByNome(EmailConstants.SMTP_PASSWORD_PROPERTY_NAME).getValore();
 
         Properties properties = getProperties();
 

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -23,11 +22,12 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+@SuppressWarnings({"unused"})
 @RestController
 @RequestMapping(path="/ddts")
 public class DdtController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(DdtController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(DdtController.class);
 
     private final DdtService ddtService;
 
