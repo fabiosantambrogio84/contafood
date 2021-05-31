@@ -48,6 +48,7 @@ public class CausaleService {
         if(optionalCausale.isPresent()){
             throw new ResourceAlreadyExistingException(Resource.CAUSALE);
         }
+        causale.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Causale createdCausale = causaleRepository.save(causale);
         LOGGER.info("Created 'causale' '{}'", createdCausale);
         return createdCausale;
@@ -55,10 +56,12 @@ public class CausaleService {
 
     public Causale update(Causale causale){
         LOGGER.info("Updating 'causale'");
+        Causale currentCausale = causaleRepository.findById(causale.getId()).orElseThrow(ResourceNotFoundException::new);
         Optional<Causale> optionalCausale = causaleRepository.findByDescrizione(causale.getDescrizione());
         if(optionalCausale.isPresent()){
             throw new ResourceAlreadyExistingException(Resource.CAUSALE);
         }
+        causale.setDataInserimento(currentCausale.getDataInserimento());
         causale.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Causale updatedCausale = causaleRepository.save(causale);
         LOGGER.info("Updated 'causale' '{}'", updatedCausale);

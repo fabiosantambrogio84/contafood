@@ -12,4 +12,5 @@ public interface PuntoConsegnaRepository extends CrudRepository<PuntoConsegna, L
     Set<PuntoConsegna> findAll();
 
     List<PuntoConsegna> findByClienteId(Long idCliente);
+
 }

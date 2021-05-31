@@ -2,10 +2,7 @@ package com.contafood.model;
 
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @EqualsAndHashCode
@@ -14,6 +11,7 @@ import java.sql.Timestamp;
 public class Causale {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "descrizione")

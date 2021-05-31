@@ -113,6 +113,8 @@ public class ClienteService {
     @Transactional
     public void delete(Long clienteId){
         LOGGER.info("Deleting 'cliente' '{}'", clienteId);
+        listinoAssociatoService.deleteByClienteId(clienteId);
+        puntoConsegnaService.deleteByClienteId(clienteId);
         clienteArticoloService.deleteByClienteId(clienteId);
         telefonataService.deleteByClienteId(clienteId);
         clienteRepository.deleteById(clienteId);

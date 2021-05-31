@@ -93,6 +93,12 @@ public class ListinoAssociatoService {
         LOGGER.info("Deleted 'listinoAssociato' '{}'", listinoAssociatoId);
     }
 
+    public void deleteByClienteId(Long idCliente){
+        LOGGER.info("Deleting 'listiniAssociato' for cliente '{}'", idCliente);
+        listinoAssociatoRepository.deleteByClienteId(idCliente);
+        LOGGER.info("Deleted 'listinoAssociato' for cliente '{}'", idCliente);
+    }
+
     public List<ListinoAssociato> getByClienteId(Long clienteId){
         LOGGER.info("Retrieving the list of 'listiniAssociati' for 'cliente' '{}'", clienteId);
         List<ListinoAssociato> listiniAssociati = listinoAssociatoRepository.findByClienteId(clienteId);

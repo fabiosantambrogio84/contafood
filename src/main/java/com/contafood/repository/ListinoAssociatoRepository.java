@@ -19,4 +19,6 @@ public interface ListinoAssociatoRepository extends CrudRepository<ListinoAssoci
 
     Optional<ListinoAssociato> findByClienteIdAndFornitoreIdAndListinoId(Long idCliente, Long idFornitore, Long idListino);
 
+    void deleteByClienteId(Long idCliente);
+
 }

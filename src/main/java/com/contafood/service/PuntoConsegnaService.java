@@ -68,6 +68,13 @@ public class PuntoConsegnaService {
         LOGGER.info("Deleted 'puntoConsegna' '{}'", puntoConsegnaId);
     }
 
+    @Transactional
+    public void deleteByClienteId(Long clienteId){
+        LOGGER.info("Deleting 'puntiConsegna' for cliente '{}'", clienteId);
+        getByClienteId(clienteId).forEach(pc -> delete(pc.getId()));
+        LOGGER.info("Deleted 'puntiConsegna' for cliente '{}'", clienteId);
+    }
+
     public List<PuntoConsegna> getByClienteId(Long clienteId){
         LOGGER.info("Retrieving the list of 'puntiConsegna' for 'cliente' '{}'", clienteId);
         List<PuntoConsegna> puntiConsegna = puntoConsegnaRepository.findByClienteId(clienteId);
