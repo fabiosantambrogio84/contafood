@@ -22,17 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Refactoring email handling">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20210531.sql" afterDir="false" />
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix clienti and causali">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Causale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Causale.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Ddt.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Ddt.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ListinoAssociatoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ListinoAssociatoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/PuntoConsegnaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/PuntoConsegnaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/CausaleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/CausaleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ClienteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ListinoAssociatoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ListinoAssociatoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/PuntoConsegnaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/PuntoConsegnaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +103,7 @@
       <recent name="com.contafood.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.contafood [clean,package]">
+  <component name="RunManager" selected="Remote JVM Debug.Contafood-remote">
     <configuration name="contafood [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -437,13 +429,6 @@
       <workItem from="1618218153296" duration="1635000" />
       <workItem from="1618319784022" duration="2381000" />
       <workItem from="1618384726376" duration="4089000" />
-    </task>
-    <task id="LOCAL-00032" summary="First implementation of Fattura">
-      <created>1583254025656</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1583254025656</updated>
     </task>
     <task id="LOCAL-00033" summary="Fix saving Cliente">
       <created>1583316446262</created>
@@ -781,7 +766,14 @@
       <option name="project" value="LOCAL" />
       <updated>1622187401167</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Fix clienti and causali">
+      <created>1622472396217</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1622472396218</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -804,7 +796,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add computation of Statistiche" />
     <MESSAGE value="Fix character set and collation" />
     <MESSAGE value="Add FattureAccompagnatorie in Statistiche computation" />
     <MESSAGE value="Fix decimal round on StatisticheArticoliGroups" />
@@ -829,17 +820,7 @@
     <MESSAGE value="Add email management" />
     <MESSAGE value="Add jasper report compiled files" />
     <MESSAGE value="Refactoring email handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactoring email handling" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java</url>
-          <line>306</line>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Fix clienti and causali" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix clienti and causali" />
   </component>
 </project>

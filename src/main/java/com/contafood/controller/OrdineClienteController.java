@@ -23,9 +23,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(path="/ordini-clienti")
+@SuppressWarnings("unused")
 public class OrdineClienteController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(OrdineClienteController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(OrdineClienteController.class);
 
     private final OrdineClienteService ordineClienteService;
 
@@ -55,9 +56,7 @@ public class OrdineClienteController {
             if(cliente != null){
                 Cliente ordineClienteCliente = ordineCliente.getCliente();
                 if(ordineClienteCliente != null){
-                    if((ordineClienteCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase())){
-                        return true;
-                    }
+                    return (ordineClienteCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase());
                 }
                 return false;
             }
@@ -73,9 +72,7 @@ public class OrdineClienteController {
             if(idAutista != null){
                 Autista autista = ordineCliente.getAutista();
                 if(autista != null){
-                    if(autista.getId().equals(Long.valueOf(idAutista))){
-                        return true;
-                    }
+                    return autista.getId().equals(Long.valueOf(idAutista));
                 }
                 return false;
             }
