@@ -10,6 +10,8 @@ public class OrdineAutistaDataSource {
 
     private String cliente;
 
+    private String puntoConsegna;
+
     private List<OrdineAutistaArticoloDataSource> ordineAutistaArticoloDataSources;
 
     private JRBeanCollectionDataSource ordineAutistaArticoliDataSource;
@@ -28,6 +30,14 @@ public class OrdineAutistaDataSource {
 
     public void setCliente(String cliente) {
         this.cliente = cliente;
+    }
+
+    public String getPuntoConsegna() {
+        return puntoConsegna;
+    }
+
+    public void setPuntoConsegna(String puntoConsegna) {
+        this.puntoConsegna = puntoConsegna;
     }
 
     public List<OrdineAutistaArticoloDataSource> getOrdineAutistaArticoloDataSources() {

@@ -7,8 +7,6 @@ import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.util.Constants;
 import com.contafood.util.enumeration.Provincia;
 import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang3.StringUtils;
@@ -24,9 +22,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static java.util.Comparator.naturalOrder;
 
 @Service
 public class StampaService {
@@ -256,13 +253,28 @@ public class StampaService {
         return autistaService.getOne(idAutista);
     }
 
-    public List<OrdineAutistaDataSource> getOrdiniAutista(String ids){
-        LOGGER.info("Retrieving the list of 'ordini-clienti' with id in '{}' for creating pdf file", ids);
+    public List<OrdineAutistaDataSource> getOrdiniAutista(Long idAutista, Date dataConsegna){
+        LOGGER.info("Retrieving the list of 'ordini-clienti' of autista '{}' and dataConsegna '{}' for creating pdf file", idAutista, dataConsegna);
+
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaEquals = ordineCliente -> {
+            if(dataConsegna != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegna) == 0;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteAutistaEquals = ordineCliente -> {
+            if(idAutista != null){
+                Autista autista = ordineCliente.getAutista();
+                if(autista != null){
+                    return autista.getId().equals(Long.valueOf(idAutista));
+                }
+                return false;
+            }
+            return true;
+        };
 
         List<OrdineCliente> ordiniClienti = ordineClienteService.getAll().stream()
-                .filter(oc -> ids.contains(oc.getId().toString()))
-                .sorted(Comparator.comparing(OrdineCliente::getProgressivo).reversed())
-                .sorted(Comparator.comparing(OrdineCliente::getAnnoContabile).reversed())
+                .filter(isOrdineClienteDataConsegnaEquals.and(isOrdineClienteAutistaEquals))
                 .collect(Collectors.toList());
 
         List<OrdineAutistaDataSource> ordiniAutistaDataSource = new ArrayList<>();
@@ -280,10 +292,15 @@ public class StampaService {
                         cliente = oc.getCliente().getRagioneSociale();
                     }
                 }
+                String puntoConsegna = "";
+                if(oc.getPuntoConsegna() != null){
+                    puntoConsegna = oc.getPuntoConsegna().getIndirizzo() + " " + oc.getPuntoConsegna().getLocalita();
+                }
 
                 OrdineAutistaDataSource ordineAutistaDataSource = new OrdineAutistaDataSource();
                 ordineAutistaDataSource.setCodiceOrdine(codiceOrdine);
                 ordineAutistaDataSource.setCliente(cliente);
+                ordineAutistaDataSource.setPuntoConsegna(puntoConsegna);
 
                 List<OrdineAutistaArticoloDataSource> ordineAutistaArticoliDataSource = new ArrayList<>();
                 Set<OrdineClienteArticolo> ordineClienteArticoli = oc.getOrdineClienteArticoli();

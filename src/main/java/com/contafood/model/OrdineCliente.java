@@ -50,6 +50,10 @@ public class OrdineCliente {
     @JoinColumn(name="id_stato_ordine")
     private StatoOrdine statoOrdine;
 
+    @ManyToOne
+    @JoinColumn(name="id_telefonata")
+    private Telefonata telefonata;
+
     @Column(name = "note")
     private String note;
 
@@ -143,6 +147,14 @@ public class OrdineCliente {
         this.statoOrdine = statoOrdine;
     }
 
+    public Telefonata getTelefonata() {
+        return telefonata;
+    }
+
+    public void setTelefonata(Telefonata telefonata) {
+        this.telefonata = telefonata;
+    }
+
     public String getNote() {
         return note;
     }
@@ -190,6 +202,7 @@ public class OrdineCliente {
         result.append(", autista: " + autista);
         result.append(", agente: " + agente);
         result.append(", statoOrdine: " + statoOrdine);
+        result.append(", telefonata: " + telefonata);
         result.append(", note: " + note);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);

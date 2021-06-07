@@ -1,0 +1,1 @@
+ALTER TABLE ordine_cliente ADD COLUMN id_telefonata int unsigned AFTER id_stato_ordine;

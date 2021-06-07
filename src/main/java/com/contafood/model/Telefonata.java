@@ -1,10 +1,12 @@
 package com.contafood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.List;
 
 @EqualsAndHashCode
 @Entity
@@ -56,6 +58,10 @@ public class Telefonata {
 
     @Column(name = "note")
     private String note;
+
+    @OneToMany(mappedBy = "telefonata")
+    @JsonIgnore
+    private List<OrdineCliente> ordiniClienti;
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
@@ -172,6 +178,14 @@ public class Telefonata {
         this.note = note;
     }
 
+    public List<OrdineCliente> getOrdiniClienti() {
+        return ordiniClienti;
+    }
+
+    public void setOrdiniClienti(List<OrdineCliente> ordiniClienti) {
+        this.ordiniClienti = ordiniClienti;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -199,6 +213,7 @@ public class Telefonata {
         result.append(", ora: " + ora);
         result.append(", oraConsegna: " + oraConsegna);
         result.append(", note: " + note);
+        result.append(", ordiniClienti: " + ordiniClienti);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
 

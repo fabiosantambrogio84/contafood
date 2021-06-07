@@ -34,11 +34,12 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
 @RequestMapping(path="/stampe")
+@SuppressWarnings("unused")
 public class StampaController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(StampaController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(StampaController.class);
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     private final StampaService stampaService;
 
@@ -187,9 +188,8 @@ public class StampaController {
     @CrossOrigin
     public ResponseEntity<Resource> printOrdiniAutisti(
             @RequestParam(name = "idAutista") Long idAutista,
-            @RequestParam(name = "dataConsegna") Date dataConsegna,
-            @RequestParam(name = "ids") String ids) throws Exception{
-        LOGGER.info("Creating pdf for 'ordini-clienti' with ids {} of 'autista' {} and 'dataConsegna' {}", ids, idAutista, dataConsegna);
+            @RequestParam(name = "dataConsegna") Date dataConsegna) throws Exception{
+        LOGGER.info("Creating pdf for 'ordini-clienti' of 'autista' {} and 'dataConsegna' {}", idAutista, dataConsegna);
 
         // retrieve Autista with id 'idAutista'
         Autista autista = stampaService.getAutista(idAutista);
@@ -199,7 +199,7 @@ public class StampaController {
         }
 
         // retrieve the list of OrdiniClienti
-        List<OrdineAutistaDataSource> ordineAutistaDataSources = stampaService.getOrdiniAutista(ids);
+        List<OrdineAutistaDataSource> ordineAutistaDataSources = stampaService.getOrdiniAutista(idAutista, dataConsegna);
 
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_ORDINI_AUTISTI);
@@ -220,7 +220,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ordini-clienti' with ids {} of 'autista' {} and 'dataConsegna' {}", ids, idAutista, dataConsegna);
+        LOGGER.info("Successfully create pdf for 'ordini-clienti' of 'autista' {} and 'dataConsegna' {}", idAutista, dataConsegna);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("ordini-clienti-autista.pdf"))
