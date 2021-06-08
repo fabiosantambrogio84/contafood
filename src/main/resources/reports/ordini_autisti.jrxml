@@ -70,7 +70,7 @@
 			<staticText>
 				<reportElement x="90" y="0" width="160" height="20" uuid="3ffdb044-e696-4a36-91ef-e05ce4225795"/>
 				<textElement textAlignment="Center">
-					<font size="14" isBold="true" isItalic="true"/>
+					<font size="12" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Urbani Giuseppe]]></text>
 			</staticText>
@@ -84,7 +84,7 @@
 			<staticText>
 				<reportElement x="0" y="25" width="555" height="30" uuid="bd86fb0b-083e-4044-9711-649afaf9b757"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="16" isBold="true"/>
+					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Elenco ordini clienti]]></text>
 			</staticText>
@@ -93,8 +93,8 @@
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="10" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{autista}+" data consegna "+$P{dataConsegna}]]></textFieldExpression>
 			</textField>
@@ -120,7 +120,7 @@
 								<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							</reportElement>
 							<textElement textAlignment="Left" verticalAlignment="Middle">
-								<font isBold="true"/>
+								<font size="9" isBold="false"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
 						</textField>
@@ -129,7 +129,7 @@
 								<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							</reportElement>
 							<textElement textAlignment="Left" verticalAlignment="Middle">
-								<font isBold="true"/>
+								<font size="9" isBold="false"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{codiceOrdine}]]></textFieldExpression>
 						</textField>
