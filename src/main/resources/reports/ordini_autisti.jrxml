@@ -105,7 +105,7 @@
 			<property name="com.jaspersoft.studio.layout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<componentElement>
-				<reportElement x="0" y="0" width="275" height="55" uuid="7da00800-08f8-4bd5-bc4d-38ea01ae56c4">
+				<reportElement x="0" y="0" width="275" height="50" uuid="7da00800-08f8-4bd5-bc4d-38ea01ae56c4">
 					<property name="com.jaspersoft.studio.layout"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -114,13 +114,13 @@
 					<datasetRun subDataset="OrdineAutistaDataset" uuid="30cb224d-29cd-4bce-932a-4fc9116e98f9">
 						<dataSourceExpression><![CDATA[$P{ordineAutistaCollection}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:listContents height="55" width="275">
+					<jr:listContents height="50" width="275">
 						<textField textAdjust="ScaleFont">
 							<reportElement x="0" y="0" width="175" height="23" uuid="fea27f30-2dcc-41ea-8800-f874cacc2862">
 								<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							</reportElement>
 							<textElement textAlignment="Left" verticalAlignment="Middle">
-								<font size="9" isBold="false"/>
+								<font size="9" isBold="true"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
 						</textField>
@@ -129,12 +129,12 @@
 								<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							</reportElement>
 							<textElement textAlignment="Left" verticalAlignment="Middle">
-								<font size="9" isBold="false"/>
+								<font size="9" isBold="true"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{codiceOrdine}]]></textFieldExpression>
 						</textField>
 						<componentElement>
-							<reportElement x="0" y="36" width="275" height="15" uuid="fa1d1dbe-a1aa-409d-a3e1-0c44c7524034">
+							<reportElement x="0" y="33" width="275" height="15" uuid="fa1d1dbe-a1aa-409d-a3e1-0c44c7524034">
 								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 								<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 								<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -167,7 +167,7 @@
 												<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 												<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 											</box>
-											<textElement textAlignment="Center" verticalAlignment="Middle">
+											<textElement textAlignment="Left" verticalAlignment="Middle">
 												<font size="8"/>
 											</textElement>
 											<textFieldExpression><![CDATA[$F{articolo}]]></textFieldExpression>
@@ -202,12 +202,12 @@
 							</jr:table>
 						</componentElement>
 						<textField textAdjust="ScaleFont">
-							<reportElement x="0" y="23" width="275" height="13" uuid="f1e3797f-95b4-4f67-baee-7d2ed3dd48ba">
+							<reportElement x="0" y="23" width="275" height="10" uuid="f1e3797f-95b4-4f67-baee-7d2ed3dd48ba">
 								<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 								<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							</reportElement>
 							<textElement>
-								<font size="8"/>
+								<font size="6"/>
 								<paragraph lineSpacingSize="0.0"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$F{puntoConsegna}]]></textFieldExpression>

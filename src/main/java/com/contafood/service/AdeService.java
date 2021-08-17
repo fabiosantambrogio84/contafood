@@ -39,7 +39,7 @@ import java.util.zip.ZipOutputStream;
 @Service
 public class AdeService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(AdeService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(AdeService.class);
 
     private final NativeQueryService nativeQueryService;
     private final StampaService stampaService;
@@ -47,7 +47,7 @@ public class AdeService {
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    private String baseDirectory;
+    private final String baseDirectory;
 
     @Autowired
     public AdeService(final NativeQueryService nativeQueryService,
@@ -307,7 +307,7 @@ public class AdeService {
         Map<String, Object> result = new HashMap<>();
         String resultFilePath = "";
         String resultFileName = "";
-        byte[] zipFile = null;
+        byte[] zipFile;
 
         String destinationPath = baseDirectory + AdeConstants.FILE_SEPARATOR + idExport;
         Path path = Paths.get(destinationPath);
@@ -432,7 +432,7 @@ public class AdeService {
 
     private Integer createFattureXmlFiles(Map<Cliente, List<Fattura>> fattureByCliente) throws Exception{
         LOGGER.info("Start creating xml files for fatture...");
-        Integer idExport = null;
+        Integer idExport;
 
         try{
             checkAndCreateDirectory(baseDirectory);
@@ -476,12 +476,12 @@ public class AdeService {
             e.printStackTrace();
             throw e;
         }
-        return idExport.intValue();
+        return idExport;
     }
 
     private Integer createFattureAccompagnatorieXmlFiles(Map<Cliente, List<FatturaAccompagnatoria>> fattureAccompagnatorieByCliente) throws Exception{
         LOGGER.info("Start creating xml files for fatture accompagnatorie...");
-        Integer idExport = null;
+        Integer idExport;
 
         try{
             checkAndCreateDirectory(baseDirectory);
@@ -525,12 +525,12 @@ public class AdeService {
             e.printStackTrace();
             throw e;
         }
-        return idExport.intValue();
+        return idExport;
     }
 
     private Integer createNoteAccreditoXmlFiles(Map<Cliente, List<NotaAccredito>> noteAccreditoByCliente) throws Exception{
         LOGGER.info("Start creating xml files for note accredito...");
-        Integer idExport = null;
+        Integer idExport;
 
         try{
             checkAndCreateDirectory(baseDirectory);
@@ -574,7 +574,7 @@ public class AdeService {
             e.printStackTrace();
             throw e;
         }
-        return idExport.intValue();
+        return idExport;
     }
 
     private void createNodeDatiTrasmissione(XMLStreamWriter xmlStreamWriter, Cliente cliente, Integer idProgressivo) throws Exception{
@@ -918,7 +918,7 @@ public class AdeService {
         // create node 'Numero' 
         Integer numeroProgr = fattura.getProgressivo();
         String numero = "";
-        if(numeroProgr != null && !numeroProgr.equals("")){
+        if(numeroProgr != null){
             numero = String.valueOf(numeroProgr);
         }
         xmlStreamWriter.writeStartElement("Numero");
@@ -1017,7 +1017,7 @@ public class AdeService {
 
         // create node 'ImportoTotaleDocumento' 
         BigDecimal totaleFattura = fattura.getTotale();
-        String totaleFattura_s = "";
+        String totaleFattura_s;
         if(totaleFattura != null){
             totaleFattura_s = totaleFattura.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
             xmlStreamWriter.writeStartElement("ImportoTotaleDocumento");
@@ -1033,23 +1033,22 @@ public class AdeService {
         // create node 'Causale' 
         // Se la lunghezza è maggiore di 200 devo creare un nuovo nodo contenente i successivi 200 caratteri 
         String causale = "vendita";
-        if(causale != null && !causale.isEmpty()){
-            int casualeLength = causale.length();
-            if(casualeLength < 200){
-                xmlStreamWriter.writeStartElement("Causale");
-                xmlStreamWriter.writeCharacters(causale.toUpperCase());
-                xmlStreamWriter.writeEndElement();
-            }else{
-                String[] tokens = Iterables.toArray(Splitter.fixedLength(4).split(causale), String.class);
-                if(tokens != null && tokens.length > 0){
-                    for(int j=0; j<tokens.length; j++){
-                        xmlStreamWriter.writeStartElement("Causale");
-                        xmlStreamWriter.writeCharacters(tokens[j].toUpperCase());
-                        xmlStreamWriter.writeEndElement();
-                    }
+        int casualeLength = causale.length();
+        if(casualeLength < 200){
+            xmlStreamWriter.writeStartElement("Causale");
+            xmlStreamWriter.writeCharacters(causale.toUpperCase());
+            xmlStreamWriter.writeEndElement();
+        }else{
+            String[] tokens = Iterables.toArray(Splitter.fixedLength(4).split(causale), String.class);
+            if(tokens != null && tokens.length > 0){
+                for (String token : tokens) {
+                    xmlStreamWriter.writeStartElement("Causale");
+                    xmlStreamWriter.writeCharacters(token.toUpperCase());
+                    xmlStreamWriter.writeEndElement();
                 }
             }
-        } //else{
+        }
+        //else{
             //xmlStreamWriter.writeStartElement("Causale");
             //xmlStreamWriter.writeCharacters("");
             //xmlStreamWriter.writeEndElement();
@@ -1212,7 +1211,7 @@ public class AdeService {
         // create node 'Numero'
         Integer numeroProgr = fatturaAccompagnatoria.getProgressivo();
         String numero = "";
-        if(numeroProgr != null && !numeroProgr.equals("")){
+        if(numeroProgr != null){
             numero = String.valueOf(numeroProgr);
         }
         xmlStreamWriter.writeStartElement("Numero");
@@ -1221,7 +1220,7 @@ public class AdeService {
 
         // create node 'ImportoTotaleDocumento'
         BigDecimal totaleFattura = fatturaAccompagnatoria.getTotale();
-        String totaleFattura_s = "";
+        String totaleFattura_s;
         if(totaleFattura != null){
             totaleFattura_s = totaleFattura.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
             xmlStreamWriter.writeStartElement("ImportoTotaleDocumento");
@@ -1232,20 +1231,18 @@ public class AdeService {
         // create node 'Causale'
         // Se la lunghezza è maggiore di 200 devo creare un nuovo nodo contenente i successivi 200 caratteri
         String causale = "vendita";
-        if(causale != null && !causale.isEmpty()){
-            int casualeLength = causale.length();
-            if(casualeLength < 200){
-                xmlStreamWriter.writeStartElement("Causale");
-                xmlStreamWriter.writeCharacters(causale.toUpperCase());
-                xmlStreamWriter.writeEndElement();
-            }else{
-                String[] tokens = Iterables.toArray(Splitter.fixedLength(4).split(causale), String.class);
-                if(tokens != null && tokens.length > 0){
-                    for(int j=0; j<tokens.length; j++){
-                        xmlStreamWriter.writeStartElement("Causale");
-                        xmlStreamWriter.writeCharacters(tokens[j].toUpperCase());
-                        xmlStreamWriter.writeEndElement();
-                    }
+        int casualeLength = causale.length();
+        if(casualeLength < 200){
+            xmlStreamWriter.writeStartElement("Causale");
+            xmlStreamWriter.writeCharacters(causale.toUpperCase());
+            xmlStreamWriter.writeEndElement();
+        }else{
+            String[] tokens = Iterables.toArray(Splitter.fixedLength(4).split(causale), String.class);
+            if(tokens != null && tokens.length > 0){
+                for (String token : tokens) {
+                    xmlStreamWriter.writeStartElement("Causale");
+                    xmlStreamWriter.writeCharacters(token.toUpperCase());
+                    xmlStreamWriter.writeEndElement();
                 }
             }
         }
@@ -1323,7 +1320,7 @@ public class AdeService {
         // create node 'Numero'
         Integer numeroProgr = notaAccredito.getProgressivo();
         String numero = "";
-        if(numeroProgr != null && !numeroProgr.equals("")){
+        if(numeroProgr != null){
             numero = String.valueOf(numeroProgr);
         }
         xmlStreamWriter.writeStartElement("Numero");
@@ -1332,7 +1329,7 @@ public class AdeService {
 
         // create node 'ImportoTotaleDocumento'
         BigDecimal totaleNotaAccredito = notaAccredito.getTotale();
-        String totaleNotaAccredito_s = "";
+        String totaleNotaAccredito_s;
         if(totaleNotaAccredito != null){
             totaleNotaAccredito_s = totaleNotaAccredito.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
             xmlStreamWriter.writeStartElement("ImportoTotaleDocumento");
@@ -1342,7 +1339,7 @@ public class AdeService {
 
         // create node 'Causale'
         // Se la lunghezza è maggiore di 200 devo creare un nuovo nodo contenente i successivi 200 caratteri
-        String causale = "vendita";
+        String causale = notaAccredito.getCausale() != null ? notaAccredito.getCausale().getDescrizione() : "vendita";
         if(causale != null && !causale.isEmpty()){
             int casualeLength = causale.length();
             if(casualeLength < 200){
@@ -1352,9 +1349,9 @@ public class AdeService {
             }else{
                 String[] tokens = Iterables.toArray(Splitter.fixedLength(4).split(causale), String.class);
                 if(tokens != null && tokens.length > 0){
-                    for(int j=0; j<tokens.length; j++){
+                    for (String token : tokens) {
                         xmlStreamWriter.writeStartElement("Causale");
-                        xmlStreamWriter.writeCharacters(tokens[j].toUpperCase());
+                        xmlStreamWriter.writeCharacters(token.toUpperCase());
                         xmlStreamWriter.writeEndElement();
                     }
                 }
@@ -1436,7 +1433,7 @@ public class AdeService {
 
                         // create node 'Descrizione' 
                         xmlStreamWriter.writeStartElement("Descrizione");
-                        xmlStreamWriter.writeCharacters(articolo.getDescrizione());
+                        xmlStreamWriter.writeCharacters(articolo != null ? articolo.getDescrizione() : "");
                         xmlStreamWriter.writeEndElement();
 
                         // create node 'Quantita' 
@@ -1554,7 +1551,7 @@ public class AdeService {
                 xmlStreamWriter.writeEndElement();
 
                 // if IVA=0 create node 'Natura'
-                if(iva.compareTo(BigDecimal.ZERO) == 0){
+                if(iva != null && iva.compareTo(BigDecimal.ZERO) == 0){
                     xmlStreamWriter.writeStartElement("Natura");
                     xmlStreamWriter.writeCharacters(AdeConstants.NATURA_IVA_ZERO);
                     xmlStreamWriter.writeEndElement();
@@ -1622,7 +1619,7 @@ public class AdeService {
 
                 // create node 'Descrizione'
                 xmlStreamWriter.writeStartElement("Descrizione");
-                xmlStreamWriter.writeCharacters(articolo.getDescrizione());
+                xmlStreamWriter.writeCharacters(articolo != null ? articolo.getDescrizione() : "");
                 xmlStreamWriter.writeEndElement();
 
                 // create node 'Quantita'
@@ -1891,7 +1888,7 @@ public class AdeService {
                 xmlStreamWriter.writeEndElement();
 
                 // if IVA=0 create node 'Natura'
-                if(iva.compareTo(BigDecimal.ZERO) == 0){
+                if(iva != null && iva.compareTo(BigDecimal.ZERO) == 0){
                     xmlStreamWriter.writeStartElement("Natura");
                     xmlStreamWriter.writeCharacters(AdeConstants.NATURA_IVA_ZERO);
                     xmlStreamWriter.writeEndElement();
@@ -2065,7 +2062,7 @@ public class AdeService {
         xmlStreamWriter.writeEndElement();
     }
 
-    private void createNodeBodyAllegati(XMLStreamWriter xmlStreamWriter, Fattura fattura) throws Exception{
+    private void createNodeBodyAllegati(XMLStreamWriter xmlStreamWriter, Fattura fattura) {
 
         try(ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 ZipOutputStream zos = new ZipOutputStream(baos)){
@@ -2117,7 +2114,7 @@ public class AdeService {
         }
     }
 
-    private void createNodeBodyAllegati(XMLStreamWriter xmlStreamWriter, FatturaAccompagnatoria fatturaAccompagnatoria) throws Exception{
+    private void createNodeBodyAllegati(XMLStreamWriter xmlStreamWriter, FatturaAccompagnatoria fatturaAccompagnatoria) {
 
         try(ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ZipOutputStream zos = new ZipOutputStream(baos)){
@@ -2169,7 +2166,7 @@ public class AdeService {
         }
     }
 
-    private void createNodeBodyAllegati(XMLStreamWriter xmlStreamWriter, NotaAccredito notaAccredito) throws Exception{
+    private void createNodeBodyAllegati(XMLStreamWriter xmlStreamWriter, NotaAccredito notaAccredito) {
 
         try(ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ZipOutputStream zos = new ZipOutputStream(baos)){
@@ -2229,28 +2226,27 @@ public class AdeService {
         }
     }
 
-    private void removeFiles(List<Path> paths, List<String> fileNamesToExclude){
-        for(int i=0; i<paths.size(); i++){
-            Path path = paths.get(i);
+    /*private void removeFiles(List<Path> paths, List<String> fileNamesToExclude){
+        for (Path path : paths) {
             String filename = path.getFileName().toString();
-            if(!fileNamesToExclude.isEmpty() && !fileNamesToExclude.contains(filename)){
+            if (!fileNamesToExclude.isEmpty() && !fileNamesToExclude.contains(filename)) {
                 removeFileOrDirectory(path);
             }
         }
-    }
+    }*/
 
     private void removeFileOrDirectory(Path path){
         try{
             File file = path.toFile();
             if(file.isDirectory()){
                 FileUtils.deleteDirectory(file);
-            }else{
+            } else{
                 file.delete();
             }
 
         } catch(Exception e){
             e.printStackTrace();
-            LOGGER.error("Error deleting file '{}'", path.toAbsolutePath().toString());
+            LOGGER.error("Error deleting file '{}'", path.toAbsolutePath());
         }
 
     }

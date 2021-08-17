@@ -13,7 +13,7 @@ import java.util.Set;
 @Service
 public class FornitoreService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(FornitoreService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(FornitoreService.class);
 
     private final FornitoreRepository fornitoreRepository;
 

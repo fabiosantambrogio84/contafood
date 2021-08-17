@@ -1,0 +1,1 @@
+ALTER TABLE contafood.fornitore ADD COLUMN email_ordini varchar(100) AFTER email_pec;

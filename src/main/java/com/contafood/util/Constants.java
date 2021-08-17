@@ -36,5 +36,5 @@ public interface Constants {
     String JASPER_REPORT_RICEVUTE_PRIVATI = "/reports/ricevute_privati.jasper";
     String JASPER_REPORT_RICEVUTA_PRIVATO = "/reports/ricevuta_privato.jasper";
     String JASPER_REPORT_FATTURE_COMMERCIANTI = "/reports/fatture_commercianti.jasper";
-
+    String JASPER_REPORT_ORDINE_FORNITORE = "/reports/ordine_fornitore.jasper";
 }

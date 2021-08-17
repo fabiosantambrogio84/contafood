@@ -9,6 +9,7 @@ encoding/header.jrxml=UTF-8
 encoding/nota_accredito.jrxml=UTF-8
 encoding/nota_reso.jrxml=UTF-8
 encoding/note_accredito.jrxml=UTF-8
+encoding/ordine_fornitore.jrxml=UTF-8
 encoding/ordini_autisti.jrxml=UTF-8
 encoding/pagamenti.jrxml=UTF-8
 encoding/ricevuta_privato.jrxml=UTF-8

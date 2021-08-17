@@ -22,8 +22,25 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix clienti and causali">
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix report ordini autisti">
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20210817.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/OrdineFornitoreArticoloDataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/ordine_fornitore.jasper" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/ordine_fornitore.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/contafood.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/EmailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/EmailController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreArticoloService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jasper" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" afterDir="false" />
     </list>
@@ -61,6 +78,12 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AdeController.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="JupyterTrust" id="e17c0346-daa0-40ae-a012-1eb389037a67" />
   <component name="ProjectId" id="1XOZ4qCFwmJr4ZtINvmWCN8YDWn" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -97,14 +120,14 @@
       <recent name="com.contafood.model.stats" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.contafood.model.reports" />
       <recent name="com.contafood.controller" />
       <recent name="com.contafood.service" />
       <recent name="com.contafood.util" />
       <recent name="com.contafood.repository" />
-      <recent name="com.contafood.model" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.contafood [clean,package]">
+  <component name="RunManager" selected="Remote JVM Debug.Contafood-remote">
     <configuration name="contafood [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -173,6 +196,7 @@
     <list>
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Remote JVM Debug.Contafood-remote" />
+      <item itemvalue="Spring Boot.Application" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -430,13 +454,9 @@
       <workItem from="1618218153296" duration="1635000" />
       <workItem from="1618319784022" duration="2381000" />
       <workItem from="1618384726376" duration="4089000" />
-    </task>
-    <task id="LOCAL-00033" summary="Fix saving Cliente">
-      <created>1583316446262</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1583316446262</updated>
+      <workItem from="1626764832508" duration="1479000" />
+      <workItem from="1628063714521" duration="619000" />
+      <workItem from="1629184051949" duration="6983000" />
     </task>
     <task id="LOCAL-00034" summary="Add method to retrieve valid Sconti with priority based on Tipologia">
       <created>1583340271145</created>
@@ -774,7 +794,14 @@
       <option name="project" value="LOCAL" />
       <updated>1622472396218</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="Fix report ordini autisti">
+      <created>1623143297560</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1623143297561</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -797,7 +824,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix character set and collation" />
     <MESSAGE value="Add FattureAccompagnatorie in Statistiche computation" />
     <MESSAGE value="Fix decimal round on StatisticheArticoliGroups" />
     <MESSAGE value="Fix computation of Statistiche" />
@@ -822,6 +848,23 @@
     <MESSAGE value="Add jasper report compiled files" />
     <MESSAGE value="Refactoring email handling" />
     <MESSAGE value="Fix clienti and causali" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix clienti and causali" />
+    <MESSAGE value="Fix report ordini autisti" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix report ordini autisti" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/EmailController.java</url>
+          <line>81</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java</url>
+          <line>186</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

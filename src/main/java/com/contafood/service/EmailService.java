@@ -1,9 +1,6 @@
 package com.contafood.service;
 
-import com.contafood.model.Cliente;
-import com.contafood.model.Ddt;
-import com.contafood.model.Fattura;
-import com.contafood.model.NotaAccredito;
+import com.contafood.model.*;
 import com.contafood.util.Constants;
 import com.contafood.util.EmailConstants;
 import com.contafood.util.EmailPecConstants;
@@ -147,6 +144,18 @@ public class EmailService {
         return createMessage(session, emailTo, emailSubject,emailBody, attachmentName, reportBytes);
     }
 
+    private Message createOrdineFornitoreMessage(Session session, OrdineFornitore ordineFornitore, byte[] reportBytes) throws Exception{
+
+        Fornitore fornitore = ordineFornitore.getFornitore();
+
+        String emailTo = fornitore.getEmail();
+        String emailSubject = "Ordine num. "+ordineFornitore.getProgressivo()+"-"+ordineFornitore.getAnnoContabile();
+        String attachmentName = "Ordine_fornitore_num_"+ordineFornitore.getProgressivo()+"-"+ordineFornitore.getAnnoContabile();
+        String emailBody = "In allegato il pdf dell'ordine.<br/>Cordiali saluti";
+
+        return createMessage(session, emailTo, emailSubject,emailBody, attachmentName, reportBytes);
+    }
+
     private void sendMessage(Transport transport, Message message) throws Exception{
         transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
     }
@@ -169,6 +178,13 @@ public class EmailService {
         Session session = createSession();
         Transport transport = connect(session);
         Message message = createNotaAccreditoMessage(session, notaAccredito, reportBytes);
+        sendMessage(transport, message);
+    }
+
+    public void sendEmailOrdineFornitore(OrdineFornitore ordineFornitore, byte[] reportBytes) throws Exception{
+        Session session = createSession();
+        Transport transport = connect(session);
+        Message message = createOrdineFornitoreMessage(session, ordineFornitore, reportBytes);
         sendMessage(transport, message);
     }
 

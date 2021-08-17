@@ -632,6 +632,25 @@ public class StampaController {
                 .body(resource);
     }
 
+    @RequestMapping(method = GET, path = "/ordini-fornitori/{idOrdineFornitore}")
+    @CrossOrigin
+    public ResponseEntity<Resource> printOrdineFornitore(@PathVariable final Long idOrdineFornitore) throws Exception{
+        LOGGER.info("Creating pdf for 'ordine-fornitore' with id '{}'", idOrdineFornitore);
+
+        // create report
+        byte[] reportBytes = stampaService.generateOrdineFornitore(idOrdineFornitore);
+
+        ByteArrayResource resource = new ByteArrayResource(reportBytes);
+
+        LOGGER.info("Successfully create pdf for 'ordine-fornitore' with id '{}'", idOrdineFornitore);
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders("ordine-fornitore-"+idOrdineFornitore+".pdf"))
+                .contentLength(reportBytes.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
     public static void main(String[] args) throws Exception{
 
         /*

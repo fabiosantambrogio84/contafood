@@ -64,6 +64,9 @@ public class Fornitore {
     @Column(name = "email_pec")
     private String emailPec;
 
+    @Column(name = "email_ordini")
+    private String emailOrdini;
+
     @Column(name = "codice_univoco_sdi")
     private String codiceUnivocoSdi;
 
@@ -236,6 +239,14 @@ public class Fornitore {
         this.emailPec = emailPec;
     }
 
+    public String getEmailOrdini() {
+        return emailOrdini;
+    }
+
+    public void setEmailOrdini(String emailOrdini) {
+        this.emailOrdini = emailOrdini;
+    }
+
     public String getCodiceUnivocoSdi() {
         return codiceUnivocoSdi;
     }
@@ -338,6 +349,7 @@ public class Fornitore {
         result.append(", telefono3: " + telefono3);
         result.append(", email: " + email);
         result.append(", emailPec: " + emailPec);
+        result.append(", emailOrdini: " + emailOrdini);
         result.append(", codiceUnivocoSdi: " + codiceUnivocoSdi);
         result.append(", iban: " + iban);
         result.append(", pagamento: " + pagamento);

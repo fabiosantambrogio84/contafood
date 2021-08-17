@@ -15,7 +15,7 @@ import java.util.Set;
 @Service
 public class OrdineFornitoreArticoloService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(OrdineFornitoreArticoloService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(OrdineFornitoreArticoloService.class);
 
     private final OrdineFornitoreArticoloRepository ordineClienteArticoloRepository;
 

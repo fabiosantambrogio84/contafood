@@ -3,6 +3,7 @@ package com.contafood.controller;
 import com.contafood.model.Ddt;
 import com.contafood.model.Fattura;
 import com.contafood.model.NotaAccredito;
+import com.contafood.model.OrdineFornitore;
 import com.contafood.service.EmailService;
 import com.contafood.service.StampaService;
 import org.slf4j.Logger;
@@ -70,6 +71,19 @@ public class EmailController {
         emailService.sendEmailNotaAccredito(notaAccredito, reportBytes);
 
         LOGGER.info("Successfully sent email for notaAccredito '{}'", idNotaAccredito);
+    }
+
+    @RequestMapping(method = GET, path = "/ordini-fornitori/{idOrdineFornitore}")
+    @CrossOrigin
+    public void sendEmailOrdineFornitore(@PathVariable final Long idOrdineFornitore) throws Exception{
+
+        LOGGER.info("Sending email for ordine-fornitore '{}'", idOrdineFornitore);
+
+        byte[] reportBytes = stampaService.generateOrdineFornitore(idOrdineFornitore);
+        OrdineFornitore ordineFornitore = stampaService.getOrdineFornitore(idOrdineFornitore);
+        emailService.sendEmailOrdineFornitore(ordineFornitore, reportBytes);
+
+        LOGGER.info("Successfully sent email for ordine-fornitore '{}'", idOrdineFornitore);
     }
 
 }

@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -28,9 +30,9 @@ import java.util.stream.Collectors;
 @Service
 public class StampaService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(StampaService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(StampaService.class);
 
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     private final GiacenzaIngredienteService giacenzaIngredienteService;
 
@@ -54,6 +56,8 @@ public class StampaService {
 
     private final RicevutaPrivatoService ricevutaPrivatoService;
 
+    private final OrdineFornitoreService ordineFornitoreService;
+
     @Autowired
     public StampaService(final GiacenzaIngredienteService giacenzaIngredienteService, final DdtService ddtService, final PagamentoService pagamentoService,
                          final AutistaService autistaService,
@@ -63,7 +67,8 @@ public class StampaService {
                          final FatturaAccompagnatoriaService fatturaAccompagnatoriaService,
                          final AliquotaIvaService aliquotaIvaService,
                          final NotaResoService notaResoService,
-                         final RicevutaPrivatoService ricevutaPrivatoService){
+                         final RicevutaPrivatoService ricevutaPrivatoService,
+                         final OrdineFornitoreService ordineFornitoreService){
         this.giacenzaIngredienteService = giacenzaIngredienteService;
         this.ddtService = ddtService;
         this.pagamentoService = pagamentoService;
@@ -75,6 +80,7 @@ public class StampaService {
         this.aliquotaIvaService = aliquotaIvaService;
         this.notaResoService = notaResoService;
         this.ricevutaPrivatoService = ricevutaPrivatoService;
+        this.ordineFornitoreService = ordineFornitoreService;
     }
 
     public List<VGiacenzaIngrediente> getGiacenzeIngredienti(String ids){
@@ -991,6 +997,36 @@ public class StampaService {
         return fatturaCommercianteDataSources;
     }
 
+    public OrdineFornitore getOrdineFornitore(Long idOrdineFornitore){
+        LOGGER.info("Retrieving 'ordine-fornitore' with id '{}' for creating pdf file", idOrdineFornitore);
+        OrdineFornitore ordineFornitore = ordineFornitoreService.getOne(idOrdineFornitore);
+        LOGGER.info("Retrieved 'ordine-fornitore' with id '{}'", idOrdineFornitore);
+        return ordineFornitore;
+    }
+
+    public List<OrdineFornitoreArticoloDataSource> getOrdineFornitoreArticoliDataSource(OrdineFornitore ordineFornitore){
+        List<OrdineFornitoreArticoloDataSource> ordineFornitoreArticoloDataSources = new ArrayList<>();
+        if(ordineFornitore.getOrdineFornitoreArticoli() != null && !ordineFornitore.getOrdineFornitoreArticoli().isEmpty()){
+            ordineFornitore.getOrdineFornitoreArticoli().stream().forEach(ofa -> {
+                Articolo articolo = ofa.getArticolo();
+
+                OrdineFornitoreArticoloDataSource ordineFornitoreArticoloDataSource = new OrdineFornitoreArticoloDataSource();
+                ordineFornitoreArticoloDataSource.setUdm("Pz");
+                ordineFornitoreArticoloDataSource.setQuantita(ofa.getNumeroPezziOrdinati());
+                if(articolo != null){
+                    ordineFornitoreArticoloDataSource.setCodiceArticolo(articolo.getCodice());
+                    ordineFornitoreArticoloDataSource.setDescrizioneArticolo(articolo.getDescrizione());
+                } else {
+                    ordineFornitoreArticoloDataSource.setCodiceArticolo("");
+                    ordineFornitoreArticoloDataSource.setDescrizioneArticolo("");
+                }
+
+                ordineFornitoreArticoloDataSources.add(ordineFornitoreArticoloDataSource);
+            });
+        }
+        return ordineFornitoreArticoloDataSources;
+    }
+
     public byte[] generateDdt(Long idDdt) throws Exception{
 
         // retrieve the Ddt
@@ -1392,6 +1428,36 @@ public class StampaService {
         parameters.put("from", from);
         parameters.put("to", to);
         parameters.put("fatturaCommercianteCollection", dataSource);
+
+        // create report
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+    }
+
+    public byte[] generateOrdineFornitore(Long idOrdineFornitore) throws Exception{
+
+        // retrieve the Fattura
+        OrdineFornitore ordineFornitore = getOrdineFornitore(idOrdineFornitore);
+
+        // create data parameters
+        String ordineFornitoreTitleParam = ordineFornitore.getProgressivo()+"/"+ordineFornitore.getAnnoContabile();
+        String ordineFornitoreFooterParam = "San Giovanni Ilarione " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+
+        // create list of OrdineFornitoreArticoliDataSource
+        List<OrdineFornitoreArticoloDataSource> ordineFornitoreArticoliDataSources = getOrdineFornitoreArticoliDataSource(ordineFornitore);
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_ORDINE_FORNITORE);
+
+        // create report datasource for OrdineFornitoreArticoli
+        JRBeanCollectionDataSource ordineFornitoreArticoliCollectionDataSource = new JRBeanCollectionDataSource(ordineFornitoreArticoliDataSources);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("ordineFornitoreTitle", ordineFornitoreTitleParam);
+        parameters.put("ordineFornitoreFooter", ordineFornitoreFooterParam);
+        parameters.put("ordineFornitoreArticoliCollection", ordineFornitoreArticoliCollectionDataSource);
 
         // create report
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
