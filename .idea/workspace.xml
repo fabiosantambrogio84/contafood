@@ -23,26 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix report ordini autisti">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20210817.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/OrdineFornitoreArticoloDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/ordine_fornitore.jasper" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/ordine_fornitore.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/contafood.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/EmailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/EmailController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ClienteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ClienteRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/OrdineClienteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/OrdineClienteRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jasper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,7 +113,7 @@
       <recent name="com.contafood.repository" />
     </key>
   </component>
-  <component name="RunManager" selected="Remote JVM Debug.Contafood-remote">
+  <component name="RunManager" selected="Maven.contafood [clean,package]">
     <configuration name="contafood [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -456,7 +442,8 @@
       <workItem from="1618384726376" duration="4089000" />
       <workItem from="1626764832508" duration="1479000" />
       <workItem from="1628063714521" duration="619000" />
-      <workItem from="1629184051949" duration="6983000" />
+      <workItem from="1629184051949" duration="7019000" />
+      <workItem from="1629272507350" duration="5966000" />
     </task>
     <task id="LOCAL-00034" summary="Add method to retrieve valid Sconti with priority based on Tipologia">
       <created>1583340271145</created>
@@ -855,14 +842,19 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/EmailController.java</url>
-          <line>81</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java</url>
           <line>186</line>
           <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java</url>
+          <line>87</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java</url>
+          <line>86</line>
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

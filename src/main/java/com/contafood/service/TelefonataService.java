@@ -1,6 +1,7 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
+import com.contafood.model.OrdineCliente;
 import com.contafood.model.Telefonata;
 import com.contafood.repository.TelefonataRepository;
 import com.contafood.util.enumeration.GiornoSettimana;
@@ -12,18 +13,25 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class TelefonataService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(TelefonataService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TelefonataService.class);
 
     private final TelefonataRepository telefonataRepository;
 
+    private final OrdineClienteService ordineClienteService;
+
     @Autowired
-    public TelefonataService(final TelefonataRepository telefonataRepository){
+    public TelefonataService(final TelefonataRepository telefonataRepository,
+                             final OrdineClienteService ordineClienteService){
         this.telefonataRepository = telefonataRepository;
+        this.ordineClienteService = ordineClienteService;
     }
 
     public List<Telefonata> getAll(){
@@ -73,8 +81,10 @@ public class TelefonataService {
         LOGGER.info("Update 'telefonate' after delete of 'puntoConsegna' '{}'", puntoConsegnaId);
     }
 
+    @Transactional
     public void delete(Long telefonataId){
         LOGGER.info("Deleting 'telefonata' '{}'", telefonataId);
+        deleteOrdiniClienti(telefonataId);
         telefonataRepository.deleteById(telefonataId);
         LOGGER.info("Deleted 'telefonata' '{}'", telefonataId);
     }
@@ -88,7 +98,25 @@ public class TelefonataService {
     @Transactional
     public void bulkDelete(List<Long> telefonateIds){
         LOGGER.info("Bulk deleting all the specified 'telefonate (number of elements to delete: {})'", telefonateIds.size());
+        if(!telefonateIds.isEmpty()){
+            for(Long idTelefonata : telefonateIds){
+                deleteOrdiniClienti(idTelefonata);
+            }
+        }
         telefonataRepository.deleteByIdIn(telefonateIds);
         LOGGER.info("Bulk deleted all the specified 'telefonate");
+    }
+
+    private void deleteOrdiniClienti(Long idTelefonata){
+        Set<OrdineCliente> ordiniClienti = ordineClienteService.getByIdTelefonata(idTelefonata);
+        if(ordiniClienti != null && !ordiniClienti.isEmpty()){
+            for(OrdineCliente ordineCliente : ordiniClienti){
+                Map<String,Object> map = new HashMap();
+                map.put("id", ordineCliente.getId().intValue());
+                map.put("idTelefonata", null);
+
+                ordineClienteService.patch(map);
+            }
+        }
     }
 }

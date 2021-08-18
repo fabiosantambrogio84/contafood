@@ -13,4 +13,5 @@ public interface ClienteRepository extends CrudRepository<Cliente, Long> {
     Set<Cliente> findAllByOrderByRagioneSocialeAsc();
 
     Set<Cliente> findByBloccaDdt(Boolean bloccaDdt);
+
 }

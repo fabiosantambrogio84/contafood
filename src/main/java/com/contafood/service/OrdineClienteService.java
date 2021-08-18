@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrdineClienteService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(OrdineClienteService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(OrdineClienteService.class);
 
     private final OrdineClienteRepository ordineClienteRepository;
     private final OrdineClienteArticoloService ordineClienteArticoloService;
@@ -82,6 +82,10 @@ public class OrdineClienteService {
         return ordiniClienti;
     }
 
+    public Set<OrdineCliente> getByIdTelefonata(Long idTelefonata){
+        return ordineClienteRepository.findByTelefonataId(idTelefonata);
+    }
+
     public Set<OrdineCliente> getOrdiniClientiEvasiAndExpired(){
         LOGGER.info("Retrieving the list of 'ordini clienti' with stato 'EVASO' and expired (dataConsegna+2 >= now)");
         Set<OrdineCliente> ordiniClienti = ordineClienteRepository.findByStatoOrdineId(statoOrdineService.getEvaso().getId());
@@ -92,7 +96,7 @@ public class OrdineClienteService {
 
     public Map<String, Integer> getAnnoContabileAndProgressivo(){
         Integer annoContabile = ZonedDateTime.now().getYear();
-        Integer progressivo = 1;
+        int progressivo = 1;
         List<OrdineCliente> ordiniClienti = ordineClienteRepository.findByAnnoContabileOrderByProgressivoDesc(annoContabile);
         if(ordiniClienti != null && !ordiniClienti.isEmpty()){
             Optional<OrdineCliente> lastOrdineCliente = ordiniClienti.stream().findFirst();
@@ -168,6 +172,19 @@ public class OrdineClienteService {
                 Autista autista = new Autista();
                 autista.setId(Long.valueOf((Integer)value));
                 ordineCliente.setAutista(autista);
+            } else if(key.equals("idTelefonata")){
+                if(value != null){
+                    Telefonata telefonata = new Telefonata();
+                    if(value instanceof Long){
+                        telefonata.setId((Long)value);
+                    } else {
+                        telefonata.setId(Long.valueOf((Integer)value));
+                    }
+                    ordineCliente.setTelefonata(telefonata);
+                } else {
+                    ordineCliente.setTelefonata(null);
+                }
+
             }
         });
         OrdineCliente patchedOrdineCliente = ordineClienteRepository.save(ordineCliente);

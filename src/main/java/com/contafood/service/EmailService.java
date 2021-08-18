@@ -148,7 +148,7 @@ public class EmailService {
 
         Fornitore fornitore = ordineFornitore.getFornitore();
 
-        String emailTo = fornitore.getEmail();
+        String emailTo = fornitore.getEmailOrdini();
         String emailSubject = "Ordine num. "+ordineFornitore.getProgressivo()+"-"+ordineFornitore.getAnnoContabile();
         String attachmentName = "Ordine_fornitore_num_"+ordineFornitore.getProgressivo()+"-"+ordineFornitore.getAnnoContabile();
         String emailBody = "In allegato il pdf dell'ordine.<br/>Cordiali saluti";
