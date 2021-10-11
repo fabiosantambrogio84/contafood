@@ -1,15 +1,18 @@
 package com.contafood.service;
 
-import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.OrdineFornitoreArticolo;
 import com.contafood.repository.OrdineFornitoreArticoloRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Service
@@ -18,10 +21,13 @@ public class OrdineFornitoreArticoloService {
     private final static Logger LOGGER = LoggerFactory.getLogger(OrdineFornitoreArticoloService.class);
 
     private final OrdineFornitoreArticoloRepository ordineClienteArticoloRepository;
+    private final OrdineClienteArticoloService ordineClienteArticoloService;
 
     @Autowired
-    public OrdineFornitoreArticoloService(final OrdineFornitoreArticoloRepository ordineClienteArticoloRepository){
+    public OrdineFornitoreArticoloService(final OrdineFornitoreArticoloRepository ordineClienteArticoloRepository,
+                                          final OrdineClienteArticoloService ordineClienteArticoloService){
         this.ordineClienteArticoloRepository = ordineClienteArticoloRepository;
+        this.ordineClienteArticoloService = ordineClienteArticoloService;
     }
 
     public Set<OrdineFornitoreArticolo> findAll(){
@@ -39,6 +45,7 @@ public class OrdineFornitoreArticoloService {
         return createdOrdineFornitoreArticolo;
     }
 
+    /*
     public OrdineFornitoreArticolo update(OrdineFornitoreArticolo ordineFornitoreArticolo){
         LOGGER.info("Updating 'ordine fornitore articolo'");
         OrdineFornitoreArticolo ordineFornitoreArticoloCurrent = ordineClienteArticoloRepository.findById(ordineFornitoreArticolo.getId()).orElseThrow(ResourceNotFoundException::new);
@@ -47,7 +54,7 @@ public class OrdineFornitoreArticoloService {
         OrdineFornitoreArticolo updatedOrdineFornitoreArticolo = ordineClienteArticoloRepository.save(ordineFornitoreArticolo);
         LOGGER.info("Updated 'ordine fornitore articolo' '{}'", updatedOrdineFornitoreArticolo);
         return updatedOrdineFornitoreArticolo;
-    }
+    }*/
 
     public void deleteByOrdineFornitoreId(Long ordineFornitoreId){
         LOGGER.info("Deleting 'ordine fornitore articolo' by 'ordineFornitore' '{}'", ordineFornitoreId);

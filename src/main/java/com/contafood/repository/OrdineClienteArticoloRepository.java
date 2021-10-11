@@ -18,6 +18,8 @@ public interface OrdineClienteArticoloRepository extends CrudRepository<OrdineCl
 
     Set<OrdineClienteArticolo> findByArticoloId(Long articoloId);
 
+    Set<OrdineClienteArticolo> findByOrdineFornitoreId(Long idOrdineFornitore);
+
     void deleteByOrdineClienteId(Long ordineClienteId);
 
     void deleteByArticoloId(Long articoloId);

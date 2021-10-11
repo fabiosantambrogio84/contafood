@@ -1,21 +1,19 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
+import com.contafood.model.OrdineClienteArticolo;
 import com.contafood.model.OrdineFornitore;
 import com.contafood.model.OrdineFornitoreArticolo;
 import com.contafood.repository.OrdineFornitoreRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class OrdineFornitoreService {
@@ -24,11 +22,14 @@ public class OrdineFornitoreService {
 
     private final OrdineFornitoreRepository ordineFornitoreRepository;
     private final OrdineFornitoreArticoloService ordineFornitoreArticoloService;
+    private final OrdineClienteArticoloService ordineClienteArticoloService;
 
-    @Autowired
-    public OrdineFornitoreService(final OrdineFornitoreRepository ordineFornitoreRepository, final OrdineFornitoreArticoloService ordineFornitoreArticoloService){
+    public OrdineFornitoreService(final OrdineFornitoreRepository ordineFornitoreRepository,
+                                  final OrdineFornitoreArticoloService ordineFornitoreArticoloService,
+                                  final OrdineClienteArticoloService ordineClienteArticoloService){
         this.ordineFornitoreRepository = ordineFornitoreRepository;
         this.ordineFornitoreArticoloService = ordineFornitoreArticoloService;
+        this.ordineClienteArticoloService = ordineClienteArticoloService;
     }
 
     public Set<OrdineFornitore> getAll(){
@@ -59,8 +60,24 @@ public class OrdineFornitoreService {
             ofa.getId().setOrdineFornitoreId(createdOrdineFornitore.getId());
             ordineFornitoreArticoloService.create(ofa);
         });
-
         ordineFornitoreRepository.save(createdOrdineFornitore);
+
+        // patch OrdiniClienti
+        createdOrdineFornitore.getOrdineFornitoreArticoli().stream().forEach(ofa -> {
+            String idOrdiniClienti = ofa.getIdOrdiniClienti();
+            if(!StringUtils.isEmpty(idOrdiniClienti)){
+                String[] idOrdiniClientiTokens = idOrdiniClienti.split(";");
+                for (String idOrdiniClientiToken : idOrdiniClientiTokens) {
+                    Map<String, Object> patchOrdineClienteArticolo = new HashMap<>();
+                    patchOrdineClienteArticolo.put("idOrdineCliente", Integer.valueOf(idOrdiniClientiToken));
+                    patchOrdineClienteArticolo.put("idArticolo", ofa.getId().getArticoloId().intValue());
+                    patchOrdineClienteArticolo.put("idOrdineFornitore", ofa.getId().getOrdineFornitoreId().intValue());
+
+                    ordineClienteArticoloService.patch(patchOrdineClienteArticolo);
+                }
+            }
+        });
+
         LOGGER.info("Created 'ordineFornitore' '{}'", createdOrdineFornitore);
         return createdOrdineFornitore;
     }
@@ -88,6 +105,14 @@ public class OrdineFornitoreService {
     @Transactional
     public void delete(Long ordineFornitoreId){
         LOGGER.info("Deleting 'ordineFornitore' '{}'", ordineFornitoreId);
+        Set<OrdineClienteArticolo> ordiniClientiArticoli = ordineClienteArticoloService.getOrdineClienteArticoliByIdOrdineFornitore(ordineFornitoreId);
+        if(!ordiniClientiArticoli.isEmpty()){
+            for(OrdineClienteArticolo ordineClienteArticolo : ordiniClientiArticoli){
+                ordineClienteArticolo.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
+                ordineClienteArticolo.setOrdineFornitoreId(null);
+            }
+            ordineClienteArticoloService.saveAll(ordiniClientiArticoli);
+        }
         ordineFornitoreArticoloService.deleteByOrdineFornitoreId(ordineFornitoreId);
         ordineFornitoreRepository.deleteById(ordineFornitoreId);
         LOGGER.info("Deleted 'ordineFornitore' '{}'", ordineFornitoreId);
@@ -103,5 +128,6 @@ public class OrdineFornitoreService {
         }
         return 1;
     }
+
 
 }

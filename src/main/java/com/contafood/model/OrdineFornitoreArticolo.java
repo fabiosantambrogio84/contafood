@@ -30,6 +30,9 @@ public class OrdineFornitoreArticolo implements Serializable {
     @Column(name = "num_ordinati")
     private Integer numeroPezziOrdinati;
 
+    @Column(name = "id_ordini_clienti")
+    private String idOrdiniClienti;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -68,6 +71,14 @@ public class OrdineFornitoreArticolo implements Serializable {
         this.numeroPezziOrdinati = numeroPezziOrdinati;
     }
 
+    public String getIdOrdiniClienti() {
+        return idOrdiniClienti;
+    }
+
+    public void setIdOrdiniClienti(String idOrdiniClienti) {
+        this.idOrdiniClienti = idOrdiniClienti;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -92,6 +103,7 @@ public class OrdineFornitoreArticolo implements Serializable {
         result.append("ordineFornitoreId: " + id.ordineFornitoreId);
         result.append(", articoloId: " + id.articoloId);
         result.append(", numeroPezziOrdinati: " + numeroPezziOrdinati);
+        result.append(", idOrdiniClienti: " + idOrdiniClienti);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

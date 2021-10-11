@@ -2,6 +2,7 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
+import com.contafood.model.views.VOrdineFornitoreArticolo;
 import com.contafood.service.OrdineClienteService;
 import com.contafood.service.jpa.NativeQueryService;
 import org.slf4j.Logger;
@@ -126,6 +127,15 @@ public class OrdineClienteController {
     public Map<String, Integer> getAnnoContabileAndProgressivo() {
         LOGGER.info("Performing GET request for retrieving 'annoContabile' and 'progressivo' for a new ordine-cliente");
         return ordineClienteService.getAnnoContabileAndProgressivo();
+    }
+
+    @RequestMapping(method = GET, path = "/articoli-for-ordine-fornitore")
+    @CrossOrigin
+    public List<VOrdineFornitoreArticolo> getArticoliForOrdineFornitore(@RequestParam(name = "idFornitore") Integer idFornitore,
+                                                                        @RequestParam(name = "dataFrom") Date dataFrom,
+                                                                        @RequestParam(name = "dataTo") Date dataTo) {
+        LOGGER.info("Performing GET request for retrieving 'articoli-for-ordine-fornitore' for fornitore '{}', dataFrom '{}' and dataTo '{}'", idFornitore, dataFrom, dataTo);
+        return ordineClienteService.getArticoliForOrdineFornitore(idFornitore.longValue(), dataFrom, dataTo);
     }
 
     @RequestMapping(method = POST)

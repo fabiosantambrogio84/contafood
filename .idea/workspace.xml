@@ -23,12 +23,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix report ordini autisti">
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20211004.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VOrdineClienteArticolo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VOrdineFornitoreArticolo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VOrdineClienteArticoloRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ClienteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ClienteRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/OrdineClienteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/OrdineClienteRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineClienteArticolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineClienteArticolo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineFornitoreArticolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineFornitoreArticolo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/OrdineClienteArticoloRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/OrdineClienteArticoloRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteArticoloService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreArticoloService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,10 +72,10 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AdeController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="JupyterTrust" id="e17c0346-daa0-40ae-a012-1eb389037a67" />
   <component name="ProjectId" id="1XOZ4qCFwmJr4ZtINvmWCN8YDWn" />
@@ -106,11 +113,11 @@
       <recent name="com.contafood.model.stats" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.contafood.model.views" />
+      <recent name="com.contafood.repository.views" />
       <recent name="com.contafood.model.reports" />
       <recent name="com.contafood.controller" />
       <recent name="com.contafood.service" />
-      <recent name="com.contafood.util" />
-      <recent name="com.contafood.repository" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
@@ -443,7 +450,17 @@
       <workItem from="1626764832508" duration="1479000" />
       <workItem from="1628063714521" duration="619000" />
       <workItem from="1629184051949" duration="7019000" />
-      <workItem from="1629272507350" duration="5966000" />
+      <workItem from="1629272507350" duration="6003000" />
+      <workItem from="1632729312595" duration="1127000" />
+      <workItem from="1632730634089" duration="1480000" />
+      <workItem from="1633351533214" duration="743000" />
+      <workItem from="1633417898001" duration="2931000" />
+      <workItem from="1633503943207" duration="8141000" />
+      <workItem from="1633589669232" duration="1779000" />
+      <workItem from="1633676807348" duration="1208000" />
+      <workItem from="1633786124180" duration="15000" />
+      <workItem from="1633937052574" duration="7290000" />
+      <workItem from="1633958679283" duration="2060000" />
     </task>
     <task id="LOCAL-00034" summary="Add method to retrieve valid Sconti with priority based on Tipologia">
       <created>1583340271145</created>

@@ -33,6 +33,9 @@ public class OrdineClienteArticolo implements Serializable {
     @Column(name = "num_da_evadere")
     private Integer numeroPezziDaEvadere;
 
+    @Column(name = "id_ordine_fornitore")
+    private Long ordineFornitoreId;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -77,6 +80,14 @@ public class OrdineClienteArticolo implements Serializable {
 
     public void setNumeroPezziDaEvadere(Integer numeroPezziDaEvadere) {
         this.numeroPezziDaEvadere = numeroPezziDaEvadere;
+    }
+
+    public Long getOrdineFornitoreId() {
+        return ordineFornitoreId;
+    }
+
+    public void setOrdineFornitoreId(Long ordineFornitoreId) {
+        this.ordineFornitoreId = ordineFornitoreId;
     }
 
     public Timestamp getDataInserimento() {

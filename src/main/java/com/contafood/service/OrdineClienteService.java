@@ -3,13 +3,15 @@ package com.contafood.service;
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.views.VOrdineClienteArticolo;
+import com.contafood.model.views.VOrdineFornitoreArticolo;
 import com.contafood.repository.DdtArticoloOrdineClienteRepository;
 import com.contafood.repository.OrdineClienteRepository;
+import com.contafood.repository.views.VOrdineClienteArticoloRepository;
 import com.contafood.util.enumeration.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,14 +32,18 @@ public class OrdineClienteService {
     private final OrdineClienteArticoloService ordineClienteArticoloService;
     private final StatoOrdineService statoOrdineService;
     private final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository;
+    private final VOrdineClienteArticoloRepository vOrdineClienteArticoloRepository;
 
-    @Autowired
-    public OrdineClienteService(final OrdineClienteRepository ordineClienteRepository, final OrdineClienteArticoloService ordineClienteArticoloService,
-                                final StatoOrdineService statoOrdineService, final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository){
+    public OrdineClienteService(final OrdineClienteRepository ordineClienteRepository,
+                                final OrdineClienteArticoloService ordineClienteArticoloService,
+                                final StatoOrdineService statoOrdineService,
+                                final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository,
+                                final VOrdineClienteArticoloRepository vOrdineClienteArticoloRepository){
         this.ordineClienteRepository = ordineClienteRepository;
         this.ordineClienteArticoloService = ordineClienteArticoloService;
         this.statoOrdineService = statoOrdineService;
         this.ddtArticoloOrdineClienteRepository = ddtArticoloOrdineClienteRepository;
+        this.vOrdineClienteArticoloRepository = vOrdineClienteArticoloRepository;
     }
 
     public Set<OrdineCliente> getAll(){
@@ -315,6 +321,51 @@ public class OrdineClienteService {
         LOGGER.info("Computed stato of 'OrdineCliente' {}", idOrdineCliente);
     }
 
+    public List<VOrdineFornitoreArticolo> getArticoliForOrdineFornitore(Long idFornitore, Date dataFrom, Date dataTo){
+        List<VOrdineFornitoreArticolo> vOrdineFornitoriArticoli = new ArrayList<>();
+
+        List<VOrdineClienteArticolo> vOrdineClienteArticoli = vOrdineClienteArticoloRepository.findByIdFornitoreAndDataConsegnaBetween(idFornitore, dataFrom, dataTo);
+        if(!vOrdineClienteArticoli.isEmpty()){
+            Map<String, ArticoloGrouped> articoliGrouped = new HashMap<>();
+            for(VOrdineClienteArticolo vOrdineClienteArticolo : vOrdineClienteArticoli){
+                String key = vOrdineClienteArticolo.getIdArticolo() + ";"
+                        + vOrdineClienteArticolo.getCodiceArticolo() + ";"
+                        + vOrdineClienteArticolo.getDescrizioneArticolo();
+
+                ArticoloGrouped articoloGrouped = articoliGrouped.getOrDefault(key, null);
+                if(articoloGrouped != null){
+                    articoloGrouped.setIdsOrdiniClienti(articoloGrouped.getIdsOrdiniClienti() + ";" + vOrdineClienteArticolo.getIdOrdineCliente().toString());
+                    articoloGrouped.setNumeroPezzi(articoloGrouped.getNumeroPezzi() + vOrdineClienteArticolo.getNumeroPezziDaEvadere());
+                } else {
+                    articoloGrouped = new ArticoloGrouped();
+                    articoloGrouped.setIdsOrdiniClienti(vOrdineClienteArticolo.getIdOrdineCliente().toString());
+                    articoloGrouped.setNumeroPezzi(vOrdineClienteArticolo.getNumeroPezziDaEvadere());
+                }
+                articoliGrouped.put(key, articoloGrouped);
+            }
+
+            if(!articoliGrouped.isEmpty()){
+                for(String key : articoliGrouped.keySet()){
+                    VOrdineFornitoreArticolo vOrdineFornitoreArticolo = new VOrdineFornitoreArticolo();
+                    String[] keyTokens = key.split(";");
+                    vOrdineFornitoreArticolo.setIdArticolo(Long.valueOf(keyTokens[0]));
+                    vOrdineFornitoreArticolo.setCodiceArticolo(keyTokens[1]);
+                    vOrdineFornitoreArticolo.setDescrizioneArticolo(keyTokens[2]);
+                    vOrdineFornitoreArticolo.setId(UUID.randomUUID().toString());
+
+                    ArticoloGrouped articoloGrouped = articoliGrouped.get(key);
+                    vOrdineFornitoreArticolo.setIdOrdiniClienti(articoloGrouped.getIdsOrdiniClienti());
+                    vOrdineFornitoreArticolo.setNumeroPezziOrdinati(articoloGrouped.getNumeroPezzi());
+
+                    vOrdineFornitoriArticoli.add(vOrdineFornitoreArticolo);
+                }
+            }
+        }
+
+        return vOrdineFornitoriArticoli;
+    }
+
+    /*
     private Integer computeProgressivo(Integer annoContabile){
         List<OrdineCliente> ordiniClienti = ordineClienteRepository.findByAnnoContabileOrderByProgressivoDesc(annoContabile);
         if(ordiniClienti != null && !ordiniClienti.isEmpty()){
@@ -324,6 +375,26 @@ public class OrdineClienteService {
             }
         }
         return 1;
-    }
+    }*/
 
+    private class ArticoloGrouped {
+        private String idsOrdiniClienti;
+        private Integer numeroPezzi;
+
+        public String getIdsOrdiniClienti() {
+            return idsOrdiniClienti;
+        }
+
+        public void setIdsOrdiniClienti(String idsOrdiniClienti) {
+            this.idsOrdiniClienti = idsOrdiniClienti;
+        }
+
+        public Integer getNumeroPezzi() {
+            return numeroPezzi;
+        }
+
+        public void setNumeroPezzi(Integer numeroPezzi) {
+            this.numeroPezzi = numeroPezzi;
+        }
+    }
 }
