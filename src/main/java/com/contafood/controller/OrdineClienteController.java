@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -41,7 +38,7 @@ public class OrdineClienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<OrdineCliente> getAll( @RequestParam(name = "cliente", required = false) String cliente,
+    public List<OrdineCliente> getAll( @RequestParam(name = "cliente", required = false) String cliente,
                                       @RequestParam(name = "dataConsegna", required = false) Date dataConsegna,
                                       @RequestParam(name = "idAutista", required = false) Integer idAutista,
                                       @RequestParam(name = "idStato", required = false) Integer idStato,
@@ -90,15 +87,17 @@ public class OrdineClienteController {
             return true;
         };
 
+        Comparator<OrdineCliente> compare = Comparator.comparing(OrdineCliente::getProgressivo).reversed().thenComparing(OrdineCliente::getAnnoContabile).reversed();
+
         if(idCliente != null && idPuntoConsegna != null && dataConsegnaLessOrEqual != null && idStatoNot != null){
             return ordineClienteService.getByIdClienteAndIdPuntoConsegnaAndDataConsegnaLessOrEqualAndIdStatoNot(
                     Long.valueOf(idCliente), Long.valueOf(idPuntoConsegna), dataConsegnaLessOrEqual, Long.valueOf(idStatoNot)
-            );
+            ).stream().sorted(compare).collect(Collectors.toList());
         } else {
             return ordineClienteService.getAll().stream().filter(isOrdineClienteClienteContains
                     .and(isOrdineClienteDataConsegnaEquals)
                     .and(isOrdineClienteAutistaEquals)
-                    .and(isOrdineClienteStatoEquals)).collect(Collectors.toSet());
+                    .and(isOrdineClienteStatoEquals)).sorted(compare).collect(Collectors.toList());
         }
     }
 

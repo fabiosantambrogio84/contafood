@@ -22,20 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix report ordini autisti">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20211004.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VOrdineClienteArticolo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VOrdineFornitoreArticolo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VOrdineClienteArticoloRepository.java" afterDir="false" />
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Update logic for OrdineFornitore">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineClienteArticolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineClienteArticolo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineFornitoreArticolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineFornitoreArticolo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/OrdineClienteArticoloRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/OrdineClienteArticoloRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineFornitoreService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -460,14 +449,8 @@
       <workItem from="1633676807348" duration="1208000" />
       <workItem from="1633786124180" duration="15000" />
       <workItem from="1633937052574" duration="7290000" />
-      <workItem from="1633958679283" duration="2060000" />
-    </task>
-    <task id="LOCAL-00034" summary="Add method to retrieve valid Sconti with priority based on Tipologia">
-      <created>1583340271145</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1583340271145</updated>
+      <workItem from="1633958679283" duration="2294000" />
+      <workItem from="1634108691664" duration="2428000" />
     </task>
     <task id="LOCAL-00035" summary="Add Fattura creation and filters">
       <created>1583512630773</created>
@@ -805,7 +788,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623143297561</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="Update logic for OrdineFornitore">
+      <created>1633962683515</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1633962683518</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -828,7 +818,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add FattureAccompagnatorie in Statistiche computation" />
     <MESSAGE value="Fix decimal round on StatisticheArticoliGroups" />
     <MESSAGE value="Fix computation of Statistiche" />
     <MESSAGE value="Fix Statistiche computation" />
@@ -853,7 +842,8 @@
     <MESSAGE value="Refactoring email handling" />
     <MESSAGE value="Fix clienti and causali" />
     <MESSAGE value="Fix report ordini autisti" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix report ordini autisti" />
+    <MESSAGE value="Update logic for OrdineFornitore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update logic for OrdineFornitore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
