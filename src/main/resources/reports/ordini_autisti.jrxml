@@ -105,7 +105,7 @@
 			<property name="com.jaspersoft.studio.layout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<componentElement>
-				<reportElement x="0" y="0" width="275" height="50" uuid="7da00800-08f8-4bd5-bc4d-38ea01ae56c4">
+				<reportElement x="0" y="0" width="275" height="60" uuid="7da00800-08f8-4bd5-bc4d-38ea01ae56c4">
 					<property name="com.jaspersoft.studio.layout"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -114,7 +114,7 @@
 					<datasetRun subDataset="OrdineAutistaDataset" uuid="30cb224d-29cd-4bce-932a-4fc9116e98f9">
 						<dataSourceExpression><![CDATA[$P{ordineAutistaCollection}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:listContents height="50" width="275">
+					<jr:listContents height="60" width="275">
 						<textField textAdjust="ScaleFont">
 							<reportElement x="0" y="0" width="175" height="23" uuid="fea27f30-2dcc-41ea-8800-f874cacc2862">
 								<property name="com.jaspersoft.studio.unit.width" value="px"/>

@@ -87,7 +87,9 @@ public class OrdineClienteController {
             return true;
         };
 
-        Comparator<OrdineCliente> compare = Comparator.comparing(OrdineCliente::getProgressivo).reversed().thenComparing(OrdineCliente::getAnnoContabile).reversed();
+        Comparator<OrdineCliente> compare = Comparator.comparing((OrdineCliente ordineCliente) -> ordineCliente.getStatoOrdine().getId())
+                .thenComparing(OrdineCliente::getProgressivo).reversed()
+                .thenComparing(OrdineCliente::getAnnoContabile).reversed();
 
         if(idCliente != null && idPuntoConsegna != null && dataConsegnaLessOrEqual != null && idStatoNot != null){
             return ordineClienteService.getByIdClienteAndIdPuntoConsegnaAndDataConsegnaLessOrEqualAndIdStatoNot(
