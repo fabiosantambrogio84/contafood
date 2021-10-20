@@ -38,17 +38,19 @@ public class OrdineClienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public List<OrdineCliente> getAll( @RequestParam(name = "cliente", required = false) String cliente,
+    public List<OrdineCliente> getAll(@RequestParam(name = "cliente", required = false) String cliente,
                                       @RequestParam(name = "dataConsegna", required = false) Date dataConsegna,
                                       @RequestParam(name = "idAutista", required = false) Integer idAutista,
                                       @RequestParam(name = "idStato", required = false) Integer idStato,
                                       @RequestParam(name = "idCliente", required = false) Integer idCliente,
                                       @RequestParam(name = "idPuntoConsegna", required = false) Integer idPuntoConsegna,
                                       @RequestParam(name = "dataConsegnaLessOrEqual", required = false) Date dataConsegnaLessOrEqual,
-                                      @RequestParam(name = "idStatoNot", required = false) Integer idStatoNot) {
+                                      @RequestParam(name = "idStatoNot", required = false) Integer idStatoNot,
+                                      @RequestParam(name = "dataConsegnaDa", required = false) Date dataConsegnaDa,
+                                      @RequestParam(name = "dataConsegnaA", required = false) Date dataConsegnaA) {
         LOGGER.info("Performing GET request for retrieving list of 'ordini-clienti'");
-        LOGGER.info("Request params: cliente {}, dataConsegna {}, idAutista {}, idStato {}, idCliente {}, idPuntoConsegna {}, dataConsegnaLessOrEqual {}, idStatoNot {}",
-                cliente, dataConsegna, idAutista, idStato, idCliente, idPuntoConsegna, dataConsegnaLessOrEqual, idStatoNot);
+        LOGGER.info("Request params: cliente {}, dataConsegna {}, idAutista {}, idStato {}, idCliente {}, idPuntoConsegna {}, dataConsegnaLessOrEqual {}, idStatoNot {}, dataConsegnaDa {}, dataConsegnaA {}",
+                cliente, dataConsegna, idAutista, idStato, idCliente, idPuntoConsegna, dataConsegnaLessOrEqual, idStatoNot, dataConsegnaDa, dataConsegnaA);
 
         Predicate<OrdineCliente> isOrdineClienteClienteContains = ordineCliente -> {
             if(cliente != null){
@@ -63,6 +65,18 @@ public class OrdineClienteController {
         Predicate<OrdineCliente> isOrdineClienteDataConsegnaEquals = ordineCliente -> {
             if(dataConsegna != null){
                 return ordineCliente.getDataConsegna().compareTo(dataConsegna) == 0;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaGreaterOrEquals = ordineCliente -> {
+            if(dataConsegnaDa != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegnaDa) >= 0;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaLessOrEquals = ordineCliente -> {
+            if(dataConsegnaA != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegnaA) <= 0;
             }
             return true;
         };
@@ -98,6 +112,8 @@ public class OrdineClienteController {
         } else {
             return ordineClienteService.getAll().stream().filter(isOrdineClienteClienteContains
                     .and(isOrdineClienteDataConsegnaEquals)
+                    .and(isOrdineClienteDataConsegnaGreaterOrEquals)
+                    .and(isOrdineClienteDataConsegnaLessOrEquals)
                     .and(isOrdineClienteAutistaEquals)
                     .and(isOrdineClienteStatoEquals)).sorted(compare).collect(Collectors.toList());
         }

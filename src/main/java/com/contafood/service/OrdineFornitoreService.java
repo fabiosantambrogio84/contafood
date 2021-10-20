@@ -103,6 +103,14 @@ public class OrdineFornitoreService {
     }
 
     @Transactional
+    public OrdineFornitore patch(OrdineFornitore ordineFornitore){
+        LOGGER.info("Patching 'ordineFornitore'");
+        OrdineFornitore patchedOrdineFornitore = ordineFornitoreRepository.save(ordineFornitore);
+        LOGGER.info("Patched 'ordineFornitore' '{}'", patchedOrdineFornitore);
+        return patchedOrdineFornitore;
+    }
+
+    @Transactional
     public void delete(Long ordineFornitoreId){
         LOGGER.info("Deleting 'ordineFornitore' '{}'", ordineFornitoreId);
         Set<OrdineClienteArticolo> ordiniClientiArticoli = ordineClienteArticoloService.getOrdineClienteArticoliByIdOrdineFornitore(ordineFornitoreId);

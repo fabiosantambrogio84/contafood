@@ -188,8 +188,9 @@ public class StampaController {
     @CrossOrigin
     public ResponseEntity<Resource> printOrdiniAutisti(
             @RequestParam(name = "idAutista") Long idAutista,
-            @RequestParam(name = "dataConsegna") Date dataConsegna) throws Exception{
-        LOGGER.info("Creating pdf for 'ordini-clienti' of 'autista' {} and 'dataConsegna' {}", idAutista, dataConsegna);
+            @RequestParam(name = "dataConsegnaDa") Date dataConsegnaDa,
+            @RequestParam(name = "dataConsegnaA") Date dataConsegnaA) throws Exception{
+        LOGGER.info("Creating pdf for 'ordini-clienti' of 'autista' {}, 'dataConsegnaDa' {} and 'dataConsegnaA' {}", idAutista, dataConsegnaDa, dataConsegnaA);
 
         // retrieve Autista with id 'idAutista'
         Autista autista = stampaService.getAutista(idAutista);
@@ -199,7 +200,7 @@ public class StampaController {
         }
 
         // retrieve the list of OrdiniClienti
-        List<OrdineAutistaDataSource> ordineAutistaDataSources = stampaService.getOrdiniAutista(idAutista, dataConsegna);
+        List<OrdineAutistaDataSource> ordineAutistaDataSources = stampaService.getOrdiniAutista(idAutista, dataConsegnaDa, dataConsegnaA);
 
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_ORDINI_AUTISTI);
@@ -212,7 +213,8 @@ public class StampaController {
 
         // add data to parameters
         parameters.put("autista", autistaLabel);
-        parameters.put("dataConsegna", simpleDateFormat.format(dataConsegna));
+        parameters.put("dataConsegnaDa", simpleDateFormat.format(dataConsegnaDa));
+        parameters.put("dataConsegnaA", simpleDateFormat.format(dataConsegnaA));
         parameters.put("ordineAutistaCollection", dataSource);
 
         // create report
@@ -220,7 +222,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ordini-clienti' of 'autista' {} and 'dataConsegna' {}", idAutista, dataConsegna);
+        LOGGER.info("Successfully create pdf for 'ordini-clienti' of 'autista' {}, 'dataConsegnaDa' {} and 'dataConsegnaA' {}", idAutista, dataConsegnaDa, dataConsegnaA);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("ordini-clienti-autista.pdf"))
@@ -395,16 +397,16 @@ public class StampaController {
         if(fornitore != null){
             StringBuilder sb = new StringBuilder();
             if(!StringUtils.isEmpty(fornitore.getRagioneSociale())){
-                sb.append(fornitore.getRagioneSociale()+"\n");
+                sb.append(fornitore.getRagioneSociale()).append("\n");
             }
             if(!StringUtils.isEmpty(fornitore.getIndirizzo())){
-                sb.append(fornitore.getIndirizzo()+"\n");
+                sb.append(fornitore.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(fornitore.getCap())){
-                sb.append(fornitore.getCap()+" ");
+                sb.append(fornitore.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(fornitore.getCitta())){
-                sb.append(fornitore.getCitta()+" ");
+                sb.append(fornitore.getCitta()).append(" ");
             }
             if(!StringUtils.isEmpty(fornitore.getProvincia())){
                 sb.append(fornitore.getProvincia());
@@ -541,19 +543,19 @@ public class StampaController {
         if(puntoConsegna != null){
             StringBuilder sb = new StringBuilder();
             if(!StringUtils.isEmpty(puntoConsegna.getNome())){
-                sb.append(puntoConsegna.getNome()+"\n");
+                sb.append(puntoConsegna.getNome()).append("\n");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getIndirizzo())){
-                sb.append(puntoConsegna.getIndirizzo()+"\n");
+                sb.append(puntoConsegna.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getCap())){
-                sb.append(puntoConsegna.getCap()+" ");
+                sb.append(puntoConsegna.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getLocalita())){
-                sb.append(puntoConsegna.getLocalita()+" ");
+                sb.append(puntoConsegna.getLocalita()).append(" ");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getProvincia())){
-                sb.append("("+Provincia.getByLabel(puntoConsegna.getProvincia()).getSigla()+")");
+                sb.append("(").append(Provincia.getByLabel(puntoConsegna.getProvincia()).getSigla()).append(")");
             }
 
             puntoConsegnaParam = sb.toString();
@@ -566,19 +568,19 @@ public class StampaController {
                 sb.append(cliente.getNome());
             }
             if(!StringUtils.isEmpty(cliente.getCognome())){
-                sb.append(" "+cliente.getCognome()+"\n");
+                sb.append(" ").append(cliente.getCognome()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getIndirizzo())){
-                sb.append(cliente.getIndirizzo()+"\n");
+                sb.append(cliente.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getCap())){
-                sb.append(cliente.getCap()+" ");
+                sb.append(cliente.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getCitta())){
-                sb.append(cliente.getCitta()+" ");
+                sb.append(cliente.getCitta()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getProvincia())){
-                sb.append("("+Provincia.getByLabel(cliente.getProvincia()).getSigla()+")");
+                sb.append("(").append(Provincia.getByLabel(cliente.getProvincia()).getSigla()).append(")");
             }
 
             destinatarioParam = sb.toString();

@@ -19,7 +19,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/ordini-fornitori")
 public class OrdineFornitoreController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(OrdineFornitoreController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrdineFornitoreController.class);
 
     private final OrdineFornitoreService ordineFornitoreService;
 

@@ -56,7 +56,8 @@
 	<parameter name="logo" class="java.net.URL" isForPrompting="false"/>
 	<parameter name="bollino" class="java.net.URL" isForPrompting="false"/>
 	<parameter name="autista" class="java.lang.String"/>
-	<parameter name="dataConsegna" class="java.lang.String"/>
+	<parameter name="dataConsegnaA" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="dataConsegnaDa" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="ordineAutistaCollection" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
 	<queryString>
 		<![CDATA[]]>
@@ -96,7 +97,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{autista}+" data consegna "+$P{dataConsegna}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{autista}+" data consegna da "+$P{dataConsegnaDa}+" a "+$P{dataConsegnaA}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

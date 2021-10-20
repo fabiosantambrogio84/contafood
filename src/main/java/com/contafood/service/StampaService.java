@@ -259,12 +259,18 @@ public class StampaService {
         return autistaService.getOne(idAutista);
     }
 
-    public List<OrdineAutistaDataSource> getOrdiniAutista(Long idAutista, Date dataConsegna){
-        LOGGER.info("Retrieving the list of 'ordini-clienti' of autista '{}' and dataConsegna '{}' for creating pdf file", idAutista, dataConsegna);
+    public List<OrdineAutistaDataSource> getOrdiniAutista(Long idAutista, Date dataConsegnaDa, Date dataConsegnaA){
+        LOGGER.info("Retrieving the list of 'ordini-clienti' of autista '{}', dataConsegnaDa '{}' and  dataConsegnaA '{}' for creating pdf file", idAutista, dataConsegnaDa, dataConsegnaA);
 
-        Predicate<OrdineCliente> isOrdineClienteDataConsegnaEquals = ordineCliente -> {
-            if(dataConsegna != null){
-                return ordineCliente.getDataConsegna().compareTo(dataConsegna) == 0;
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaGreaterOrEquals = ordineCliente -> {
+            if(dataConsegnaDa != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegnaDa) >= 0;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaLessOrEquals = ordineCliente -> {
+            if(dataConsegnaA != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegnaA) <= 0;
             }
             return true;
         };
@@ -280,7 +286,9 @@ public class StampaService {
         };
 
         List<OrdineCliente> ordiniClienti = ordineClienteService.getAll().stream()
-                .filter(isOrdineClienteDataConsegnaEquals.and(isOrdineClienteAutistaEquals))
+                .filter(isOrdineClienteDataConsegnaGreaterOrEquals
+                        .and(isOrdineClienteDataConsegnaLessOrEquals)
+                        .and(isOrdineClienteAutistaEquals))
                 .collect(Collectors.toList());
 
         List<OrdineAutistaDataSource> ordiniAutistaDataSource = new ArrayList<>();

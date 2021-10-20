@@ -30,6 +30,12 @@ public class OrdineFornitore {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "email_inviata")
+    private String emailInviata;
+
+    @Column(name = "data_invio_email")
+    private Timestamp dataInvioEmail;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -80,6 +86,22 @@ public class OrdineFornitore {
         this.note = note;
     }
 
+    public String getEmailInviata() {
+        return emailInviata;
+    }
+
+    public void setEmailInviata(String emailInviata) {
+        this.emailInviata = emailInviata;
+    }
+
+    public Timestamp getDataInvioEmail() {
+        return dataInvioEmail;
+    }
+
+    public void setDataInvioEmail(Timestamp dataInvioEmail) {
+        this.dataInvioEmail = dataInvioEmail;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -114,6 +136,8 @@ public class OrdineFornitore {
         result.append(", annoContabile: " + annoContabile);
         result.append(", fornitore: " + fornitore);
         result.append(", note: " + note);
+        result.append(", emailInviata: " + emailInviata);
+        result.append(", dataInvioEmail: " + dataInvioEmail);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

@@ -16,6 +16,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.Properties;
 
 @Service
@@ -24,14 +26,16 @@ public class EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     private final ProprietaService proprietaService;
+    private final OrdineFornitoreService ordineFornitoreService;
 
     private String username;
-
     private String password;
 
     @Autowired
-    public EmailService(final ProprietaService proprietaService){
+    public EmailService(final ProprietaService proprietaService,
+                        final OrdineFornitoreService ordineFornitoreService){
         this.proprietaService = proprietaService;
+        this.ordineFornitoreService = ordineFornitoreService;
     }
 
     private Properties getProperties(){
@@ -186,6 +190,10 @@ public class EmailService {
         Transport transport = connect(session);
         Message message = createOrdineFornitoreMessage(session, ordineFornitore, reportBytes);
         sendMessage(transport, message);
+
+        ordineFornitore.setEmailInviata(Constants.EMAIL_INVIATA_OK);
+        ordineFornitore.setDataInvioEmail(Timestamp.from(ZonedDateTime.now().toInstant()));
+        ordineFornitoreService.patch(ordineFornitore);
     }
 
     /*

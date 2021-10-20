@@ -22,11 +22,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Update rows order for OrdineCliente">
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="OrdiniAutisti date range. Save email sent for OrdineFornitore">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jasper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -453,21 +450,8 @@
       <workItem from="1633937052574" duration="7290000" />
       <workItem from="1633958679283" duration="2294000" />
       <workItem from="1634108691664" duration="2486000" />
-      <workItem from="1634281352296" duration="2804000" />
-    </task>
-    <task id="LOCAL-00036" summary="Fix Articolo creation">
-      <created>1583751766027</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1583751766028</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Add Fattura bulk creation">
-      <created>1583760937043</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1583760937043</updated>
+      <workItem from="1634281352296" duration="3472000" />
+      <workItem from="1634716193105" duration="5932000" />
     </task>
     <task id="LOCAL-00038" summary="Fix Fattura creation bulk and DDTs retrieval">
       <created>1583923801354</created>
@@ -798,7 +782,21 @@
       <option name="project" value="LOCAL" />
       <updated>1634139701056</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="Update rows order for OrdineCliente (stato)">
+      <created>1634284708510</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1634284708511</updated>
+    </task>
+    <task id="LOCAL-00086" summary="OrdiniAutisti date range. Save email sent for OrdineFornitore">
+      <created>1634721425998</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1634721426000</updated>
+    </task>
+    <option name="localTasksCounter" value="87" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -821,8 +819,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix computation of Statistiche" />
-    <MESSAGE value="Fix Statistiche computation" />
     <MESSAGE value="Add logic for retrieving Articolo by barcode" />
     <MESSAGE value="Remove not null on data_aggiornamento column" />
     <MESSAGE value="Add Produzione.tempoImpiegato" />
@@ -846,16 +842,13 @@
     <MESSAGE value="Fix report ordini autisti" />
     <MESSAGE value="Update logic for OrdineFornitore" />
     <MESSAGE value="Update rows order for OrdineCliente" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update rows order for OrdineCliente" />
+    <MESSAGE value="Update rows order for OrdineCliente (stato)" />
+    <MESSAGE value="OrdiniAutisti date range. Save email sent for OrdineFornitore" />
+    <option name="LAST_COMMIT_MESSAGE" value="OrdiniAutisti date range. Save email sent for OrdineFornitore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/EmailService.java</url>
-          <line>186</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java</url>
           <line>87</line>
