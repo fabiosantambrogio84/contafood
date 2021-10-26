@@ -105,7 +105,7 @@ public class StampaService {
                 .collect(Collectors.toList());
 
         List<PagamentoDataSource> pagamentiDataSource = new ArrayList<>();
-        if(pagamenti != null && !pagamenti.isEmpty()){
+        if(!pagamenti.isEmpty()){
             pagamenti.forEach(p -> {
                 PagamentoDataSource pagamentoDataSource = new PagamentoDataSource();
                 pagamentoDataSource.setData(simpleDateFormat.format(p.getData()));
@@ -200,7 +200,7 @@ public class StampaService {
     public List<DdtArticoloDataSource> getDdtArticoliDataSource(Ddt ddt){
         List<DdtArticoloDataSource> ddtArticoloDataSources = new ArrayList<>();
         if(ddt.getDdtArticoli() != null && !ddt.getDdtArticoli().isEmpty()){
-            ddt.getDdtArticoli().stream().forEach(da -> {
+            ddt.getDdtArticoli().forEach(da -> {
                 DdtArticoloDataSource ddtArticoloDataSource = new DdtArticoloDataSource();
                 ddtArticoloDataSource.setCodiceArticolo(da.getArticolo().getCodice());
                 ddtArticoloDataSource.setDescrizioneArticolo(da.getArticolo().getDescrizione());
@@ -562,6 +562,7 @@ public class StampaService {
                 FatturaAccompagnatoriaRigaDataSource fatturaAccompagnatoriaRigaDataSource = new FatturaAccompagnatoriaRigaDataSource();
                 fatturaAccompagnatoriaRigaDataSource.setCodiceArticolo(articolo != null ? articolo.getCodice() : "");
                 fatturaAccompagnatoriaRigaDataSource.setDescrizioneArticolo(articolo != null ? articolo.getDescrizione() : "");
+                fatturaAccompagnatoriaRigaDataSource.setScadenza(faa.getScadenza() != null ? simpleDateFormat.format(faa.getScadenza()) : "");
                 fatturaAccompagnatoriaRigaDataSource.setLotto(faa.getLotto());
                 fatturaAccompagnatoriaRigaDataSource.setUdm(articolo != null ? (articolo.getUnitaMisura() != null ? articolo.getUnitaMisura().getEtichetta() : "") : "");
                 fatturaAccompagnatoriaRigaDataSource.setQuantita(faa.getQuantita());

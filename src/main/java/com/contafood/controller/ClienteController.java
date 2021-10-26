@@ -2,7 +2,6 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Cliente;
-import com.contafood.model.Ddt;
 import com.contafood.model.ListinoAssociato;
 import com.contafood.model.PuntoConsegna;
 import com.contafood.service.ClienteService;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -36,7 +36,7 @@ public class ClienteController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Cliente> getAll(@RequestParam(required = false) Boolean bloccaDdt,
+    public List<Cliente> getAll(@RequestParam(required = false) Boolean bloccaDdt,
                                @RequestParam(required = false) Boolean privato) {
         LOGGER.info("Performing GET request for retrieving list of 'clienti'");
         LOGGER.info("Request params: bloccaDdt {}", bloccaDdt, privato);
@@ -55,10 +55,13 @@ public class ClienteController {
             return true;
         };
 
+        Comparator<Cliente> comparator = Comparator.comparing(Cliente::getFieldComparing);
+
         Set<Cliente> clienti = clienteService.getAll();
         return clienti.stream().filter(isClienteBloccaDdtEquals
                 .and(isClientePrivatoEquals))
-                .collect(Collectors.toSet());
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(method = GET, path = "/{clienteId}")

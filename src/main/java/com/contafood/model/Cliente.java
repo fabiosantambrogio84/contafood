@@ -422,6 +422,15 @@ public class Cliente {
         this.clienteArticoli = clienteArticoli;
     }
 
+    @JsonIgnore
+    public String getFieldComparing(){
+        if(getDittaIndividuale()){
+            return getCognome() + " " + getNome();
+        } else {
+            return getRagioneSociale();
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -460,7 +469,5 @@ public class Cliente {
         result.append("}");
 
         return result.toString();
-
     }
-
 }

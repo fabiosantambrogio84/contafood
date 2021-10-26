@@ -8,6 +8,8 @@ public class FatturaAccompagnatoriaRigaDataSource {
 
     private String descrizioneArticolo;
 
+    private String scadenza;
+
     private String lotto;
 
     private String udm;
@@ -36,6 +38,14 @@ public class FatturaAccompagnatoriaRigaDataSource {
 
     public void setDescrizioneArticolo(String descrizioneArticolo) {
         this.descrizioneArticolo = descrizioneArticolo;
+    }
+
+    public String getScadenza() {
+        return scadenza;
+    }
+
+    public void setScadenza(String scadenza) {
+        this.scadenza = scadenza;
     }
 
     public String getLotto() {

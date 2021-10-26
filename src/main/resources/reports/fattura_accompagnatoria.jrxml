@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.13.0.final utlizzo versione della libreria JasperReports6.13.0-46ada4d1be8f3c5985fd0b6146f3ed44caed6f05  -->
+<!-- Created with Jaspersoft Studio version 6.17.0.final utlizzo versione della libreria JasperReports6.17.0-6d93193241dd8cc42629e188b94f9e0bc5722efd  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fattura_accompagnatoria" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="5" uuid="4633089e-5d6d-4d62-aee5-be492a434aeb">
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -91,12 +91,13 @@
 		</box>
 		<paragraph lineSpacingSize="0.0"/>
 	</style>
-	<subDataset name="NotaAccreditoRigheDataset" uuid="2069be07-7622-4e30-81eb-3d2a699db08c">
+	<subDataset name="FatturaAccompagnatoriaRigheDataset" uuid="2069be07-7622-4e30-81eb-3d2a699db08c">
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
 		<field name="codiceArticolo" class="java.lang.String"/>
 		<field name="descrizioneArticolo" class="java.lang.String"/>
+		<field name="scadenza" class="java.lang.String"/>
 		<field name="lotto" class="java.lang.String"/>
 		<field name="udm" class="java.lang.String"/>
 		<field name="quantita" class="java.lang.Float"/>
@@ -105,7 +106,7 @@
 		<field name="imponibile" class="java.math.BigDecimal"/>
 		<field name="iva" class="java.lang.Integer"/>
 	</subDataset>
-	<subDataset name="NotaAccreditoDataset" uuid="4cd35d20-ac34-491c-b855-45bf24b134e4">
+	<subDataset name="FatturaAccompagnatoriaDataset" uuid="4cd35d20-ac34-491c-b855-45bf24b134e4">
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
@@ -115,7 +116,7 @@
 		<field name="pagamento" class="java.lang.String"/>
 		<field name="agente" class="java.lang.String"/>
 	</subDataset>
-	<subDataset name="NotaAccreditoTotaliDataset" uuid="725f2ac4-f446-4c96-884c-3ab4a2908876">
+	<subDataset name="FatturaAccompagnatoriaTotaliDataset" uuid="725f2ac4-f446-4c96-884c-3ab4a2908876">
 		<parameter name="dsTotaleImponibile" class="java.math.BigDecimal"/>
 		<parameter name="dsTotaleIva" class="java.math.BigDecimal"/>
 		<queryString>
@@ -267,7 +268,7 @@
 				<textFieldExpression><![CDATA["FATTURA ACCOMPAGNATORIA n. "+$P{fatturaAccompagnatoriaTitle}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="350" y="60" width="130" height="20" uuid="a4979443-b074-4014-8a80-57fa08057b5c">
+				<reportElement x="350" y="60" width="130" height="15" uuid="a4979443-b074-4014-8a80-57fa08057b5c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -278,12 +279,12 @@
 				<text><![CDATA[Intestazione]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="350" y="80" width="130" height="30" uuid="310ff373-6f26-46b3-ae8f-15a8ca68192f">
+				<reportElement x="350" y="75" width="130" height="35" uuid="310ff373-6f26-46b3-ae8f-15a8ca68192f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="10"/>
+					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{destinatario}]]></textFieldExpression>
 			</textField>
@@ -307,14 +308,16 @@
 				<textFieldExpression><![CDATA[$P{fatturaAccompagnatoriaTotDocumento}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="0" y="190" width="555" height="300" uuid="feb2e4c9-2703-4968-9e77-6054459b6ff2">
+				<reportElement x="0" y="180" width="555" height="300" uuid="feb2e4c9-2703-4968-9e77-6054459b6ff2">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="NotaAccreditoRigheDataset" uuid="f54e8738-42d4-454c-ac9e-88a3f7b920d7">
+					<datasetRun subDataset="FatturaAccompagnatoriaRigheDataset" uuid="f54e8738-42d4-454c-ac9e-88a3f7b920d7">
 						<dataSourceExpression><![CDATA[$P{fatturaAccompagnatoriaRigheCollection}]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="65" uuid="8e180bd2-cdb8-410d-9660-90b868c3c0d9">
@@ -347,13 +350,13 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="70" uuid="e816703a-e09f-4587-8815-075011a1b653">
+					<jr:column width="50" uuid="e816703a-e09f-4587-8815-075011a1b653">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna2"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<staticText>
-								<reportElement x="0" y="0" width="70" height="20" uuid="d8b46b9f-4b49-428e-9d0d-79fd87a0fa01"/>
+								<reportElement x="0" y="0" width="50" height="20" uuid="d8b46b9f-4b49-428e-9d0d-79fd87a0fa01"/>
 								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8" isBold="false" isItalic="true"/>
 								</textElement>
@@ -362,8 +365,9 @@
 						</jr:columnHeader>
 						<jr:detailCell style="Table_TD" height="15">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<textField textAdjust="ScaleFont">
-								<reportElement x="0" y="0" width="70" height="15" uuid="94432cae-9688-47cf-8605-2d53feebc2f2"/>
+								<reportElement x="0" y="0" width="50" height="15" uuid="94432cae-9688-47cf-8605-2d53feebc2f2"/>
 								<textElement textAlignment="Left" verticalAlignment="Top">
 									<font size="8"/>
 								</textElement>
@@ -371,13 +375,13 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="160" uuid="8a43bbc4-2d34-40b7-a2d3-7322021fb224">
+					<jr:column width="120" uuid="8a43bbc4-2d34-40b7-a2d3-7322021fb224">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna3"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<staticText>
-								<reportElement x="0" y="0" width="160" height="20" uuid="7c60bb25-31bd-41fc-99e4-110febd290ad"/>
+								<reportElement x="0" y="0" width="120" height="20" uuid="7c60bb25-31bd-41fc-99e4-110febd290ad"/>
 								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8" isBold="false" isItalic="true"/>
 								</textElement>
@@ -387,7 +391,7 @@
 						<jr:detailCell style="Table_TD" height="15">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<textField textAdjust="ScaleFont">
-								<reportElement x="0" y="0" width="160" height="15" uuid="d381506b-5036-47a7-81ac-f482964eb3b0"/>
+								<reportElement x="0" y="0" width="120" height="15" uuid="d381506b-5036-47a7-81ac-f482964eb3b0"/>
 								<textElement textAlignment="Left" verticalAlignment="Top">
 									<font size="8"/>
 								</textElement>
@@ -395,8 +399,30 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="40" uuid="9578d54e-5b65-4edf-b9f4-ba522f7e8f04">
+					<jr:column width="60" uuid="bfb7c3f8-fe20-497a-9cac-285d06736e1f">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
+						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="20" uuid="c4104662-359a-4c8d-8e3f-25e8dcf2b84e"/>
+								<textElement verticalAlignment="Middle">
+									<font size="8" isItalic="true"/>
+								</textElement>
+								<text><![CDATA[Scadenza]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="15">
+							<textField textAdjust="ScaleFont">
+								<reportElement x="0" y="0" width="60" height="15" uuid="c977392a-8e28-4ca1-afd9-d99fc89727e6"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{scadenza}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="40" uuid="9578d54e-5b65-4edf-b9f4-ba522f7e8f04">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna5"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -420,7 +446,7 @@
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="45" uuid="fd081d7c-81bb-4df5-bd9e-3001f8b1ed61">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna5"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna6"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -444,7 +470,7 @@
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="45" uuid="e1f07715-7ba3-4fbd-8243-620124cc965c">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna6"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna7"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -468,7 +494,7 @@
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="45" uuid="883a55ab-22a3-45ad-893a-17dbd255f691">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna7"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna8"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<staticText>
@@ -491,7 +517,7 @@
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="45" uuid="f24b3d32-e445-4088-828c-a04749ddc97b">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna8"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna9"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<staticText>
@@ -514,7 +540,7 @@
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="40" uuid="b7aeeda9-0221-4e09-b066-5ca725b8c311">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna9"/>
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna10"/>
 						<jr:columnHeader style="Table_CH" height="20" rowSpan="1">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -547,7 +573,7 @@
 					<property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="NotaAccreditoDataset" uuid="4d643898-4bca-47df-a768-b68a1948ef0e">
+					<datasetRun subDataset="FatturaAccompagnatoriaDataset" uuid="4d643898-4bca-47df-a768-b68a1948ef0e">
 						<dataSourceExpression><![CDATA[$P{fatturaAccompagnatoriaCollection}]]></dataSourceExpression>
 					</datasetRun>
 					<jr:column width="120" uuid="f180a592-c2d9-4782-8404-4d6bbd10e13f">
@@ -660,7 +686,7 @@
 				</jr:table>
 			</componentElement>
 			<componentElement>
-				<reportElement positionType="Float" x="0" y="494" width="200" height="59" uuid="c0e9507d-a3c4-4528-b57d-8c1ddecf17bc">
+				<reportElement positionType="Float" x="0" y="480" width="200" height="59" uuid="c0e9507d-a3c4-4528-b57d-8c1ddecf17bc">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
@@ -668,7 +694,7 @@
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="NotaAccreditoTotaliDataset" uuid="c3b2825c-0d2e-4071-8614-e96cd97ba686">
+					<datasetRun subDataset="FatturaAccompagnatoriaTotaliDataset" uuid="c3b2825c-0d2e-4071-8614-e96cd97ba686">
 						<datasetParameter name="dsTotaleImponibile">
 							<datasetParameterExpression><![CDATA[$P{totaleImponibile}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -771,7 +797,7 @@
 				</jr:table>
 			</componentElement>
 			<staticText>
-				<reportElement x="261" y="495" width="50" height="14" uuid="9a39b5b1-5c5e-4698-8ea6-0bb2451ca24f">
+				<reportElement positionType="Float" x="0" y="580" width="50" height="14" uuid="9a39b5b1-5c5e-4698-8ea6-0bb2451ca24f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
@@ -780,25 +806,27 @@
 				<text><![CDATA[Note]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement x="261" y="509" width="168" height="44" uuid="fdfb795c-09e5-4982-99c4-a08d7e79e977"/>
+				<reportElement positionType="Float" x="0" y="594" width="160" height="30" uuid="fdfb795c-09e5-4982-99c4-a08d7e79e977"/>
 				<textFieldExpression><![CDATA[$P{note}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="60" y="60" width="130" height="20" uuid="5128b585-83d0-410b-8757-8bf7d4886974"/>
+				<reportElement x="60" y="60" width="130" height="15" uuid="5128b585-83d0-410b-8757-8bf7d4886974">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8" isBold="false" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Luogo di destinazione]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="60" y="80" width="130" height="30" uuid="a311a500-25da-42da-9872-995436e53ebf"/>
+				<reportElement x="60" y="75" width="130" height="35" uuid="a311a500-25da-42da-9872-995436e53ebf"/>
 				<textElement>
-					<font size="10"/>
+					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{puntoConsegna}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="455" y="495" width="70" height="14" forecolor="#000000" uuid="501a1e44-a58c-4daf-960d-1e12da3f73ff">
+				<reportElement positionType="Float" x="170" y="580" width="70" height="14" forecolor="#000000" uuid="501a1e44-a58c-4daf-960d-1e12da3f73ff">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -810,7 +838,7 @@
 				<text><![CDATA[Trasportatore]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="455" y="509" width="100" height="30" uuid="da19bf67-058b-44cf-b3c7-b8799c718181">
+				<reportElement positionType="Float" x="170" y="594" width="100" height="30" uuid="da19bf67-058b-44cf-b3c7-b8799c718181">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$P{trasportatore}]]></textFieldExpression>
@@ -865,7 +893,7 @@
 				<textFieldExpression><![CDATA[$P{nota}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="560" width="100" height="14" uuid="62015d88-9242-4dde-99c0-e7d78ef75150">
+				<reportElement positionType="Float" x="0" y="540" width="100" height="14" uuid="62015d88-9242-4dde-99c0-e7d78ef75150">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -874,7 +902,7 @@
 				<text><![CDATA[Trasporto a cura del]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="0" y="575" width="100" height="20" uuid="4f6671da-6c2d-4e02-a739-74139cf5b9fc">
+				<reportElement positionType="Float" x="0" y="555" width="100" height="20" uuid="4f6671da-6c2d-4e02-a739-74139cf5b9fc">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Top">
@@ -883,7 +911,7 @@
 				<textFieldExpression><![CDATA[$P{tipoTrasporto}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="110" y="560" width="50" height="14" uuid="20788a82-b74b-41d5-9b0e-bf507f43d7c6">
+				<reportElement positionType="Float" x="110" y="540" width="50" height="14" uuid="20788a82-b74b-41d5-9b0e-bf507f43d7c6">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
@@ -892,7 +920,7 @@
 				<text><![CDATA[Num. colli]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="110" y="575" width="50" height="20" uuid="242d54b5-6b0b-4cd5-96da-928a12cc2219">
+				<reportElement positionType="Float" x="110" y="555" width="50" height="20" uuid="242d54b5-6b0b-4cd5-96da-928a12cc2219">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -902,7 +930,7 @@
 				<textFieldExpression><![CDATA[$P{numeroColli}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
-				<reportElement positionType="Float" x="170" y="575" width="100" height="20" uuid="dfc1d054-4c00-4c2d-a61a-a063c443b99c">
+				<reportElement positionType="Float" x="170" y="555" width="100" height="20" uuid="dfc1d054-4c00-4c2d-a61a-a063c443b99c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -911,7 +939,7 @@
 				<textFieldExpression><![CDATA[$P{dataOraTrasporto}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="170" y="560" width="100" height="14" uuid="60024afa-38d2-422c-a493-eb944075cfa8">
+				<reportElement positionType="Float" x="170" y="540" width="100" height="14" uuid="60024afa-38d2-422c-a493-eb944075cfa8">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>

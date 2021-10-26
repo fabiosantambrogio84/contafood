@@ -71,6 +71,10 @@ public class ClienteService {
     @Transactional
     public Cliente create(Cliente cliente){
         LOGGER.info("Creating 'cliente'");
+        cliente.setCognome(cliente.getCognome().trim());
+        cliente.setNome(cliente.getNome().trim());
+        cliente.setRagioneSociale(cliente.getRagioneSociale().trim());
+        cliente.setRagioneSociale2(cliente.getRagioneSociale2().trim());
         cliente.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Cliente createdCliente = clienteRepository.save(cliente);
         createdCliente.setCodice(createdCliente.getId().intValue());

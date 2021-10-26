@@ -22,8 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="OrdiniAutisti date range. Save email sent for OrdineFornitore">
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 25">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -452,13 +453,11 @@
       <workItem from="1634108691664" duration="2486000" />
       <workItem from="1634281352296" duration="3472000" />
       <workItem from="1634716193105" duration="5932000" />
-    </task>
-    <task id="LOCAL-00038" summary="Fix Fattura creation bulk and DDTs retrieval">
-      <created>1583923801354</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1583923801354</updated>
+      <workItem from="1634742055998" duration="181000" />
+      <workItem from="1634898889297" duration="1317000" />
+      <workItem from="1634907562694" duration="598000" />
+      <workItem from="1635232638698" duration="5597000" />
+      <workItem from="1635320066281" duration="2664000" />
     </task>
     <task id="LOCAL-00039" summary="temporarily remove Fattura filter on TipologiaPagamento">
       <created>1584018203781</created>
@@ -796,7 +795,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634721426000</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="Fix step 25">
+      <created>1635251874159</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1635251874160</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -819,7 +825,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add logic for retrieving Articolo by barcode" />
     <MESSAGE value="Remove not null on data_aggiornamento column" />
     <MESSAGE value="Add Produzione.tempoImpiegato" />
     <MESSAGE value="Fix barcode substring for Articolo with variable weight" />
@@ -844,7 +849,8 @@
     <MESSAGE value="Update rows order for OrdineCliente" />
     <MESSAGE value="Update rows order for OrdineCliente (stato)" />
     <MESSAGE value="OrdiniAutisti date range. Save email sent for OrdineFornitore" />
-    <option name="LAST_COMMIT_MESSAGE" value="OrdiniAutisti date range. Save email sent for OrdineFornitore" />
+    <MESSAGE value="Fix step 25" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix step 25" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
