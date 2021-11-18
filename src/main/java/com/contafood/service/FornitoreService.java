@@ -3,6 +3,8 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Fornitore;
 import com.contafood.repository.FornitoreRepository;
+import com.contafood.util.BarcodeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,7 @@ public class FornitoreService {
 
     public Fornitore create(Fornitore fornitore){
         LOGGER.info("Creating 'fornitore'");
+        handleBarcodeMask(fornitore);
         Fornitore createdFornitore = fornitoreRepository.save(fornitore);
         createdFornitore.setCodice(createdFornitore.getId().intValue());
         fornitoreRepository.save(createdFornitore);
@@ -57,6 +60,7 @@ public class FornitoreService {
 
     public Fornitore update(Fornitore fornitore){
         LOGGER.info("Updating 'fornitore'");
+        handleBarcodeMask(fornitore);
         Fornitore updatedFornitore = fornitoreRepository.save(fornitore);
         LOGGER.info("Updated 'fornitore' '{}'", updatedFornitore);
         return updatedFornitore;
@@ -70,5 +74,12 @@ public class FornitoreService {
         LOGGER.info("Deleting 'fornitore' '{}'", fornitoreId);
         fornitoreRepository.deleteById(fornitoreId);
         LOGGER.info("Deleted 'fornitore' '{}'", fornitoreId);
+    }
+
+    private void handleBarcodeMask(Fornitore fornitore){
+        if(!StringUtils.isEmpty(fornitore.getBarcodeMaskLottoScadenza())){
+            fornitore.setBarcodeRegexpLotto(BarcodeUtils.createRegexpLotto(fornitore.getBarcodeMaskLottoScadenza()));
+            fornitore.setBarcodeRegexpDataScadenza(BarcodeUtils.createRegexpDataScadenza(fornitore.getBarcodeMaskLottoScadenza()));
+        }
     }
 }

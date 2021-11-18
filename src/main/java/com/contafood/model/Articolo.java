@@ -2,6 +2,8 @@ package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -11,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Getter
+@Setter
 @EqualsAndHashCode(exclude = {"articoloImmagini", "sconti", "listiniPrezzi", "listiniPrezziVariazioni", "ordineClienteArticoli", "ddtArticoli", "ddtAcquistoArticoli", "fatturaAccompagnatoriaArticoli", "notaAccreditoRighe", "giacenze"})
 @Entity
 @Table(name = "articolo")
@@ -62,6 +66,15 @@ public class Articolo {
 
     @Column(name = "complete_barcode")
     private Boolean completeBarcode;
+
+    @Column(name = "barcode_mask_lotto_scadenza")
+    private String barcodeMaskLottoScadenza;
+
+    @Column(name = "barcode_regexp_lotto")
+    private String barcodeRegexpLotto;
+
+    @Column(name = "barcode_regexp_data_scadenza")
+    private String barcodeRegexpDataScadenza;
 
     @Column(name = "sito_web")
     private Boolean sitoWeb;
@@ -115,222 +128,6 @@ public class Articolo {
     @JsonIgnore
     private Set<GiacenzaArticolo> giacenze = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCodice() {
-        return codice;
-    }
-
-    public void setCodice(String codice) {
-        this.codice = codice;
-    }
-
-    public String getDescrizione() {
-        return descrizione;
-    }
-
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
-
-    public CategoriaArticolo getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(CategoriaArticolo categoria) {
-        this.categoria = categoria;
-    }
-
-    public Fornitore getFornitore() {
-        return fornitore;
-    }
-
-    public void setFornitore(Fornitore fornitore) {
-        this.fornitore = fornitore;
-    }
-
-    public AliquotaIva getAliquotaIva() {
-        return aliquotaIva;
-    }
-
-    public void setAliquotaIva(AliquotaIva aliquotaIva) {
-        this.aliquotaIva = aliquotaIva;
-    }
-
-    public UnitaMisura getUnitaMisura() {
-        return unitaMisura;
-    }
-
-    public void setUnitaMisura(UnitaMisura unitaMisura) {
-        this.unitaMisura = unitaMisura;
-    }
-
-    public Date getData() {
-        return data;
-    }
-
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public Float getQuantitaPredefinita() {
-        return quantitaPredefinita;
-    }
-
-    public void setQuantitaPredefinita(Float quantitaPredefinita) {
-        this.quantitaPredefinita = quantitaPredefinita;
-    }
-
-    public BigDecimal getPrezzoAcquisto() {
-        return prezzoAcquisto;
-    }
-
-    public void setPrezzoAcquisto(BigDecimal prezzoAcquisto) {
-        this.prezzoAcquisto = prezzoAcquisto;
-    }
-
-    public BigDecimal getPrezzoListinoBase() {
-        return prezzoListinoBase;
-    }
-
-    public void setPrezzoListinoBase(BigDecimal prezzoListinoBase) {
-        this.prezzoListinoBase = prezzoListinoBase;
-    }
-
-    public Integer getScadenzaGiorni() {
-        return scadenzaGiorni;
-    }
-
-    public void setScadenzaGiorni(Integer scadenzaGiorni) {
-        this.scadenzaGiorni = scadenzaGiorni;
-    }
-
-    public String getBarcode() {
-        return barcode;
-    }
-
-    public void setBarcode(String barcode) {
-        this.barcode = barcode;
-    }
-
-    public Boolean getCompleteBarcode() {
-        return completeBarcode;
-    }
-
-    public void setCompleteBarcode(Boolean completeBarcode) {
-        this.completeBarcode = completeBarcode;
-    }
-
-    public Boolean getSitoWeb() {
-        return sitoWeb;
-    }
-
-    public void setSitoWeb(Boolean sitoWeb) {
-        this.sitoWeb = sitoWeb;
-    }
-
-    public Boolean getAttivo() {
-        return attivo;
-    }
-
-    public void setAttivo(Boolean attivo) {
-        this.attivo = attivo;
-    }
-
-    public Timestamp getDataInserimento() {
-        return dataInserimento;
-    }
-
-    public void setDataInserimento(Timestamp dataInserimento) {
-        this.dataInserimento = dataInserimento;
-    }
-
-    public Timestamp getDataAggiornamento() {
-        return dataAggiornamento;
-    }
-
-    public void setDataAggiornamento(Timestamp dataAggiornamento) {
-        this.dataAggiornamento = dataAggiornamento;
-    }
-
-    public List<ArticoloImmagine> getArticoloImmagini() {
-        return articoloImmagini;
-    }
-
-    public void setArticoloImmagini(List<ArticoloImmagine> articoloImmagini) {
-        this.articoloImmagini = articoloImmagini;
-    }
-
-    public List<Sconto> getSconti() {
-        return sconti;
-    }
-
-    public void setSconti(List<Sconto> sconti) {
-        this.sconti = sconti;
-    }
-
-    public List<ListinoPrezzo> getListiniPrezzi() {
-        return listiniPrezzi;
-    }
-
-    public void setListiniPrezzi(List<ListinoPrezzo> listiniPrezzi) {
-        this.listiniPrezzi = listiniPrezzi;
-    }
-
-    public List<ListinoPrezzoVariazione> getListiniPrezziVariazioni() {
-        return listiniPrezziVariazioni;
-    }
-
-    public void setListiniPrezziVariazioni(List<ListinoPrezzoVariazione> listiniPrezziVariazioni) {
-        this.listiniPrezziVariazioni = listiniPrezziVariazioni;
-    }
-
-    public Set<OrdineClienteArticolo> getOrdineClienteArticoli() {
-        return ordineClienteArticoli;
-    }
-
-    public void setOrdineClienteArticoli(Set<OrdineClienteArticolo> ordineClienteArticoli) {
-        this.ordineClienteArticoli = ordineClienteArticoli;
-    }
-
-    public Set<DdtArticolo> getDdtArticoli() {
-        return ddtArticoli;
-    }
-
-    public void setDdtArticoli(Set<DdtArticolo> ddtArticoli) {
-        this.ddtArticoli = ddtArticoli;
-    }
-
-    public Set<DdtAcquistoArticolo> getDdtAcquistoArticoli() {
-        return ddtAcquistoArticoli;
-    }
-
-    public void setDdtAcquistoArticoli(Set<DdtAcquistoArticolo> ddtAcquistoArticoli) {
-        this.ddtAcquistoArticoli = ddtAcquistoArticoli;
-    }
-
-    public Set<FatturaAccompagnatoriaArticolo> getFatturaAccompagnatoriaArticoli() {
-        return fatturaAccompagnatoriaArticoli;
-    }
-
-    public void setFatturaAccompagnatoriaArticoli(Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli) {
-        this.fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoli;
-    }
-
-    public Set<NotaAccreditoRiga> getNotaAccreditoRighe() {
-        return notaAccreditoRighe;
-    }
-
-    public void setNotaAccreditoRighe(Set<NotaAccreditoRiga> notaAccreditoRighe) {
-        this.notaAccreditoRighe = notaAccreditoRighe;
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -350,6 +147,9 @@ public class Articolo {
         result.append(", scadenzaGiorni: " + scadenzaGiorni);
         result.append(", barcode: " + barcode);
         result.append(", completeBarcode: " + completeBarcode);
+        result.append(", barcodeMaskLottoScadenza: " + barcodeMaskLottoScadenza);
+        result.append(", barcodeRegexpLotto: " + barcodeRegexpLotto);
+        result.append(", barcodeRegexpDataScadenza: " + barcodeRegexpDataScadenza);
         result.append(", sitoWeb: " + sitoWeb);
         result.append(", attivo: " + attivo);
         result.append(", dataInserimento: " + dataInserimento);

@@ -22,9 +22,17 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 25">
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Step 26: new barcode parsing">
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20211117.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/exception/BarcodeMaskParsingException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/BarcodeUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Utils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Articolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Articolo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,21 +103,34 @@
       <recent name="$PROJECT_DIR$/src/main/resources/spec" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.contafood.util" />
       <recent name="com.contafood.service" />
       <recent name="com.contafood.util.enumeration" />
       <recent name="com.contafood.repository.views" />
       <recent name="com.contafood.model.views" />
-      <recent name="com.contafood.model.stats" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.contafood.exception" />
       <recent name="com.contafood.model.views" />
       <recent name="com.contafood.repository.views" />
       <recent name="com.contafood.model.reports" />
       <recent name="com.contafood.controller" />
-      <recent name="com.contafood.service" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
+    <configuration name="BarcodeUtils" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.contafood.util.BarcodeUtils" />
+      <module name="contafood" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.contafood.util.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="contafood [clean,package]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -176,10 +197,16 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Application.BarcodeUtils" />
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Remote JVM Debug.Contafood-remote" />
       <item itemvalue="Spring Boot.Application" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.BarcodeUtils" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -457,7 +484,15 @@
       <workItem from="1634898889297" duration="1317000" />
       <workItem from="1634907562694" duration="598000" />
       <workItem from="1635232638698" duration="5597000" />
-      <workItem from="1635320066281" duration="2664000" />
+      <workItem from="1635320066281" duration="2694000" />
+      <workItem from="1635406539037" duration="605000" />
+      <workItem from="1635849488317" duration="593000" />
+      <workItem from="1635854640711" duration="1170000" />
+      <workItem from="1635930786134" duration="1813000" />
+      <workItem from="1636100985017" duration="2074000" />
+      <workItem from="1637068318782" duration="620000" />
+      <workItem from="1637135773034" duration="9981000" />
+      <workItem from="1637223707842" duration="2099000" />
     </task>
     <task id="LOCAL-00039" summary="temporarily remove Fattura filter on TipologiaPagamento">
       <created>1584018203781</created>
@@ -825,7 +860,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Remove not null on data_aggiornamento column" />
     <MESSAGE value="Add Produzione.tempoImpiegato" />
     <MESSAGE value="Fix barcode substring for Articolo with variable weight" />
     <MESSAGE value="Add scadenza to DdtArticolo and FatturaAccompagnatoriaArticolo" />
@@ -850,7 +884,8 @@
     <MESSAGE value="Update rows order for OrdineCliente (stato)" />
     <MESSAGE value="OrdiniAutisti date range. Save email sent for OrdineFornitore" />
     <MESSAGE value="Fix step 25" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix step 25" />
+    <MESSAGE value="Step 26: new barcode parsing" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step 26: new barcode parsing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -864,6 +899,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java</url>
           <line>86</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java</url>
+          <line>61</line>
+          <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

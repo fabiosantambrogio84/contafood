@@ -1,5 +1,8 @@
 package com.contafood.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface Constants {
 
     String DEFAULT_ENCODING = "UTF-8";
@@ -39,4 +42,7 @@ public interface Constants {
     String JASPER_REPORT_RICEVUTA_PRIVATO = "/reports/ricevuta_privato.jasper";
     String JASPER_REPORT_FATTURE_COMMERCIANTI = "/reports/fatture_commercianti.jasper";
     String JASPER_REPORT_ORDINE_FORNITORE = "/reports/ordine_fornitore.jasper";
+
+    List<Character> BARCODE_ALLOWED_CHARS = Arrays.asList('L', 'A', 'M', 'G', 'X');
+    String BARCODE_REGEXP = "/^.{start}(.{length})/";
 }

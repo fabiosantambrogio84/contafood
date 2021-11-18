@@ -5,6 +5,7 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.ArticoloRepository;
 import com.contafood.repository.GiacenzaArticoloRepository;
+import com.contafood.util.BarcodeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +16,16 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class ArticoloService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ArticoloService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ArticoloService.class);
 
     private final ArticoloRepository articoloRepository;
     private final ArticoloImmagineService articoloImmagineService;
@@ -105,12 +109,13 @@ public class ArticoloService {
         String codice = articolo.getCodice().toUpperCase();
         articolo.setCodice(codice);
         articolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        handleBarcodeMask(articolo);
         Articolo createdArticolo = articoloRepository.save(articolo);
 
         // compute 'listini prezzi'
         LOGGER.info("Computing 'listiniPrezzi' for 'articolo' '{}'", createdArticolo.getId());
         List<ListinoPrezzo> listiniPrezzi = new ArrayList<>();
-        Set<Listino> listini = listinoPrezzoService.getAll().stream().map(lp -> lp.getListino()).collect(Collectors.toSet());
+        Set<Listino> listini = listinoPrezzoService.getAll().stream().map(ListinoPrezzo::getListino).collect(Collectors.toSet());
         listini.forEach(l -> {
             ListinoPrezzo listinoPrezzo = new ListinoPrezzo();
             listinoPrezzo.setListino(l);
@@ -118,8 +123,8 @@ public class ArticoloService {
             listinoPrezzo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
             List<ListinoPrezzoVariazione> listiniPrezziVariazioni = l.getListiniPrezziVariazioni();
-            String tipologiaVariazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(lpv -> lpv.getTipologiaVariazionePrezzo()).findFirst().orElse(null);
-            Float variazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
+            String tipologiaVariazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(ListinoPrezzoVariazione::getTipologiaVariazionePrezzo).findFirst().orElse(null);
+            Float variazionePrezzo = listiniPrezziVariazioni.stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(ListinoPrezzoVariazione::getVariazionePrezzo).findFirst().orElse(null);
 
             BigDecimal newPrezzo = listinoPrezzoService.computePrezzoInListinoCreation(l, createdArticolo, tipologiaVariazionePrezzo, variazionePrezzo);
             listinoPrezzo.setPrezzo(newPrezzo);
@@ -151,9 +156,10 @@ public class ArticoloService {
         articolo.setDataInserimento(articoloCurrent.getDataInserimento());
         String codice = articolo.getCodice().toUpperCase();
         articolo.setCodice(codice);
+        handleBarcodeMask(articolo);
         Articolo updatedArticolo = articoloRepository.save(articolo);
 
-        if(updatedArticolo.getPrezzoListinoBase() != prezzoListinoBaseCurrent){
+        if(!updatedArticolo.getPrezzoListinoBase().equals(prezzoListinoBaseCurrent)){
             // compute 'listini prezzi'
             listinoPrezzoService.computeListiniPrezziForArticolo(updatedArticolo);
         }
@@ -194,5 +200,12 @@ public class ArticoloService {
         List<ListinoPrezzo> listiniPrezzi = listinoPrezzoService.getByArticoloId(articoloId);
         LOGGER.info("Retrieved {} 'listiniPrezzi'", listiniPrezzi.size());
         return listiniPrezzi;
+    }
+
+    private void handleBarcodeMask(Articolo articolo){
+        if(!StringUtils.isEmpty(articolo.getBarcodeMaskLottoScadenza())){
+            articolo.setBarcodeRegexpLotto(BarcodeUtils.createRegexpLotto(articolo.getBarcodeMaskLottoScadenza()));
+            articolo.setBarcodeRegexpDataScadenza(BarcodeUtils.createRegexpDataScadenza(articolo.getBarcodeMaskLottoScadenza()));
+        }
     }
 }
