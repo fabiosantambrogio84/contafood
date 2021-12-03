@@ -109,6 +109,10 @@ public class ArticoloService {
         String codice = articolo.getCodice().toUpperCase();
         articolo.setCodice(codice);
         articolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        String barcodeMaskLottoScadenza = articolo.getBarcodeMaskLottoScadenza();
+        if(!StringUtils.isEmpty(barcodeMaskLottoScadenza)){
+            articolo.setBarcodeMaskLottoScadenza(barcodeMaskLottoScadenza.toUpperCase());
+        }
         handleBarcodeMask(articolo);
         Articolo createdArticolo = articoloRepository.save(articolo);
 
@@ -156,7 +160,12 @@ public class ArticoloService {
         articolo.setDataInserimento(articoloCurrent.getDataInserimento());
         String codice = articolo.getCodice().toUpperCase();
         articolo.setCodice(codice);
+        String barcodeMaskLottoScadenza = articolo.getBarcodeMaskLottoScadenza();
+        if(!StringUtils.isEmpty(barcodeMaskLottoScadenza)){
+            articolo.setBarcodeMaskLottoScadenza(barcodeMaskLottoScadenza.toUpperCase());
+        }
         handleBarcodeMask(articolo);
+        articolo.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
         Articolo updatedArticolo = articoloRepository.save(articolo);
 
         if(!updatedArticolo.getPrezzoListinoBase().equals(prezzoListinoBaseCurrent)){

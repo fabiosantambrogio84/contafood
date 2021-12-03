@@ -44,5 +44,5 @@ public interface Constants {
     String JASPER_REPORT_ORDINE_FORNITORE = "/reports/ordine_fornitore.jasper";
 
     List<Character> BARCODE_ALLOWED_CHARS = Arrays.asList('L', 'A', 'M', 'G', 'X');
-    String BARCODE_REGEXP = "/^.{start}(.{length})/";
+    String BARCODE_REGEXP = "^.{start}(.{length})";
 }

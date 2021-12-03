@@ -23,15 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Step 26: new barcode parsing">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20211117.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/exception/BarcodeMaskParsingException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/BarcodeUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Utils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Articolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Articolo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/BarcodeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/BarcodeUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,10 +63,10 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AdeController.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AdeController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="JupyterTrust" id="e17c0346-daa0-40ae-a012-1eb389037a67" />
   <component name="ProjectId" id="1XOZ4qCFwmJr4ZtINvmWCN8YDWn" />
@@ -492,14 +486,9 @@
       <workItem from="1636100985017" duration="2074000" />
       <workItem from="1637068318782" duration="620000" />
       <workItem from="1637135773034" duration="9981000" />
-      <workItem from="1637223707842" duration="2099000" />
-    </task>
-    <task id="LOCAL-00039" summary="temporarily remove Fattura filter on TipologiaPagamento">
-      <created>1584018203781</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1584018203781</updated>
+      <workItem from="1637223707842" duration="2230000" />
+      <workItem from="1637655790130" duration="1174000" />
+      <workItem from="1638544434718" duration="2576000" />
     </task>
     <task id="LOCAL-00040" summary="Fix Fattura filter by TipoPagamento">
       <created>1584018538653</created>
@@ -837,7 +826,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635251874160</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="Step 26: new barcode parsing">
+      <created>1637246011369</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1637246011370</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -904,6 +900,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java</url>
           <line>61</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java</url>
+          <line>157</line>
+          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -56,9 +56,9 @@ public class BarcodeUtils {
         int dataScadenzaStartDay = mask.indexOf("XG");
 
         if(dataScadenzaStartYear != -1){
-            dataScadenzaStart = dataScadenzaStartYear;
+            dataScadenzaStart = dataScadenzaStartYear + 1;
         } else if(dataScadenzaStartDay != -1){
-            dataScadenzaStart = dataScadenzaStartDay;
+            dataScadenzaStart = dataScadenzaStartDay + 1;
         }
 
         if(dataScadenzaStart == -1){
