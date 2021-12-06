@@ -205,11 +205,17 @@ public class StampaService {
                 ddtArticoloDataSource.setCodiceArticolo(da.getArticolo().getCodice());
                 ddtArticoloDataSource.setDescrizioneArticolo(da.getArticolo().getDescrizione());
                 ddtArticoloDataSource.setLotto(da.getLotto());
+                Date dataScadenza = da.getScadenza();
+                if(dataScadenza != null){
+                    ddtArticoloDataSource.setDataScadenza(simpleDateFormat.format(dataScadenza));
+                } else {
+                    ddtArticoloDataSource.setDataScadenza("");
+                }
                 ddtArticoloDataSource.setUdm(da.getArticolo().getUnitaMisura().getEtichetta());
                 ddtArticoloDataSource.setQuantita(da.getQuantita());
-                ddtArticoloDataSource.setPrezzo(da.getPrezzo() != null ? da.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                ddtArticoloDataSource.setSconto(da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                ddtArticoloDataSource.setImponibile(da.getImponibile() != null ? da.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                ddtArticoloDataSource.setPrezzo(da.getPrezzo() != null ? da.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
+                ddtArticoloDataSource.setSconto(da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
+                ddtArticoloDataSource.setImponibile(da.getImponibile() != null ? da.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
                 ddtArticoloDataSource.setIva(da.getArticolo().getAliquotaIva().getValore().intValue());
 
                 ddtArticoloDataSources.add(ddtArticoloDataSource);

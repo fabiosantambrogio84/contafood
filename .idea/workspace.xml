@@ -22,11 +22,12 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Step 26: new barcode parsing">
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix barcode scanner in ddt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/BarcodeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/BarcodeUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/DdtArticoloDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/DdtArticoloDataSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jasper" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -488,14 +489,9 @@
       <workItem from="1637135773034" duration="9981000" />
       <workItem from="1637223707842" duration="2230000" />
       <workItem from="1637655790130" duration="1174000" />
-      <workItem from="1638544434718" duration="2576000" />
-    </task>
-    <task id="LOCAL-00040" summary="Fix Fattura filter by TipoPagamento">
-      <created>1584018538653</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1584018538653</updated>
+      <workItem from="1638544434718" duration="2597000" />
+      <workItem from="1638781819871" duration="1214000" />
+      <workItem from="1638803703720" duration="2103000" />
     </task>
     <task id="LOCAL-00041" summary="Fix filter DDT.importo">
       <created>1584023731583</created>
@@ -833,7 +829,14 @@
       <option name="project" value="LOCAL" />
       <updated>1637246011370</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="Fix barcode scanner in ddt">
+      <created>1638551799921</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1638551799924</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -856,7 +859,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add Produzione.tempoImpiegato" />
     <MESSAGE value="Fix barcode substring for Articolo with variable weight" />
     <MESSAGE value="Add scadenza to DdtArticolo and FatturaAccompagnatoriaArticolo" />
     <MESSAGE value="Fix Cliente.dataInserimento on update" />
@@ -881,7 +883,8 @@
     <MESSAGE value="OrdiniAutisti date range. Save email sent for OrdineFornitore" />
     <MESSAGE value="Fix step 25" />
     <MESSAGE value="Step 26: new barcode parsing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 26: new barcode parsing" />
+    <MESSAGE value="Fix barcode scanner in ddt" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix barcode scanner in ddt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
