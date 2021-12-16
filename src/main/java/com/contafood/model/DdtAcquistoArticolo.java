@@ -1,6 +1,8 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,6 +10,8 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "ddt_acquisto_articolo")
 public class DdtAcquistoArticolo implements Serializable {
@@ -38,6 +42,9 @@ public class DdtAcquistoArticolo implements Serializable {
     @Column(name = "quantita")
     private Float quantita;
 
+    @Column(name = "numero_pezzi")
+    private Integer numeroPezzi;
+
     @Column(name = "prezzo")
     private BigDecimal prezzo;
 
@@ -53,94 +60,6 @@ public class DdtAcquistoArticolo implements Serializable {
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
 
-    public DdtAcquistoArticoloKey getId() {
-        return id;
-    }
-
-    public void setId(DdtAcquistoArticoloKey id) {
-        this.id = id;
-    }
-
-    public DdtAcquisto getDdtAcquisto() {
-        return ddtAcquisto;
-    }
-
-    public void setDdtAcquisto(DdtAcquisto ddtAcquisto) {
-        this.ddtAcquisto = ddtAcquisto;
-    }
-
-    public Articolo getArticolo() {
-        return articolo;
-    }
-
-    public void setArticolo(Articolo articolo) {
-        this.articolo = articolo;
-    }
-
-    public String getLotto() {
-        return lotto;
-    }
-
-    public void setLotto(String lotto) {
-        this.lotto = lotto;
-    }
-
-    public Date getDataScadenza() {
-        return dataScadenza;
-    }
-
-    public void setDataScadenza(Date dataScadenza) {
-        this.dataScadenza = dataScadenza;
-    }
-
-    public Float getQuantita() {
-        return quantita;
-    }
-
-    public void setQuantita(Float quantita) {
-        this.quantita = quantita;
-    }
-
-    public BigDecimal getPrezzo() {
-        return prezzo;
-    }
-
-    public void setPrezzo(BigDecimal prezzo) {
-        this.prezzo = prezzo;
-    }
-
-    public BigDecimal getSconto() {
-        return sconto;
-    }
-
-    public void setSconto(BigDecimal sconto) {
-        this.sconto = sconto;
-    }
-
-    public BigDecimal getImponibile() {
-        return imponibile;
-    }
-
-    public void setImponibile(BigDecimal imponibile) {
-        this.imponibile = imponibile;
-    }
-
-    public Timestamp getDataInserimento() {
-        return dataInserimento;
-    }
-
-    public void setDataInserimento(Timestamp dataInserimento) {
-        this.dataInserimento = dataInserimento;
-    }
-
-    public Timestamp getDataAggiornamento() {
-        return dataAggiornamento;
-    }
-
-    public void setDataAggiornamento(Timestamp dataAggiornamento) {
-        this.dataAggiornamento = dataAggiornamento;
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -151,6 +70,7 @@ public class DdtAcquistoArticolo implements Serializable {
         result.append(", lotto: " + lotto);
         result.append(", dataScadenza: " + dataScadenza);
         result.append(", quantita: " + quantita);
+        result.append(", numeroPezzi: " + numeroPezzi);
         result.append(", prezzo: " + prezzo);
         result.append(", sconto: " + sconto);
         result.append(", imponibile: " + imponibile);

@@ -22,12 +22,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix barcode scanner in ddt">
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix ddt pdf">
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20211216.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/DdtArticoloDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/DdtArticoloDataSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jasper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/DdtAcquistoArticolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/DdtAcquistoArticolo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/DdtAcquistoIngrediente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/DdtAcquistoIngrediente.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +111,7 @@
       <recent name="com.contafood.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.contafood [clean,package]">
+  <component name="RunManager" selected="Remote JVM Debug.Contafood-remote">
     <configuration name="BarcodeUtils" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.contafood.util.BarcodeUtils" />
       <module name="contafood" />
@@ -491,14 +490,10 @@
       <workItem from="1637655790130" duration="1174000" />
       <workItem from="1638544434718" duration="2597000" />
       <workItem from="1638781819871" duration="1214000" />
-      <workItem from="1638803703720" duration="2103000" />
-    </task>
-    <task id="LOCAL-00041" summary="Fix filter DDT.importo">
-      <created>1584023731583</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1584023731583</updated>
+      <workItem from="1638803703720" duration="2716000" />
+      <workItem from="1638881757454" duration="800000" />
+      <workItem from="1639555130668" duration="939000" />
+      <workItem from="1639643022826" duration="2716000" />
     </task>
     <task id="LOCAL-00042" summary="Moved sql scripts to new folder external to build">
       <created>1584023987067</created>
@@ -836,7 +831,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638551799924</updated>
     </task>
-    <option name="localTasksCounter" value="90" />
+    <task id="LOCAL-00090" summary="Fix ddt pdf">
+      <created>1638806784005</created>
+      <option name="number" value="00090" />
+      <option name="presentableId" value="LOCAL-00090" />
+      <option name="project" value="LOCAL" />
+      <updated>1638806784006</updated>
+    </task>
+    <option name="localTasksCounter" value="91" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -859,7 +861,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix barcode substring for Articolo with variable weight" />
     <MESSAGE value="Add scadenza to DdtArticolo and FatturaAccompagnatoriaArticolo" />
     <MESSAGE value="Fix Cliente.dataInserimento on update" />
     <MESSAGE value="Add Ddt.scannerLog" />
@@ -884,7 +885,8 @@
     <MESSAGE value="Fix step 25" />
     <MESSAGE value="Step 26: new barcode parsing" />
     <MESSAGE value="Fix barcode scanner in ddt" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix barcode scanner in ddt" />
+    <MESSAGE value="Fix ddt pdf" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix ddt pdf" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -908,6 +910,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java</url>
           <line>157</line>
           <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java</url>
+          <line>67</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

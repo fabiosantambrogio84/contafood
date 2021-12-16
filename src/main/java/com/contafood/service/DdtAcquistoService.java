@@ -197,12 +197,11 @@ public class DdtAcquistoService {
             ivaDdtIngredientiMap.put(iva, ddtIngredientiByIva);
         });
 
-
         BigDecimal totaleImponibile = new BigDecimal(0);
         BigDecimal totaleIva = new BigDecimal(0);
         BigDecimal totale = new BigDecimal(0);
 
-        // compute 'totaleImponibile' and 'totale'
+        // compute 'totaleImponibile', 'totaleIva' and 'totale'
         for (Map.Entry<AliquotaIva, Set<DdtAcquistoArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
             BigDecimal iva = entry.getKey().getValore();
             BigDecimal totaleByIva = new BigDecimal(0);
@@ -233,6 +232,7 @@ public class DdtAcquistoService {
         }
 
         ddtAcquisto.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
+        ddtAcquisto.setTotaleIva(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
         ddtAcquisto.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
     }
 
