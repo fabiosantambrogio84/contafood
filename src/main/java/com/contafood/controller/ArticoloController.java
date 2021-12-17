@@ -73,9 +73,8 @@ public class ArticoloController {
             } else {
                 articoli = articoloService.getAll();
             }
-            articoli = articoli.stream().filter(isArticoloIdFornitoreEquals).collect(Collectors.toSet());
         }
-        return articoli.stream().sorted(Comparator.comparing(Articolo::getCodice)).collect(Collectors.toList());
+        return articoli.stream().filter(isArticoloIdFornitoreEquals).sorted(Comparator.comparing(Articolo::getCodice)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = GET, path = "/{articoloId}")

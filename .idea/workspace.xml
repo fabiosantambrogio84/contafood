@@ -22,11 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix ddt pdf">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20211216.sql" afterDir="false" />
+    <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix ddt acquisto">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/DdtAcquistoArticolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/DdtAcquistoArticolo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/DdtAcquistoIngrediente.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/DdtAcquistoIngrediente.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ArticoloController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ArticoloController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -111,7 +109,7 @@
       <recent name="com.contafood.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="Remote JVM Debug.Contafood-remote">
+  <component name="RunManager" selected="Maven.contafood [clean,package]">
     <configuration name="BarcodeUtils" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.contafood.util.BarcodeUtils" />
       <module name="contafood" />
@@ -493,14 +491,9 @@
       <workItem from="1638803703720" duration="2716000" />
       <workItem from="1638881757454" duration="800000" />
       <workItem from="1639555130668" duration="939000" />
-      <workItem from="1639643022826" duration="2716000" />
-    </task>
-    <task id="LOCAL-00042" summary="Moved sql scripts to new folder external to build">
-      <created>1584023987067</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1584023987067</updated>
+      <workItem from="1639643022826" duration="5544000" />
+      <workItem from="1639729299160" duration="606000" />
+      <workItem from="1639735170869" duration="1065000" />
     </task>
     <task id="LOCAL-00043" summary="Add DdtAcquisto, DdtAcquistoArticolo model,repository,service,controller">
       <created>1584027060229</created>
@@ -838,7 +831,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638806784006</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="Fix ddt acquisto">
+      <created>1639663129611</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1639663129612</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -861,7 +861,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add scadenza to DdtArticolo and FatturaAccompagnatoriaArticolo" />
     <MESSAGE value="Fix Cliente.dataInserimento on update" />
     <MESSAGE value="Add Ddt.scannerLog" />
     <MESSAGE value="Add check on Articolo.barcode starting with zero" />
@@ -886,7 +885,8 @@
     <MESSAGE value="Step 26: new barcode parsing" />
     <MESSAGE value="Fix barcode scanner in ddt" />
     <MESSAGE value="Fix ddt pdf" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix ddt pdf" />
+    <MESSAGE value="Fix ddt acquisto" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix ddt acquisto" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
