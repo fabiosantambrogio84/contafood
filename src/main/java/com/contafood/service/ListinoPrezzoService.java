@@ -129,6 +129,9 @@ public class ListinoPrezzoService {
 
     public BigDecimal computePrezzo(Articolo articolo, String tipologiaVariazionePrezzo, Float variazionePrezzo){
         BigDecimal newPrezzo = articolo.getPrezzoListinoBase();
+        if(newPrezzo == null){
+            newPrezzo = BigDecimal.ZERO;
+        }
         if(!StringUtils.isEmpty(tipologiaVariazionePrezzo)){
             TipologiaListinoPrezzoVariazione tipologiaListinoPrezzoVariazione = TipologiaListinoPrezzoVariazione.valueOf(tipologiaVariazionePrezzo);
             if(TipologiaListinoPrezzoVariazione.PERCENTUALE.equals(tipologiaListinoPrezzoVariazione)){

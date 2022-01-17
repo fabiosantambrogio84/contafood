@@ -1,6 +1,7 @@
 package com.contafood.service;
 
 import com.contafood.exception.ArticoloBarcodeCannotStartWithZeroException;
+import com.contafood.exception.ArticoloByCodiceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.ArticoloRepository;
@@ -98,6 +99,8 @@ public class ArticoloService {
     public Articolo create(Articolo articolo){
         LOGGER.info("Creating 'articolo'");
 
+        checkIfArticoloByCodiceAlreadyExisting(articolo);
+
         String barcode = articolo.getBarcode();
         if(!StringUtils.isEmpty(barcode)){
             if(barcode.startsWith("0")){
@@ -146,6 +149,8 @@ public class ArticoloService {
 
     public Articolo update(Articolo articolo){
         LOGGER.info("Updating 'articolo'");
+
+        checkIfArticoloByCodiceAlreadyExisting(articolo);
 
         String barcode = articolo.getBarcode();
         if(!StringUtils.isEmpty(barcode)){
@@ -215,6 +220,19 @@ public class ArticoloService {
         if(!StringUtils.isEmpty(articolo.getBarcodeMaskLottoScadenza())){
             articolo.setBarcodeRegexpLotto(BarcodeUtils.createRegexpLotto(articolo.getBarcodeMaskLottoScadenza()));
             articolo.setBarcodeRegexpDataScadenza(BarcodeUtils.createRegexpDataScadenza(articolo.getBarcodeMaskLottoScadenza()));
+        }
+    }
+
+    private void checkIfArticoloByCodiceAlreadyExisting(Articolo articolo){
+        Optional<Articolo> articoloByCodice = getByCodice(articolo.getCodice());
+        if(articoloByCodice.isPresent()){
+            if(articolo.getId() != null){
+                if(!articolo.getId().equals(articoloByCodice.get().getId())){
+                    throw new ArticoloByCodiceAlreadyExistingException(articolo.getCodice());
+                }
+            } else {
+                throw new ArticoloByCodiceAlreadyExistingException(articolo.getCodice());
+            }
         }
     }
 }

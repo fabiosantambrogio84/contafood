@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -59,6 +60,14 @@ public class IngredienteService {
         Ingrediente updatedIngrediente = ingredienteRepository.save(ingrediente);
         LOGGER.info("Updated 'ingrediente' '{}'", updatedIngrediente);
         return updatedIngrediente;
+    }
+
+    public void emptyAllByFornitoreId(Long idFornitore){
+        List<Ingrediente> ingredienti = ingredienteRepository.findByFornitoreId(idFornitore);
+        for(Ingrediente ingrediente : ingredienti){
+            ingrediente.setFornitore(null);
+            update(ingrediente);
+        }
     }
 
     public void delete(Long ingredienteId){

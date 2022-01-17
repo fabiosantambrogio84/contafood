@@ -24,6 +24,22 @@
         <start-class>com.contafood.Application</start-class>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jaspersoft-third-party</id>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts/</url>
+        </repository>
+        <repository>
+            <id>jr-ce-snapshots</id>
+            <name>JasperReports CE Snapshots</name>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jr-ce-snapshots</url>
+        </repository>
+        <repository>
+            <id>jr-ce-releases</id>
+            <name>JasperReports CE Releases</name>
+            <url>https://jaspersoft.jfrog.io/jaspersoft/jr-ce-releases</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -90,6 +106,7 @@
             <artifactId>javax.mail</artifactId>
             <version>1.6.2</version>
         </dependency>
+
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>

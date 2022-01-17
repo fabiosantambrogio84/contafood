@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Set;
 
 @Service
@@ -18,13 +19,16 @@ public class FornitoreService {
     private final static Logger LOGGER = LoggerFactory.getLogger(FornitoreService.class);
 
     private final FornitoreRepository fornitoreRepository;
-
     private final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService;
+    private final IngredienteService ingredienteService;
 
     @Autowired
-    public FornitoreService(final FornitoreRepository fornitoreRepository, final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService){
+    public FornitoreService(final FornitoreRepository fornitoreRepository,
+                            final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService,
+                            final IngredienteService ingredienteService){
         this.fornitoreRepository = fornitoreRepository;
         this.listinoPrezzoVariazioneService = listinoPrezzoVariazioneService;
+        this.ingredienteService = ingredienteService;
     }
 
     public Set<Fornitore> getAll(){
@@ -66,10 +70,15 @@ public class FornitoreService {
         return updatedFornitore;
     }
 
+    @Transactional
     public void delete(Long fornitoreId){
         LOGGER.info("Deleting 'listiniPrezziVariazioni' of fornitore '{}'", fornitoreId);
         listinoPrezzoVariazioneService.deleteByFornitoreId(fornitoreId);
         LOGGER.info("Deleted 'listiniPrezziVariazioni' of fornitore '{}'", fornitoreId);
+
+        LOGGER.info("Updating 'ingredienti' of fornitore '{}'", fornitoreId);
+        ingredienteService.emptyAllByFornitoreId(fornitoreId);
+        LOGGER.info("Updated 'ingredienti' of fornitore '{}'", fornitoreId);
 
         LOGGER.info("Deleting 'fornitore' '{}'", fornitoreId);
         fornitoreRepository.deleteById(fornitoreId);
