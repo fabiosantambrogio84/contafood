@@ -23,10 +23,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Step 27 fix">
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20220125.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ConfigurazioneClientController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/ConfigurazioneClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ConfigurazioneClientRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ConfigurazioneClientService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/IngredienteRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/IngredienteRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/AutistaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/AutistaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FornitoreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FornitoreController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/IngredienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/IngredienteService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,11 +104,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Overdata\IdeaProjects\contafood\sql-scripts" />
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\sql-scripts" />
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\src\main\resources\reports" />
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\src\main\resources\sql" />
       <recent name="$PROJECT_DIR$/src/main/resources/sql" />
-      <recent name="$PROJECT_DIR$/src/main/resources/spec" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.contafood.util" />
@@ -110,11 +118,11 @@
       <recent name="com.contafood.model.views" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.contafood.exception" />
-      <recent name="com.contafood.model.views" />
-      <recent name="com.contafood.repository.views" />
-      <recent name="com.contafood.model.reports" />
       <recent name="com.contafood.controller" />
+      <recent name="com.contafood.service" />
+      <recent name="com.contafood.repository" />
+      <recent name="com.contafood.model" />
+      <recent name="com.contafood.exception" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
@@ -516,7 +524,12 @@
       <workItem from="1642159040648" duration="558000" />
       <workItem from="1642428005753" duration="723000" />
       <workItem from="1642429009439" duration="5239000" />
-      <workItem from="1642494397790" duration="1787000" />
+      <workItem from="1642494397790" duration="3660000" />
+      <workItem from="1642582151100" duration="597000" />
+      <workItem from="1642666958280" duration="633000" />
+      <workItem from="1643014093264" duration="815000" />
+      <workItem from="1643100818416" duration="6512000" />
+      <workItem from="1643185665784" duration="2357000" />
     </task>
     <task id="LOCAL-00044" summary="Fix Ingrediente.dataInserimento on POST">
       <created>1584091959204</created>

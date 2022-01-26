@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -30,9 +32,20 @@ public class AutistaController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Autista> getAll() {
+    public Set<Autista> getAll(@RequestParam(name = "attivo", required = false) Boolean active) {
         LOGGER.info("Performing GET request for retrieving list of 'autisti'");
-        return autistaService.getAll();
+        LOGGER.info("Request params: attivo {}", active);
+
+        Predicate<Autista> isAutistaAttivoEquals = autista -> {
+            if(active != null){
+                return autista.getAttivo().equals(active);
+            }
+            return true;
+        };
+
+        return autistaService.getAll().stream()
+                .filter(isAutistaAttivoEquals)
+                .collect(Collectors.toSet());
     }
 
     @RequestMapping(method = GET, path = "/{autistaId}")

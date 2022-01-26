@@ -92,6 +92,9 @@ public class Fornitore {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "attivo")
+    private Boolean attivo;
+
     @OneToMany(mappedBy = "fornitore")
     @JsonIgnore
     private List<Ingrediente> ingredienti;

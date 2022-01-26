@@ -51,8 +51,10 @@ public class AutistaService {
     }
 
     public void delete(Long autistaId){
-        LOGGER.info("Deleting 'autista' '{}'", autistaId);
-        autistaRepository.deleteById(autistaId);
-        LOGGER.info("Deleted 'autista' '{}'", autistaId);
+        LOGGER.info("Disabling 'autista' '{}'", autistaId);
+        Autista autista = autistaRepository.findById(autistaId).orElseThrow(ResourceNotFoundException::new);
+        autista.setAttivo(false);
+        autistaRepository.save(autista);
+        LOGGER.info("Disabled 'autista' '{}'", autistaId);
     }
 }

@@ -34,9 +34,10 @@ public class FornitoreController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public List<Fornitore> getAll(@RequestParam(name = "codiceTipo", required = false) String codiceTipoFornitore) {
+    public List<Fornitore> getAll(@RequestParam(name = "codiceTipo", required = false) String codiceTipoFornitore,
+                                  @RequestParam(name = "attivo", required = false) Boolean active) {
         LOGGER.info("Performing GET request for retrieving list of 'fornitori'");
-        LOGGER.info("Request params: codiceTipoFornitore {}",codiceTipoFornitore);
+        LOGGER.info("Request params: codiceTipoFornitore {}, attivo {}",codiceTipoFornitore, active);
 
         Predicate<Fornitore> isFornitoreTipoFornitoreEquals = fornitore -> {
             if(codiceTipoFornitore != null){
@@ -48,7 +49,16 @@ public class FornitoreController {
             }
             return true;
         };
-        return fornitoreService.getAll().stream().filter(isFornitoreTipoFornitoreEquals).sorted(Comparator.comparing(Fornitore::getRagioneSociale)).collect(Collectors.toList());
+        Predicate<Fornitore> isFornitoreAttivoEquals = fornitore -> {
+            if(active != null){
+                return fornitore.getAttivo().equals(active);
+            }
+            return true;
+        };
+        return fornitoreService.getAll().stream()
+                .filter(isFornitoreTipoFornitoreEquals.and(isFornitoreAttivoEquals))
+                .sorted(Comparator.comparing(Fornitore::getRagioneSociale))
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(method = GET, path = "/{fornitoreId}")

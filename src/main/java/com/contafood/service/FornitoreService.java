@@ -72,17 +72,11 @@ public class FornitoreService {
 
     @Transactional
     public void delete(Long fornitoreId){
-        LOGGER.info("Deleting 'listiniPrezziVariazioni' of fornitore '{}'", fornitoreId);
-        listinoPrezzoVariazioneService.deleteByFornitoreId(fornitoreId);
-        LOGGER.info("Deleted 'listiniPrezziVariazioni' of fornitore '{}'", fornitoreId);
-
-        LOGGER.info("Updating 'ingredienti' of fornitore '{}'", fornitoreId);
-        ingredienteService.emptyAllByFornitoreId(fornitoreId);
-        LOGGER.info("Updated 'ingredienti' of fornitore '{}'", fornitoreId);
-
-        LOGGER.info("Deleting 'fornitore' '{}'", fornitoreId);
-        fornitoreRepository.deleteById(fornitoreId);
-        LOGGER.info("Deleted 'fornitore' '{}'", fornitoreId);
+        LOGGER.info("Disabling 'fornitore' '{}'", fornitoreId);
+        Fornitore fornitore = fornitoreRepository.findById(fornitoreId).orElseThrow(ResourceNotFoundException::new);
+        fornitore.setAttivo(false);
+        fornitoreRepository.save(fornitore);
+        LOGGER.info("Disabled 'fornitore' '{}'", fornitoreId);
     }
 
     private void handleBarcodeMask(Fornitore fornitore){
