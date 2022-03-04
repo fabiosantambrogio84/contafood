@@ -64,10 +64,10 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AdeController.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AdeController.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="JupyterTrust" id="e17c0346-daa0-40ae-a012-1eb389037a67" />
   <component name="MarkdownSettingsMigration">
@@ -111,11 +111,11 @@
       <recent name="com.contafood.model.views" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.contafood.model.reports" />
       <recent name="com.contafood.controller" />
       <recent name="com.contafood.service" />
       <recent name="com.contafood.repository" />
       <recent name="com.contafood.model" />
+      <recent name="com.contafood.exception" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
@@ -523,12 +523,13 @@
       <workItem from="1643014093264" duration="815000" />
       <workItem from="1643100818416" duration="6512000" />
       <workItem from="1643185665784" duration="2357000" />
-      <workItem from="1644396523480" duration="1005000" />
-      <workItem from="1644933651928" duration="57000" />
-      <workItem from="1644934273725" duration="4852000" />
-      <workItem from="1645799182496" duration="1204000" />
-      <workItem from="1646381457021" duration="701000" />
-      <workItem from="1646382262319" duration="10614000" />
+    </task>
+    <task id="LOCAL-00044" summary="Fix Ingrediente.dataInserimento on POST">
+      <created>1584091959204</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1584091959204</updated>
     </task>
     <task id="LOCAL-00045" summary="Add target folder to gitignore">
       <created>1584092051232</created>
@@ -866,14 +867,7 @@
       <option name="project" value="LOCAL" />
       <updated>1642436109978</updated>
     </task>
-    <task id="LOCAL-00093" summary="Fix step 29">
-      <created>1646390630416</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1646390630417</updated>
-    </task>
-    <option name="localTasksCounter" value="94" />
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -897,6 +891,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Add Ddt.scannerLog" />
     <MESSAGE value="Add check on Articolo.barcode starting with zero" />
     <MESSAGE value="Fix sort Articolo" />
     <MESSAGE value="Add sql script for step 12" />
@@ -921,36 +916,25 @@
     <MESSAGE value="Fix ddt pdf" />
     <MESSAGE value="Fix ddt acquisto" />
     <MESSAGE value="Step 27 fix" />
-    <MESSAGE value="Fix step 29" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix step 29" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step 27 fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java</url>
-          <line>103</line>
+          <line>87</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java</url>
-          <line>102</line>
+          <line>86</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java</url>
           <line>67</line>
           <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java</url>
-          <line>77</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/TelefonataController.java</url>
-          <line>66</line>
-          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
