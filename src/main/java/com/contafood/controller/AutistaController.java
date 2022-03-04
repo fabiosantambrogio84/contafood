@@ -2,12 +2,15 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Autista;
+import com.contafood.model.Fornitore;
 import com.contafood.service.AutistaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -32,7 +35,7 @@ public class AutistaController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Autista> getAll(@RequestParam(name = "attivo", required = false) Boolean active) {
+    public List<Autista> getAll(@RequestParam(name = "attivo", required = false) Boolean active) {
         LOGGER.info("Performing GET request for retrieving list of 'autisti'");
         LOGGER.info("Request params: attivo {}", active);
 
@@ -45,7 +48,8 @@ public class AutistaController {
 
         return autistaService.getAll().stream()
                 .filter(isAutistaAttivoEquals)
-                .collect(Collectors.toSet());
+                .sorted(Comparator.comparing(Autista::getCognome).thenComparing(Autista::getNome))
+                .collect(Collectors.toList());
     }
 
     @RequestMapping(method = GET, path = "/{autistaId}")

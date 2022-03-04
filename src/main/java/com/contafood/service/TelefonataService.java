@@ -2,6 +2,8 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.OrdineCliente;
+import com.contafood.model.OrdineClienteArticolo;
+import com.contafood.model.OrdineClienteArticoloKey;
 import com.contafood.model.Telefonata;
 import com.contafood.repository.TelefonataRepository;
 import com.contafood.util.enumeration.GiornoSettimana;
@@ -70,6 +72,20 @@ public class TelefonataService {
         Telefonata updatedTelefonata = telefonataRepository.save(telefonata);
         LOGGER.info("Updated 'telefonata' '{}'", updatedTelefonata);
         return updatedTelefonata;
+    }
+
+    public Telefonata patch(Map<String,Object> patchTelefonata){
+        LOGGER.info("Patching 'telefonata'");
+
+        Long idTelefonata = Long.valueOf((Integer) patchTelefonata.get("idTelefonata"));
+        Boolean eseguito = (Boolean)patchTelefonata.get("eseguito");
+
+        Telefonata telefonata = telefonataRepository.findById(idTelefonata).orElseThrow(ResourceNotFoundException::new);
+        telefonata.setEseguito(eseguito);
+        Telefonata patchedTelefonata = telefonataRepository.save(telefonata);
+
+        LOGGER.info("Patched 'telefonata' '{}'", patchedTelefonata);
+        return patchedTelefonata;
     }
 
     public void updateAfterDeletePuntoConsegna(Long puntoConsegnaId){

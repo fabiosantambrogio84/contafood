@@ -1,6 +1,7 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
+@Data
 @EqualsAndHashCode
 @Entity
 @Table(name = "telefonata")
@@ -56,6 +58,9 @@ public class Telefonata {
     @Column(name = "ora_consegna")
     private Time oraConsegna;
 
+    @Column(name = "eseguito")
+    private Boolean eseguito;
+
     @Column(name = "note")
     private String note;
 
@@ -65,134 +70,6 @@ public class Telefonata {
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public PuntoConsegna getPuntoConsegna() {
-        return puntoConsegna;
-    }
-
-    public void setPuntoConsegna(PuntoConsegna puntoConsegna) {
-        this.puntoConsegna = puntoConsegna;
-    }
-
-    public Autista getAutista() {
-        return autista;
-    }
-
-    public void setAutista(Autista autista) {
-        this.autista = autista;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getTelefonoTwo() {
-        return telefonoTwo;
-    }
-
-    public void setTelefonoTwo(String telefonoTwo) {
-        this.telefonoTwo = telefonoTwo;
-    }
-
-    public String getTelefonoThree() {
-        return telefonoThree;
-    }
-
-    public void setTelefonoThree(String telefonoThree) {
-        this.telefonoThree = telefonoThree;
-    }
-
-    public String getGiorno() {
-        return giorno;
-    }
-
-    public void setGiorno(String giorno) {
-        this.giorno = giorno;
-    }
-
-    public Integer getGiornoOrdinale() {
-        return giornoOrdinale;
-    }
-
-    public void setGiornoOrdinale(Integer giornoOrdinale) {
-        this.giornoOrdinale = giornoOrdinale;
-    }
-
-    public String getGiornoConsegna() {
-        return giornoConsegna;
-    }
-
-    public void setGiornoConsegna(String giornoConsegna) {
-        this.giornoConsegna = giornoConsegna;
-    }
-
-    public Integer getGiornoConsegnaOrdinale() {
-        return giornoConsegnaOrdinale;
-    }
-
-    public void setGiornoConsegnaOrdinale(Integer giornoConsegnaOrdinale) {
-        this.giornoConsegnaOrdinale = giornoConsegnaOrdinale;
-    }
-
-    public Time getOra() {
-        return ora;
-    }
-
-    public void setOra(Time ora) {
-        this.ora = ora;
-    }
-
-    public Time getOraConsegna() {
-        return oraConsegna;
-    }
-
-    public void setOraConsegna(Time oraConsegna) {
-        this.oraConsegna = oraConsegna;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public List<OrdineCliente> getOrdiniClienti() {
-        return ordiniClienti;
-    }
-
-    public void setOrdiniClienti(List<OrdineCliente> ordiniClienti) {
-        this.ordiniClienti = ordiniClienti;
-    }
-
-    public Timestamp getDataInserimento() {
-        return dataInserimento;
-    }
-
-    public void setDataInserimento(Timestamp dataInserimento) {
-        this.dataInserimento = dataInserimento;
-    }
 
     @Override
     public String toString() {
@@ -212,6 +89,7 @@ public class Telefonata {
         result.append(", giornoConsegnaOrdinale: " + giornoConsegnaOrdinale);
         result.append(", ora: " + ora);
         result.append(", oraConsegna: " + oraConsegna);
+        result.append(", eseguito: " + eseguito);
         result.append(", note: " + note);
         result.append(", ordiniClienti: " + ordiniClienti);
         result.append(", dataInserimento: " + dataInserimento);

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -19,7 +20,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/telefonate")
 public class TelefonataController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(TelefonataController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(TelefonataController.class);
 
     private final TelefonataService telefonataService;
 
@@ -58,6 +59,17 @@ public class TelefonataController {
             throw new CannotChangeResourceIdException();
         }
         return telefonataService.update(telefonata);
+    }
+
+    @RequestMapping(method = PATCH, path = "/{telefonataId}")
+    @CrossOrigin
+    public Telefonata patch(@PathVariable final Long telefonataId, @RequestBody final Map<String,Object> patchTelefonata){
+        LOGGER.info("Performing PATCH request for updating 'telefonata' '{}'", telefonataId);
+        Long id = Long.valueOf((Integer)patchTelefonata.get("idTelefonata"));
+        if (!Objects.equals(telefonataId, id)) {
+            throw new CannotChangeResourceIdException();
+        }
+        return telefonataService.patch(patchTelefonata);
     }
 
     @RequestMapping(method = DELETE, path = "/{telefonataId}")

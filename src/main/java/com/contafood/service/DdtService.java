@@ -76,6 +76,15 @@ public class DdtService {
 
     public Map<String, Integer> getAnnoContabileAndProgressivo(){
         Integer annoContabile = ZonedDateTime.now().getYear();
+        Integer progressivo = getProgressivo(annoContabile);
+        HashMap<String, Integer> result = new HashMap<>();
+        result.put("annoContabile", annoContabile);
+        result.put("progressivo", progressivo);
+
+        return result;
+    }
+
+    private Integer getProgressivo(Integer annoContabile){
         Integer progressivo = 1;
         List<Ddt> ddts = ddtRepository.findByAnnoContabileOrderByProgressivoDesc(annoContabile);
         if(ddts != null && !ddts.isEmpty()){
@@ -84,16 +93,18 @@ public class DdtService {
                 progressivo = lastDdt.get().getProgressivo() + 1;
             }
         }
-        HashMap<String, Integer> result = new HashMap<>();
-        result.put("annoContabile", annoContabile);
-        result.put("progressivo", progressivo);
-
-        return result;
+        return progressivo;
     }
 
     @Transactional
     public Ddt create(Ddt ddt){
         LOGGER.info("Creating 'ddt'");
+
+        Integer progressivo = ddt.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(ddt.getAnnoContabile());
+            ddt.setProgressivo(progressivo);
+        }
 
         checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), Long.valueOf(-1));
 
@@ -128,6 +139,13 @@ public class DdtService {
     @Transactional
     public Ddt update(Ddt ddt){
         LOGGER.info("Updating 'ddt'");
+
+        Integer progressivo = ddt.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(ddt.getAnnoContabile());
+            ddt.setProgressivo(progressivo);
+        }
+
         checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), ddt.getId());
 
         Boolean modificaGiacenze = ddt.getModificaGiacenze();

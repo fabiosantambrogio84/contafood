@@ -58,6 +58,8 @@ public class StampaService {
 
     private final OrdineFornitoreService ordineFornitoreService;
 
+    private final ListinoService listinoService;
+
     @Autowired
     public StampaService(final GiacenzaIngredienteService giacenzaIngredienteService, final DdtService ddtService, final PagamentoService pagamentoService,
                          final AutistaService autistaService,
@@ -68,7 +70,8 @@ public class StampaService {
                          final AliquotaIvaService aliquotaIvaService,
                          final NotaResoService notaResoService,
                          final RicevutaPrivatoService ricevutaPrivatoService,
-                         final OrdineFornitoreService ordineFornitoreService){
+                         final OrdineFornitoreService ordineFornitoreService,
+                         final ListinoService listinoService){
         this.giacenzaIngredienteService = giacenzaIngredienteService;
         this.ddtService = ddtService;
         this.pagamentoService = pagamentoService;
@@ -81,6 +84,7 @@ public class StampaService {
         this.notaResoService = notaResoService;
         this.ricevutaPrivatoService = ricevutaPrivatoService;
         this.ordineFornitoreService = ordineFornitoreService;
+        this.listinoService = listinoService;
     }
 
     public List<VGiacenzaIngrediente> getGiacenzeIngredienti(String ids){
@@ -1473,6 +1477,57 @@ public class StampaService {
         parameters.put("ordineFornitoreTitle", ordineFornitoreTitleParam);
         parameters.put("ordineFornitoreFooter", ordineFornitoreFooterParam);
         parameters.put("ordineFornitoreArticoliCollection", ordineFornitoreArticoliCollectionDataSource);
+
+        // create report
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+    }
+
+    public byte[] generateListino(Long idListino) throws Exception{
+
+        // retrieve the Listino
+        Listino listino = listinoService.getOne(idListino);
+
+        String listinoTitleParam = listino.getNome();
+
+        List<ListinoPrezzo> listinoPrezzi = listinoService.getListiniPrezziByListinoId(idListino);
+
+        List<ListinoPrezzoDataSource> listinoPrezziDataSource = new ArrayList<>();
+        if(!listinoPrezzi.isEmpty()){
+            listinoPrezzi.forEach(lp -> {
+                ListinoPrezzoDataSource listinoPrezzoDataSource = new ListinoPrezzoDataSource();
+                listinoPrezzoDataSource.setPrezzo(lp.getPrezzo() != null ? lp.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
+
+                Articolo articolo = lp.getArticolo();
+                if(articolo != null){
+                    listinoPrezzoDataSource.setDescrizioneArticolo(articolo.getCodice() + " - " + articolo.getDescrizione());
+                    if(articolo.getCategoria() != null) {
+                        listinoPrezzoDataSource.setCategoriaArticolo(articolo.getCategoria().getNome());
+                    }
+                    if(articolo.getFornitore() != null){
+                        Fornitore fornitore = articolo.getFornitore();
+                        listinoPrezzoDataSource.setFornitore(fornitore.getRagioneSociale());
+                    }
+                }
+                listinoPrezziDataSource.add(listinoPrezzoDataSource);
+            });
+        }
+        listinoPrezziDataSource.stream()
+                .sorted(Comparator.comparing(ListinoPrezzoDataSource::getDescrizioneArticolo)
+                        .thenComparing(ListinoPrezzoDataSource::getFornitore)
+                        .thenComparing(ListinoPrezzoDataSource::getCategoriaArticolo));
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_LISTINO);
+
+        // create report datasource for OrdineFornitoreArticoli
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(listinoPrezziDataSource);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("listinoTitle", listinoTitleParam);
+        parameters.put("listinoPrezziCollection", dataSource);
 
         // create report
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
