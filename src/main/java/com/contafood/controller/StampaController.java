@@ -653,6 +653,25 @@ public class StampaController {
                 .body(resource);
     }
 
+    @RequestMapping(method = GET, path = "/listini/{idListino}")
+    @CrossOrigin
+    public ResponseEntity<Resource> printListino(@PathVariable final Long idListino) throws Exception{
+        LOGGER.info("Creating pdf for 'listino' with id '{}'", idListino);
+
+        // create report
+        byte[] reportBytes = stampaService.generateListino(idListino);
+
+        ByteArrayResource resource = new ByteArrayResource(reportBytes);
+
+        LOGGER.info("Successfully create pdf for 'listino' with id '{}'", idListino);
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders("listino-"+idListino+".pdf"))
+                .contentLength(reportBytes.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
     public static void main(String[] args) throws Exception{
 
         /*

@@ -102,6 +102,16 @@ public class OrdineClienteService {
 
     public Map<String, Integer> getAnnoContabileAndProgressivo(){
         Integer annoContabile = ZonedDateTime.now().getYear();
+        int progressivo = getProgressivo(annoContabile);
+
+        HashMap<String, Integer> result = new HashMap<>();
+        result.put("annoContabile", annoContabile);
+        result.put("progressivo", progressivo);
+
+        return result;
+    }
+
+    private Integer getProgressivo(Integer annoContabile){
         int progressivo = 1;
         List<OrdineCliente> ordiniClienti = ordineClienteRepository.findByAnnoContabileOrderByProgressivoDesc(annoContabile);
         if(ordiniClienti != null && !ordiniClienti.isEmpty()){
@@ -110,16 +120,18 @@ public class OrdineClienteService {
                 progressivo = lastOrdineCliente.get().getProgressivo() + 1;
             }
         }
-        HashMap<String, Integer> result = new HashMap<>();
-        result.put("annoContabile", annoContabile);
-        result.put("progressivo", progressivo);
-
-        return result;
+        return progressivo;
     }
 
     @Transactional
     public OrdineCliente create(OrdineCliente ordineCliente){
         LOGGER.info("Creating 'ordineCliente'");
+
+        Integer progressivo = ordineCliente.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(ordineCliente.getAnnoContabile());
+            ordineCliente.setProgressivo(progressivo);
+        }
 
         checkExistsByAnnoContabileAndProgressivoAndIdNot(ordineCliente.getAnnoContabile(), ordineCliente.getProgressivo(), Long.valueOf(-1));
 
@@ -143,6 +155,12 @@ public class OrdineClienteService {
     @Transactional
     public OrdineCliente update(OrdineCliente ordineCliente){
         LOGGER.info("Updating 'ordineCliente'");
+
+        Integer progressivo = ordineCliente.getProgressivo();
+        if(progressivo.equals(null)){
+            progressivo = getProgressivo(ordineCliente.getAnnoContabile());
+            ordineCliente.setProgressivo(progressivo);
+        }
 
         checkExistsByAnnoContabileAndProgressivoAndIdNot(ordineCliente.getAnnoContabile(), ordineCliente.getProgressivo(), ordineCliente.getId());
 

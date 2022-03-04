@@ -23,18 +23,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Step 27 fix">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20220125.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ConfigurazioneClientController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/ConfigurazioneClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ConfigurazioneClientRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ConfigurazioneClientService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/ListinoPrezzoDataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/listino.jrxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/AutistaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/AutistaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FornitoreController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FornitoreController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Fornitore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FornitoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.settings/org.eclipse.core.resources.prefs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,10 +70,10 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AdeController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="JupyterTrust" id="e17c0346-daa0-40ae-a012-1eb389037a67" />
   <component name="MarkdownSettingsMigration">
@@ -118,11 +117,11 @@
       <recent name="com.contafood.model.views" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.contafood.model.reports" />
       <recent name="com.contafood.controller" />
       <recent name="com.contafood.service" />
       <recent name="com.contafood.repository" />
       <recent name="com.contafood.model" />
-      <recent name="com.contafood.exception" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
@@ -530,6 +529,12 @@
       <workItem from="1643014093264" duration="815000" />
       <workItem from="1643100818416" duration="6512000" />
       <workItem from="1643185665784" duration="2357000" />
+      <workItem from="1644396523480" duration="1005000" />
+      <workItem from="1644933651928" duration="57000" />
+      <workItem from="1644934273725" duration="4852000" />
+      <workItem from="1645799182496" duration="1204000" />
+      <workItem from="1646381457021" duration="701000" />
+      <workItem from="1646382262319" duration="5636000" />
     </task>
     <task id="LOCAL-00044" summary="Fix Ingrediente.dataInserimento on POST">
       <created>1584091959204</created>
