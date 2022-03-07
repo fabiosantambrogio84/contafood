@@ -23,11 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 29">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20220304.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/TelefonataController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/TelefonataController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Telefonata.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Telefonata.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaResoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaResoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/listino.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/listino.jrxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,10 +65,10 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/controller/AdeController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="JupyterTrust" id="e17c0346-daa0-40ae-a012-1eb389037a67" />
   <component name="MarkdownSettingsMigration">
@@ -523,6 +524,7 @@
       <workItem from="1643014093264" duration="815000" />
       <workItem from="1643100818416" duration="6512000" />
       <workItem from="1643185665784" duration="2357000" />
+      <workItem from="1646642763663" duration="1119000" />
     </task>
     <task id="LOCAL-00044" summary="Fix Ingrediente.dataInserimento on POST">
       <created>1584091959204</created>
@@ -891,7 +893,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add Ddt.scannerLog" />
     <MESSAGE value="Add check on Articolo.barcode starting with zero" />
     <MESSAGE value="Fix sort Articolo" />
     <MESSAGE value="Add sql script for step 12" />
@@ -916,7 +917,8 @@
     <MESSAGE value="Fix ddt pdf" />
     <MESSAGE value="Fix ddt acquisto" />
     <MESSAGE value="Step 27 fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 27 fix" />
+    <MESSAGE value="Fix step 29" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix step 29" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

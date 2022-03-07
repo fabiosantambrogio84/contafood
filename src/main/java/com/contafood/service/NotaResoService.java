@@ -59,6 +59,15 @@ public class NotaResoService {
 
     public Map<String, Integer> getAnnoAndProgressivo(){
         Integer anno = ZonedDateTime.now().getYear();
+        Integer progressivo = getProgressivo(anno);
+        HashMap<String, Integer> result = new HashMap<>();
+        result.put("anno", anno);
+        result.put("progressivo", progressivo);
+
+        return result;
+    }
+
+    private Integer getProgressivo(Integer anno) {
         Integer progressivo = 1;
         List<NotaReso> noteReso = notaResoRepository.findByAnnoOrderByProgressivoDesc(anno);
         if(noteReso != null && !noteReso.isEmpty()){
@@ -67,16 +76,18 @@ public class NotaResoService {
                 progressivo = lastNotaReso.get().getProgressivo() + 1;
             }
         }
-        HashMap<String, Integer> result = new HashMap<>();
-        result.put("anno", anno);
-        result.put("progressivo", progressivo);
-
-        return result;
+        return progressivo;
     }
 
     @Transactional
     public NotaReso create(NotaReso notaReso){
         LOGGER.info("Creating 'nota reso'");
+
+        Integer progressivo = notaReso.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(notaReso.getAnno());
+            notaReso.setProgressivo(progressivo);
+        }
 
         checkExistsByAnnoAndProgressivoAndIdNot(notaReso.getAnno(), notaReso.getProgressivo(), Long.valueOf(-1));
 
@@ -109,6 +120,12 @@ public class NotaResoService {
     @Transactional
     public NotaReso update(NotaReso notaReso){
         LOGGER.info("Updating 'nota reso'");
+
+        Integer progressivo = notaReso.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(notaReso.getAnno());
+            notaReso.setProgressivo(progressivo);
+        }
 
         checkExistsByAnnoAndProgressivoAndIdNot(notaReso.getAnno(), notaReso.getProgressivo(), notaReso.getId());
 

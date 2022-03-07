@@ -72,6 +72,15 @@ public class FatturaAccompagnatoriaService {
 
     public Map<String, Integer> getAnnoAndProgressivo(){
         Integer anno = ZonedDateTime.now().getYear();
+        Integer progressivo = getProgressivo(anno);
+        HashMap<String, Integer> result = new HashMap<>();
+        result.put("anno", anno);
+        result.put("progressivo", progressivo);
+
+        return result;
+    }
+
+    private Integer getProgressivo(Integer anno){
         Integer progressivo = 1;
         List<VFattura> fattureAccompagnatorie = vFatturaRepository.findByAnnoOrderByProgressivoDesc(anno);
         if(fattureAccompagnatorie != null && !fattureAccompagnatorie.isEmpty()){
@@ -80,11 +89,7 @@ public class FatturaAccompagnatoriaService {
                 progressivo = lastFatturaAccompagnatoria.get().getProgressivo() + 1;
             }
         }
-        HashMap<String, Integer> result = new HashMap<>();
-        result.put("anno", anno);
-        result.put("progressivo", progressivo);
-
-        return result;
+        return progressivo;
     }
 
     public List<FatturaAccompagnatoria> getByDataGreaterThanEqual(Date data){
@@ -137,6 +142,12 @@ public class FatturaAccompagnatoriaService {
     @Transactional
     public FatturaAccompagnatoria create(FatturaAccompagnatoria fatturaAccompagnatoria){
         LOGGER.info("Creating 'fattura accompagnatoria'");
+
+        Integer progressivo = fatturaAccompagnatoria.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(fatturaAccompagnatoria.getAnno());
+            fatturaAccompagnatoria.setProgressivo(progressivo);
+        }
 
         checkExistsByAnnoAndProgressivoAndIdNot(fatturaAccompagnatoria.getAnno(),fatturaAccompagnatoria.getProgressivo(), Long.valueOf(-1));
 

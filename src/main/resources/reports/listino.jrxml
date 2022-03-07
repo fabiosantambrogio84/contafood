@@ -149,7 +149,7 @@
 		<band height="699" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<componentElement>
-				<reportElement x="0" y="50" width="529" height="630" uuid="359aef9f-7d78-44cc-b66b-88e45181310d">
+				<reportElement x="1" y="50" width="553" height="630" uuid="359aef9f-7d78-44cc-b66b-88e45181310d">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
@@ -159,50 +159,27 @@
 					<datasetRun subDataset="ListinoArticoliDataset" uuid="627441a4-5978-4fad-a672-cba32f03455c">
 						<dataSourceExpression><![CDATA[$P{listinoPrezziCollection}]]></dataSourceExpression>
 					</datasetRun>
-					<jr:column width="200" uuid="dbc4705a-ff2c-4711-94ac-56ef48f5c6df">
+					<jr:column width="350" uuid="dbc4705a-ff2c-4711-94ac-56ef48f5c6df">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna1"/>
 						<jr:detailCell style="Table_TD" height="15">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<textField textAdjust="ScaleFont">
-								<reportElement x="0" y="0" width="200" height="15" uuid="87942a63-306f-44cc-989f-373024b6097c"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
+								<reportElement x="0" y="0" width="350" height="15" uuid="87942a63-306f-44cc-989f-373024b6097c"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="9"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{descrizioneArticolo}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="150" uuid="4b967abd-50f0-41ec-b760-6347ea8711f2">
+					<jr:column width="199" uuid="c7474240-4c63-4817-ac32-e4ae3dc0a220">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna2"/>
 						<jr:detailCell style="Table_TD" height="15">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<textField textAdjust="ScaleFont">
-								<reportElement x="0" y="0" width="150" height="15" uuid="306567fd-5ca8-4132-b5fb-37d50fa46d42"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font size="9"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{fornitore}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="100" uuid="ee4412c0-953b-435a-a9e2-8fb29b86317f">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna3"/>
-						<jr:detailCell style="Table_TD" height="15">
-							<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-								<reportElement x="0" y="0" width="100" height="15" uuid="33bd698a-6c9d-44e5-85e2-39631c062733"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font size="9"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$F{categoriaArticolo}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="80" uuid="c7474240-4c63-4817-ac32-e4ae3dc0a220">
-						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna4"/>
-						<jr:detailCell style="Table_TD" height="15">
-							<textField textAdjust="ScaleFont">
-								<reportElement x="0" y="0" width="80" height="15" uuid="06330014-803b-49e9-ab25-63233250e134"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
+								<reportElement x="0" y="0" width="199" height="15" uuid="06330014-803b-49e9-ab25-63233250e134"/>
+								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font size="9"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$F{prezzo} + " €"]]></textFieldExpression>

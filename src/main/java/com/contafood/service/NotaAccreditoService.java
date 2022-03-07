@@ -59,6 +59,15 @@ public class NotaAccreditoService {
 
     public Map<String, Integer> getAnnoAndProgressivo(){
         Integer anno = ZonedDateTime.now().getYear();
+        Integer progressivo = getProgressivo(anno);
+        HashMap<String, Integer> result = new HashMap<>();
+        result.put("anno", anno);
+        result.put("progressivo", progressivo);
+
+        return result;
+    }
+
+    private Integer getProgressivo(Integer anno){
         Integer progressivo = 1;
         List<NotaAccredito> noteAccredito = notaAccreditoRepository.findByAnnoOrderByProgressivoDesc(anno);
         if(noteAccredito != null && !noteAccredito.isEmpty()){
@@ -67,11 +76,7 @@ public class NotaAccreditoService {
                 progressivo = lastNotaAccredito.get().getProgressivo() + 1;
             }
         }
-        HashMap<String, Integer> result = new HashMap<>();
-        result.put("anno", anno);
-        result.put("progressivo", progressivo);
-
-        return result;
+        return progressivo;
     }
 
     public Map<Cliente, List<NotaAccredito>> getNoteAccreditoByCliente(Date dateFrom, Date dateTo){
@@ -118,6 +123,12 @@ public class NotaAccreditoService {
     public NotaAccredito create(NotaAccredito notaAccredito){
         LOGGER.info("Creating 'nota accredito'");
 
+        Integer progressivo = notaAccredito.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(notaAccredito.getAnno());
+            notaAccredito.setProgressivo(progressivo);
+        }
+
         checkExistsByAnnoAndProgressivoAndIdNot(notaAccredito.getAnno(), notaAccredito.getProgressivo(), Long.valueOf(-1));
 
         notaAccredito.setStatoNotaAccredito(statoNotaAccreditoService.getDaPagare());
@@ -149,6 +160,12 @@ public class NotaAccreditoService {
     @Transactional
     public NotaAccredito update(NotaAccredito notaAccredito){
         LOGGER.info("Updating 'nota accredito'");
+
+        Integer progressivo = notaAccredito.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(notaAccredito.getAnno());
+            notaAccredito.setProgressivo(progressivo);
+        }
 
         checkExistsByAnnoAndProgressivoAndIdNot(notaAccredito.getAnno(), notaAccredito.getProgressivo(), notaAccredito.getId());
 

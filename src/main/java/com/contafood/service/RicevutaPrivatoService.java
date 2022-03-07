@@ -65,6 +65,15 @@ public class RicevutaPrivatoService {
 
     public Map<String, Integer> getAnnoAndProgressivo(){
         Integer anno = ZonedDateTime.now().getYear();
+        Integer progressivo = getProgressivo(anno);
+        HashMap<String, Integer> result = new HashMap<>();
+        result.put("anno", anno);
+        result.put("progressivo", progressivo);
+
+        return result;
+    }
+
+    private Integer getProgressivo(Integer anno) {
         Integer progressivo = 1;
         List<RicevutaPrivato> ricevutePrivato = ricevutaPrivatoRepository.findByAnnoOrderByProgressivoDesc(anno);
         if(ricevutePrivato != null && !ricevutePrivato.isEmpty()){
@@ -73,11 +82,7 @@ public class RicevutaPrivatoService {
                 progressivo = lastRicevutaPrivato.get().getProgressivo() + 1;
             }
         }
-        HashMap<String, Integer> result = new HashMap<>();
-        result.put("anno", anno);
-        result.put("progressivo", progressivo);
-
-        return result;
+        return progressivo;
     }
 
     public List<RicevutaPrivato> getByDataGreaterThanEqual(Date data){
@@ -90,6 +95,12 @@ public class RicevutaPrivatoService {
     @Transactional
     public RicevutaPrivato create(RicevutaPrivato ricevutaPrivato){
         LOGGER.info("Creating 'ricevuta privato'");
+
+        Integer progressivo = ricevutaPrivato.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(ricevutaPrivato.getAnno());
+            ricevutaPrivato.setProgressivo(progressivo);
+        }
 
         checkExistsByAnnoAndProgressivoAndIdNot(ricevutaPrivato.getAnno(),ricevutaPrivato.getProgressivo(), Long.valueOf(-1));
 
