@@ -5,6 +5,7 @@ import com.contafood.exception.ArticoloByCodiceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.ArticoloRepository;
+import com.contafood.repository.ClienteArticoloRepository;
 import com.contafood.repository.GiacenzaArticoloRepository;
 import com.contafood.util.BarcodeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,16 +34,18 @@ public class ArticoloService {
     private final ListinoPrezzoService listinoPrezzoService;
     private final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService;
     private final GiacenzaArticoloRepository giacenzaArticoloRepository;
+    private final ClienteArticoloRepository clienteArticoloRepository;
 
     @Autowired
     public ArticoloService(final ArticoloRepository articoloRepository, final ArticoloImmagineService articoloImmagineService,
                            final ListinoPrezzoService listinoPrezzoService, final ListinoPrezzoVariazioneService listinoPrezzoVariazioneService,
-                           final GiacenzaArticoloRepository giacenzaArticoloRepository){
+                           final GiacenzaArticoloRepository giacenzaArticoloRepository, final ClienteArticoloRepository clienteArticoloRepository){
         this.articoloRepository = articoloRepository;
         this.articoloImmagineService = articoloImmagineService;
         this.listinoPrezzoService = listinoPrezzoService;
         this.listinoPrezzoVariazioneService = listinoPrezzoVariazioneService;
         this.giacenzaArticoloRepository = giacenzaArticoloRepository;
+        this.clienteArticoloRepository = clienteArticoloRepository;
     }
 
     public Set<Articolo> getAll(){
@@ -71,8 +74,8 @@ public class ArticoloService {
         Set<Articolo> articoli;
         articoli = articoloRepository.findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsTrue(active, barcode);
         if(articoli == null || articoli.isEmpty()){
-            barcode = barcode.substring(0, 7);
-            articoli = articoloRepository.findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsFalse(active, barcode);
+            barcode = barcode.substring(0, 6);
+            articoli = articoloRepository.findByAttivoAndBarcodeStartsWithAndCompleteBarcodeIsFalse(active, barcode);
         }
         LOGGER.info("Retrieved {} 'articoli'", articoli.size());
         return articoli;
@@ -195,6 +198,10 @@ public class ArticoloService {
         LOGGER.info("Deleting 'giacenze' of articolo '{}'", articoloId);
         giacenzaArticoloRepository.deleteByArticoloId(articoloId);
         LOGGER.info("Deleted 'giacenze' of articolo '{}'", articoloId);
+
+        LOGGER.info("Deleting 'cliente-articolo' of articolo '{}'", articoloId);
+        clienteArticoloRepository.deleteByArticoloId(articoloId);
+        LOGGER.info("Deleted 'cliente-articolo' of articolo '{}'", articoloId);
 
         LOGGER.info("Deleting 'articolo' '{}'", articoloId);
         articoloImmagineService.deleteByArticoloId(articoloId);

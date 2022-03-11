@@ -24,11 +24,14 @@
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 29">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaAccreditoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaResoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/NotaResoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ArticoloRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ArticoloRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/reports/listino.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/listino.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordine_fornitore.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordine_fornitore.jasper" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordine_fornitore.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordine_fornitore.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jasper" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ordini_autisti.jrxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -524,14 +527,8 @@
       <workItem from="1643014093264" duration="815000" />
       <workItem from="1643100818416" duration="6512000" />
       <workItem from="1643185665784" duration="2357000" />
-      <workItem from="1646642763663" duration="1119000" />
-    </task>
-    <task id="LOCAL-00044" summary="Fix Ingrediente.dataInserimento on POST">
-      <created>1584091959204</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1584091959204</updated>
+      <workItem from="1646642763663" duration="3927000" />
+      <workItem from="1646995417324" duration="2246000" />
     </task>
     <task id="LOCAL-00045" summary="Add target folder to gitignore">
       <created>1584092051232</created>
@@ -869,7 +866,14 @@
       <option name="project" value="LOCAL" />
       <updated>1642436109978</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="Fix step 29">
+      <created>1646643905965</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1646643905966</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -937,6 +941,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java</url>
           <line>67</line>
           <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java</url>
+          <line>195</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
