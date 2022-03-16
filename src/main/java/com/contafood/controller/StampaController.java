@@ -655,15 +655,16 @@ public class StampaController {
 
     @RequestMapping(method = GET, path = "/listini/{idListino}")
     @CrossOrigin
-    public ResponseEntity<Resource> printListino(@PathVariable final Long idListino) throws Exception{
-        LOGGER.info("Creating pdf for 'listino' with id '{}'", idListino);
+    public ResponseEntity<Resource> printListino(@PathVariable final Long idListino,
+                                                 @RequestParam(name = "orderBy", required = false) String orderBy) throws Exception{
+        LOGGER.info("Creating pdf for 'listino' with id '{}' order by '{}'", idListino, orderBy);
 
         // create report
-        byte[] reportBytes = stampaService.generateListino(idListino);
+        byte[] reportBytes = stampaService.generateListino(idListino, orderBy);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'listino' with id '{}'", idListino);
+        LOGGER.info("Successfully create pdf for 'listino' with id '{}' order by '{}'", idListino, orderBy);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("listino-"+idListino+".pdf"))

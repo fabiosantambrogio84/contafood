@@ -74,7 +74,7 @@ public class ArticoloService {
         Set<Articolo> articoli;
         articoli = articoloRepository.findByAttivoAndBarcodeEqualsAndCompleteBarcodeIsTrue(active, barcode);
         if(articoli == null || articoli.isEmpty()){
-            barcode = barcode.substring(0, 6);
+            barcode = barcode.substring(0, 7);
             articoli = articoloRepository.findByAttivoAndBarcodeStartsWithAndCompleteBarcodeIsFalse(active, barcode);
         }
         LOGGER.info("Retrieved {} 'articoli'", articoli.size());

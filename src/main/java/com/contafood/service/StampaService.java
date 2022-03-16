@@ -27,6 +27,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.naturalOrder;
+
 @Service
 public class StampaService {
 
@@ -238,7 +240,7 @@ public class StampaService {
                 .sorted(Comparator.comparing(Ddt::getProgressivo).reversed())
                 .collect(Collectors.toList());
 
-        if(ddts != null && !ddts.isEmpty()){
+        if(!ddts.isEmpty()){
             ddts.forEach(ddt -> {
                 DdtDataSource ddtDataSource = new DdtDataSource();
                 ddtDataSource.setNumero(ddt.getProgressivo().toString());
@@ -288,7 +290,7 @@ public class StampaService {
             if(idAutista != null){
                 Autista autista = ordineCliente.getAutista();
                 if(autista != null){
-                    return autista.getId().equals(Long.valueOf(idAutista));
+                    return autista.getId().equals(idAutista);
                 }
                 return false;
             }
@@ -302,7 +304,7 @@ public class StampaService {
                 .collect(Collectors.toList());
 
         List<OrdineAutistaDataSource> ordiniAutistaDataSource = new ArrayList<>();
-        if(ordiniClienti != null && !ordiniClienti.isEmpty()){
+        if(!ordiniClienti.isEmpty()){
             ordiniClienti.forEach(oc -> {
                 Integer annoContabile = oc.getAnnoContabile();
                 Integer progressivo = oc.getProgressivo();
@@ -403,7 +405,7 @@ public class StampaService {
     public List<NotaAccreditoRigaDataSource> getNotaAccreditoRigheDataSource(NotaAccredito notaAccredito){
         List<NotaAccreditoRigaDataSource> notaAccreditoRigaDataSources = new ArrayList<>();
         if(notaAccredito.getNotaAccreditoRighe() != null && !notaAccredito.getNotaAccreditoRighe().isEmpty()){
-            notaAccredito.getNotaAccreditoRighe().stream().sorted(Comparator.comparing(NotaAccreditoRiga::getNumRiga, Comparator.nullsLast(Comparator.naturalOrder()))).forEach(na -> {
+            notaAccredito.getNotaAccreditoRighe().stream().sorted(Comparator.comparing(NotaAccreditoRiga::getNumRiga, Comparator.nullsLast(naturalOrder()))).forEach(na -> {
                 NotaAccreditoRigaDataSource notaAccreditoRigaDataSource = new NotaAccreditoRigaDataSource();
                 notaAccreditoRigaDataSource.setCodiceArticolo(na.getArticolo() != null ? na.getArticolo().getCodice() : "");
                 notaAccreditoRigaDataSource.setDescrizioneArticolo(na.getDescrizione());
@@ -447,7 +449,7 @@ public class StampaService {
                 .sorted(Comparator.comparing(NotaAccredito::getProgressivo).reversed())
                 .collect(Collectors.toList());
 
-        if(noteAccredito != null && !noteAccredito.isEmpty()){
+        if(!noteAccredito.isEmpty()){
             noteAccredito.forEach(notaAccredito -> {
                 NotaAccreditoDataSource notaAccreditoDataSource = new NotaAccreditoDataSource();
                 notaAccreditoDataSource.setNumero(notaAccredito.getProgressivo().toString());
@@ -484,7 +486,7 @@ public class StampaService {
                 .sorted(Comparator.comparing(VFattura::getProgressivo).reversed())
                 .collect(Collectors.toList());
 
-        if(fatture != null && !fatture.isEmpty()){
+        if(!fatture.isEmpty()){
             fatture.forEach(fattura -> {
                 FatturaDataSource fatturaDataSource = new FatturaDataSource();
                 fatturaDataSource.setNumero(fattura.getProgressivo().toString());
@@ -643,7 +645,7 @@ public class StampaService {
     }
 
     public List<FatturaRigaDataSource> getFatturaRigheDataSource(Fattura fattura){
-        Integer numeroRiga = 0;
+        int numeroRiga = 0;
 
         List<FatturaRigaDataSource> fatturaRigaDataSources = new ArrayList<>();
         Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
@@ -776,7 +778,7 @@ public class StampaService {
     public List<NotaResoRigaDataSource> getNotaResoRigheDataSource(NotaReso notaReso){
         List<NotaResoRigaDataSource> notaResoRigaDataSources = new ArrayList<>();
         if(notaReso.getNotaResoRighe() != null && !notaReso.getNotaResoRighe().isEmpty()){
-            notaReso.getNotaResoRighe().stream().forEach(nr -> {
+            notaReso.getNotaResoRighe().forEach(nr -> {
                 NotaResoRigaDataSource notaResoRigaDataSource = new NotaResoRigaDataSource();
                 notaResoRigaDataSource.setCodiceArticolo(nr.getArticolo() != null ? nr.getArticolo().getCodice() : "");
                 notaResoRigaDataSource.setDescrizioneArticolo(nr.getDescrizione());
@@ -797,7 +799,7 @@ public class StampaService {
     public List<NotaResoTotaleDataSource> getNotaResoTotaliDataSource(NotaReso notaReso){
         List<NotaResoTotaleDataSource> notaResoTotaleDataSources = new ArrayList<>();
         if(notaReso.getNotaResoTotali() != null && !notaReso.getNotaResoTotali().isEmpty()){
-            notaReso.getNotaResoTotali().stream().forEach(nr -> {
+            notaReso.getNotaResoTotali().forEach(nr -> {
                 NotaResoTotaleDataSource notaResoTotaleDataSource = new NotaResoTotaleDataSource();
                 notaResoTotaleDataSource.setAliquotaIva(nr.getAliquotaIva().getValore().intValue());
                 notaResoTotaleDataSource.setTotaleImponibile(nr.getTotaleImponibile() != null ? nr.getTotaleImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
@@ -889,7 +891,7 @@ public class StampaService {
     public List<RicevutaPrivatoArticoloDataSource> getRicevutaPrivatoArticoliDataSource(RicevutaPrivato ricevutaPrivato){
         List<RicevutaPrivatoArticoloDataSource> ricevutaPrivatoArticoloDataSources = new ArrayList<>();
         if(ricevutaPrivato.getRicevutaPrivatoArticoli() != null && !ricevutaPrivato.getRicevutaPrivatoArticoli().isEmpty()){
-            ricevutaPrivato.getRicevutaPrivatoArticoli().stream().forEach(rpa -> {
+            ricevutaPrivato.getRicevutaPrivatoArticoli().forEach(rpa -> {
                 RicevutaPrivatoArticoloDataSource ricevutaPrivatoArticoloDataSource = new RicevutaPrivatoArticoloDataSource();
 
                 Float quantita = rpa.getQuantita();
@@ -925,7 +927,7 @@ public class StampaService {
                 .collect(Collectors.toList());
 
         List<FatturaCommercianteDataSource> fatturaCommercianteDataSources = new ArrayList<>();
-        if(fatture != null && !fatture.isEmpty()){
+        if(!fatture.isEmpty()){
             fatture.forEach(fattura -> {
                 String date = simpleDateFormat.format(fattura.getData());
 
@@ -1026,7 +1028,7 @@ public class StampaService {
     public List<OrdineFornitoreArticoloDataSource> getOrdineFornitoreArticoliDataSource(OrdineFornitore ordineFornitore){
         List<OrdineFornitoreArticoloDataSource> ordineFornitoreArticoloDataSources = new ArrayList<>();
         if(ordineFornitore.getOrdineFornitoreArticoli() != null && !ordineFornitore.getOrdineFornitoreArticoli().isEmpty()){
-            ordineFornitore.getOrdineFornitoreArticoli().stream().forEach(ofa -> {
+            ordineFornitore.getOrdineFornitoreArticoli().forEach(ofa -> {
                 Articolo articolo = ofa.getArticolo();
 
                 OrdineFornitoreArticoloDataSource ordineFornitoreArticoloDataSource = new OrdineFornitoreArticoloDataSource();
@@ -1066,7 +1068,7 @@ public class StampaService {
         if(puntoConsegna != null){
             StringBuilder sb = new StringBuilder();
             if(!StringUtils.isEmpty(puntoConsegna.getNome())){
-                sb.append(puntoConsegna.getNome()+"\n");
+                sb.append(puntoConsegna.getNome()).append("\n");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getIndirizzo())){
                 sb.append(puntoConsegna.getIndirizzo()+"\n");
@@ -1482,7 +1484,7 @@ public class StampaService {
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
     }
 
-    public byte[] generateListino(Long idListino) throws Exception{
+    public byte[] generateListino(Long idListino, String orderBy) throws Exception{
 
         // retrieve the Listino
         Listino listino = listinoService.getOne(idListino);
@@ -1490,10 +1492,11 @@ public class StampaService {
         String listinoTitleParam = listino.getNome();
 
         List<ListinoPrezzo> listinoPrezzi = listinoService.getListiniPrezziByListinoId(idListino);
+        listinoPrezzi = listinoPrezzi.stream().filter(lp -> lp.getArticolo().getAttivo()).collect(Collectors.toList());
 
         List<ListinoPrezzoDataSource> listinoPrezziDataSource = new ArrayList<>();
         if(!listinoPrezzi.isEmpty()){
-            listinoPrezzi.forEach(lp -> {
+            for(ListinoPrezzo lp : listinoPrezzi){
                 ListinoPrezzoDataSource listinoPrezzoDataSource = new ListinoPrezzoDataSource();
                 listinoPrezzoDataSource.setPrezzo(lp.getPrezzo() != null ? lp.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
 
@@ -1509,12 +1512,26 @@ public class StampaService {
                     }
                 }
                 listinoPrezziDataSource.add(listinoPrezzoDataSource);
-            });
+            }
         }
-        listinoPrezziDataSource.stream()
-                .sorted(Comparator.comparing(ListinoPrezzoDataSource::getDescrizioneArticolo)
-                        .thenComparing(ListinoPrezzoDataSource::getFornitore)
-                        .thenComparing(ListinoPrezzoDataSource::getCategoriaArticolo));
+
+        orderBy = StringUtils.isNotEmpty(orderBy) ? orderBy : "categoria-articolo";
+        if(orderBy.equals("descrizione-articolo")){
+            listinoPrezziDataSource = listinoPrezziDataSource
+                    .stream()
+                    .sorted(Comparator.comparing(ListinoPrezzoDataSource::getDescrizioneArticolo, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .collect(Collectors.toList());
+        } else if(orderBy.equals("fornitore")){
+            listinoPrezziDataSource = listinoPrezziDataSource
+                    .stream()
+                    .sorted(Comparator.comparing(ListinoPrezzoDataSource::getFornitore, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .collect(Collectors.toList());
+        } else {
+            listinoPrezziDataSource = listinoPrezziDataSource
+                    .stream()
+                    .sorted(Comparator.comparing(ListinoPrezzoDataSource::getCategoriaArticolo, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .collect(Collectors.toList());
+        }
 
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_LISTINO);
@@ -1557,7 +1574,7 @@ public class StampaService {
 
             // group DdtArticolo by Iva
             if(!ddtArticoli.isEmpty()){
-                ddtArticoli.stream().forEach(ddtArticolo -> {
+                ddtArticoli.forEach(ddtArticolo -> {
                     Articolo articolo = ddtArticolo.getArticolo();
                     AliquotaIva iva = articolo.getAliquotaIva();
 
