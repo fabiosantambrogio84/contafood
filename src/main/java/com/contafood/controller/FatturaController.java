@@ -15,8 +15,7 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
@@ -212,7 +211,7 @@ public class FatturaController {
 
     @RequestMapping(method = PATCH, path = "/{fatturaId}")
     @CrossOrigin
-    public Fattura patch(@PathVariable final Long fatturaId, @RequestBody final Map<String,Object> patchFattura){
+    public Fattura patch(@PathVariable final Long fatturaId, @RequestBody final Map<String,Object> patchFattura) throws Exception{
         LOGGER.info("Performing PATCH request for updating 'fattura' '{}'", fatturaId);
         Long id = Long.valueOf((Integer) patchFattura.get("id"));
         if (!Objects.equals(fatturaId, id)) {

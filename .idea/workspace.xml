@@ -24,9 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ArticoloService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FatturaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FatturaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +116,7 @@
       <recent name="com.contafood.exception" />
     </key>
   </component>
-  <component name="RunManager" selected="Remote JVM Debug.Contafood-remote">
+  <component name="RunManager" selected="Maven.contafood [clean,package]">
     <configuration name="contafood [clean,install,-U]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -526,14 +525,13 @@
       <workItem from="1646995417324" duration="2311000" />
       <workItem from="1647255992600" duration="648000" />
       <workItem from="1647267109709" duration="723000" />
-      <workItem from="1647429159405" duration="5106000" />
-    </task>
-    <task id="LOCAL-00046" summary="Removed spec and sql folders from target">
-      <created>1584092098624</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1584092098624</updated>
+      <workItem from="1647429159405" duration="5452000" />
+      <workItem from="1647524305257" duration="1193000" />
+      <workItem from="1647872470341" duration="650000" />
+      <workItem from="1647937037817" duration="1281000" />
+      <workItem from="1648042887934" duration="757000" />
+      <workItem from="1648455302203" duration="4203000" />
+      <workItem from="1648541750045" duration="833000" />
     </task>
     <task id="LOCAL-00047" summary="Add RicercaLotto on Ddt, DdtAcquisto and Produzione">
       <created>1584112632422</created>
@@ -871,7 +869,14 @@
       <option name="project" value="LOCAL" />
       <updated>1647008874485</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="Fix step 29,30,31">
+      <created>1647447785460</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1647447785461</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -896,7 +901,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix sort Articolo" />
     <MESSAGE value="Add sql script for step 12" />
     <MESSAGE value="Add stats on OrdineCliente. Add load OrdiniClienti on DDT creation" />
     <MESSAGE value="Fix delete Ddt with DdtArticoloOrdineCliente. Fix Serializable" />
@@ -921,7 +925,8 @@
     <MESSAGE value="Step 27 fix" />
     <MESSAGE value="Fix step 29" />
     <MESSAGE value="Fix step 30" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix step 30" />
+    <MESSAGE value="Fix step 29,30,31" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix step 29,30,31" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -940,6 +945,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java</url>
           <line>67</line>
           <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java</url>
+          <line>131</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

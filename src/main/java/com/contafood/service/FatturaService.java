@@ -5,7 +5,9 @@ import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.views.VFattura;
-import com.contafood.repository.*;
+import com.contafood.repository.FatturaRepository;
+import com.contafood.repository.PagamentoRepository;
+import com.contafood.repository.TipoPagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
 import com.contafood.util.Constants;
 import com.contafood.util.enumeration.Resource;
@@ -20,6 +22,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -40,6 +43,7 @@ public class FatturaService {
     private final VFatturaRepository vFatturaRepository;
     private final PagamentoRepository pagamentoRepository;
     private final TipoPagamentoRepository tipoPagamentoRepository;
+    private final SimpleDateFormat simpleDateFormat;
 
     @Autowired
     public FatturaService(final FatturaRepository fatturaRepository,
@@ -60,6 +64,7 @@ public class FatturaService {
         this.vFatturaRepository = vFatturaRepository;
         this.pagamentoRepository = pagamentoRepository;
         this.tipoPagamentoRepository = tipoPagamentoRepository;
+        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public Set<VFattura> getAll(){
@@ -190,7 +195,7 @@ public class FatturaService {
     public Fattura create(Fattura fattura){
         LOGGER.info("Creating 'fattura'");
 
-        checkExistsByAnnoAndProgressivoAndIdNot(fattura.getAnno(),fattura.getProgressivo(), Long.valueOf(-1));
+        checkExistsByAnnoAndProgressivoAndIdNot(fattura.getAnno(),fattura.getProgressivo(), -1L);
 
         fattura.setStatoFattura(statoFatturaService.getDaPagare());
         fattura.setTipoFattura(tipoFatturaService.getVendita());
@@ -325,12 +330,13 @@ public class FatturaService {
     */
 
     @Transactional
-    public Fattura patch(Map<String,Object> patchFattura){
+    public Fattura patch(Map<String,Object> patchFattura) throws Exception{
         LOGGER.info("Patching 'fattura'");
 
         Long id = Long.valueOf((Integer) patchFattura.get("id"));
         Fattura fattura = fatturaRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
-        patchFattura.forEach((key, value) -> {
+        for(String key : patchFattura.keySet()){
+            Object value = patchFattura.get(key);
             if(key.equals("id")){
                 fattura.setId(Long.valueOf((Integer)value));
             } else if(key.equals("speditoAde")){
@@ -339,8 +345,16 @@ public class FatturaService {
                 } else {
                     fattura.setSpeditoAde(Boolean.FALSE);
                 }
+            } else if(key.equals("progressivo")){
+                fattura.setProgressivo((Integer)value);
+            } else if(key.equals("anno")){
+                fattura.setAnno((Integer)value);
+            } else if(key.equals("data")){
+                fattura.setData(new Date(simpleDateFormat.parse((String) value).getTime()));
+            } else if(key.equals("note")){
+                fattura.setNote((String)value);
             }
-        });
+        }
         Fattura patchedFattura = fatturaRepository.save(fattura);
 
         LOGGER.info("Patched 'fattura' '{}'", patchedFattura);
@@ -348,7 +362,7 @@ public class FatturaService {
     }
 
     @Transactional
-    public void patchSpeditoAdeFattureByCliente(Map<Cliente, List<Fattura>> fattureByCliente, boolean speditoAde){
+    public void patchSpeditoAdeFattureByCliente(Map<Cliente, List<Fattura>> fattureByCliente, boolean speditoAde) throws Exception{
         LOGGER.info("Updating fatture setting speditoAde='{}'", speditoAde);
 
         if(fattureByCliente != null && !fattureByCliente.isEmpty()){
