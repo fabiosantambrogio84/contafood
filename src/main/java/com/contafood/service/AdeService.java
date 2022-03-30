@@ -1443,10 +1443,7 @@ public class AdeService {
                         if(quantita != null){
                             quantita_s = quantita.toString();
                         }
-                        if(quantita_s.endsWith(".0")){
-                            quantita_s += "00";
-                        }
-                        xmlStreamWriter.writeCharacters(quantita_s);
+                        xmlStreamWriter.writeCharacters(createDecimalValue(quantita_s, 3));
                         xmlStreamWriter.writeEndElement();
 
                         // create node 'UnitaMisura' 
@@ -1788,10 +1785,7 @@ public class AdeService {
                 if(quantita != null){
                     quantita_s = quantita.toString();
                 }
-                if(quantita_s.endsWith(".0")){
-                    quantita_s += "0";
-                }
-                xmlStreamWriter.writeCharacters(quantita_s);
+                xmlStreamWriter.writeCharacters(createDecimalValue(quantita_s, 2));
                 xmlStreamWriter.writeEndElement();
 
                 // create node 'UnitaMisura'
@@ -2269,4 +2263,46 @@ public class AdeService {
         return headers;
     }
 
+    private String createDecimalValue(String input, int decimalPlaces){
+        if(StringUtils.isNotEmpty(input)){
+            if(input.contains(".")){
+                String inputBefore = StringUtils.substringBefore(input, ".");
+                String inputAfter = StringUtils.substringAfter(input, ".");
+                if(inputAfter.length() > decimalPlaces){
+                    inputAfter = inputAfter.substring(0, decimalPlaces);
+                }
+                return inputBefore + "." + StringUtils.rightPad(inputAfter, decimalPlaces, '0');
+            } else {
+                input += ".";
+                for(int i=0; i<decimalPlaces; i++){
+                    input += i;
+                }
+                return input;
+            }
+        }
+        return input;
+    }
+
+    /*
+    public static void main(String[] args) {
+        int decimalPlaces = 2;
+        String result;
+        String input = "2";
+        if(input.contains(".")){
+            String inputBefore = StringUtils.substringBefore(input, ".");
+            String inputAfter = StringUtils.substringAfter(input, ".");
+            if(inputAfter.length() > decimalPlaces){
+                inputAfter = inputAfter.substring(0, decimalPlaces);
+            }
+            result = inputBefore + "." + StringUtils.rightPad(inputAfter, decimalPlaces, '0');
+        } else {
+            input += ".";
+            for(int i=0; i<decimalPlaces; i++){
+                input += "0";
+            }
+            result = input;
+        }
+        System.out.println(result);
+    }
+    */
 }
