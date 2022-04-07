@@ -1,0 +1,1 @@
+ALTER TABLE contafood.telefonata ADD COLUMN data_esecuzione timestamp after eseguito;

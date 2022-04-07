@@ -20,8 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -85,5 +84,4 @@ public class TestController {
                 .contentType(MediaType.parseMediaType("application/pdf"))
                 .body(resource);
     }
-
 }

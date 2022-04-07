@@ -9,6 +9,7 @@ public interface Constants {
 
     String DEFAULT_FORNITORE = "URBANI GIUSEPPE";
     String DEFAULT_FORNITORE_INITIALS = "UR";
+    String DEFAULT_EMAIL = "info@urbanialimentari.com";
 
     String ZONE_ID_EUROPE_ROME = "Europe/Rome";
 

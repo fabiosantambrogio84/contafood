@@ -80,7 +80,7 @@ public class ReportController {
 
     @RequestMapping(method = GET, path = "/email")
     @CrossOrigin
-    public ResponseEntity<Resource> reportEmail(@RequestParam(name = "action") String action,
+    public String reportEmail(@RequestParam(name = "action") String action,
                                               @RequestParam(name = "dataDa", required = false) Date dataDa,
                                               @RequestParam(name = "dataA", required = false) Date dataA,
                                               @RequestParam(name = "numeroDa", required = false) String numeroDa,
@@ -90,11 +90,10 @@ public class ReportController {
 
         reportService.checkRequestParams(dataDa, dataA, numeroDa, numeroA);
 
-        Map<String, Object> report;
+        String response;
 
         try{
-            report = reportService.createReportEmailFatture(action, dataDa, dataA, numeroDa, numeroA);
-
+            response = reportService.createReportEmailFatture(action, dataDa, dataA, numeroDa, numeroA);
         } catch(Exception e){
             LOGGER.error("Error creating report file. "+e.getMessage());
             throw e;
@@ -102,17 +101,8 @@ public class ReportController {
 
         LOGGER.info("Successfully executed action '{}' for dataDa '{}', dataA '{}', numeroDa '{}', numeroA '{}'", action, dataDa, dataA, numeroDa, numeroA);
 
-        byte[] txtContent = (byte[])report.get("content");
-
-        ByteArrayResource resource = new ByteArrayResource(txtContent);
-
-        return ResponseEntity.ok()
-                .headers(ReportService.createHttpHeaders((String)report.get("fileName")))
-                .contentLength(txtContent.length)
-                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_TXT))
-                .body(resource);
+        return response;
     }
-
 }
 
 

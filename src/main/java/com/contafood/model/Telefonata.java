@@ -61,6 +61,9 @@ public class Telefonata {
     @Column(name = "eseguito")
     private Boolean eseguito;
 
+    @Column(name = "data_esecuzione")
+    private Timestamp dataEsecuzione;
+
     @Column(name = "note")
     private String note;
 
@@ -90,6 +93,7 @@ public class Telefonata {
         result.append(", ora: " + ora);
         result.append(", oraConsegna: " + oraConsegna);
         result.append(", eseguito: " + eseguito);
+        result.append(", dataEsecuzione: " + dataEsecuzione);
         result.append(", note: " + note);
         result.append(", ordiniClienti: " + ordiniClienti);
         result.append(", dataInserimento: " + dataInserimento);

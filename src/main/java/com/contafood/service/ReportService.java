@@ -30,21 +30,21 @@ public class ReportService {
 
     private final FatturaService fatturaService;
     private final StampaService stampaService;
+    private final EmailService emailService;
     private final EmailPecService emailPecService;
     private final AsyncExecutor asyncExecutor;
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    private static final String DELIMITER = ";";
-    private static final String NEW_LINE = "\n";
-
     @Autowired
     public ReportService(final FatturaService fatturaService,
                          final StampaService stampaService,
+                         final EmailService emailService,
                          final EmailPecService emailPecService,
                          final AsyncExecutor asyncExecutor
                       ){
         this.fatturaService = fatturaService;
+        this.emailService = emailService;
         this.emailPecService = emailPecService;
         this.stampaService = stampaService;
         this.asyncExecutor = asyncExecutor;
@@ -189,72 +189,38 @@ public class ReportService {
         return result;
     }
 
-    public Map<String, Object> createReportEmailFatture(String action, Date dataDa, Date dataA, String numeroDa, String numeroA) throws Exception{
-        Map<String, Object> result = new HashMap<>();
+    public String createReportEmailFatture(String action, Date dataDa, Date dataA, String numeroDa, String numeroA) throws Exception{
 
         LOGGER.info("Start creating report emails for fatture...");
 
-        try{
+        Set<Fattura> fatture;
+        String txtFileName = "Invio_fatture_##.txt";
+        boolean isPec = false;
+        try {
             String modalitaInvioFatture = "mail";
-            boolean isPec = false;
-            if(action.equals("spedizioneFatturePec")){
+            if (action.equals("spedizioneFatturePec")) {
                 modalitaInvioFatture = "pec";
                 isPec = true;
             }
-            Set<Fattura> fatture = getFatture(dataDa, dataA, numeroDa, numeroA, modalitaInvioFatture);
-
-            String txtFileName = "Invio_fatture_##.txt";
-            byte[] txtContent = null;
+            fatture = getFatture(dataDa, dataA, numeroDa, numeroA, modalitaInvioFatture);
 
             String replacePlaceholder = "";
-            if(dataDa != null && dataA != null){
+            if (dataDa != null && dataA != null) {
                 replacePlaceholder = sdf.format(dataDa) + "_" + sdf.format(dataA);
             } else {
                 replacePlaceholder = numeroDa + "_" + numeroA;
             }
             txtFileName = txtFileName.replace("##", replacePlaceholder);
 
-            if(!fatture.isEmpty()){
-
-                Session session = emailPecService.createSession();
-
-                StringBuilder stringBuilder = new StringBuilder();
-
-                stringBuilder.append("fattura").append(DELIMITER).append("cliente").append(DELIMITER).append("email/pec").append(DELIMITER).append("esito").append(NEW_LINE);
-
-                List<CompletableFuture<String>> completableFutures = new ArrayList<>();
-
-                for(Fattura fattura : fatture){
-                    completableFutures.add(asyncExecutor.executeAsyncSendFatturaReport(emailPecService, stampaService, fattura, session, isPec));
-                }
-                CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[completableFutures.size()]));
-
-                for(CompletableFuture<String> completableFuture : completableFutures){
-                    try{
-                        stringBuilder.append(completableFuture.get());
-                    } catch(Exception e){
-                        e.printStackTrace();
-                    }
-                }
-
-                txtContent = stringBuilder.toString().getBytes();
-            }
-
-            result.put("fileName", txtFileName);
-            result.put("content", txtContent);
-
+        } catch(GenericException ge){
+            return ge.getMessage();
         } catch(Exception e){
-            e.printStackTrace();
-            throw e;
+            LOGGER.error("Error retrieving fatture", e);
+            return "Errore nel recupero delle fatture";
         }
 
-        if(result.isEmpty()){
-            throw new RuntimeException("Error creating report emails for fatture");
-        }
-
-        LOGGER.info("Successfully created report emails for fatture");
-
-        return result;
+        asyncExecutor.executeAsyncSendFattureReport(emailService, emailPecService, stampaService, fatture, txtFileName, isPec);
+        return "Invio email in corso. Riceverai un'email di riepilogo all'indirizzo "+Constants.DEFAULT_EMAIL;
     }
 
     public void checkRequestParams(Date dataDa, Date dataA, String numeroDa, String numeroA){

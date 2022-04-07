@@ -82,6 +82,9 @@ public class TelefonataService {
 
         Telefonata telefonata = telefonataRepository.findById(idTelefonata).orElseThrow(ResourceNotFoundException::new);
         telefonata.setEseguito(eseguito);
+        if(Boolean.TRUE.equals(eseguito)){
+            telefonata.setDataEsecuzione(Timestamp.from(ZonedDateTime.now().toInstant()));
+        }
         Telefonata patchedTelefonata = telefonataRepository.save(telefonata);
 
         LOGGER.info("Patched 'telefonata' '{}'", patchedTelefonata);

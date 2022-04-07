@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class NativeQueryService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(NativeQueryService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NativeQueryService.class);
 
     private static final String ORDINI_CLIENTI_AGGREGATE_QUERY = "select \n" +
             "ordine_cliente_articolo.id_articolo,\n" +
@@ -26,7 +26,8 @@ public class NativeQueryService {
             "sum(ordine_cliente_articolo.num_ordinati) as num_ordinati,\n" +
             "sum(ordine_cliente_articolo.num_da_evadere) as num_da_evadere,\n" +
             "group_concat(ordine_cliente_articolo.id_ordine_cliente separator ',') as ordini_clienti,\n" +
-            "group_concat(concat(ordine_cliente.progressivo,'/', ordine_cliente.anno_contabile) separator ',') as codici_ordini_clienti\n" +
+            "group_concat(concat(ordine_cliente.progressivo,'/', ordine_cliente.anno_contabile) separator ',') as codici_ordini_clienti,\n" +
+            "group_concat(concat(ordine_cliente.progressivo,'/', ordine_cliente.anno_contabile,': ',ordine_cliente.note) separator ',') as note\n" +
             "from contafood.ordine_cliente_articolo\n" +
             "join contafood.ordine_cliente on ordine_cliente_articolo.id_ordine_cliente = ordine_cliente.id\n" +
             "join contafood.articolo on ordine_cliente_articolo.id_articolo = articolo.id\n" +
@@ -60,7 +61,7 @@ public class NativeQueryService {
             List<Object[]> resultList = query.getResultList();
 
             if(resultList != null && !resultList.isEmpty()){
-                resultList.stream().forEach(rl -> {
+                resultList.forEach(rl -> {
                     OrdineClienteAggregate ordineClienteAggregate = new OrdineClienteAggregate();
                     ordineClienteAggregate.setIdArticolo(((Integer)rl[0]).longValue());
                     ordineClienteAggregate.setArticolo((String)rl[1]);
@@ -73,6 +74,7 @@ public class NativeQueryService {
                     ordineClienteAggregate.setNumeroPezziEvasi(numeroPezziEvasi.intValue());
                     ordineClienteAggregate.setIdsOrdiniClienti((String)rl[5]);
                     ordineClienteAggregate.setCodiciOrdiniClienti((String)rl[6]);
+                    ordineClienteAggregate.setNote((String)rl[7]);
 
                     ordiniClientiAggregate.add(ordineClienteAggregate);
                 });

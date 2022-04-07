@@ -3,6 +3,7 @@ package com.contafood.component;
 import com.contafood.model.Cliente;
 import com.contafood.model.Fattura;
 import com.contafood.service.EmailPecService;
+import com.contafood.service.EmailService;
 import com.contafood.service.ReportService;
 import com.contafood.service.StampaService;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Component
@@ -44,55 +46,79 @@ public class AsyncExecutor {
     }
 
     @Async("threadPoolTaskExecutorReport")
-    public CompletableFuture<String> executeAsyncSendFatturaReport(EmailPecService emailPecService, StampaService stampaService, Fattura fattura, Session session, boolean isPec) throws Exception{
+    public void executeAsyncSendFattureReport(EmailService emailService, EmailPecService emailPecService, StampaService stampaService, Set<Fattura> fatture, String txtFileName, boolean isPec) throws Exception{
         long start = System.currentTimeMillis();
         String threadName = Thread.currentThread().getName();
         String prefix = "["+threadName+"] ";
 
-        LOGGER.info(prefix + "Sending asynchronously report email for fattura with id '{}'", fattura.getId());
+        LOGGER.info(prefix + "Sending asynchronously report email for a set of fatture");
 
-        String result = "";
-
+        String txtContent = "";
         StringBuilder stringBuilder = new StringBuilder();
 
-        Transport transport = emailPecService.connect(session);
+        Session pecSession;
+        Transport pecTransport = null;
 
-        Integer progressivo = fattura.getProgressivo();
-        Integer anno = fattura.getAnno();
+        try {
+            pecSession = emailPecService.createSession();
+            pecTransport = emailPecService.connect(pecSession);
 
-        stringBuilder.append("Fattura_").append(progressivo).append("/").append(anno).append(DELIMITER);
+            for(Fattura fattura : fatture){
 
-        Cliente cliente = fattura.getCliente();
-        if(!cliente.getDittaIndividuale()){
-            stringBuilder.append(cliente.getRagioneSociale()).append(DELIMITER);
-        } else {
-            stringBuilder.append(cliente.getNome()).append(" ").append(cliente.getCognome()).append(DELIMITER);
-        }
+                try{
+                    Integer progressivo = fattura.getProgressivo();
+                    Integer anno = fattura.getAnno();
 
-        String email = cliente.getEmail();
-        if(isPec){
-            email = cliente.getEmailPec();
-        }
-        stringBuilder.append(email).append(DELIMITER);
+                    stringBuilder.append("Fattura_").append(progressivo).append("/").append(anno).append(DELIMITER);
 
-        try{
-            byte[] reportBytes = stampaService.generateFattura(fattura.getId());
-            Message message = emailPecService.createFatturaMessage(session, fattura, isPec, reportBytes);
-            emailPecService.sendMessage(transport, message);
+                    Cliente cliente = fattura.getCliente();
+                    if(!cliente.getDittaIndividuale()){
+                        stringBuilder.append(cliente.getRagioneSociale()).append(DELIMITER);
+                    } else {
+                        stringBuilder.append(cliente.getNome()).append(" ").append(cliente.getCognome()).append(DELIMITER);
+                    }
 
-            stringBuilder.append("OK");
+                    String email = cliente.getEmail();
+                    if(isPec){
+                        email = cliente.getEmailPec();
+                    }
+                    stringBuilder.append(email).append(DELIMITER);
+
+                    byte[] reportBytes = stampaService.generateFattura(fattura.getId());
+                    Message message = emailPecService.createFatturaMessage(pecSession, fattura, isPec, reportBytes);
+                    emailPecService.sendMessage(pecTransport, message);
+
+                    stringBuilder.append("OK");
+
+                    stringBuilder.append(NEW_LINE);
+
+                    txtContent += stringBuilder.toString();
+
+                    stringBuilder.setLength(0);
+
+                    Thread.sleep(1000);
+
+                } catch(Exception e){
+                    e.printStackTrace();
+                    stringBuilder.append("ERROR").append(DELIMITER).append(e.getMessage());
+                }
+            }
 
         } catch(Exception e){
-            e.printStackTrace();
-            stringBuilder.append("ERROR").append(DELIMITER).append(e.getMessage());
+            LOGGER.error("Error opening session to SMTP server for PEC", e);
+            txtContent = "Errore nell'apertura della sessione sul server SMTP PEC";
         } finally {
-            transport.close();
+            if(pecTransport != null) {
+                pecTransport.close();
+            }
         }
-        stringBuilder.append(NEW_LINE);
 
-        result = stringBuilder.toString();
+        try{
+            emailService.sendEmailRecapReportFatture(txtFileName, txtContent.getBytes());
+        } catch(Exception e){
+            LOGGER.error("Error sending recap email", e);
+        }
 
         LOGGER.info(prefix + "Elapsed time : " + (System.currentTimeMillis() - start));
-        return CompletableFuture.completedFuture(result);
     }
 }

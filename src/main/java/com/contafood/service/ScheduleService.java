@@ -1,8 +1,6 @@
 package com.contafood.service;
 
-import com.contafood.model.GiacenzaArticolo;
-import com.contafood.model.GiacenzaIngrediente;
-import com.contafood.model.OrdineCliente;
+import com.contafood.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,30 +17,32 @@ import java.util.stream.Collectors;
 @Service
 public class ScheduleService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ScheduleService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ScheduleService.class);
 
     private final ScontoService scontoService;
     private final OrdineClienteService ordineClienteService;
     private final GiacenzaArticoloService giacenzaArticoloService;
     private final GiacenzaIngredienteService giacenzaIngredienteService;
+    private final TelefonataService telefonataService;
 
-    @Autowired
     public ScheduleService(final ScontoService scontoService,
                            final OrdineClienteService ordineClienteService,
                            final GiacenzaArticoloService giacenzaArticoloService,
-                           final GiacenzaIngredienteService giacenzaIngredienteService){
+                           final GiacenzaIngredienteService giacenzaIngredienteService,
+                           final TelefonataService telefonataService){
         this.scontoService = scontoService;
         this.ordineClienteService = ordineClienteService;
         this.giacenzaArticoloService = giacenzaArticoloService;
         this.giacenzaIngredienteService = giacenzaIngredienteService;
+        this.telefonataService = telefonataService;
     }
 
     @Scheduled(cron = "0 50 17 * * ?")
     public void deleteExpiredSconti() {
         LOGGER.info("Executing remove of expired Sconti");
         Date now = new Date(System.currentTimeMillis());
-        List<Long> expiredSconti = scontoService.getAll().stream().filter(s -> (s.getDataAl() != null && s.getDataAl().before(now))).map(s -> s.getId()).collect(Collectors.toList());
-        expiredSconti.forEach(es -> scontoService.delete(es));
+        List<Long> expiredSconti = scontoService.getAll().stream().filter(s -> (s.getDataAl() != null && s.getDataAl().before(now))).map(Sconto::getId).collect(Collectors.toList());
+        expiredSconti.forEach(scontoService::delete);
         LOGGER.info("Executed remove of expired Sconti");
     }
 
@@ -63,9 +64,7 @@ public class ScheduleService {
         if(giacenzeArticoli != null && !giacenzeArticoli.isEmpty()){
             giacenzeArticoli.stream()
                     .filter(g -> (g.getQuantita().equals(0f) && g.getScadenza() == null)||(g.getQuantita().equals(0f) && g.getScadenza() != null && g.getScadenza().toLocalDate().compareTo(yesterday)<0))
-                    .forEach(g -> {
-                        giacenzaArticoloService.delete(g.getId());
-                    });
+                    .forEach(g -> giacenzaArticoloService.delete(g.getId()));
         }
         LOGGER.info("Deleted Giacenze Articoli");
 
@@ -73,11 +72,24 @@ public class ScheduleService {
         if(giacenzeIngredienti != null && !giacenzeIngredienti.isEmpty()){
             giacenzeIngredienti.stream()
                     .filter(g -> (g.getQuantita().equals(0f) && g.getScadenza() == null)||(g.getQuantita().equals(0f) && g.getScadenza() != null && g.getScadenza().toLocalDate().compareTo(yesterday)<0))
-                    .forEach(g -> {
-                        giacenzaIngredienteService.delete(g.getId());
-                    });
+                    .forEach(g -> giacenzaIngredienteService.delete(g.getId()));
         }
         LOGGER.info("Deleted Giacenze Ingredienti");
         LOGGER.info("Executed remove of expired and zero Giacenze");
     }
+
+    @Scheduled(cron = "0 35 17 * * ?")
+    public void deleteExpiredTelefonate(){
+        LOGGER.info("Executing remove of expired Telefonate");
+        LocalDateTime limitDatetime = LocalDateTime.now().minusDays(1).withHour(0).withMinute(0).withSecond(0);
+        LOGGER.info("Date to check: {}", limitDatetime);
+        List<Telefonata> telefonate = telefonataService.getAll();
+        if(!telefonate.isEmpty()){
+            telefonate.stream()
+                    .filter(t -> t.getDataEsecuzione().toLocalDateTime().isBefore(limitDatetime))
+                    .forEach(t -> telefonataService.delete(t.getId()));
+        }
+        LOGGER.info("Executed remove of expired Telefonate");
+    }
+
 }

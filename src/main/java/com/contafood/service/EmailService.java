@@ -52,7 +52,7 @@ public class EmailService {
         return properties;
     }
 
-    private Session createSession(){
+    public Session createSession(){
         LOGGER.info("Creating session for connecting to SMTPs server...");
 
         username = proprietaService.findByNome(EmailConstants.SMTP_USER_PROPERTY_NAME).getValore();
@@ -71,7 +71,7 @@ public class EmailService {
         return session;
     }
 
-    private Transport connect(Session session) throws Exception{
+    public Transport connect(Session session) throws Exception{
         LOGGER.info("Connecting to SMTPs server...");
 
         Transport transport = session.getTransport(EmailPecConstants.PROTOCOL);
@@ -80,6 +80,16 @@ public class EmailService {
         LOGGER.info("Successfully connected to SMTPs server");
 
         return transport;
+    }
+
+    private void closeTransport(Transport transport){
+        if(transport != null){
+            try {
+                transport.close();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     private Message createMessage(Session session, String emailTo, String emailSubject, String emailBody, String attachmentName,  byte[] reportBytes) throws Exception{
@@ -133,7 +143,7 @@ public class EmailService {
         String attachmentName = "DDT_num_"+ddt.getProgressivo()+"-"+ddt.getAnnoContabile();
         String emailBody = "In allegato il pdf del DDT.<br/>Cordiali saluti";
 
-        return createMessage(session, emailTo, emailSubject,emailBody, attachmentName, reportBytes);
+        return createMessage(session, emailTo, emailSubject, emailBody, attachmentName, reportBytes);
     }
 
     private Message createNotaAccreditoMessage(Session session, NotaAccredito notaAccredito, byte[] reportBytes) throws Exception{
@@ -145,7 +155,7 @@ public class EmailService {
         String attachmentName = "Nota_accredito_num_"+notaAccredito.getProgressivo()+"-"+notaAccredito.getAnno();
         String emailBody = "In allegato il pdf della nota di accredito.<br/>Cordiali saluti";
 
-        return createMessage(session, emailTo, emailSubject,emailBody, attachmentName, reportBytes);
+        return createMessage(session, emailTo, emailSubject, emailBody, attachmentName, reportBytes);
     }
 
     private Message createOrdineFornitoreMessage(Session session, OrdineFornitore ordineFornitore, byte[] reportBytes) throws Exception{
@@ -157,7 +167,17 @@ public class EmailService {
         String attachmentName = "Ordine_fornitore_num_"+ordineFornitore.getProgressivo()+"-"+ordineFornitore.getAnnoContabile();
         String emailBody = "In allegato il pdf dell'ordine.<br/>Cordiali saluti";
 
-        return createMessage(session, emailTo, emailSubject,emailBody, attachmentName, reportBytes);
+        return createMessage(session, emailTo, emailSubject, emailBody, attachmentName, reportBytes);
+    }
+
+    private Message createRecapReportFattureMessage(Session session, String txtFileName, byte[] reportBytes) throws Exception{
+
+        String emailTo = Constants.DEFAULT_EMAIL;
+        String emailSubject = "Riepilogo spedizione fatture: file "+txtFileName;
+        String attachmentName = txtFileName;
+        String emailBody = "In allegato il file txt contenente il riepilogo dell'invio email delle fatture.<br/>Cordiali saluti";
+
+        return createMessage(session, emailTo, emailSubject, emailBody, attachmentName, reportBytes);
     }
 
     private void sendMessage(Transport transport, Message message) throws Exception{
@@ -169,6 +189,7 @@ public class EmailService {
         Transport transport = connect(session);
         Message message = createDdtMessage(session, ddt, reportBytes);
         sendMessage(transport, message);
+        closeTransport(transport);
     }
 
     public void sendEmailFattura(Fattura fattura, byte[] reportBytes) throws Exception{
@@ -176,6 +197,7 @@ public class EmailService {
         Transport transport = connect(session);
         Message message = createFatturaMessage(session, fattura, reportBytes);
         sendMessage(transport, message);
+        closeTransport(transport);
     }
 
     public void sendEmailNotaAccredito(NotaAccredito notaAccredito, byte[] reportBytes) throws Exception{
@@ -183,6 +205,7 @@ public class EmailService {
         Transport transport = connect(session);
         Message message = createNotaAccreditoMessage(session, notaAccredito, reportBytes);
         sendMessage(transport, message);
+        closeTransport(transport);
     }
 
     public void sendEmailOrdineFornitore(OrdineFornitore ordineFornitore, byte[] reportBytes) throws Exception{
@@ -190,10 +213,19 @@ public class EmailService {
         Transport transport = connect(session);
         Message message = createOrdineFornitoreMessage(session, ordineFornitore, reportBytes);
         sendMessage(transport, message);
+        closeTransport(transport);
 
         ordineFornitore.setEmailInviata(Constants.EMAIL_INVIATA_OK);
         ordineFornitore.setDataInvioEmail(Timestamp.from(ZonedDateTime.now().toInstant()));
         ordineFornitoreService.patch(ordineFornitore);
+    }
+
+    public void sendEmailRecapReportFatture(String fileName, byte[] reportBytes) throws Exception{
+        Session session = createSession();
+        Transport transport = connect(session);
+        Message message = createRecapReportFattureMessage(session, fileName, reportBytes);
+        sendMessage(transport, message);
+        closeTransport(transport);
     }
 
     /*

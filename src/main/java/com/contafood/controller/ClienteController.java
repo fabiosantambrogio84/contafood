@@ -2,6 +2,7 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Cliente;
+import com.contafood.model.Listino;
 import com.contafood.model.ListinoAssociato;
 import com.contafood.model.PuntoConsegna;
 import com.contafood.service.ClienteService;
@@ -25,7 +26,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/clienti")
 public class ClienteController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ClienteController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ClienteController.class);
 
     private final ClienteService clienteService;
 
@@ -37,9 +38,10 @@ public class ClienteController {
     @RequestMapping(method = GET)
     @CrossOrigin
     public List<Cliente> getAll(@RequestParam(required = false) Boolean bloccaDdt,
-                               @RequestParam(required = false) Boolean privato) {
+                                @RequestParam(required = false) Boolean privato,
+                                @RequestParam(required = false) Integer idListino) {
         LOGGER.info("Performing GET request for retrieving list of 'clienti'");
-        LOGGER.info("Request params: bloccaDdt {}", bloccaDdt, privato);
+        LOGGER.info("Request params: bloccaDdt {}, privato {}, idListino {}", bloccaDdt, privato, idListino);
 
         Predicate<Cliente> isClienteBloccaDdtEquals = cliente -> {
             if(bloccaDdt != null){
@@ -55,11 +57,22 @@ public class ClienteController {
             return true;
         };
 
+        Predicate<Cliente> isClienteIdListinoEquals = cliente -> {
+            if(idListino != null){
+                Listino listino = cliente.getListino();
+                if(listino != null){
+                    return listino.getId().equals(idListino.longValue());
+                }
+                return false;
+            }
+            return true;
+        };
+
         Comparator<Cliente> comparator = Comparator.comparing(Cliente::getFieldComparing);
 
         Set<Cliente> clienti = clienteService.getAll();
         return clienti.stream().filter(isClienteBloccaDdtEquals
-                .and(isClientePrivatoEquals))
+                .and(isClientePrivatoEquals).and(isClienteIdListinoEquals))
                 .sorted(comparator)
                 .collect(Collectors.toList());
     }
