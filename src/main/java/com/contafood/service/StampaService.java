@@ -4,6 +4,7 @@ import com.contafood.model.*;
 import com.contafood.model.reports.*;
 import com.contafood.model.views.VFattura;
 import com.contafood.model.views.VGiacenzaIngrediente;
+import com.contafood.util.AccountingUtils;
 import com.contafood.util.Constants;
 import com.contafood.util.enumeration.Provincia;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -649,8 +650,17 @@ public class StampaService {
 
         List<FatturaRigaDataSource> fatturaRigaDataSources = new ArrayList<>();
         Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
-        if(fatturaDdts != null && !fatturaDdts.isEmpty()){
-            for(FatturaDdt fatturaDdt : fatturaDdts){
+
+        Comparator<FatturaDdt> compareByDdtProgressivo = (fd1, fd2) -> {
+            Ddt ddt1 = fd1.getDdt();
+            Ddt ddt2 = fd2.getDdt();
+            return ddt1.getProgressivo().compareTo(ddt2.getProgressivo());
+        };
+
+        List<FatturaDdt> fatturaDdtsOrdered = fatturaDdts.stream().sorted(compareByDdtProgressivo).collect(Collectors.toList());
+
+        if(fatturaDdtsOrdered != null && !fatturaDdtsOrdered.isEmpty()){
+            for(FatturaDdt fatturaDdt : fatturaDdtsOrdered){
                Ddt ddt = fatturaDdt.getDdt();
                if(ddt != null){
                     String descrizione = "Riferimento ns. DDT n. "+ddt.getProgressivo()+"/"+ddt.getAnnoContabile()+" del "+simpleDateFormat.format(ddt.getData());
@@ -674,9 +684,13 @@ public class StampaService {
                             fatturaRigaDataSource.setLotto(da.getLotto());
                             fatturaRigaDataSource.setUdm(articolo != null ? (articolo.getUnitaMisura() != null ? articolo.getUnitaMisura().getEtichetta() : "") : "");
                             fatturaRigaDataSource.setQuantita(da.getQuantita());
-                            fatturaRigaDataSource.setPrezzo(da.getPrezzo() != null ? da.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                            fatturaRigaDataSource.setSconto(da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                            fatturaRigaDataSource.setImponibile(da.getImponibile() != null ? da.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+
+                            BigDecimal prezzo = da.getPrezzo() != null ? da.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
+                            BigDecimal sconto = da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
+                            fatturaRigaDataSource.setPrezzo(prezzo);
+                            fatturaRigaDataSource.setSconto(sconto);
+                            fatturaRigaDataSource.setImponibile(AccountingUtils.computeImponibile(da.getQuantita(), prezzo, sconto));
+
                             fatturaRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
 
                             fatturaRigaDataSources.add(fatturaRigaDataSource);
@@ -1054,6 +1068,10 @@ public class StampaService {
         Ddt ddt = getDdt(idDdt);
         PuntoConsegna puntoConsegna = ddt.getPuntoConsegna();
         Cliente cliente = ddt.getCliente();
+        Boolean nascondiPrezzi = cliente.getNascondiPrezzi();
+        if(nascondiPrezzi == null){
+            nascondiPrezzi = false;
+        }
 
         // create DdtDataSource
         List<DdtDataSource> ddtDataSources = new ArrayList<>();
@@ -1132,6 +1150,7 @@ public class StampaService {
         parameters.put("destinatario", destinatarioParam);
         parameters.put("note", ddt.getNote());
         parameters.put("trasportatore", ddt.getTrasportatore());
+        parameters.put("nascondiPrezzi", nascondiPrezzi);
         parameters.put("nota", Constants.JASPER_PARAMETER_DDT_NOTA);
         parameters.put("ddtTrasportoTipo", ddt.getTipoTrasporto());
         parameters.put("ddtTrasportoDataOra", ddtTrasportoDataOraParam);
@@ -1548,60 +1567,6 @@ public class StampaService {
 
         // create report
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
-    }
-
-    public Map<AliquotaIva, BigDecimal> createFatturaTotaliImponibiliByIva(Fattura fattura) {
-
-        Map<AliquotaIva, BigDecimal> ivaImponibileMap = new HashMap<>();
-        Map<AliquotaIva, Set<DdtArticolo>> ivaDdtArticoliMap = new HashMap<>();
-
-        /*Set<AliquotaIva> aliquoteIva = aliquotaIvaService.getAll();
-        for(AliquotaIva aliquotaIva : aliquoteIva){
-            ivaImponibileMap.put(aliquotaIva, BigDecimal.ZERO);
-            ivaDdtArticoliMap.put(aliquotaIva, new HashSet<>());
-        }*/
-
-        Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
-        if(fatturaDdts != null && !fatturaDdts.isEmpty()){
-            // retrieve the list of all DdtArticolo
-            Set<DdtArticolo> ddtArticoli = new HashSet<>();
-            for(FatturaDdt fatturaDdt: fatturaDdts){
-                Ddt ddt = fatturaDdt.getDdt();
-                if(ddt != null){
-                    ddtArticoli.addAll(ddt.getDdtArticoli());
-                }
-            }
-
-            // group DdtArticolo by Iva
-            if(!ddtArticoli.isEmpty()){
-                ddtArticoli.forEach(ddtArticolo -> {
-                    Articolo articolo = ddtArticolo.getArticolo();
-                    AliquotaIva iva = articolo.getAliquotaIva();
-
-                    Set<DdtArticolo> ddtArticoliByIva = ivaDdtArticoliMap.getOrDefault(iva, new HashSet<>());
-                    ddtArticoliByIva.add(ddtArticolo);
-
-                    ivaDdtArticoliMap.put(iva, ddtArticoliByIva);
-                });
-            }
-
-            // compute totaleImponibile for all AliquotaIva
-            for (Map.Entry<AliquotaIva, Set<DdtArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
-                AliquotaIva aliquotaIva = entry.getKey();
-                BigDecimal totaleImponibile = new BigDecimal(0);
-
-                Set<DdtArticolo> ddtArticoliByIva = entry.getValue();
-                for(DdtArticolo ddtArticoloByIva : ddtArticoliByIva){
-                    BigDecimal imponibile = ddtArticoloByIva.getImponibile() != null ? ddtArticoloByIva.getImponibile() : BigDecimal.ZERO;
-                    totaleImponibile = totaleImponibile.add(imponibile);
-                }
-                ivaImponibileMap.put(aliquotaIva, totaleImponibile);
-
-            }
-
-        }
-        return ivaImponibileMap;
-
     }
 
     public static HttpHeaders createHttpHeaders(String fileName){

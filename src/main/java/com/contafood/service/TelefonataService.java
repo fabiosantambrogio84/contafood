@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TelefonataService {
@@ -124,6 +121,23 @@ public class TelefonataService {
         }
         telefonataRepository.deleteByIdIn(telefonateIds);
         LOGGER.info("Bulk deleted all the specified 'telefonate");
+    }
+
+    public void bulkSetEseguito(List<Long> telefonateIds, Boolean eseguito){
+        if(!telefonateIds.isEmpty()) {
+            List<Telefonata> telefonate = new ArrayList<>();
+            for(Long idTelefonata : telefonateIds){
+                Optional<Telefonata> telefonataOptional = telefonataRepository.findById(idTelefonata);
+                if(telefonataOptional.isPresent()){
+                    Telefonata telefonata = telefonataOptional.get();
+                    telefonata.setEseguito(eseguito);
+                    telefonate.add(telefonata);
+                }
+            }
+            if(!telefonate.isEmpty()){
+                telefonataRepository.saveAll(telefonate);
+            }
+        }
     }
 
     private void deleteOrdiniClienti(Long idTelefonata){

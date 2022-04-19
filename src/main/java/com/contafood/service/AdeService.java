@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.model.*;
 import com.contafood.properties.AdeExportProperties;
 import com.contafood.service.jpa.NativeQueryService;
+import com.contafood.util.AccountingUtils;
 import com.contafood.util.AdeConstants;
 import com.contafood.util.Constants;
 import com.contafood.util.enumeration.Provincia;
@@ -1492,11 +1493,13 @@ public class AdeService {
                         // create node 'PrezzoTotale' 
                         xmlStreamWriter.writeStartElement("PrezzoTotale");
                         BigDecimal prezzoTemp = ddtArticolo.getPrezzo().setScale(2, RoundingMode.HALF_DOWN);
+                        /*
                         if(sconto != null && sconto.compareTo(BigDecimal.ZERO) != 0){
                             BigDecimal scontoValue = prezzoTemp.multiply(sconto.divide(new BigDecimal(100)));
                             prezzoTemp = prezzoTemp.subtract(scontoValue);
-                        }
-                        BigDecimal prezzoTotale = prezzoTemp.multiply(BigDecimal.valueOf(ddtArticolo.getQuantita()));
+                        }*/
+                        BigDecimal prezzoTotale = AccountingUtils.computeImponibile(ddtArticolo.getQuantita(), prezzoTemp, sconto);
+                        //prezzoTemp.multiply(BigDecimal.valueOf(ddtArticolo.getQuantita()));
                         String prezzoTotale_s = "";
                         if(prezzoTotale != null){
                             prezzoTotale_s = prezzoTotale.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
@@ -1525,7 +1528,7 @@ public class AdeService {
         }
 
         // Creo i nodi 'DatiRiepilogo' 
-        Map<AliquotaIva, BigDecimal> totaliImponibiliByIva = stampaService.createFatturaTotaliImponibiliByIva(fattura);
+        Map<AliquotaIva, BigDecimal> totaliImponibiliByIva = AccountingUtils.createFatturaTotaliImponibiliByIva(fattura);
         if(totaliImponibiliByIva != null && !totaliImponibiliByIva.isEmpty()){
             for(Map.Entry<AliquotaIva, BigDecimal> totaleImponibileByIva : totaliImponibiliByIva.entrySet()){
                 BigDecimal iva = totaleImponibileByIva.getKey().getValore();

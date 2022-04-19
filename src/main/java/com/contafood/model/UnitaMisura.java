@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"articoli", "notaAccreditoInfo"})
+@EqualsAndHashCode(exclude = {"articoli", "notaAccreditoRiga"})
 @Entity
 @Table(name = "unita_misura")
 public class UnitaMisura {

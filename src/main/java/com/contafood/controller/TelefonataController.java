@@ -87,4 +87,13 @@ public class TelefonataController {
         LOGGER.info("Performing BULK DELETE operation on 'telefonate' (number of elements to delete: {})", telefonateIds.size());
         telefonataService.bulkDelete(telefonateIds);
     }
+
+    @RequestMapping(method = POST, path = "/operations/set-eseguito")
+    @ResponseStatus(NO_CONTENT)
+    @CrossOrigin
+    public void bulkSetEseguito(@RequestParam(name = "value", required = false) Boolean eseguito, @RequestBody final List<Long> telefonateIds){
+        LOGGER.info("Performing SET-ESEGUITO operation on 'telefonate' (number of elements: {})", telefonateIds.size());
+        eseguito = eseguito != null ? eseguito : true;
+        telefonataService.bulkSetEseguito(telefonateIds, eseguito);
+    }
 }

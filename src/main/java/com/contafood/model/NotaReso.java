@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"notaResoArticoli", "notaResoTotali", "notaResoRighe", "notaResoPagamenti"})
+@EqualsAndHashCode(exclude = {"notaResoTotali", "notaResoRighe", "notaResoPagamenti"})
 @Entity
 @Table(name = "nota_reso")
 public class NotaReso {

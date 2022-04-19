@@ -1,17 +1,20 @@
 package com.contafood.util;
 
-import com.contafood.model.AliquotaIva;
-import com.contafood.model.Articolo;
+import com.contafood.model.*;
 import com.contafood.service.ArticoloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class AccountingUtils {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(AccountingUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountingUtils.class);
 
     public static BigDecimal computeImponibile(Float quantita, BigDecimal prezzo, BigDecimal sconto){
         BigDecimal imponibile = new BigDecimal(0);
@@ -79,4 +82,56 @@ public class AccountingUtils {
         return totale;
     }
 
+    public static Map<AliquotaIva, BigDecimal> createFatturaTotaliImponibiliByIva(Fattura fattura) {
+
+        Map<AliquotaIva, BigDecimal> ivaImponibileMap = new HashMap<>();
+        Map<AliquotaIva, Set<DdtArticolo>> ivaDdtArticoliMap = new HashMap<>();
+
+        Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
+        if(fatturaDdts != null && !fatturaDdts.isEmpty()){
+            // retrieve the list of all DdtArticolo
+            Set<DdtArticolo> ddtArticoli = new HashSet<>();
+            for(FatturaDdt fatturaDdt: fatturaDdts){
+                Ddt ddt = fatturaDdt.getDdt();
+                if(ddt != null){
+                    ddtArticoli.addAll(ddt.getDdtArticoli());
+                }
+            }
+
+            // group DdtArticolo by Iva
+            if(!ddtArticoli.isEmpty()){
+                ddtArticoli.forEach(ddtArticolo -> {
+                    Articolo articolo = ddtArticolo.getArticolo();
+                    AliquotaIva iva = articolo.getAliquotaIva();
+
+                    Set<DdtArticolo> ddtArticoliByIva = ivaDdtArticoliMap.getOrDefault(iva, new HashSet<>());
+                    ddtArticoliByIva.add(ddtArticolo);
+
+                    ivaDdtArticoliMap.put(iva, ddtArticoliByIva);
+                });
+            }
+
+            // compute totaleImponibile for all AliquotaIva
+            for (Map.Entry<AliquotaIva, Set<DdtArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
+                AliquotaIva aliquotaIva = entry.getKey();
+                BigDecimal totaleImponibile = new BigDecimal(0);
+
+                Set<DdtArticolo> ddtArticoliByIva = entry.getValue();
+                for(DdtArticolo ddtArticoloByIva : ddtArticoliByIva){
+                    BigDecimal prezzo = ddtArticoloByIva.getPrezzo();
+                    if(prezzo != null){
+                        prezzo = prezzo.setScale(2, RoundingMode.HALF_DOWN);
+                    }
+                    BigDecimal sconto = ddtArticoloByIva.getSconto();
+                    if(sconto != null){
+                        sconto = sconto.setScale(2, RoundingMode.HALF_DOWN);
+                    }
+                    BigDecimal imponibile = computeImponibile(ddtArticoloByIva.getQuantita(), prezzo, sconto);
+                    totaleImponibile = totaleImponibile.add(imponibile);
+                }
+                ivaImponibileMap.put(aliquotaIva, totaleImponibile);
+            }
+        }
+        return ivaImponibileMap;
+    }
 }
