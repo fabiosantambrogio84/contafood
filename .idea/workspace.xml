@@ -23,18 +23,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20220428.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaCommercianteTotaleCompletoDataSource.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VDdt.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VDdtLast.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VDdtCustomRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VDdtCustomRepositoryImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VDdtLastRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VDdtRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti_TMP.jrxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/TelefonataController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/TelefonataController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaAccredito.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaReso.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/NotaReso.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/UnitaMisura.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/UnitaMisura.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtAcquistoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtAcquistoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Causale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Causale.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/CausaleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/CausaleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ReportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ReportService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/TelefonataService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jasper" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jrxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,21 +132,23 @@
       <recent name="com.contafood.model.views" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.contafood.repository.views" />
+      <recent name="com.contafood.model.views" />
+      <recent name="com.contafood.model.reports" />
       <recent name="com.contafood.controller" />
       <recent name="com.contafood.service" />
-      <recent name="com.contafood.repository" />
-      <recent name="com.contafood.model" />
-      <recent name="com.contafood.exception" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -560,14 +576,10 @@
       <workItem from="1649320374993" duration="10763000" />
       <workItem from="1649670077639" duration="611000" />
       <workItem from="1650016669163" duration="1823000" />
-      <workItem from="1650353725253" duration="8675000" />
-    </task>
-    <task id="LOCAL-00050" summary="Fix Ricerca Lotti Produzione.lotto film chiusura">
-      <created>1584536711225</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1584536711226</updated>
+      <workItem from="1650353725253" duration="9905000" />
+      <workItem from="1650438808469" duration="2720000" />
+      <workItem from="1651131780201" duration="15382000" />
+      <workItem from="1651217637777" duration="4537000" />
     </task>
     <task id="LOCAL-00051" summary="Add TipoFattura, filter Fattura.tipoFattura">
       <created>1584713337398</created>
@@ -905,7 +917,14 @@
       <option name="project" value="LOCAL" />
       <updated>1649342883463</updated>
     </task>
-    <option name="localTasksCounter" value="99" />
+    <task id="LOCAL-00099" summary="Fix step 32">
+      <created>1650365001782</created>
+      <option name="number" value="00099" />
+      <option name="presentableId" value="LOCAL-00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1650365001782</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -972,18 +991,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java</url>
-          <line>58</line>
+          <line>46</line>
           <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java</url>
-          <line>45</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java</url>
-          <line>172</line>
-          <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/ReportController.java</url>
@@ -992,7 +1001,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/ReportService.java</url>
-          <line>215</line>
+          <line>214</line>
           <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -1004,6 +1013,21 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java</url>
           <line>1531</line>
           <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VDdtCustomRepositoryImpl.java</url>
+          <line>20</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VDdtCustomRepositoryImpl.java</url>
+          <line>101</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/ReportService.java</url>
+          <line>156</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

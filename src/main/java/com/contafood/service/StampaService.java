@@ -933,7 +933,7 @@ public class StampaService {
         return ricevutaPrivatoArticoloDataSources;
     }
 
-    public List<FatturaCommercianteDataSource> getFattureCommercianti(Set<Fattura> inputFatture){
+    private List<FatturaCommercianteDataSource> getFattureCommercianti(Set<Fattura> inputFatture){
         LOGGER.info("Retrieving the list of 'fatture commercianti' for creating pdf file");
 
         List<Fattura> fatture = inputFatture.stream()
@@ -1030,6 +1030,51 @@ public class StampaService {
 
         LOGGER.info("Retrieved {} 'fatture commercianti'", fatturaCommercianteDataSources.size());
         return fatturaCommercianteDataSources;
+    }
+
+    private Map<String, Object> getFattureCommerciantiTotaliCompleti(List<FatturaCommercianteDataSource> fatturaCommercianteDataSources){
+
+        Map<String, Object> result = new HashMap<>();
+
+        Map<Integer, FatturaCommercianteTotaleCompletoDataSource> totaliCompletiMap = new HashMap<>();
+
+        BigDecimal totaleCompleto = BigDecimal.ZERO;
+        List<FatturaCommercianteTotaleCompletoDataSource> fatturaCommercianteTotaleCompletoDataSources = new ArrayList<>();
+
+        if(fatturaCommercianteDataSources != null && !fatturaCommercianteDataSources.isEmpty()){
+            for(FatturaCommercianteDataSource fatturaCommercianteDataSource : fatturaCommercianteDataSources){
+                totaleCompleto = totaleCompleto.add(fatturaCommercianteDataSource.getTotale());
+                List<FatturaCommercianteTotaleDataSource> fatturaCommercianteTotaleDataSources = fatturaCommercianteDataSource.getFatturaCommercianteTotaleDataSources();
+                if(fatturaCommercianteTotaleDataSources != null && !fatturaCommercianteTotaleDataSources.isEmpty()){
+                    for(FatturaCommercianteTotaleDataSource fatturaCommercianteTotaleDataSource : fatturaCommercianteTotaleDataSources){
+                        FatturaCommercianteTotaleCompletoDataSource fatturaCommercianteTotaleCompletoDataSource;
+                        Integer iva = fatturaCommercianteTotaleDataSource.getIva();
+                        BigDecimal imponibile = fatturaCommercianteTotaleDataSource.getImponibile();
+                        BigDecimal imposta = fatturaCommercianteTotaleDataSource.getImposta();
+                        if(totaliCompletiMap.containsKey(iva)){
+                            fatturaCommercianteTotaleCompletoDataSource = totaliCompletiMap.get(iva);
+                            fatturaCommercianteTotaleCompletoDataSource.setTotaleImponibile(fatturaCommercianteTotaleCompletoDataSource.getTotaleImponibile().add(imponibile));
+                            fatturaCommercianteTotaleCompletoDataSource.setTotaleIva(fatturaCommercianteTotaleCompletoDataSource.getTotaleIva().add(imposta));
+                        } else {
+                            fatturaCommercianteTotaleCompletoDataSource = new FatturaCommercianteTotaleCompletoDataSource();
+                            fatturaCommercianteTotaleCompletoDataSource.setAliquotaIva(iva);
+                            fatturaCommercianteTotaleCompletoDataSource.setTotaleImponibile(imponibile);
+                            fatturaCommercianteTotaleCompletoDataSource.setTotaleIva(imposta);
+                        }
+                        totaliCompletiMap.put(iva, fatturaCommercianteTotaleCompletoDataSource);
+                    }
+                }
+            }
+        }
+        if(!totaliCompletiMap.isEmpty()){
+            for(Integer key : totaliCompletiMap.keySet()){
+                fatturaCommercianteTotaleCompletoDataSources.add(totaliCompletiMap.get(key));
+            }
+        }
+
+        result.put("totaleCompleto", totaleCompleto);
+        result.put("fatturaTotaliCompletiCollection", fatturaCommercianteTotaleCompletoDataSources);
+        return result;
     }
 
     public OrdineFornitore getOrdineFornitore(Long idOrdineFornitore){
@@ -1455,11 +1500,16 @@ public class StampaService {
         // retrieve the list of FatturaCommercianti
         List<FatturaCommercianteDataSource> fatturaCommercianteDataSource = getFattureCommercianti(fatture);
 
+        Map<String, Object> totaliCompleti = getFattureCommerciantiTotaliCompleti(fatturaCommercianteDataSource);
+
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_FATTURE_COMMERCIANTI);
 
         // create report datasource
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(fatturaCommercianteDataSource);
+
+        // create report datasource for FatturaTotaliCompleti
+        JRBeanCollectionDataSource fatturaTotaliCompletiCollectionDataSource = new JRBeanCollectionDataSource((List<FatturaCommercianteTotaleCompletoDataSource>)totaliCompleti.get("fatturaTotaliCompletiCollection"));
 
         // create report parameters
         Map<String, Object> parameters = createParameters();
@@ -1467,7 +1517,9 @@ public class StampaService {
         // add data to parameters
         parameters.put("from", from);
         parameters.put("to", to);
+        parameters.put("totaleCompleto", totaliCompleti.get("totaleCompleto"));
         parameters.put("fatturaCommercianteCollection", dataSource);
+        parameters.put("fatturaTotaliCompletiCollection", fatturaTotaliCompletiCollectionDataSource);
 
         // create report
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());

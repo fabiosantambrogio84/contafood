@@ -18,7 +18,7 @@ import java.util.Set;
 @Service
 public class CausaleService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(CausaleService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CausaleService.class);
 
     private final CausaleRepository causaleRepository;
 
@@ -58,7 +58,7 @@ public class CausaleService {
         LOGGER.info("Updating 'causale'");
         Causale currentCausale = causaleRepository.findById(causale.getId()).orElseThrow(ResourceNotFoundException::new);
         Optional<Causale> optionalCausale = causaleRepository.findByDescrizione(causale.getDescrizione());
-        if(optionalCausale.isPresent()){
+        if(optionalCausale.isPresent() && !optionalCausale.get().getId().equals(causale.getId())){
             throw new ResourceAlreadyExistingException(Resource.CAUSALE);
         }
         causale.setDataInserimento(currentCausale.getDataInserimento());

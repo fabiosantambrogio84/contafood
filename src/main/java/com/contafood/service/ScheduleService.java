@@ -1,15 +1,16 @@
 package com.contafood.service;
 
-import com.contafood.model.*;
+import com.contafood.model.GiacenzaArticolo;
+import com.contafood.model.GiacenzaIngrediente;
+import com.contafood.model.OrdineCliente;
+import com.contafood.model.Sconto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,18 +24,15 @@ public class ScheduleService {
     private final OrdineClienteService ordineClienteService;
     private final GiacenzaArticoloService giacenzaArticoloService;
     private final GiacenzaIngredienteService giacenzaIngredienteService;
-    private final TelefonataService telefonataService;
 
     public ScheduleService(final ScontoService scontoService,
                            final OrdineClienteService ordineClienteService,
                            final GiacenzaArticoloService giacenzaArticoloService,
-                           final GiacenzaIngredienteService giacenzaIngredienteService,
-                           final TelefonataService telefonataService){
+                           final GiacenzaIngredienteService giacenzaIngredienteService){
         this.scontoService = scontoService;
         this.ordineClienteService = ordineClienteService;
         this.giacenzaArticoloService = giacenzaArticoloService;
         this.giacenzaIngredienteService = giacenzaIngredienteService;
-        this.telefonataService = telefonataService;
     }
 
     @Scheduled(cron = "0 50 17 * * ?")
@@ -78,6 +76,7 @@ public class ScheduleService {
         LOGGER.info("Executed remove of expired and zero Giacenze");
     }
 
+    /*
     @Scheduled(cron = "0 35 17 * * ?")
     public void deleteExpiredTelefonate(){
         LOGGER.info("Executing remove of expired Telefonate");
@@ -91,5 +90,6 @@ public class ScheduleService {
         }
         LOGGER.info("Executed remove of expired Telefonate");
     }
+    */
 
 }

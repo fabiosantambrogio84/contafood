@@ -112,31 +112,33 @@
 	<pageHeader>
 		<band height="78" splitType="Stretch">
 			<image>
-				<reportElement x="0" y="0" width="50" height="50" uuid="bb69aea0-5bb8-4d20-87d4-704c4ac37b1f"/>
+				<reportElement x="0" y="6" width="50" height="50" uuid="bb69aea0-5bb8-4d20-87d4-704c4ac37b1f"/>
 				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
 			</image>
 			<image>
-				<reportElement x="504" y="0" width="50" height="40" uuid="595dc3b5-150a-408b-8458-93801329340d"/>
+				<reportElement x="504" y="6" width="50" height="40" uuid="595dc3b5-150a-408b-8458-93801329340d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<imageExpression><![CDATA[$P{bollino}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="90" y="0" width="160" height="20" uuid="a414342e-ae91-47eb-84bd-b1c7089fe521"/>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="12" isBold="true" isItalic="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Urbani Giuseppe]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="250" y="0" width="220" height="20" uuid="3960cf9c-8bfc-4ba7-ac7a-b6087857e3b8"/>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="12" isBold="true" isItalic="false" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[pasta fresca - gastronomia]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="110" y="20" width="310" height="14" uuid="2c2a24e9-c6da-4477-9b96-6f9383a66d98"/>
-				<textElement textAlignment="Center">
-					<font size="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[37035 SAN GIOVANNI ILARIONE / VR - Via 11 Settembre, 17]]></text>
 			</staticText>
@@ -144,8 +146,8 @@
 				<reportElement x="195" y="36" width="164" height="14" uuid="afe523ea-c3db-45c1-ae10-d04e2be00110">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Cod. Fisc. RBNGPP56A14L551I]]></text>
 			</staticText>
@@ -153,8 +155,8 @@
 				<reportElement x="70" y="36" width="124" height="14" uuid="4461cc11-344e-4b43-8364-87b979562532">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[P.Iva 02471520243]]></text>
 			</staticText>
@@ -162,8 +164,8 @@
 				<reportElement x="359" y="36" width="92" height="14" uuid="e6074144-46ca-46e0-b9a8-dc117cceea44">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[REA VR 373577]]></text>
 			</staticText>
@@ -171,8 +173,8 @@
 				<reportElement x="150" y="50" width="114" height="14" uuid="3326e1f3-5f01-4d29-aa0c-cf02cd71c586">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Tel: 045 6550993]]></text>
 			</staticText>
@@ -180,8 +182,8 @@
 				<reportElement x="264" y="50" width="118" height="14" uuid="98bb01d5-94bb-4591-94da-789ab8459c87">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="9"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Cell: 328 4694654]]></text>
 			</staticText>
@@ -189,8 +191,8 @@
 				<reportElement x="30" y="64" width="170" height="14" uuid="3cbb33ad-5d4d-44d1-8c44-bdbf826ad948">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left">
-					<font size="9"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Website www.urbanialimentari.com]]></text>
 			</staticText>
@@ -198,8 +200,8 @@
 				<reportElement x="200" y="64" width="168" height="14" uuid="2ada7831-088e-49f3-b89f-0180c2b2fc6d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left">
-					<font size="9"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[E-mail info@urbanialimentari.com]]></text>
 			</staticText>
@@ -207,8 +209,8 @@
 				<reportElement x="369" y="64" width="164" height="14" uuid="539a830a-e622-449f-8c7d-925724b1f3cd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left">
-					<font size="9"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Pec urbanialimentari@legalmail.it]]></text>
 			</staticText>
@@ -228,21 +230,23 @@
 				<textFieldExpression><![CDATA["DDT n. "+$P{ddtTitle}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="100" y="59" width="130" height="20" uuid="826d3cba-e366-4557-98aa-9074cd717f33"/>
+				<reportElement x="51" y="59" width="160" height="20" uuid="826d3cba-e366-4557-98aa-9074cd717f33">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8" isBold="false" isItalic="true"/>
 				</textElement>
 				<text><![CDATA[Luogo di destinazione]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="100" y="79" width="130" height="30" uuid="4b1e194c-4ce7-4b13-a4e6-314a720a7c0a"/>
+				<reportElement x="51" y="79" width="160" height="30" uuid="4b1e194c-4ce7-4b13-a4e6-314a720a7c0a"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{puntoConsegna}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="320" y="59" width="130" height="20" uuid="a4979443-b074-4014-8a80-57fa08057b5c">
+				<reportElement x="340" y="60" width="160" height="20" uuid="a4979443-b074-4014-8a80-57fa08057b5c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -250,10 +254,10 @@
 				<textElement>
 					<font size="8" isBold="false" isItalic="true"/>
 				</textElement>
-				<text><![CDATA[Destinatario]]></text>
+				<text><![CDATA[Intestazione]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont">
-				<reportElement x="320" y="79" width="130" height="30" uuid="310ff373-6f26-46b3-ae8f-15a8ca68192f">
+				<reportElement x="340" y="79" width="160" height="30" uuid="310ff373-6f26-46b3-ae8f-15a8ca68192f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -825,11 +829,6 @@
 	<pageFooter>
 		<band height="40" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<line>
-				<reportElement x="-20" y="0" width="595" height="1" uuid="ce6cba64-29e9-48a6-86ae-86a69ee52369">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</line>
 			<textField>
 				<reportElement x="174" y="14" width="100" height="17" uuid="80a70d67-1e11-4239-99b9-4f4139f6ffbd"/>
 				<textElement textAlignment="Right"/>

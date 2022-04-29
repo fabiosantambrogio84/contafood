@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
     FileStorageProperties.class,
     AdeExportProperties.class
 })
+@EnableJpaRepositories("com.contafood.repository")
 @EnableScheduling
 public class Application extends SpringBootServletInitializer {
 

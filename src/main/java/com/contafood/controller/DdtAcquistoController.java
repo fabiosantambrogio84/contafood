@@ -1,7 +1,8 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.*;
+import com.contafood.model.DdtAcquisto;
+import com.contafood.model.Fornitore;
 import com.contafood.service.DdtAcquistoService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -9,11 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -27,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/ddts-acquisto")
 public class DdtAcquistoController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(DdtAcquistoController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DdtAcquistoController.class);
 
     private final DdtAcquistoService ddtAcquistoService;
 
@@ -38,7 +34,7 @@ public class DdtAcquistoController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<DdtAcquisto> getAll(@RequestParam(name = "numero", required = false) Integer numero,
+    public Set<DdtAcquisto> getAll(@RequestParam(name = "numero", required = false) String numero,
                                     @RequestParam(name = "fornitore", required = false) String fornitore,
                                     @RequestParam(name = "lotto", required = false) String lotto) {
         LOGGER.info("Performing GET request for retrieving list of 'ddts acquisto'");
@@ -60,14 +56,10 @@ public class DdtAcquistoController {
                 Fornitore ddtAcquistoFornitore = ddtAcquisto.getFornitore();
                 if(ddtAcquistoFornitore != null){
                     if(ddtAcquistoFornitore.getRagioneSociale() != null){
-                        if((ddtAcquistoFornitore.getRagioneSociale().toLowerCase()).contains(fornitore.toLowerCase())){
-                            return true;
-                        }
+                        return (ddtAcquistoFornitore.getRagioneSociale().toLowerCase()).contains(fornitore.toLowerCase());
                     }else {
                         if(ddtAcquistoFornitore.getRagioneSociale2() != null){
-                            if((ddtAcquistoFornitore.getRagioneSociale2().toLowerCase()).contains(fornitore.toLowerCase())){
-                                return true;
-                            }
+                            return (ddtAcquistoFornitore.getRagioneSociale2().toLowerCase()).contains(fornitore.toLowerCase());
                         }
                     }
                 }

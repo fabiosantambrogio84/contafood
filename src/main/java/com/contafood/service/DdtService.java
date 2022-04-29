@@ -3,8 +3,10 @@ package com.contafood.service;
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.views.VDdt;
 import com.contafood.repository.DdtRepository;
 import com.contafood.repository.PagamentoRepository;
+import com.contafood.repository.views.VDdtRepository;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,16 +32,19 @@ public class DdtService {
     private final StatoDdtService statoDdtService;
     private final PagamentoRepository pagamentoRepository;
     private final GiacenzaArticoloService giacenzaArticoloService;
+    private final VDdtRepository vDdtRepository;
 
     @Autowired
     public DdtService(final DdtRepository ddtRepository, final DdtArticoloService ddtArticoloService,
                       final StatoDdtService statoDdtService, final PagamentoRepository pagamentoRepository,
-                      final GiacenzaArticoloService giacenzaArticoloService){
+                      final GiacenzaArticoloService giacenzaArticoloService,
+                      final VDdtRepository vDdtRepository){
         this.ddtRepository = ddtRepository;
         this.ddtArticoloService = ddtArticoloService;
         this.statoDdtService = statoDdtService;
         this.pagamentoRepository = pagamentoRepository;
         this.giacenzaArticoloService = giacenzaArticoloService;
+        this.vDdtRepository = vDdtRepository;
     }
 
     public Set<Ddt> getAll(){
@@ -52,6 +57,13 @@ public class DdtService {
     public Set<Ddt> getAllByLotto(String lotto){
         LOGGER.info("Retrieving the list of 'ddts' filtered by 'lotto' '{}'", lotto);
         Set<Ddt> ddts = ddtRepository.findAllByLotto(lotto);
+        LOGGER.info("Retrieved {} 'ddts'", ddts.size());
+        return ddts;
+    }
+
+    public List<VDdt> getAllByFilters(Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
+        LOGGER.info("Retrieving the list of 'ddts' filtered by request paramters");
+        List<VDdt> ddts = vDdtRepository.findByFilter(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, fatturato, importo, idTipoPagamento, idArticolo);
         LOGGER.info("Retrieved {} 'ddts'", ddts.size());
         return ddts;
     }

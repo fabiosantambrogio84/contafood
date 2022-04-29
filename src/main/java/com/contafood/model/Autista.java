@@ -35,6 +35,9 @@ public class Autista {
     @JsonIgnore
     private List<Telefonata> telefonate;
 
+    @Transient
+    private boolean predefinito;
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

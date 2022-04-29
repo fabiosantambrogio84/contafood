@@ -1,10 +1,12 @@
 package com.contafood.model;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Data
 @EqualsAndHashCode
 @Entity
 @Table(name = "causale")
@@ -17,43 +19,14 @@ public class Causale {
     @Column(name = "descrizione")
     private String descrizione;
 
+    @Column(name = "predefinito")
+    private Boolean predefinito;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescrizione() {
-        return descrizione;
-    }
-
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
-
-    public Timestamp getDataInserimento() {
-        return dataInserimento;
-    }
-
-    public void setDataInserimento(Timestamp dataInserimento) {
-        this.dataInserimento = dataInserimento;
-    }
-
-    public Timestamp getDataAggiornamento() {
-        return dataAggiornamento;
-    }
-
-    public void setDataAggiornamento(Timestamp dataAggiornamento) {
-        this.dataAggiornamento = dataAggiornamento;
-    }
 
     @Override
     public String toString() {
@@ -62,6 +35,7 @@ public class Causale {
         result.append("{");
         result.append("id: " + id);
         result.append(", descrizione: " + descrizione);
+        result.append(", predefinito: " + predefinito);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

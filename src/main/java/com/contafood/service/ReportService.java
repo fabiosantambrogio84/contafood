@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import javax.mail.Session;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Date;
@@ -26,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 @Service
 public class ReportService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportService.class);
 
     private final FatturaService fatturaService;
     private final StampaService stampaService;
@@ -34,7 +33,7 @@ public class ReportService {
     private final EmailPecService emailPecService;
     private final AsyncExecutor asyncExecutor;
 
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
     @Autowired
     public ReportService(final FatturaService fatturaService,
@@ -51,7 +50,7 @@ public class ReportService {
     }
 
     private Set<Fattura> getFatture(Date dataDa, Date dataA, String numeroDa, String numeroA, String modalitaInvioFatture){
-        Set<Fattura> fatture = new HashSet<>();
+        Set<Fattura> fatture;
 
         Integer numeroFrom = null;
         Integer annoFrom = null;
@@ -91,7 +90,7 @@ public class ReportService {
             }
             byte[] pdfContent = null;
 
-            String replacePlaceholder = "";
+            String replacePlaceholder;
             if(dataDa != null && dataA != null){
                 replacePlaceholder = sdf.format(dataDa) + "_" + sdf.format(dataA);
             } else {
@@ -152,9 +151,9 @@ public class ReportService {
             String pdfFileName = "Fatture_commercianti_##.pdf";
             byte[] pdfContent = null;
 
-            String replacePlaceholder = "";
-            String from = "";
-            String to = "";
+            String replacePlaceholder;
+            String from;
+            String to;
             if(dataDa != null && dataA != null){
                 replacePlaceholder = sdf.format(dataDa) + "_" + sdf.format(dataA);
                 sdf.applyPattern("dd/MM/YYYY");
@@ -204,7 +203,7 @@ public class ReportService {
             }
             fatture = getFatture(dataDa, dataA, numeroDa, numeroA, modalitaInvioFatture);
 
-            String replacePlaceholder = "";
+            String replacePlaceholder;
             if (dataDa != null && dataA != null) {
                 replacePlaceholder = sdf.format(dataDa) + "_" + sdf.format(dataA);
             } else {
@@ -277,7 +276,7 @@ public class ReportService {
         PdfCopy writer = null;
 
         // sort FatturaFile list by fileName
-        Collections.sort(fatturaFiles, (f1, f2) -> f1.fileName.compareToIgnoreCase(f2.fileName));
+        fatturaFiles.sort((f1, f2) -> f1.fileName.compareToIgnoreCase(f2.fileName));
 
         for(FatturaFile fatturaFile : fatturaFiles){
             try {
