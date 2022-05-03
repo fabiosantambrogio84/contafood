@@ -1,4 +1,4 @@
-ALTER TABLE contafood.causale ADD COLUMN default bit(1) NOT NULL DEFAULT b'0' after descrizione;
+ALTER TABLE contafood.causale ADD COLUMN predefinito bit(1) NOT NULL DEFAULT b'0' after descrizione;
 
 update contafood.causale set predefinito=1 where lower(descrizione)='reso merce';
 

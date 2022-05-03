@@ -23,32 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20220428.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaCommercianteTotaleCompletoDataSource.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VDdt.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VDdtLast.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VDdtCustomRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VDdtCustomRepositoryImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VDdtLastRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VDdtRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti_TMP.jrxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtAcquistoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtAcquistoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Autista.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Causale.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Causale.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AutistaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/CausaleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/CausaleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ReportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ReportService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql-scripts/20220428.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql-scripts/20220428.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jasper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/ddt.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jrxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,19 +117,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="contafood [clean,install,-U]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -579,14 +543,10 @@
       <workItem from="1650353725253" duration="9905000" />
       <workItem from="1650438808469" duration="2720000" />
       <workItem from="1651131780201" duration="15382000" />
-      <workItem from="1651217637777" duration="4537000" />
-    </task>
-    <task id="LOCAL-00051" summary="Add TipoFattura, filter Fattura.tipoFattura">
-      <created>1584713337398</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1584713337399</updated>
+      <workItem from="1651217637777" duration="4702000" />
+      <workItem from="1651226224341" duration="943000" />
+      <workItem from="1651487718573" duration="1194000" />
+      <workItem from="1651568498044" duration="1125000" />
     </task>
     <task id="LOCAL-00052" summary="Add controller,repository,service for FatturaAccompagnatoria">
       <created>1584979536998</created>
@@ -924,7 +884,14 @@
       <option name="project" value="LOCAL" />
       <updated>1650365001782</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="Step 33">
+      <created>1651226132069</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1651226132070</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -949,7 +916,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix delete Ddt with DdtArticoloOrdineCliente. Fix Serializable" />
     <MESSAGE value="Add logic for managing giacenze" />
     <MESSAGE value="Fix bugs on Giacenza" />
     <MESSAGE value="Add GiacenzaIngrediente" />
@@ -974,7 +940,8 @@
     <MESSAGE value="Fix step 29,30,31" />
     <MESSAGE value="Fix decimal places" />
     <MESSAGE value="Fix step 32" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix step 32" />
+    <MESSAGE value="Step 33" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step 33" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -315,6 +315,8 @@ public class StampaService {
                 if(oc.getCliente() != null){
                     if(oc.getCliente().getDittaIndividuale()){
                         cliente = oc.getCliente().getNome() + " " + oc.getCliente().getCognome();
+                    } else if(oc.getCliente().getPrivato()){
+                        cliente = oc.getCliente().getNome() + " " + oc.getCliente().getCognome();
                     } else {
                         cliente = oc.getCliente().getRagioneSociale();
                     }
