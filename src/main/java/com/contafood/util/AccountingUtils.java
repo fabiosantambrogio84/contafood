@@ -118,6 +118,8 @@ public class AccountingUtils {
 
                 Set<DdtArticolo> ddtArticoliByIva = entry.getValue();
                 for(DdtArticolo ddtArticoloByIva : ddtArticoliByIva){
+                    BigDecimal imponibile = ddtArticoloByIva.getImponibile();
+                    /*
                     BigDecimal prezzo = ddtArticoloByIva.getPrezzo();
                     if(prezzo != null){
                         prezzo = prezzo.setScale(2, RoundingMode.HALF_DOWN);
@@ -127,6 +129,7 @@ public class AccountingUtils {
                         sconto = sconto.setScale(2, RoundingMode.HALF_DOWN);
                     }
                     BigDecimal imponibile = computeImponibile(ddtArticoloByIva.getQuantita(), prezzo, sconto);
+                    */
                     totaleImponibile = totaleImponibile.add(imponibile);
                 }
                 ivaImponibileMap.put(aliquotaIva, totaleImponibile);

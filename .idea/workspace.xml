@@ -23,9 +23,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20220518.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VPagamento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VPagamentoCustomRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VPagamentoCustomRepositoryImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VPagamentoRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/TargetSettingsBean.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/TargetSettingsDay.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/TargetSettingsDayAssigned.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/TargetSettingsStore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Temp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql-scripts/20220428.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql-scripts/20220428.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/PagamentoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/PagamentoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/exception/ResourceAlreadyExistingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/exception/ResourceAlreadyExistingException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/BancaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/BancaRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/BancaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/BancaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +104,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/sql-scripts" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/contafood/xTemp" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
@@ -95,11 +113,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Overdata\IdeaProjects\contafood\src\main\java\com\contafood\xTemp" />
       <recent name="C:\Users\Overdata\IdeaProjects\contafood\sql-scripts" />
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\sql-scripts" />
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\src\main\resources\reports" />
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\src\main\resources\sql" />
-      <recent name="$PROJECT_DIR$/src/main/resources/sql" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.contafood.util" />
@@ -110,13 +128,39 @@
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.contafood.repository.views" />
+      <recent name="com.contafood.repository.custom" />
       <recent name="com.contafood.model.views" />
       <recent name="com.contafood.model.reports" />
       <recent name="com.contafood.controller" />
-      <recent name="com.contafood.service" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
+    <configuration name="TargetSettingsBean" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.contafood.xTemp.TargetSettingsBean" />
+      <module name="contafood" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.contafood.xTemp.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Temp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.contafood.xTemp.Temp" />
+      <module name="contafood" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.contafood.xTemp.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="contafood [clean,install,-U]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -210,11 +254,19 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Application.Temp" />
+      <item itemvalue="Application.TargetSettingsBean" />
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Maven.contafood [clean,install,-U]" />
       <item itemvalue="Remote JVM Debug.Contafood-remote" />
       <item itemvalue="Spring Boot.Application" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.TargetSettingsBean" />
+        <item itemvalue="Application.Temp" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -546,14 +598,17 @@
       <workItem from="1651217637777" duration="4702000" />
       <workItem from="1651226224341" duration="943000" />
       <workItem from="1651487718573" duration="1194000" />
-      <workItem from="1651568498044" duration="1125000" />
-    </task>
-    <task id="LOCAL-00052" summary="Add controller,repository,service for FatturaAccompagnatoria">
-      <created>1584979536998</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1584979536999</updated>
+      <workItem from="1651568498044" duration="2673000" />
+      <workItem from="1651657126129" duration="1814000" />
+      <workItem from="1651926058334" duration="2974000" />
+      <workItem from="1652104970905" duration="4000" />
+      <workItem from="1652108941220" duration="74000" />
+      <workItem from="1652171290575" duration="597000" />
+      <workItem from="1652448662577" duration="972000" />
+      <workItem from="1652707094780" duration="614000" />
+      <workItem from="1652859359589" duration="9878000" />
+      <workItem from="1652969429138" duration="810000" />
+      <workItem from="1653032449320" duration="2628000" />
     </task>
     <task id="LOCAL-00053" summary="Add FatturaAccompagnatoria">
       <created>1585063885457</created>
@@ -891,7 +946,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651226132070</updated>
     </task>
-    <option name="localTasksCounter" value="101" />
+    <task id="LOCAL-00101" summary="Fix step 33">
+      <created>1651581505848</created>
+      <option name="number" value="00101" />
+      <option name="presentableId" value="LOCAL-00101" />
+      <option name="project" value="LOCAL" />
+      <updated>1651581505848</updated>
+    </task>
+    <option name="localTasksCounter" value="102" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -916,7 +978,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add logic for managing giacenze" />
     <MESSAGE value="Fix bugs on Giacenza" />
     <MESSAGE value="Add GiacenzaIngrediente" />
     <MESSAGE value="Add GiacenzaIngrediente, fix bugs" />
@@ -941,7 +1002,8 @@
     <MESSAGE value="Fix decimal places" />
     <MESSAGE value="Fix step 32" />
     <MESSAGE value="Step 33" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 33" />
+    <MESSAGE value="Fix step 33" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix step 33" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -950,11 +1012,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtAcquistoService.java</url>
           <line>67</line>
           <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java</url>
-          <line>131</line>
-          <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java</url>
@@ -982,19 +1039,39 @@
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VDdtCustomRepositoryImpl.java</url>
-          <line>20</line>
-          <option name="timeStamp" value="19" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VDdtCustomRepositoryImpl.java</url>
-          <line>101</line>
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/ReportService.java</url>
           <line>156</line>
           <option name="timeStamp" value="21" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/ClienteController.java</url>
+          <line>90</line>
+          <option name="timeStamp" value="22" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java</url>
+          <line>86</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java</url>
+          <line>137</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java</url>
+          <line>101</line>
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java</url>
+          <line>190</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java</url>
+          <line>230</line>
+          <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

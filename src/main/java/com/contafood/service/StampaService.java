@@ -236,8 +236,10 @@ public class StampaService {
 
         List<DdtDataSource> ddtDataSources = new ArrayList<>();
 
+        List<String> idsAsList = Arrays.asList(ids.split(","));
+
         List<Ddt> ddts = ddtService.getAll().stream()
-                .filter(ddt -> ids.contains(ddt.getId().toString()))
+                .filter(ddt -> idsAsList.contains(ddt.getId().toString()))
                 .sorted(Comparator.comparing(Ddt::getProgressivo).reversed())
                 .collect(Collectors.toList());
 
@@ -447,8 +449,10 @@ public class StampaService {
 
         List<NotaAccreditoDataSource> notaAccreditoDataSources = new ArrayList<>();
 
+        List<String> idsAsList = Arrays.asList(ids.split(","));
+
         List<NotaAccredito> noteAccredito = notaAccreditoService.getAll().stream()
-                .filter(notaAccredito -> ids.contains(notaAccredito.getId().toString()))
+                .filter(notaAccredito -> idsAsList.contains(notaAccredito.getId().toString()))
                 .sorted(Comparator.comparing(NotaAccredito::getProgressivo).reversed())
                 .collect(Collectors.toList());
 
@@ -484,8 +488,10 @@ public class StampaService {
 
         List<FatturaDataSource> fatturaDataSources = new ArrayList<>();
 
+        List<String> idsAsList = Arrays.asList(ids.split(","));
+
         List<VFattura> fatture = fatturaService.getAll().stream()
-                .filter(fattura -> ids.contains(fattura.getId().toString()))
+                .filter(fattura -> idsAsList.contains(fattura.getId().toString()))
                 .sorted(Comparator.comparing(VFattura::getProgressivo).reversed())
                 .collect(Collectors.toList());
 
@@ -496,11 +502,7 @@ public class StampaService {
                 fatturaDataSource.setData(simpleDateFormat.format(fattura.getData()));
                 Cliente cliente = fattura.getCliente();
                 if(cliente != null){
-                    if(!cliente.getDittaIndividuale()){
-                        fatturaDataSource.setClienteDescrizione(cliente.getRagioneSociale());
-                    } else {
-                        fatturaDataSource.setClienteDescrizione(cliente.getNome()+" "+cliente.getCognome());
-                    }
+                    fatturaDataSource.setClienteDescrizione(cliente.getRagioneSociale());
                 }
                 BigDecimal totaleAcconto = fattura.getTotaleAcconto() != null ? fattura.getTotaleAcconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
                 BigDecimal totale = fattura.getTotale() != null ? fattura.getTotale().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
@@ -691,7 +693,7 @@ public class StampaService {
                             BigDecimal sconto = da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
                             fatturaRigaDataSource.setPrezzo(prezzo);
                             fatturaRigaDataSource.setSconto(sconto);
-                            fatturaRigaDataSource.setImponibile(AccountingUtils.computeImponibile(da.getQuantita(), prezzo, sconto));
+                            fatturaRigaDataSource.setImponibile(da.getImponibile());
 
                             fatturaRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
 
@@ -711,46 +713,16 @@ public class StampaService {
     public List<FatturaTotaleDataSource> getFatturaTotaliDataSource(Fattura fattura){
         List<FatturaTotaleDataSource> fatturaTotaleDataSources = new ArrayList<>();
 
-        // get all AliquotaIva
-        Map<AliquotaIva, Set<DdtArticolo>> ivaDdtArticoliMap = new HashMap<>();
-        Set<AliquotaIva> aliquoteIva = aliquotaIvaService.getAll();
-        for(AliquotaIva aliquotaIva : aliquoteIva){
-            ivaDdtArticoliMap.putIfAbsent(aliquotaIva, new HashSet<>());
-        }
+        Map<AliquotaIva, BigDecimal> imponibiliByIva = AccountingUtils.createFatturaTotaliImponibiliByIva(fattura);
 
-        // create a map with the list of DdtArticoli grouped by AliquotaIva
-        Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
-        if(fatturaDdts != null && !fatturaDdts.isEmpty()){
-            for(FatturaDdt fatturaDdt : fatturaDdts){
-                Ddt ddt = fatturaDdt.getDdt();
-                if(ddt != null){
-                    if(ddt.getDdtArticoli() != null && !ddt.getDdtArticoli().isEmpty()){
-                        for(DdtArticolo ddtArticolo : ddt.getDdtArticoli()){
-                            AliquotaIva aliquotaIva = ddtArticolo.getArticolo().getAliquotaIva();
-                            Set<DdtArticolo> ddtArticoli = ivaDdtArticoliMap.get(aliquotaIva);
-                            ddtArticoli.add(ddtArticolo);
-                            ivaDdtArticoliMap.put(aliquotaIva, ddtArticoli);
-                        }
-                    }
-                }
-            }
-        }
-
-        for (Map.Entry<AliquotaIva, Set<DdtArticolo>> entry : ivaDdtArticoliMap.entrySet()) {
-            BigDecimal iva = entry.getKey().getValore();
-            BigDecimal totaleImponibile = BigDecimal.ZERO;
-            BigDecimal totaleIva = BigDecimal.ZERO;
-
-            for(DdtArticolo ddtArticolo : entry.getValue()){
-                BigDecimal imponibile = ddtArticolo.getImponibile() != null ? ddtArticolo.getImponibile() : BigDecimal.ZERO;
-                BigDecimal ddtArticoloIva = ddtArticolo.getImponibile() != null ? (imponibile.multiply(iva.divide(new BigDecimal(100)))) : BigDecimal.ZERO;
-                totaleImponibile = totaleImponibile.add(imponibile);
-                totaleIva = totaleIva.add(ddtArticoloIva);
-            }
+        for(AliquotaIva aliquotaIva : imponibiliByIva.keySet()){
+            BigDecimal ivaValore = aliquotaIva.getValore();
+            BigDecimal imponibile = imponibiliByIva.get(aliquotaIva);
+            BigDecimal totaleIva = imponibile.multiply(ivaValore.divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_DOWN)).setScale(2, RoundingMode.HALF_DOWN);
 
             FatturaTotaleDataSource fatturaTotaleDataSource = new FatturaTotaleDataSource();
-            fatturaTotaleDataSource.setAliquotaIva(iva.intValue());
-            fatturaTotaleDataSource.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
+            fatturaTotaleDataSource.setAliquotaIva(ivaValore.intValue());
+            fatturaTotaleDataSource.setTotaleImponibile(imponibile);
             fatturaTotaleDataSource.setTotaleIva(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
 
             fatturaTotaleDataSources.add(fatturaTotaleDataSource);

@@ -3,7 +3,9 @@ package com.contafood.service;
 import com.contafood.exception.PagamentoExceedingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.views.VPagamento;
 import com.contafood.repository.*;
+import com.contafood.repository.views.VPagamentoRepository;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class PagamentoService {
     private final StatoNotaResoService statoNotaResoService;
     private final StatoRicevutaPrivatoService statoRicevutaPrivatoService;
     private final StatoFatturaService statoFatturaService;
+    private final VPagamentoRepository vPagamentoRepository;
 
     @Autowired
     public PagamentoService(final PagamentoRepository pagamentoRepository,
@@ -49,7 +53,8 @@ public class PagamentoService {
                             final StatoNotaAccreditoService statoNotaAccreditoService,
                             final StatoNotaResoService statoNotaResoService,
                             final StatoRicevutaPrivatoService statoRicevutaPrivatoService,
-                            final StatoFatturaService statoFatturaService){
+                            final StatoFatturaService statoFatturaService,
+                            final VPagamentoRepository vPagamentoRepository){
         this.pagamentoRepository = pagamentoRepository;
         this.ddtRepository = ddtRepository;
         this.notaAccreditoRepository = notaAccreditoRepository;
@@ -62,11 +67,19 @@ public class PagamentoService {
         this.statoNotaResoService = statoNotaResoService;
         this.statoRicevutaPrivatoService = statoRicevutaPrivatoService;
         this.statoFatturaService = statoFatturaService;
+        this.vPagamentoRepository = vPagamentoRepository;
     }
 
     public Set<Pagamento> getPagamenti(){
         LOGGER.info("Retrieving 'pagamenti'");
         Set<Pagamento> pagamenti = pagamentoRepository.findAllByOrderByDataDesc();
+        LOGGER.info("Retrieved {} 'pagamenti'", pagamenti.size());
+        return pagamenti;
+    }
+
+    public List<VPagamento> getAllByFilters(String tipologia, Date dataDa, Date dataA, String cliente, String fornitore, Float importo){
+        LOGGER.info("Retrieving the list of 'pagamenti' filtered by request paramters");
+        List<VPagamento> pagamenti = vPagamentoRepository.findByFilter(tipologia, dataDa, dataA, cliente, fornitore, importo);
         LOGGER.info("Retrieved {} 'pagamenti'", pagamenti.size());
         return pagamenti;
     }

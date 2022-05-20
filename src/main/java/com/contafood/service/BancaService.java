@@ -1,8 +1,10 @@
 package com.contafood.service;
 
+import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Banca;
 import com.contafood.repository.BancaRepository;
+import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BancaService {
@@ -44,6 +47,10 @@ public class BancaService {
     public Banca create(Banca banca){
         LOGGER.info("Creating 'banca'");
         banca.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        Optional<Banca> bancaByAbiAndCab = bancaRepository.findByAbiEqualsAndCabEquals(banca.getAbi(), banca.getCab());
+        if(bancaByAbiAndCab.isPresent()){
+            throw new ResourceAlreadyExistingException(Resource.BANCA, banca.getAbi(), banca.getCab());
+        }
         Banca createdBanca = bancaRepository.save(banca);
         LOGGER.info("Created 'banca' '{}'", createdBanca);
         return createdBanca;
@@ -53,6 +60,10 @@ public class BancaService {
         LOGGER.info("Updating 'banca'");
         Banca currentBanca = bancaRepository.findById(banca.getId()).orElseThrow(ResourceNotFoundException::new);
         banca.setDataInserimento(currentBanca.getDataInserimento());
+        Optional<Banca> bancaByAbiAndCab = bancaRepository.findByAbiEqualsAndCabEquals(banca.getAbi(), banca.getCab());
+        if(bancaByAbiAndCab.isPresent() && !bancaByAbiAndCab.get().getId().equals(banca.getId())){
+            throw new ResourceAlreadyExistingException(Resource.BANCA, banca.getAbi(), banca.getCab());
+        }
         Banca updatedBanca = bancaRepository.save(banca);
         LOGGER.info("Updated 'banca' '{}'", updatedBanca);
         return updatedBanca;

@@ -1563,13 +1563,13 @@ public class AdeService {
                 if(imponibile != null){
 
                     // Calcolo l'imposta 
-                    imposta = imponibile.multiply(iva.divide(new BigDecimal(100)).setScale(2, 4)).setScale(2, 0);
+                    imposta = imponibile.multiply(iva.divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_DOWN)).setScale(2, RoundingMode.HALF_DOWN);
 
                     if(imponibile != null){
-                        imp_s = imponibile.toString();
-                        if(imp_s.endsWith("0")){
-                            imp_s = StringUtils.substringBeforeLast(imp_s, "0");
-                        }
+                        imp_s = imponibile.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                        //if(imp_s.endsWith("0")){
+                        //    imp_s = StringUtils.substringBeforeLast(imp_s, "0");
+                        //}
                     }
                 }
                 xmlStreamWriter.writeCharacters(imp_s);

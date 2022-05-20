@@ -2,6 +2,7 @@ package com.contafood.util.enumeration;
 
 public enum Resource {
 
+    BANCA("banca"),
     CAUSALE("causale"),
     CLIENTE("cliente"),
     DDT("ddt"),
