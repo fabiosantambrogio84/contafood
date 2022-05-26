@@ -2,6 +2,7 @@ package com.contafood.service;
 
 import com.contafood.model.*;
 import com.contafood.model.reports.*;
+import com.contafood.model.views.VDdt;
 import com.contafood.model.views.VFattura;
 import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.util.AccountingUtils;
@@ -231,31 +232,20 @@ public class StampaService {
         return ddtArticoloDataSources;
     }
 
-    public List<DdtDataSource> getDdtDataSources(String ids){
-        LOGGER.info("Retrieving the list of 'ddts' with id in '{}' for creating pdf file", ids);
+    public List<DdtDataSource> getDdtDataSources(java.sql.Date dataDa, java.sql.Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
+        LOGGER.info("Retrieving the list of 'ddts' for creating pdf file");
 
         List<DdtDataSource> ddtDataSources = new ArrayList<>();
 
-        List<String> idsAsList = Arrays.asList(ids.split(","));
-
-        List<Ddt> ddts = ddtService.getAll().stream()
-                .filter(ddt -> idsAsList.contains(ddt.getId().toString()))
-                .sorted(Comparator.comparing(Ddt::getProgressivo).reversed())
-                .collect(Collectors.toList());
+        List<VDdt> ddts = ddtService.getAllByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, fatturato, importo, idTipoPagamento, idArticolo);
 
         if(!ddts.isEmpty()){
             ddts.forEach(ddt -> {
                 DdtDataSource ddtDataSource = new DdtDataSource();
                 ddtDataSource.setNumero(ddt.getProgressivo().toString());
                 ddtDataSource.setData(simpleDateFormat.format(ddt.getData()));
-                Cliente cliente = ddt.getCliente();
-                if(cliente != null){
-                    if(!cliente.getDittaIndividuale()){
-                        ddtDataSource.setClienteDescrizione(cliente.getRagioneSociale());
-                    } else {
-                        ddtDataSource.setClienteDescrizione(cliente.getNome()+" "+cliente.getCognome());
-                    }
-                }
+                ddtDataSource.setClienteDescrizione(ddt.getCliente());
+
                 BigDecimal totaleAcconto = ddt.getTotaleAcconto() != null ? ddt.getTotaleAcconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
                 BigDecimal totale = ddt.getTotale() != null ? ddt.getTotale().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
                 ddtDataSource.setAcconto(totaleAcconto);
@@ -483,16 +473,13 @@ public class StampaService {
         return notaAccreditoDataSources;
     }
 
-    public List<FatturaDataSource> getFatturaDataSources(String ids){
-        LOGGER.info("Retrieving the list of 'fatture' with id in '{}' for creating pdf file", ids);
+    public List<FatturaDataSource> getFatturaDataSources(java.sql.Date dataDa, java.sql.Date dataA, Integer progressivo, Float importo, String idTipoPagamento, String cliente, Integer idAgente, Integer idArticolo, Integer idStato, Integer idTipo){
+        LOGGER.info("Retrieving the list of 'fatture' for creating pdf file");
 
         List<FatturaDataSource> fatturaDataSources = new ArrayList<>();
 
-        List<String> idsAsList = Arrays.asList(ids.split(","));
-
-        List<VFattura> fatture = fatturaService.getAll().stream()
-                .filter(fattura -> idsAsList.contains(fattura.getId().toString()))
-                .sorted(Comparator.comparing(VFattura::getProgressivo).reversed())
+        List<VFattura> fatture = fatturaService.search(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo)
+                .stream().sorted(Comparator.comparing(VFattura::getProgressivo).reversed())
                 .collect(Collectors.toList());
 
         if(!fatture.isEmpty()){
@@ -500,9 +487,9 @@ public class StampaService {
                 FatturaDataSource fatturaDataSource = new FatturaDataSource();
                 fatturaDataSource.setNumero(fattura.getProgressivo().toString());
                 fatturaDataSource.setData(simpleDateFormat.format(fattura.getData()));
-                Cliente cliente = fattura.getCliente();
-                if(cliente != null){
-                    fatturaDataSource.setClienteDescrizione(cliente.getRagioneSociale());
+                Cliente clienteFattura = fattura.getCliente();
+                if(clienteFattura != null){
+                    fatturaDataSource.setClienteDescrizione(clienteFattura.getRagioneSociale());
                 }
                 BigDecimal totaleAcconto = fattura.getTotaleAcconto() != null ? fattura.getTotaleAcconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
                 BigDecimal totale = fattura.getTotale() != null ? fattura.getTotale().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
@@ -693,7 +680,7 @@ public class StampaService {
                             BigDecimal sconto = da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
                             fatturaRigaDataSource.setPrezzo(prezzo);
                             fatturaRigaDataSource.setSconto(sconto);
-                            fatturaRigaDataSource.setImponibile(da.getImponibile());
+                            fatturaRigaDataSource.setImponibile(da.getImponibile() != null ? da.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
 
                             fatturaRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
 
@@ -722,7 +709,7 @@ public class StampaService {
 
             FatturaTotaleDataSource fatturaTotaleDataSource = new FatturaTotaleDataSource();
             fatturaTotaleDataSource.setAliquotaIva(ivaValore.intValue());
-            fatturaTotaleDataSource.setTotaleImponibile(imponibile);
+            fatturaTotaleDataSource.setTotaleImponibile(imponibile.setScale(2, RoundingMode.HALF_DOWN));
             fatturaTotaleDataSource.setTotaleIva(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
 
             fatturaTotaleDataSources.add(fatturaTotaleDataSource);
@@ -1259,7 +1246,7 @@ public class StampaService {
         parameters.put("nota", Constants.JASPER_PARAMETER_FATTURA_NOTA);
         parameters.put("totaleImponibile", totaleImponibile);
         parameters.put("totaleIva", totaleIva);
-        parameters.put("fatturaTotDocumento", totaleImponibile.add(totaleIva).setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("fatturaTotDocumento", fattura.getTotale().setScale(2, RoundingMode.HALF_DOWN));
         parameters.put("fatturaCollection", fatturaCollectionDataSource);
         parameters.put("fatturaRigheCollection", fatturaRigheCollectionDataSource);
         parameters.put("fatturaTotaliCollection", fatturaTotaliCollectionDataSource);

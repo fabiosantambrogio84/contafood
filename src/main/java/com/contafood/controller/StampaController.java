@@ -120,11 +120,24 @@ public class StampaController {
 
     @RequestMapping(method = GET, path = "/ddts")
     @CrossOrigin
-    public ResponseEntity<Resource> printDdts(@RequestParam(name = "ids") String ids) throws Exception{
-        LOGGER.info("Creating pdf for 'ddt' with ids {}", ids);
+    public ResponseEntity<Resource> printDdts(@RequestParam(name = "dataDa", required = false) Date dataDa,
+                                              @RequestParam(name = "dataA", required = false) Date dataA,
+                                              @RequestParam(name = "progressivo", required = false) Integer progressivo,
+                                              @RequestParam(name = "importo", required = false) Float importo,
+                                              @RequestParam(name = "tipoPagamento", required = false) Integer idTipoPagamento,
+                                              @RequestParam(name = "cliente", required = false) String cliente,
+                                              @RequestParam(name = "agente", required = false) Integer idAgente,
+                                              @RequestParam(name = "autista", required = false) Integer idAutista,
+                                              @RequestParam(name = "articolo", required = false) Integer idArticolo,
+                                              @RequestParam(name = "stato", required = false) Integer idStato,
+                                              @RequestParam(name = "idCliente", required = false) Integer idCliente,
+                                              @RequestParam(name = "fatturato", required = false) Boolean fatturato) throws Exception{
+        LOGGER.info("Creating pdf for list of 'ddt'");
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, idCliente {}, fatturato {}",
+                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, idCliente, fatturato);
 
         // retrieve the list of Ddt
-        List<DdtDataSource> ddts = stampaService.getDdtDataSources(ids);
+        List<DdtDataSource> ddts = stampaService.getDdtDataSources(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, fatturato, importo, idTipoPagamento, idArticolo);
 
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_DDTS);
@@ -299,11 +312,22 @@ public class StampaController {
 
     @RequestMapping(method = GET, path = "/fatture")
     @CrossOrigin
-    public ResponseEntity<Resource> printFatture(@RequestParam(name = "ids") String ids) throws Exception{
-        LOGGER.info("Creating pdf for 'fatture' with ids {}", ids);
+    public ResponseEntity<Resource> printFatture(@RequestParam(name = "dataDa", required = false) Date dataDa,
+                                                 @RequestParam(name = "dataA", required = false) Date dataA,
+                                                 @RequestParam(name = "progressivo", required = false) Integer progressivo,
+                                                 @RequestParam(name = "importo", required = false) Float importo,
+                                                 @RequestParam(name = "tipoPagamento", required = false) String idTipoPagamento,
+                                                 @RequestParam(name = "cliente", required = false) String cliente,
+                                                 @RequestParam(name = "agente", required = false) Integer idAgente,
+                                                 @RequestParam(name = "articolo", required = false) Integer idArticolo,
+                                                 @RequestParam(name = "stato", required = false) Integer idStato,
+                                                 @RequestParam(name = "tipo", required = false) Integer idTipo) throws Exception{
+        LOGGER.info("Creating pdf for list of 'fatture'");
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
+                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
         // retrieve the list of Fatture
-        List<FatturaDataSource> fatture = stampaService.getFatturaDataSources(ids);
+        List<FatturaDataSource> fatture = stampaService.getFatturaDataSources(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_FATTURE);

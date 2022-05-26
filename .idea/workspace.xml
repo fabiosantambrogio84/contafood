@@ -23,27 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20220518.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VPagamento.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VPagamentoCustomRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VPagamentoCustomRepositoryImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VPagamentoRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/TargetSettingsBean.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/TargetSettingsDay.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/TargetSettingsDayAssigned.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/TargetSettingsStore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Temp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/PagamentoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/PagamentoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/exception/ResourceAlreadyExistingException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/exception/ResourceAlreadyExistingException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/BancaRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/BancaRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/AdeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/BancaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/BancaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FatturaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FatturaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -608,14 +593,9 @@
       <workItem from="1652707094780" duration="614000" />
       <workItem from="1652859359589" duration="9878000" />
       <workItem from="1652969429138" duration="810000" />
-      <workItem from="1653032449320" duration="2628000" />
-    </task>
-    <task id="LOCAL-00053" summary="Add FatturaAccompagnatoria">
-      <created>1585063885457</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1585063885458</updated>
+      <workItem from="1653032449320" duration="3968000" />
+      <workItem from="1653463881377" duration="2057000" />
+      <workItem from="1653547914770" duration="3178000" />
     </task>
     <task id="LOCAL-00054" summary="Add enums, endpoints for StatistichePeriodi e StatisticheOpzioni">
       <created>1585066285257</created>
@@ -953,7 +933,14 @@
       <option name="project" value="LOCAL" />
       <updated>1651581505848</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="Fix step 33 and step 34">
+      <created>1653036908514</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1653036908514</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -978,7 +965,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix bugs on Giacenza" />
     <MESSAGE value="Add GiacenzaIngrediente" />
     <MESSAGE value="Add GiacenzaIngrediente, fix bugs" />
     <MESSAGE value="Add email management" />
@@ -1003,7 +989,8 @@
     <MESSAGE value="Fix step 32" />
     <MESSAGE value="Step 33" />
     <MESSAGE value="Fix step 33" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix step 33" />
+    <MESSAGE value="Fix step 33 and step 34" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix step 33 and step 34" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

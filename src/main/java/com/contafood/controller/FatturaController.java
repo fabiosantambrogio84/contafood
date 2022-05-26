@@ -1,28 +1,29 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.*;
+import com.contafood.model.Fattura;
 import com.contafood.model.views.VFattura;
 import com.contafood.service.FatturaService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(path="/fatture")
 public class FatturaController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(FatturaController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(FatturaController.class);
 
     private final FatturaService fatturaService;
 
@@ -47,124 +48,7 @@ public class FatturaController {
         LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
                 dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
-        List<Long> idTipiPagamento = new ArrayList<>();
-        if(!StringUtils.isEmpty(idTipoPagamento)){
-            Arrays.stream(idTipoPagamento.split(",")).mapToLong(id -> Long.parseLong(id)).forEach(l -> idTipiPagamento.add(l));
-        }
-
-        Predicate<VFattura> isFatturaDataDaGreaterOrEquals = fattura -> {
-            if(dataDa != null){
-                return fattura.getData().compareTo(dataDa)>=0;
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaDataALessOrEquals = fattura -> {
-            if(dataA != null){
-                return fattura.getData().compareTo(dataA)<=0;
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaProgressivoEquals = fattura -> {
-            if(progressivo != null){
-                return fattura.getProgressivo().equals(progressivo);
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaImportoEquals = fattura -> {
-            if(importo != null){
-                LOGGER.info("Importo {} - Fattura totale {} - Fattura totale float {}", importo, fattura.getTotale(), fattura.getTotale().floatValue());
-                if(importo.equals(fattura.getTotale().floatValue())){
-                    return true;
-                } else {
-                    return false;
-                }
-                //return fattura.getTotale().compareTo(new BigDecimal(importo).setScale(2, BigDecimal.ROUND_DOWN))==0;
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaTipoPagamentoEquals = fattura -> {
-            LOGGER.info("Filter by idTipoPagamento '{}'", idTipiPagamento);
-            if(idTipiPagamento != null && !idTipiPagamento.isEmpty()){
-                Cliente fatturaCliente = fattura.getCliente();
-                if(fatturaCliente != null){
-                    TipoPagamento tipoPagamento = fatturaCliente.getTipoPagamento();
-                    if(tipoPagamento != null){
-                        LOGGER.info("Cliente id '{}', TipoPagamento id '{}'", fatturaCliente.getId(), tipoPagamento.getId());
-                        return idTipiPagamento.contains(tipoPagamento.getId());
-                    }
-                }
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaClienteContains = fattura -> {
-            if(cliente != null){
-                Cliente fatturaCliente = fattura.getCliente();
-                if(fatturaCliente != null){
-                    if((fatturaCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase())){
-                        return true;
-                    }
-                }
-                return false;
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaAgenteEquals = fattura -> {
-            if(idAgente != null){
-                Cliente fatturaCliente = fattura.getCliente();
-                if(fatturaCliente != null){
-                    Agente agente = fatturaCliente.getAgente();
-                    if(agente != null){
-                        if(agente.getId().equals(Long.valueOf(idAgente))){
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaDdtArticoloEquals = fattura -> {
-            if(idArticolo != null){
-                Set<DdtArticolo> ddtArticoli = fatturaService.getFatturaDdtArticoli(fattura.getId());
-                if(ddtArticoli != null && !ddtArticoli.isEmpty()){
-                    return ddtArticoli.stream().filter(da -> da.getId() != null).map(da -> da.getId()).filter(daId -> daId.getArticoloId() != null && daId.getArticoloId().equals(Long.valueOf(idArticolo))).findFirst().isPresent();
-                }
-                return false;
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaStatoEquals = fattura -> {
-            if(idStato != null){
-                StatoFattura statoFattura = fattura.getStatoFattura();
-                if(statoFattura != null){
-                    return statoFattura.getId().equals(Long.valueOf(idStato));
-                }
-                return false;
-            }
-            return true;
-        };
-        Predicate<VFattura> isFatturaTipoEquals = fattura -> {
-            if(idTipo != null){
-                TipoFattura tipoFattura = fattura.getTipoFattura();
-                if(tipoFattura != null){
-                    return tipoFattura.getId().equals(Long.valueOf(idTipo));
-                }
-                return false;
-            }
-            return true;
-        };
-
-        Set<VFattura> fatture = fatturaService.getAll();
-        return fatture.stream().filter(isFatturaDataDaGreaterOrEquals
-                .and(isFatturaDataALessOrEquals)
-                .and(isFatturaProgressivoEquals)
-                .and(isFatturaImportoEquals)
-                .and(isFatturaTipoPagamentoEquals)
-                .and(isFatturaClienteContains)
-                .and(isFatturaAgenteEquals)
-                .and(isFatturaDdtArticoloEquals)
-                .and(isFatturaStatoEquals)
-                .and(isFatturaTipoEquals)).collect(Collectors.toSet());
+        return fatturaService.search(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
     }
 
     @RequestMapping(method = GET, path = "/{fatturaId}")
