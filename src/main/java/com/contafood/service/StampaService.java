@@ -54,8 +54,6 @@ public class StampaService {
 
     private final FatturaAccompagnatoriaService fatturaAccompagnatoriaService;
 
-    private final AliquotaIvaService aliquotaIvaService;
-
     private final NotaResoService notaResoService;
 
     private final RicevutaPrivatoService ricevutaPrivatoService;
@@ -71,7 +69,6 @@ public class StampaService {
                          final NotaAccreditoService notaAccreditoService,
                          final FatturaService fatturaService,
                          final FatturaAccompagnatoriaService fatturaAccompagnatoriaService,
-                         final AliquotaIvaService aliquotaIvaService,
                          final NotaResoService notaResoService,
                          final RicevutaPrivatoService ricevutaPrivatoService,
                          final OrdineFornitoreService ordineFornitoreService,
@@ -84,7 +81,6 @@ public class StampaService {
         this.notaAccreditoService = notaAccreditoService;
         this.fatturaService = fatturaService;
         this.fatturaAccompagnatoriaService = fatturaAccompagnatoriaService;
-        this.aliquotaIvaService = aliquotaIvaService;
         this.notaResoService = notaResoService;
         this.ricevutaPrivatoService = ricevutaPrivatoService;
         this.ordineFornitoreService = ordineFornitoreService;
@@ -434,15 +430,12 @@ public class StampaService {
                 .collect(Collectors.toList());
     }
 
-    public List<NotaAccreditoDataSource> getNotaAccreditoDataSources(String ids){
-        LOGGER.info("Retrieving the list of 'note accredito' with id in '{}' for creating pdf file", ids);
+    public List<NotaAccreditoDataSource> getNotaAccreditoDataSources(java.sql.Date dataDa, java.sql.Date dataA, Integer progressivo, Float importo, String cliente, Integer idAgente, Integer idArticolo, Integer idStato){
+        LOGGER.info("Retrieving the list of 'note accredito' for creating pdf file");
 
         List<NotaAccreditoDataSource> notaAccreditoDataSources = new ArrayList<>();
 
-        List<String> idsAsList = Arrays.asList(ids.split(","));
-
-        List<NotaAccredito> noteAccredito = notaAccreditoService.getAll().stream()
-                .filter(notaAccredito -> idsAsList.contains(notaAccredito.getId().toString()))
+        List<NotaAccredito> noteAccredito = notaAccreditoService.search(dataDa, dataA, progressivo, importo, cliente, idAgente, idArticolo, idStato).stream()
                 .sorted(Comparator.comparing(NotaAccredito::getProgressivo).reversed())
                 .collect(Collectors.toList());
 
@@ -451,12 +444,14 @@ public class StampaService {
                 NotaAccreditoDataSource notaAccreditoDataSource = new NotaAccreditoDataSource();
                 notaAccreditoDataSource.setNumero(notaAccredito.getProgressivo().toString());
                 notaAccreditoDataSource.setData(simpleDateFormat.format(notaAccredito.getData()));
-                Cliente cliente = notaAccredito.getCliente();
-                if(cliente != null){
-                    if(!cliente.getDittaIndividuale()){
-                        notaAccreditoDataSource.setClienteDescrizione(cliente.getRagioneSociale());
+                Cliente notaAccreditoCliente = notaAccredito.getCliente();
+                if(notaAccreditoCliente != null){
+                    if(notaAccreditoCliente.getDittaIndividuale()){
+                        notaAccreditoDataSource.setClienteDescrizione(notaAccreditoCliente.getNome()+" "+notaAccreditoCliente.getCognome());
+                    } else if (notaAccreditoCliente.getPrivato()){
+                        notaAccreditoDataSource.setClienteDescrizione(notaAccreditoCliente.getNome()+" "+notaAccreditoCliente.getCognome());
                     } else {
-                        notaAccreditoDataSource.setClienteDescrizione(cliente.getNome()+" "+cliente.getCognome());
+                        notaAccreditoDataSource.setClienteDescrizione(notaAccreditoCliente.getRagioneSociale());
                     }
                 }
                 BigDecimal totaleAcconto = notaAccredito.getTotaleAcconto() != null ? notaAccredito.getTotaleAcconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
@@ -820,7 +815,7 @@ public class StampaService {
         if(agente != null){
             StringBuilder sb = new StringBuilder();
             if(!StringUtils.isEmpty(agente.getNome())){
-                sb.append(agente.getNome()+" ");
+                sb.append(agente.getNome()).append(" ");
             }
             if(!StringUtils.isEmpty(agente.getCognome())){
                 sb.append(agente.getCognome());
@@ -1095,16 +1090,16 @@ public class StampaService {
                 sb.append(puntoConsegna.getNome()).append("\n");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getIndirizzo())){
-                sb.append(puntoConsegna.getIndirizzo()+"\n");
+                sb.append(puntoConsegna.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getCap())){
-                sb.append(puntoConsegna.getCap()+" ");
+                sb.append(puntoConsegna.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getLocalita())){
-                sb.append(puntoConsegna.getLocalita()+" ");
+                sb.append(puntoConsegna.getLocalita()).append(" ");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getProvincia())){
-                sb.append("("+Provincia.getByLabel(puntoConsegna.getProvincia()).getSigla()+")");
+                sb.append("(").append(Provincia.getByLabel(puntoConsegna.getProvincia()).getSigla()).append(")");
             }
 
             puntoConsegnaParam = sb.toString();
@@ -1114,19 +1109,19 @@ public class StampaService {
         if(cliente != null){
             StringBuilder sb = new StringBuilder();
             if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
-                sb.append(cliente.getRagioneSociale()+"\n");
+                sb.append(cliente.getRagioneSociale()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getIndirizzo())){
-                sb.append(cliente.getIndirizzo()+"\n");
+                sb.append(cliente.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getCap())){
-                sb.append(cliente.getCap()+" ");
+                sb.append(cliente.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getCitta())){
-                sb.append(cliente.getCitta()+" ");
+                sb.append(cliente.getCitta()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getProvincia())){
-                sb.append("("+Provincia.getByLabel(cliente.getProvincia()).getSigla()+")");
+                sb.append("(").append(Provincia.getByLabel(cliente.getProvincia()).getSigla()).append(")");
             }
 
             destinatarioParam = sb.toString();
@@ -1187,19 +1182,19 @@ public class StampaService {
         if(cliente != null){
             StringBuilder sb = new StringBuilder();
             if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
-                sb.append(cliente.getRagioneSociale()+"\n");
+                sb.append(cliente.getRagioneSociale()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getIndirizzo())){
-                sb.append(cliente.getIndirizzo()+"\n");
+                sb.append(cliente.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getCap())){
-                sb.append(cliente.getCap()+" ");
+                sb.append(cliente.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getCitta())){
-                sb.append(cliente.getCitta()+" ");
+                sb.append(cliente.getCitta()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getProvincia())){
-                sb.append("("+ Provincia.getByLabel(cliente.getProvincia()).getSigla()+")");
+                sb.append("(").append(Provincia.getByLabel(cliente.getProvincia()).getSigla()).append(")");
             }
 
             destinatarioParam = sb.toString();
@@ -1271,19 +1266,19 @@ public class StampaService {
         if(puntoConsegna != null){
             StringBuilder sb = new StringBuilder();
             if(!StringUtils.isEmpty(puntoConsegna.getNome())){
-                sb.append(puntoConsegna.getNome()+"\n");
+                sb.append(puntoConsegna.getNome()).append("\n");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getIndirizzo())){
-                sb.append(puntoConsegna.getIndirizzo()+"\n");
+                sb.append(puntoConsegna.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getCap())){
-                sb.append(puntoConsegna.getCap()+" ");
+                sb.append(puntoConsegna.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getLocalita())){
-                sb.append(puntoConsegna.getLocalita()+" ");
+                sb.append(puntoConsegna.getLocalita()).append(" ");
             }
             if(!StringUtils.isEmpty(puntoConsegna.getProvincia())){
-                sb.append("("+Provincia.getByLabel(puntoConsegna.getProvincia()).getSigla()+")");
+                sb.append("(").append(Provincia.getByLabel(puntoConsegna.getProvincia()).getSigla()).append(")");
             }
 
             puntoConsegnaParam = sb.toString();
@@ -1293,16 +1288,16 @@ public class StampaService {
         if(cliente != null){
             StringBuilder sb = new StringBuilder();
             if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
-                sb.append(cliente.getRagioneSociale()+"\n");
+                sb.append(cliente.getRagioneSociale()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getIndirizzo())){
-                sb.append(cliente.getIndirizzo()+"\n");
+                sb.append(cliente.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getCap())){
-                sb.append(cliente.getCap()+" ");
+                sb.append(cliente.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getCitta())){
-                sb.append(cliente.getCitta()+" ");
+                sb.append(cliente.getCitta()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getProvincia())){
                 sb.append(cliente.getProvincia());
@@ -1387,17 +1382,20 @@ public class StampaService {
         // create data parameters for Cliente
         if(cliente != null){
             StringBuilder sb = new StringBuilder();
-            if(!StringUtils.isEmpty(cliente.getRagioneSociale())){
-                sb.append(cliente.getRagioneSociale()+"\n");
+            if(cliente.getPrivato() || cliente.getDittaIndividuale()){
+                sb.append(cliente.getNome()).append(" ").append(cliente.getCognome()).append("\n");
+            } else {
+                sb.append(cliente.getRagioneSociale()).append("\n");
             }
+
             if(!StringUtils.isEmpty(cliente.getIndirizzo())){
-                sb.append(cliente.getIndirizzo()+"\n");
+                sb.append(cliente.getIndirizzo()).append("\n");
             }
             if(!StringUtils.isEmpty(cliente.getCap())){
-                sb.append(cliente.getCap()+" ");
+                sb.append(cliente.getCap()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getCitta())){
-                sb.append(cliente.getCitta()+" ");
+                sb.append(cliente.getCitta()).append(" ");
             }
             if(!StringUtils.isEmpty(cliente.getProvincia())){
                 sb.append(cliente.getProvincia());

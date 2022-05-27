@@ -246,11 +246,18 @@ public class StampaController {
 
     @RequestMapping(method = GET, path = "/note-accredito")
     @CrossOrigin
-    public ResponseEntity<Resource> printNoteAccredito(@RequestParam(name = "ids") String ids) throws Exception{
-        LOGGER.info("Creating pdf for 'note accredito' with ids {}", ids);
+    public ResponseEntity<Resource> printNoteAccredito(@RequestParam(name = "dataDa", required = false) Date dataDa,
+                                                       @RequestParam(name = "dataA", required = false) Date dataA,
+                                                       @RequestParam(name = "progressivo", required = false) Integer progressivo,
+                                                       @RequestParam(name = "importo", required = false) Float importo,
+                                                       @RequestParam(name = "cliente", required = false) String cliente,
+                                                       @RequestParam(name = "agente", required = false) Integer idAgente,
+                                                       @RequestParam(name = "articolo", required = false) Integer idArticolo,
+                                                       @RequestParam(name = "stato", required = false) Integer idStato) throws Exception{
+        LOGGER.info("Creating pdf for list of 'note accredito'");
 
         // retrieve the list of NoteAccredito
-        List<NotaAccreditoDataSource> noteAccredito = stampaService.getNotaAccreditoDataSources(ids);
+        List<NotaAccreditoDataSource> noteAccredito = stampaService.getNotaAccreditoDataSources(dataDa, dataA, progressivo, importo, cliente, idAgente, idArticolo, idStato);
 
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_NOTE_ACCREDITO);

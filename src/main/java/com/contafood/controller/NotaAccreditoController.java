@@ -51,76 +51,7 @@ public class NotaAccreditoController {
         LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, cliente {}, agente {}, articolo {}, stato {}",
                 dataDa, dataA, progressivo, importo, cliente, idAgente, idArticolo, idStato);
 
-        Predicate<NotaAccredito> isNotaAccreditoDataDaGreaterOrEquals = notaAccredito -> {
-            if(dataDa != null){
-                return notaAccredito.getData().compareTo(dataDa)>=0;
-            }
-            return true;
-        };
-        Predicate<NotaAccredito> isNotaAccreditoDataALessOrEquals = notaAccredito -> {
-            if(dataA != null){
-                return notaAccredito.getData().compareTo(dataA)<=0;
-            }
-            return true;
-        };
-        Predicate<NotaAccredito> isNotaAccreditoProgressivoEquals = notaAccredito -> {
-            if(progressivo != null){
-                return notaAccredito.getProgressivo().equals(progressivo);
-            }
-            return true;
-        };
-        Predicate<NotaAccredito> isNotaAccreditoImportoEquals = notaAccredito -> {
-            if(importo != null){
-                return notaAccredito.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.HALF_DOWN))==0;
-            }
-            return true;
-        };
-        Predicate<NotaAccredito> isNotaAccreditoClienteContains = notaAccredito -> {
-            if(cliente != null){
-                Cliente notaAccreditoCliente = notaAccredito.getCliente();
-                if(notaAccreditoCliente != null){
-                    if((notaAccreditoCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase())){
-                        return true;
-                    }
-                }
-                return false;
-            }
-            return true;
-        };
-        Predicate<NotaAccredito> isNotaAccreditoAgenteEquals = notaAccredito -> {
-            if(idAgente != null){
-                Cliente notaAccreditoCliente = notaAccredito.getCliente();
-                if(notaAccreditoCliente != null){
-                    Agente agente = notaAccreditoCliente.getAgente();
-                    if(agente != null){
-                        if(agente.getId().equals(Long.valueOf(idAgente))){
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-            return true;
-        };
-        Predicate<NotaAccredito> isNotaAccreditoStatoEquals = notaAccredito -> {
-            if(idStato != null){
-                StatoNotaAccredito statoNotaAccredito = notaAccredito.getStatoNotaAccredito();
-                if(statoNotaAccredito != null){
-                    return statoNotaAccredito.getId().equals(Long.valueOf(idStato));
-                }
-                return false;
-            }
-            return true;
-        };
-
-        Set<NotaAccredito> noteAccredito = notaAccreditoService.getAll();
-        return noteAccredito.stream().filter(isNotaAccreditoDataDaGreaterOrEquals
-                .and(isNotaAccreditoDataALessOrEquals)
-                .and(isNotaAccreditoProgressivoEquals)
-                .and(isNotaAccreditoImportoEquals)
-                .and(isNotaAccreditoClienteContains)
-                .and(isNotaAccreditoAgenteEquals)
-                .and(isNotaAccreditoStatoEquals)).collect(Collectors.toSet());
+        return notaAccreditoService.search(dataDa, dataA, progressivo, importo, cliente, idAgente, idArticolo, idStato);
     }
 
     @RequestMapping(method = GET, path = "/{notaAccreditoId}")
