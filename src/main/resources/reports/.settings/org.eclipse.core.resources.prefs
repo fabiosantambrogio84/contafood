@@ -7,6 +7,7 @@ encoding/footer.jrxml=UTF-8
 encoding/giacenze_ingredienti.jrxml=UTF-8
 encoding/header.jrxml=UTF-8
 encoding/listino.jrxml=UTF-8
+encoding/listino_OLD.jrxml=UTF-8
 encoding/nota_accredito.jrxml=UTF-8
 encoding/nota_reso.jrxml=UTF-8
 encoding/note_accredito.jrxml=UTF-8

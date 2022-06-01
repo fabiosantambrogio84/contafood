@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class StatisticaService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(StatisticaService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(StatisticaService.class);
 
     private final DdtService ddtService;
 
@@ -232,12 +232,12 @@ public class StatisticaService {
     }
 
     private BigDecimal computeTotaleVenduto(ComputationObject computationObject){
-        BigDecimal totaleVenduto = BigDecimal.ZERO;
+        BigDecimal totaleVenduto;
 
-        BigDecimal totaleVendutoDdts = computationObject.getDdtArticoli().stream().map(da -> da.getTotale()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totaleVendutoDdts = computationObject.getDdtArticoli().stream().map(DdtArticolo::getTotale).reduce(BigDecimal.ZERO, BigDecimal::add);
         LOGGER.info("Totale venduto ddts {}", totaleVendutoDdts);
 
-        BigDecimal totaleVendutoFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().stream().map(fa -> fa.getTotale()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totaleVendutoFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().stream().map(FatturaAccompagnatoriaArticolo::getTotale).reduce(BigDecimal.ZERO, BigDecimal::add);
         LOGGER.info("Totale venduto fatture accompagnatorie {}", totaleVendutoFattureAccompagnatorie);
 
         totaleVenduto = totaleVendutoDdts.add(totaleVendutoFattureAccompagnatorie);
@@ -246,12 +246,12 @@ public class StatisticaService {
     }
 
     private Float computeTotaleQuantitaVenduta(ComputationObject computationObject){
-        Float totaleQuantitaVenduta = 0f;
+        Float totaleQuantitaVenduta;
 
-        Float totaleQuantitaVendutaDdts = computationObject.getDdtArticoli().stream().map(da -> da.getQuantita()).reduce(0f, (fa1, fa2) -> fa1 + fa2);
+        Float totaleQuantitaVendutaDdts = computationObject.getDdtArticoli().stream().map(DdtArticolo::getQuantita).reduce(0f, (fa1, fa2) -> (fa1 != null ? fa1 : 0f) + (fa2 != null ? fa2 : 0f));
         LOGGER.info("Totale quantita venduta ddts {}", totaleQuantitaVendutaDdts);
 
-        Float totaleQuantitaVendutaFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().stream().map(fa -> fa.getQuantita()).reduce(0f, (fa1, fa2) -> fa1 + fa2);
+        Float totaleQuantitaVendutaFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().stream().map(FatturaAccompagnatoriaArticolo::getQuantita).reduce(0f, (fa1, fa2) -> (fa1 != null ? fa1 : 0f) + (fa2 != null ? fa2 : 0f));
         LOGGER.info("Totale quantita venduta fatture accompagnatorie {}", totaleQuantitaVendutaFattureAccompagnatorie);
 
         totaleQuantitaVenduta = totaleQuantitaVendutaDdts + totaleQuantitaVendutaFattureAccompagnatorie;
@@ -260,15 +260,14 @@ public class StatisticaService {
     }
 
     private long computeNumeroRighe(ComputationObject computationObject){
-        long numeroRighe = 0l;
 
-        long numeroRigheDdts = computationObject.getDdtArticoli().stream().count();
+        long numeroRigheDdts = computationObject.getDdtArticoli().size();
         LOGGER.info("Numero righe ddts {}", numeroRigheDdts);
 
-        long numeroRigheFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().stream().count();
+        long numeroRigheFattureAccompagnatorie = computationObject.getFattureAccompagnatorieArticoli().size();
         LOGGER.info("Numero righe fatture accompagnatorie {}", numeroRigheFattureAccompagnatorie);
 
-        numeroRighe = numeroRigheDdts + numeroRigheFattureAccompagnatorie;
+        long numeroRighe = numeroRigheDdts + numeroRigheFattureAccompagnatorie;
         LOGGER.info("Numero righe {}", numeroRighe);
         return numeroRighe;
     }
@@ -310,7 +309,7 @@ public class StatisticaService {
         }
 
         // sort list by progressivo desc and codice articolo asc
-        Collections.sort(statisticaArticoli, Comparator.comparing(StatisticaArticolo::getProgressivo).reversed()
+        statisticaArticoli.sort(Comparator.comparing(StatisticaArticolo::getProgressivo).reversed()
                 .thenComparing(StatisticaArticolo::getCodice));
 
         LOGGER.info("Computed 'statistica mostra dettaglio'");
@@ -324,15 +323,15 @@ public class StatisticaService {
 
         List<StatisticaArticolo> statisticaArticoli = createStatisticaArticoli(computationObject);
 
-        Map<Long, List<StatisticaArticolo>> statisticaArticoliMap = statisticaArticoli.stream().collect(Collectors.groupingBy(sa -> sa.getIdArticolo()));
+        Map<Long, List<StatisticaArticolo>> statisticaArticoliMap = statisticaArticoli.stream().collect(Collectors.groupingBy(StatisticaArticolo::getIdArticolo));
 
         for (Map.Entry<Long, List<StatisticaArticolo>> entry : statisticaArticoliMap.entrySet()) {
             List<StatisticaArticolo> statisticaArticoliByArticolo = entry.getValue();
 
-            String codice = statisticaArticoliByArticolo.stream().map(sa -> sa.getCodice()).findFirst().get();
-            String descrizione = statisticaArticoliByArticolo.stream().map(sa -> sa.getDescrizione()).findFirst().get();
-            Integer numRighe = statisticaArticoliByArticolo.size();
-            BigDecimal totVenduto = statisticaArticoliByArticolo.stream().map(sa -> sa.getTotale()).reduce(BigDecimal.ZERO, BigDecimal::add);
+            String codice = statisticaArticoliByArticolo.stream().map(StatisticaArticolo::getCodice).findFirst().get();
+            String descrizione = statisticaArticoliByArticolo.stream().map(StatisticaArticolo::getDescrizione).findFirst().get();
+            int numRighe = statisticaArticoliByArticolo.size();
+            BigDecimal totVenduto = statisticaArticoliByArticolo.stream().map(StatisticaArticolo::getTotale).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal totQuantitaVenduta = statisticaArticoliByArticolo.stream().map(sa -> new BigDecimal(sa.getQuantita())).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal totVendutoMedio = totVenduto.divide(new BigDecimal(numRighe), 3, RoundingMode.HALF_DOWN);
 
@@ -349,17 +348,14 @@ public class StatisticaService {
         }
 
         // sort list by codice articolo desc
-        Collections.sort(statisticaArticoliGroups, Comparator.comparing(StatisticaArticoloGroup::getCodice));
+        statisticaArticoliGroups.sort(Comparator.comparing(StatisticaArticoloGroup::getCodice));
 
         LOGGER.info("Computed 'statistica raggruppa dettaglio'");
         return statisticaArticoliGroups;
     }
 
     private static boolean isNullOrEmpty(List<?> list){
-        if(list != null && !list.isEmpty()){
-            return false;
-        }
-        return true;
+        return list == null || list.isEmpty();
     }
 
 }

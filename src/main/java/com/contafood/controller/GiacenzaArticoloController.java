@@ -43,9 +43,7 @@ public class GiacenzaArticoloController {
         LOGGER.info("Request params: articolo {}, attivo {}, idFornitore {}, lotto {}, scadenza {}",
                 articolo, attivo, idFornitore, lotto, scadenza);
 
-        Predicate<VGiacenzaArticolo> isGiacenzaQuantitaGreaterOrLessThanZero = giacenza -> {
-            return giacenza.getQuantita() > 0 || giacenza.getQuantita() < 0;
-        };
+        Predicate<VGiacenzaArticolo> isGiacenzaQuantitaGreaterOrLessThanZero = giacenza -> giacenza.getQuantita() > 0 || giacenza.getQuantita() < 0;
 
         Predicate<VGiacenzaArticolo> isGiacenzaArticoloCodiceOrDescriptionContains = giacenza -> {
             if(articolo != null){

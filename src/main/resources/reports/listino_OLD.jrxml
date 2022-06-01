@@ -36,11 +36,11 @@
 		<field name="fornitore" class="java.lang.String"/>
 		<field name="categoriaArticolo" class="java.lang.String"/>
 		<field name="prezzo" class="java.math.BigDecimal"/>
-		<field name="groupField" class="java.lang.String"/>
-		<field name="isGroup" class="java.lang.Integer"/>
-		<group name="Group1">
-			<groupExpression><![CDATA[$F{groupField}]]></groupExpression>
-		</group>
+	</subDataset>
+	<subDataset name="Dataset1" uuid="d524c63b-7d22-487c-8f04-5b7218a6fd22">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
 	</subDataset>
 	<parameter name="logo" class="java.net.URL" isForPrompting="false"/>
 	<parameter name="bollino" class="java.net.URL" isForPrompting="false"/>
@@ -161,36 +161,9 @@
 					</datasetRun>
 					<jr:column width="350" uuid="dbc4705a-ff2c-4711-94ac-56ef48f5c6df">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna1"/>
-						<jr:groupHeader groupName="Group1">
-							<jr:cell style="Table_TD" height="20" rowSpan="1">
-								<box>
-									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-								</box>
-								<textField textAdjust="ScaleFont">
-									<reportElement x="0" y="0" width="350" height="20" uuid="bdb43f89-c9d6-43c9-9a6e-5002baa51ed4">
-										<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-										<property name="com.jaspersoft.studio.unit.spacingBefore" value="px"/>
-									</reportElement>
-									<textElement>
-										<font isBold="true"/>
-										<paragraph leftIndent="5" spacingBefore="5"/>
-									</textElement>
-									<textFieldExpression><![CDATA[$F{groupField} != null ? $F{groupField} : ""]]></textFieldExpression>
-								</textField>
-							</jr:cell>
-						</jr:groupHeader>
 						<jr:detailCell style="Table_TD" height="15">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<box>
-								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-							</box>
 							<textField textAdjust="ScaleFont">
 								<reportElement x="0" y="0" width="350" height="15" uuid="87942a63-306f-44cc-989f-373024b6097c">
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -214,12 +187,6 @@
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Colonna2"/>
 						<jr:detailCell style="Table_TD" height="15">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<box>
-								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-								<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-								<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-								<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-							</box>
 							<textField textAdjust="ScaleFont">
 								<reportElement x="0" y="0" width="204" height="15" uuid="06330014-803b-49e9-ab25-63233250e134">
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
@@ -232,11 +199,6 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:groupHeader groupName="Group1">
-						<jr:row>
-							<printWhenExpression><![CDATA[$F{isGroup} == 1]]></printWhenExpression>
-						</jr:row>
-					</jr:groupHeader>
 				</jr:table>
 			</componentElement>
 			<textField textAdjust="ScaleFont">

@@ -1,12 +1,15 @@
 package com.contafood.model.views;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 
+@Data
 @EqualsAndHashCode()
 @Entity
 @Table(name = "v_giacenza_articolo")
@@ -19,8 +22,17 @@ public class VGiacenzaArticolo {
     @Column(name = "articolo")
     private String articolo;
 
+    @Column(name = "prezzo_acquisto")
+    private BigDecimal prezzoAcquisto;
+
+    @Column(name = "prezzo_listino_base")
+    private BigDecimal prezzoListinoBase;
+
     @Column(name = "quantita_tot")
     private Float quantita;
+
+    @Column(name = "quantita_kg")
+    private Float quantitaKg;
 
     @Column(name = "id_giacenze")
     private String idGiacenze;
@@ -40,78 +52,6 @@ public class VGiacenzaArticolo {
     @Column(name = "fornitore")
     private String fornitore;
 
-    public Long getIdArticolo() {
-        return idArticolo;
-    }
-
-    public void setIdArticolo(Long idArticolo) {
-        this.idArticolo = idArticolo;
-    }
-
-    public String getArticolo() {
-        return articolo;
-    }
-
-    public void setArticolo(String articolo) {
-        this.articolo = articolo;
-    }
-
-    public Float getQuantita() {
-        return quantita;
-    }
-
-    public void setQuantita(Float quantita) {
-        this.quantita = quantita;
-    }
-
-    public String getIdGiacenze() {
-        return idGiacenze;
-    }
-
-    public void setIdGiacenze(String idGiacenze) {
-        this.idGiacenze = idGiacenze;
-    }
-
-    public String getLottoGiacenze() {
-        return lottoGiacenze;
-    }
-
-    public void setLottoGiacenze(String lottoGiacenze) {
-        this.lottoGiacenze = lottoGiacenze;
-    }
-
-    public String getScadenzaGiacenze() {
-        return scadenzaGiacenze;
-    }
-
-    public void setScadenzaGiacenze(String scadenzaGiacenze) {
-        this.scadenzaGiacenze = scadenzaGiacenze;
-    }
-
-    public Boolean getAttivo() {
-        return attivo;
-    }
-
-    public void setAttivo(Boolean attivo) {
-        this.attivo = attivo;
-    }
-
-    public Long getIdFornitore() {
-        return idFornitore;
-    }
-
-    public void setIdFornitore(Long idFornitore) {
-        this.idFornitore = idFornitore;
-    }
-
-    public String getFornitore() {
-        return fornitore;
-    }
-
-    public void setFornitore(String fornitore) {
-        this.fornitore = fornitore;
-    }
-
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -119,7 +59,10 @@ public class VGiacenzaArticolo {
         result.append("{");
         result.append("idArticolo: " + idArticolo);
         result.append(", articolo: " + articolo);
+        result.append(", prezzoAcquisto: " + prezzoAcquisto);
+        result.append(", prezzoListinoBase: " + prezzoListinoBase);
         result.append(", quantita: " + quantita);
+        result.append(", quantitaKg: " + quantitaKg);
         result.append(", idGiacenze: " + idGiacenze);
         result.append(", lottoGiacenze: " + lottoGiacenze);
         result.append(", scadenzaGiacenze: " + scadenzaGiacenze);

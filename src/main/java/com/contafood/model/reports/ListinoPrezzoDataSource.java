@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 @Data
 public class ListinoPrezzoDataSource {
 
+    private String descrizioneFullArticolo;
+
     private String descrizioneArticolo;
 
     private String fornitore;
@@ -14,5 +16,9 @@ public class ListinoPrezzoDataSource {
     private String categoriaArticolo;
 
     private BigDecimal prezzo;
+
+    private String groupField;
+
+    private Integer isGroup;
 
 }

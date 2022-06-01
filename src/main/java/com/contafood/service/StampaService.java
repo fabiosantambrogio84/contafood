@@ -1060,7 +1060,7 @@ public class StampaService {
                 ordineFornitoreArticoloDataSources.add(ordineFornitoreArticoloDataSource);
             });
         }
-        return ordineFornitoreArticoloDataSources;
+        return ordineFornitoreArticoloDataSources.stream().sorted(Comparator.comparing(oads -> oads.getDescrizioneArticolo().toLowerCase())).collect(Collectors.toList());
     }
 
     public byte[] generateDdt(Long idDdt) throws Exception{
@@ -1516,6 +1516,8 @@ public class StampaService {
 
     public byte[] generateListino(Long idListino, String orderBy) throws Exception{
 
+        orderBy = StringUtils.isNotEmpty(orderBy) ? orderBy : "categoria-articolo";
+
         // retrieve the Listino
         Listino listino = listinoService.getOne(idListino);
 
@@ -1532,20 +1534,31 @@ public class StampaService {
 
                 Articolo articolo = lp.getArticolo();
                 if(articolo != null){
-                    listinoPrezzoDataSource.setDescrizioneArticolo(articolo.getCodice() + " - " + articolo.getDescrizione());
+                    listinoPrezzoDataSource.setDescrizioneFullArticolo(articolo.getCodice() + " - " + articolo.getDescrizione().trim());
+                    listinoPrezzoDataSource.setDescrizioneArticolo(articolo.getDescrizione().toLowerCase().trim());
                     if(articolo.getCategoria() != null) {
                         listinoPrezzoDataSource.setCategoriaArticolo(articolo.getCategoria().getNome());
                     }
+                    Fornitore fornitore = null;
                     if(articolo.getFornitore() != null){
-                        Fornitore fornitore = articolo.getFornitore();
+                        fornitore = articolo.getFornitore();
                         listinoPrezzoDataSource.setFornitore(fornitore.getRagioneSociale());
+                    }
+
+                    if(orderBy.equals("fornitore")){
+                        listinoPrezzoDataSource.setGroupField(fornitore != null ? fornitore.getRagioneSociale() : null);
+                        listinoPrezzoDataSource.setIsGroup(1);
+                    } else if(orderBy.equals("categoria-articolo")){
+                        listinoPrezzoDataSource.setGroupField(articolo.getCategoria() != null ? articolo.getCategoria().getNome() : null);
+                        listinoPrezzoDataSource.setIsGroup(1);
+                    } else {
+                        listinoPrezzoDataSource.setIsGroup(0);
                     }
                 }
                 listinoPrezziDataSource.add(listinoPrezzoDataSource);
             }
         }
 
-        orderBy = StringUtils.isNotEmpty(orderBy) ? orderBy : "categoria-articolo";
         if(orderBy.equals("descrizione-articolo")){
             listinoPrezziDataSource = listinoPrezziDataSource
                     .stream()
@@ -1554,12 +1567,12 @@ public class StampaService {
         } else if(orderBy.equals("fornitore")){
             listinoPrezziDataSource = listinoPrezziDataSource
                     .stream()
-                    .sorted(Comparator.comparing(ListinoPrezzoDataSource::getFornitore, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .sorted(Comparator.comparing(ListinoPrezzoDataSource::getFornitore, Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(ListinoPrezzoDataSource::getDescrizioneArticolo, Comparator.nullsLast(Comparator.naturalOrder())))
                     .collect(Collectors.toList());
         } else {
             listinoPrezziDataSource = listinoPrezziDataSource
                     .stream()
-                    .sorted(Comparator.comparing(ListinoPrezzoDataSource::getCategoriaArticolo, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .sorted(Comparator.comparing(ListinoPrezzoDataSource::getCategoriaArticolo, Comparator.nullsLast(Comparator.naturalOrder())).thenComparing(ListinoPrezzoDataSource::getDescrizioneArticolo, Comparator.nullsLast(Comparator.naturalOrder())))
                     .collect(Collectors.toList());
         }
 

@@ -3,8 +3,8 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.DdtAcquisto;
 import com.contafood.model.Fornitore;
+import com.contafood.model.beans.DdtAcquistoRicercaLotto;
 import com.contafood.service.DdtAcquistoService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +35,9 @@ public class DdtAcquistoController {
     @RequestMapping(method = GET)
     @CrossOrigin
     public Set<DdtAcquisto> getAll(@RequestParam(name = "numero", required = false) String numero,
-                                    @RequestParam(name = "fornitore", required = false) String fornitore,
-                                    @RequestParam(name = "lotto", required = false) String lotto) {
+                                    @RequestParam(name = "fornitore", required = false) String fornitore) {
         LOGGER.info("Performing GET request for retrieving list of 'ddts acquisto'");
-        LOGGER.info("Request params: numero {}, fornitore {}, lotto {}",
-                numero, fornitore, lotto);
-
-        if(!StringUtils.isEmpty(lotto)){
-            return ddtAcquistoService.getAllByLotto(lotto);
-        }
+        LOGGER.info("Request params: numero {}, fornitore {}", numero, fornitore);
 
         Predicate<DdtAcquisto> isDdtAcquistoNumeroEquals = ddtAcquisto -> {
             if(numero != null){
@@ -71,6 +65,15 @@ public class DdtAcquistoController {
         Set<DdtAcquisto> ddtsAcquisto = ddtAcquistoService.getAll();
         return ddtsAcquisto.stream().filter(isDdtAcquistoNumeroEquals
                 .and(isDdtAcquistoFornitoreContains)).collect(Collectors.toSet());
+    }
+
+    @RequestMapping(method = GET, path = "/search-lotto")
+    @CrossOrigin
+    public Set<DdtAcquistoRicercaLotto> getAllByLotto(@RequestParam(name = "lotto") String lotto) {
+        LOGGER.info("Performing GET request for retrieving list of 'ddts acquisto' filtered by lotto");
+        LOGGER.info("Request params:lotto {}",lotto);
+
+        return ddtAcquistoService.getAllByLotto(lotto);
     }
 
     @RequestMapping(method = GET, path = "/{ddtAcquistoId}")

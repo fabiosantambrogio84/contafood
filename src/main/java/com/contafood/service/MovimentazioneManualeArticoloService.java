@@ -1,6 +1,5 @@
 package com.contafood.service;
 
-import com.contafood.model.DdtArticolo;
 import com.contafood.model.GiacenzaArticolo;
 import com.contafood.model.MovimentazioneManualeArticolo;
 import com.contafood.repository.MovimentazioneManualeArticoloRepository;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class MovimentazioneManualeArticoloService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(MovimentazioneManualeArticoloService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(MovimentazioneManualeArticoloService.class);
 
     private final MovimentazioneManualeArticoloRepository movimentazioneManualeArticoloRepository;
 
@@ -39,6 +38,7 @@ public class MovimentazioneManualeArticoloService {
         movimentazioneManualeArticolo.setScadenza(giacenzaArticolo.getScadenza());
         movimentazioneManualeArticolo.setQuantita(giacenzaArticolo.getQuantita());
         movimentazioneManualeArticolo.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
+        movimentazioneManualeArticolo.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         MovimentazioneManualeArticolo createdMovimentazioneManualeArticolo = movimentazioneManualeArticoloRepository.save(movimentazioneManualeArticolo);
 

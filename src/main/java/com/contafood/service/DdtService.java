@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.beans.DdtRicercaLotto;
 import com.contafood.model.views.VDdt;
 import com.contafood.repository.DdtRepository;
 import com.contafood.repository.PagamentoRepository;
@@ -54,9 +55,9 @@ public class DdtService {
         return ddts;
     }
 
-    public Set<Ddt> getAllByLotto(String lotto){
+    public Set<DdtRicercaLotto> getAllByLotto(String lotto){
         LOGGER.info("Retrieving the list of 'ddts' filtered by 'lotto' '{}'", lotto);
-        Set<Ddt> ddts = ddtRepository.findAllByLotto(lotto);
+        Set<DdtRicercaLotto> ddts = ddtRepository.findAllByLotto(lotto);
         LOGGER.info("Retrieved {} 'ddts'", ddts.size());
         return ddts;
     }

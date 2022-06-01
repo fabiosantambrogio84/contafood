@@ -1,6 +1,7 @@
 package com.contafood.repository;
 
 import com.contafood.model.Ddt;
+import com.contafood.model.beans.DdtRicercaLotto;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -23,7 +24,13 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
     List<Ddt> findByDataGreaterThanEqualOrderByProgressivoDesc(Date data);
 
     @Query(nativeQuery = true,
-            value = "select distinct ddt.* from ddt join ddt_articolo on ddt.id = ddt_articolo.id_ddt where ddt_articolo.lotto = ?1 order by ddt.anno_contabile desc, ddt.progressivo desc"
-            )
-    Set<Ddt> findAllByLotto(String lotto);
+            value = "select d.id,d.progressivo,d.data,cliente.ragione_sociale as cliente,d.quantita\n" +
+                    "from(select ddt.id, ddt.anno_contabile, ddt.progressivo, ddt.data, ddt.id_cliente, sum(ddt_articolo.quantita) quantita\n" +
+                    "from ddt join ddt_articolo on ddt.id = ddt_articolo.id_ddt\n" +
+                    "where ddt_articolo.lotto = ?1\n" +
+                    "group by ddt.id, ddt.anno_contabile, ddt.progressivo, ddt.data, ddt.id_cliente) d\n" +
+                    "join cliente on d.id_cliente = cliente.id\n" +
+                    "order by d.anno_contabile desc, d.progressivo desc"
+    )
+    Set<DdtRicercaLotto> findAllByLotto(String lotto);
 }

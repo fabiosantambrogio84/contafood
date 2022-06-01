@@ -2,6 +2,7 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
+import com.contafood.model.beans.DdtRicercaLotto;
 import com.contafood.model.views.VDdt;
 import com.contafood.service.DdtService;
 import org.apache.commons.lang3.StringUtils;
@@ -40,15 +41,19 @@ public class DdtController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<Ddt> getAll(@RequestParam(name = "lotto", required = false) String lotto) {
+    public Set<Ddt> getAll() {
+        LOGGER.info("Performing GET request for retrieving list of 'ddts'");
+
+        return ddtService.getAll();
+    }
+
+    @RequestMapping(method = GET, path = "/search-lotto")
+    @CrossOrigin
+    public Set<DdtRicercaLotto> getAllByLotto(@RequestParam(name = "lotto") String lotto) {
         LOGGER.info("Performing GET request for retrieving list of 'ddts'");
         LOGGER.info("Request params: lotto {}", lotto);
 
-        if(!StringUtils.isEmpty(lotto)){
-            return ddtService.getAllByLotto(lotto);
-        }
-
-        return ddtService.getAll();
+        return ddtService.getAllByLotto(lotto);
     }
 
     @RequestMapping(method = GET, path = "/search")

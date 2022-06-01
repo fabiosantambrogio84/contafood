@@ -2,6 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.beans.DdtAcquistoRicercaLotto;
 import com.contafood.repository.DdtAcquistoRepository;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
@@ -47,9 +48,9 @@ public class DdtAcquistoService {
         return ddtsAcquisto;
     }
 
-    public Set<DdtAcquisto> getAllByLotto(String lotto){
+    public Set<DdtAcquistoRicercaLotto> getAllByLotto(String lotto){
         LOGGER.info("Retrieving the list of 'ddts acquisto' filtered by 'lotto' '{}'", lotto);
-        Set<DdtAcquisto> ddtsAcquisto = ddtAcquistoRepository.findAllByLotto(lotto);
+        Set<DdtAcquistoRicercaLotto> ddtsAcquisto = ddtAcquistoRepository.findAllByLotto(lotto);
         LOGGER.info("Retrieved {} 'ddts acquisto'", ddtsAcquisto.size());
         return ddtsAcquisto;
     }

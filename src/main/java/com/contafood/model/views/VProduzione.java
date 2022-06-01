@@ -1,5 +1,6 @@
 package com.contafood.model.views;
 
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
@@ -8,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Date;
 
+@Data
 @EqualsAndHashCode()
 @Entity
 @Table(name = "v_produzione")
@@ -47,93 +49,11 @@ public class VProduzione {
     @Column(name = "num_confezioni_prodotte")
     private Integer numConfezioniProdotte;
 
-    public String getId() {
-        return id;
-    }
+    @Column(name = "quantita")
+    private Float quantita;
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Long getIdProduzione() {
-        return idProduzione;
-    }
-
-    public void setIdProduzione(Long idProduzione) {
-        this.idProduzione = idProduzione;
-    }
-
-    public String getCodiceProduzione() {
-        return codiceProduzione;
-    }
-
-    public void setCodiceProduzione(String codiceProduzione) {
-        this.codiceProduzione = codiceProduzione;
-    }
-
-    public Date getDataProduzione() {
-        return dataProduzione;
-    }
-
-    public void setDataProduzione(Date dataProduzione) {
-        this.dataProduzione = dataProduzione;
-    }
-
-    public Long getIdConfezione() {
-        return idConfezione;
-    }
-
-    public void setIdConfezione(Long idConfezione) {
-        this.idConfezione = idConfezione;
-    }
-
-    public String getLotto() {
-        return lotto;
-    }
-
-    public void setLotto(String lotto) {
-        this.lotto = lotto;
-    }
-
-    public Date getScadenza() {
-        return scadenza;
-    }
-
-    public void setScadenza(Date scadenza) {
-        this.scadenza = scadenza;
-    }
-
-    public Long getIdArticolo() {
-        return idArticolo;
-    }
-
-    public void setIdArticolo(Long idArticolo) {
-        this.idArticolo = idArticolo;
-    }
-
-    public String getCodiceArticolo() {
-        return codiceArticolo;
-    }
-
-    public void setCodiceArticolo(String codiceArticolo) {
-        this.codiceArticolo = codiceArticolo;
-    }
-
-    public String getDescrizioneArticolo() {
-        return descrizioneArticolo;
-    }
-
-    public void setDescrizioneArticolo(String descrizioneArticolo) {
-        this.descrizioneArticolo = descrizioneArticolo;
-    }
-
-    public Integer getNumConfezioniProdotte() {
-        return numConfezioniProdotte;
-    }
-
-    public void setNumConfezioniProdotte(Integer numConfezioniProdotte) {
-        this.numConfezioniProdotte = numConfezioniProdotte;
-    }
+    @Column(name = "ricetta")
+    private String ricetta;
 
     @Override
     public String toString() {
@@ -151,6 +71,8 @@ public class VProduzione {
         result.append(", codiceArticolo: " + codiceArticolo);
         result.append(", descrizioneArticolo: " + descrizioneArticolo);
         result.append(", numConfezioniProdotte: " + numConfezioniProdotte);
+        result.append(", quantita: " + quantita);
+        result.append(", ricetta: " + ricetta);
         result.append("}");
 
         return result.toString();
