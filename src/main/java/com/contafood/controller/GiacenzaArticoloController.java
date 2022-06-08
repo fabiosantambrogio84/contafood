@@ -23,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/giacenze-articoli")
 public class GiacenzaArticoloController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(GiacenzaArticoloController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(GiacenzaArticoloController.class);
 
     private final GiacenzaArticoloService giacenzaArticoloService;
 
@@ -49,11 +49,7 @@ public class GiacenzaArticoloController {
             if(articolo != null){
                 String giacenzaArticolo = giacenza.getArticolo();
                 if(giacenzaArticolo != null){
-                    if(giacenzaArticolo.toLowerCase().contains(articolo.toLowerCase())){
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return giacenzaArticolo.toLowerCase().contains(articolo.toLowerCase());
                 } else {
                     return false;
                 }
@@ -122,12 +118,26 @@ public class GiacenzaArticoloController {
         return giacenzaArticoloService.getOne(idArticolo);
     }
 
+    @RequestMapping(method = GET, path = "/{idArticolo}/list")
+    @CrossOrigin
+    public List<GiacenzaArticolo> getAllByArticolo(@PathVariable final Long idArticolo) {
+        LOGGER.info("Performing GET request for retrieving 'giacenza articolo' of articolo '{}'", idArticolo);
+        return giacenzaArticoloService.getNotAggregateByArticolo(idArticolo);
+    }
+
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin
     public GiacenzaArticolo create(@RequestBody final GiacenzaArticolo giacenzaArticolo){
         LOGGER.info("Performing POST request for creating 'giacenza articolo'");
         return giacenzaArticoloService.create(giacenzaArticolo);
+    }
+
+    @RequestMapping(method = PUT)
+    @CrossOrigin
+    public List<GiacenzaArticolo> updateBulk(@RequestBody final List<GiacenzaArticolo> giacenzeArticolo){
+        LOGGER.info("Performing PUT request for bulk updating 'giacenza articolo'");
+        return giacenzaArticoloService.updateBulk(giacenzeArticolo);
     }
 
     @RequestMapping(method = POST, path = "/operations/delete")

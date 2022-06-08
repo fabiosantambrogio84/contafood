@@ -1,6 +1,7 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+@Data
 @Entity
 @Table(name = "nota_reso_riga")
 public class NotaResoRiga implements Serializable {
@@ -59,131 +61,15 @@ public class NotaResoRiga implements Serializable {
     @JoinColumn(name="id_articolo")
     private Articolo articolo;
 
+    @ManyToOne
+    @JoinColumn(name="id_ingrediente")
+    private Ingrediente ingrediente;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
-
-    public NotaResoRigaKey getId() {
-        return id;
-    }
-
-    public void setId(NotaResoRigaKey id) {
-        this.id = id;
-    }
-
-    public NotaReso getNotaReso() {
-        return notaReso;
-    }
-
-    public void setNotaReso(NotaReso notaReso) {
-        this.notaReso = notaReso;
-    }
-
-    public String getDescrizione() {
-        return descrizione;
-    }
-
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
-
-    public String getLotto() {
-        return lotto;
-    }
-
-    public void setLotto(String lotto) {
-        this.lotto = lotto;
-    }
-
-    public Date getScadenza() {
-        return scadenza;
-    }
-
-    public void setScadenza(Date scadenza) {
-        this.scadenza = scadenza;
-    }
-
-    public UnitaMisura getUnitaMisura() {
-        return unitaMisura;
-    }
-
-    public void setUnitaMisura(UnitaMisura unitaMisura) {
-        this.unitaMisura = unitaMisura;
-    }
-
-    public Float getQuantita() {
-        return quantita;
-    }
-
-    public void setQuantita(Float quantita) {
-        this.quantita = quantita;
-    }
-
-    public BigDecimal getPrezzo() {
-        return prezzo;
-    }
-
-    public void setPrezzo(BigDecimal prezzo) {
-        this.prezzo = prezzo;
-    }
-
-    public BigDecimal getSconto() {
-        return sconto;
-    }
-
-    public void setSconto(BigDecimal sconto) {
-        this.sconto = sconto;
-    }
-
-    public AliquotaIva getAliquotaIva() {
-        return aliquotaIva;
-    }
-
-    public void setAliquotaIva(AliquotaIva aliquotaIva) {
-        this.aliquotaIva = aliquotaIva;
-    }
-
-    public BigDecimal getImponibile() {
-        return imponibile;
-    }
-
-    public void setImponibile(BigDecimal imponibile) {
-        this.imponibile = imponibile;
-    }
-
-    public BigDecimal getTotale() {
-        return totale;
-    }
-
-    public void setTotale(BigDecimal totale) {
-        this.totale = totale;
-    }
-
-    public Articolo getArticolo() {
-        return articolo;
-    }
-
-    public void setArticolo(Articolo articolo) {
-        this.articolo = articolo;
-    }
-
-    public Timestamp getDataInserimento() {
-        return dataInserimento;
-    }
-
-    public void setDataInserimento(Timestamp dataInserimento) {
-        this.dataInserimento = dataInserimento;
-    }
-
-    public Timestamp getDataAggiornamento() {
-        return dataAggiornamento;
-    }
-
-    public void setDataAggiornamento(Timestamp dataAggiornamento) {
-        this.dataAggiornamento = dataAggiornamento;
-    }
 
     @Override
     public String toString() {
@@ -202,6 +88,7 @@ public class NotaResoRiga implements Serializable {
         result.append(", imponibile: " + imponibile);
         result.append(", totale: " + totale);
         result.append(", articolo: " + articolo);
+        result.append(", ingrediente: " + ingrediente);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");

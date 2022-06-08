@@ -228,12 +228,12 @@ public class StampaService {
         return ddtArticoloDataSources;
     }
 
-    public List<DdtDataSource> getDdtDataSources(java.sql.Date dataDa, java.sql.Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
+    public List<DdtDataSource> getDdtDataSources(java.sql.Date dataDa, java.sql.Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
         LOGGER.info("Retrieving the list of 'ddts' for creating pdf file");
 
         List<DdtDataSource> ddtDataSources = new ArrayList<>();
 
-        List<VDdt> ddts = ddtService.getAllByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, fatturato, importo, idTipoPagamento, idArticolo);
+        List<VDdt> ddts = ddtService.getAllByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
 
         if(!ddts.isEmpty()){
             ddts.forEach(ddt -> {
@@ -749,11 +749,22 @@ public class StampaService {
         List<NotaResoRigaDataSource> notaResoRigaDataSources = new ArrayList<>();
         if(notaReso.getNotaResoRighe() != null && !notaReso.getNotaResoRighe().isEmpty()){
             notaReso.getNotaResoRighe().forEach(nr -> {
+
+                String codiceArticolo = "";
+                UnitaMisura unitaMisura = null;
+                if(nr.getArticolo() != null){
+                    codiceArticolo = nr.getArticolo().getCodice();
+                    unitaMisura = nr.getArticolo().getUnitaMisura();
+                } else if(nr.getIngrediente() != null){
+                    codiceArticolo = nr.getIngrediente().getCodice();
+                    unitaMisura = nr.getIngrediente().getUnitaMisura();
+                }
+
                 NotaResoRigaDataSource notaResoRigaDataSource = new NotaResoRigaDataSource();
-                notaResoRigaDataSource.setCodiceArticolo(nr.getArticolo() != null ? nr.getArticolo().getCodice() : "");
+                notaResoRigaDataSource.setCodiceArticolo(codiceArticolo);
                 notaResoRigaDataSource.setDescrizioneArticolo(nr.getDescrizione());
                 notaResoRigaDataSource.setLotto(nr.getLotto());
-                notaResoRigaDataSource.setUdm(nr.getArticolo() != null ? (nr.getArticolo().getUnitaMisura() != null ? nr.getArticolo().getUnitaMisura().getEtichetta() : "") : "");
+                notaResoRigaDataSource.setUdm(unitaMisura != null ? unitaMisura.getEtichetta() : "");
                 notaResoRigaDataSource.setQuantita(nr.getQuantita());
                 notaResoRigaDataSource.setPrezzo(nr.getPrezzo() != null ? nr.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
                 notaResoRigaDataSource.setSconto(nr.getSconto() != null ? nr.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));

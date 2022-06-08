@@ -62,9 +62,9 @@ public class DdtService {
         return ddts;
     }
 
-    public List<VDdt> getAllByFilters(Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
+    public List<VDdt> getAllByFilters(Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
         LOGGER.info("Retrieving the list of 'ddts' filtered by request paramters");
-        List<VDdt> ddts = vDdtRepository.findByFilter(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, fatturato, importo, idTipoPagamento, idArticolo);
+        List<VDdt> ddts = vDdtRepository.findByFilter(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
         LOGGER.info("Retrieved {} 'ddts'", ddts.size());
         return ddts;
     }

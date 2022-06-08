@@ -4,12 +4,8 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
 import com.contafood.model.GiacenzaArticolo;
 import com.contafood.model.Movimentazione;
-import com.contafood.model.Ricetta;
 import com.contafood.model.views.VGiacenzaArticolo;
-import com.contafood.repository.ArticoloRepository;
 import com.contafood.repository.GiacenzaArticoloRepository;
-import com.contafood.repository.MovimentazioneManualeArticoloRepository;
-import com.contafood.repository.RicettaRepository;
 import com.contafood.repository.views.VGiacenzaArticoloRepository;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
@@ -27,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class GiacenzaArticoloService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(GiacenzaArticoloService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(GiacenzaArticoloService.class);
 
     private final GiacenzaArticoloRepository giacenzaArticoloRepository;
     private final VGiacenzaArticoloRepository vGiacenzaArticoloRepository;
@@ -59,6 +55,15 @@ public class GiacenzaArticoloService {
         return giacenze;
     }
 
+    public List<GiacenzaArticolo> getNotAggregateByArticolo(Long idArticolo){
+        LOGGER.info("Retrieving the list of 'giacenze articolo' of articolo with id {}", idArticolo);
+        Set<GiacenzaArticolo> giacenze = giacenzaArticoloRepository.findByArticoloId(idArticolo);
+        LOGGER.info("Retrieved {} 'giacenze articolo'", giacenze.size());
+        return giacenze.stream()
+                .sorted(Comparator.comparing(GiacenzaArticolo::getLotto).thenComparing(GiacenzaArticolo::getScadenza, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public GiacenzaArticolo create(GiacenzaArticolo giacenzaArticolo){
         LOGGER.info("Creating 'giacenza articolo'");
@@ -73,6 +78,18 @@ public class GiacenzaArticoloService {
 
         LOGGER.info("Created 'giacenza articolo' '{}'", giacenzaArticolo);
         return giacenzaArticolo;
+    }
+
+    @Transactional
+    public List<GiacenzaArticolo> updateBulk(List<GiacenzaArticolo> giacenzeArticolo){
+        LOGGER.info("Updating bulk 'giacenza articolo'");
+
+        giacenzeArticolo.forEach(ga -> ga.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant())));
+
+        giacenzaArticoloRepository.saveAll(giacenzeArticolo);
+
+        LOGGER.info("Updated bulk 'giacenza articolo'");
+        return giacenzeArticolo;
     }
 
     public void delete(Long idGiacenza){
@@ -100,12 +117,10 @@ public class GiacenzaArticoloService {
         List<Movimentazione> movimentazioni = new ArrayList<>();
         Set<Movimentazione> movimentazioniArticolo = new HashSet<>();
         if(giacenzeArticoli != null && !giacenzeArticoli.isEmpty()){
-            giacenzeArticoli.stream().forEach(ga -> {
-                movimentazioniArticolo.addAll(movimentazioneService.getMovimentazioniArticolo(ga));
-            });
+            giacenzeArticoli.forEach(ga -> movimentazioniArticolo.addAll(movimentazioneService.getMovimentazioniArticolo(ga)));
         }
         if(!movimentazioniArticolo.isEmpty()){
-            movimentazioni = movimentazioniArticolo.stream().collect(Collectors.toList());
+            movimentazioni = new ArrayList<>(movimentazioniArticolo);
             movimentazioni.sort(Comparator.comparing(Movimentazione::getData).reversed());
         }
 
@@ -137,18 +152,18 @@ public class GiacenzaArticoloService {
             LOGGER.info("Retrieved 'giacenza articolo' {}", giacenzaArticolo);
 
             Set<Movimentazione> movimentazioni = movimentazioneService.getMovimentazioniArticolo(giacenzaArticolo);
-            Float quantitaInput = 0f;
-            Float quantitaOutput = 0f;
-            Float newQuantita = 0f;
+            Float quantitaInput;
+            Float quantitaOutput;
+            float newQuantita;
 
             LOGGER.info("Computing input and output quantities");
 
             if(movimentazioni != null && !movimentazioni.isEmpty()){
                 // 'movimentazioni' in input
-                quantitaInput = movimentazioni.stream().filter(m -> m.getInputOutput().equals("INPUT") && m.getQuantita() != null).map(m -> m.getQuantita()).reduce(0f, Float::sum);
+                quantitaInput = movimentazioni.stream().filter(m -> m.getInputOutput().equals("INPUT") && m.getQuantita() != null).map(Movimentazione::getQuantita).reduce(0f, Float::sum);
 
                 // 'movimentazioni' in output
-                quantitaOutput = movimentazioni.stream().filter(m -> m.getInputOutput().equals("OUTPUT") && m.getQuantita() != null).map(m -> m.getQuantita()).reduce(0f, Float::sum);
+                quantitaOutput = movimentazioni.stream().filter(m -> m.getInputOutput().equals("OUTPUT") && m.getQuantita() != null).map(Movimentazione::getQuantita).reduce(0f, Float::sum);
 
                 quantita = (quantita != null ? quantita : 0f);
 
@@ -185,7 +200,7 @@ public class GiacenzaArticoloService {
 
         } else {
             LOGGER.info("Creating a new 'giacenza articolo'");
-            Float newQuantita = 0f;
+            float newQuantita = 0f;
             if(quantita != null){
                 newQuantita = quantita;
             }

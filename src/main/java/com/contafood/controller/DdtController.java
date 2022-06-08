@@ -68,14 +68,15 @@ public class DdtController {
                              @RequestParam(name = "autista", required = false) Integer idAutista,
                              @RequestParam(name = "articolo", required = false) Integer idArticolo,
                              @RequestParam(name = "stato", required = false) Integer idStato,
+                             @RequestParam(name = "pagato", required = false) Boolean pagato,
                              @RequestParam(name = "idCliente", required = false) Integer idCliente,
                              @RequestParam(name = "fatturato", required = false) Boolean fatturato) {
         LOGGER.info("Performing GET request for searching list of 'ddts'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, idCliente {}, fatturato {}",
-                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, idCliente, fatturato);
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, pagato {}, idCliente {}, fatturato {}",
+                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, pagato, idCliente, fatturato);
         // /contafood-be/ddts?dataDa=&dataA=&progressivo=&importo=&tipoPagamento=&cliente=&agente=&autista=&articolo=
 
-        return ddtService.getAllByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, fatturato, importo, idTipoPagamento, idArticolo);
+        return ddtService.getAllByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
     }
 
     @RequestMapping(method = GET, path = "/{ddtId}")

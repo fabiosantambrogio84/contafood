@@ -1,7 +1,6 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.Articolo;
 import com.contafood.model.Fornitore;
 import com.contafood.model.Ingrediente;
 import com.contafood.service.IngredienteService;
@@ -25,7 +24,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/ingredienti")
 public class IngredienteController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(IngredienteController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(IngredienteController.class);
 
     private final IngredienteService ingredienteService;
 
@@ -52,9 +51,7 @@ public class IngredienteController {
             if(idFornitore != null){
                 Fornitore ingredienteFornitore = ingrediente.getFornitore();
                 if(ingredienteFornitore != null){
-                    if(ingredienteFornitore.getId().equals(Long.valueOf(idFornitore))){
-                        return true;
-                    }
+                    return ingredienteFornitore.getId().equals(Long.valueOf(idFornitore));
                 }
                 return false;
             }

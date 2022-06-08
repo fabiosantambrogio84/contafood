@@ -17,7 +17,7 @@ public class VDdtCustomRepositoryImpl implements VDdtCustomRepository{
 
 
     @Override
-    public List<VDdt> findByFilter(Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo) {
+    public List<VDdt> findByFilter(Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM contafood.v_ddt WHERE 1=1 ");
 
@@ -44,6 +44,13 @@ public class VDdtCustomRepositoryImpl implements VDdtCustomRepository{
         }
         if(idStato != null) {
             sb.append(" AND id_stato = :idStato ");
+        }
+        if(pagato != null){
+            if(pagato){
+                sb.append(" AND id_stato = 2 ");
+            } else {
+                sb.append(" AND id_stato != 2 ");
+            }
         }
         if(fatturato != null) {
             sb.append(" AND fatturato = :fatturato ");

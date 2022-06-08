@@ -1,7 +1,9 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.*;
+import com.contafood.model.Fornitore;
+import com.contafood.model.NotaReso;
+import com.contafood.model.StatoNotaReso;
 import com.contafood.service.NotaResoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +27,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/note-reso")
 public class NotaResoController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(NotaResoController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(NotaResoController.class);
 
     private final NotaResoService notaResoService;
 
@@ -42,11 +44,10 @@ public class NotaResoController {
                                 @RequestParam(name = "importo", required = false) Float importo,
                                 @RequestParam(name = "fornitore", required = false) String fornitore,
                                 @RequestParam(name = "agente", required = false) Integer idAgente,
-                                @RequestParam(name = "articolo", required = false) Integer idArticolo,
                                 @RequestParam(name = "stato", required = false) Integer idStato ) {
         LOGGER.info("Performing GET request for retrieving list of 'note accredito'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, fornitore {}, agente {}, articolo {}, stato {}",
-                dataDa, dataA, progressivo, importo, fornitore, idAgente, idArticolo, idStato);
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, fornitore {}, agente {}, stato {}",
+                dataDa, dataA, progressivo, importo, fornitore, idAgente, idStato);
 
         Predicate<NotaReso> isNotaResoDataDaGreaterOrEquals = notaReso -> {
             if(dataDa != null){
@@ -76,9 +77,7 @@ public class NotaResoController {
             if(fornitore != null){
                 Fornitore notaResoFornitore = notaReso.getFornitore();
                 if(notaResoFornitore != null){
-                    if((notaResoFornitore.getRagioneSociale().toLowerCase()).contains(fornitore.toLowerCase())){
-                        return true;
-                    }
+                    return (notaResoFornitore.getRagioneSociale().toLowerCase()).contains(fornitore.toLowerCase());
                 }
                 return false;
             }

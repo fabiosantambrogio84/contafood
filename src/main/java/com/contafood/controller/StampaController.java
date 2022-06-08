@@ -19,14 +19,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -130,14 +128,15 @@ public class StampaController {
                                               @RequestParam(name = "autista", required = false) Integer idAutista,
                                               @RequestParam(name = "articolo", required = false) Integer idArticolo,
                                               @RequestParam(name = "stato", required = false) Integer idStato,
+                                              @RequestParam(name = "pagato", required = false) Boolean pagato,
                                               @RequestParam(name = "idCliente", required = false) Integer idCliente,
                                               @RequestParam(name = "fatturato", required = false) Boolean fatturato) throws Exception{
         LOGGER.info("Creating pdf for list of 'ddt'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, idCliente {}, fatturato {}",
-                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, idCliente, fatturato);
+        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, pagato {}, idCliente {}, fatturato {}",
+                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, pagato, idCliente, fatturato);
 
         // retrieve the list of Ddt
-        List<DdtDataSource> ddts = stampaService.getDdtDataSources(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, fatturato, importo, idTipoPagamento, idArticolo);
+        List<DdtDataSource> ddts = stampaService.getDdtDataSources(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
 
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_DDTS);
