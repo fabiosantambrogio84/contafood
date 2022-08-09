@@ -1,9 +1,11 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 @Entity
@@ -41,6 +43,9 @@ public class OrdineClienteArticolo implements Serializable {
 
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
+
+    @Transient
+    private BigDecimal prezzo;
 
     public OrdineClienteArticoloKey getId() {
         return id;
@@ -104,6 +109,14 @@ public class OrdineClienteArticolo implements Serializable {
 
     public void setDataAggiornamento(Timestamp dataAggiornamento) {
         this.dataAggiornamento = dataAggiornamento;
+    }
+
+    public BigDecimal getPrezzo() {
+        return prezzo;
+    }
+
+    public void setPrezzo(BigDecimal prezzo) {
+        this.prezzo = prezzo;
     }
 
     @Override

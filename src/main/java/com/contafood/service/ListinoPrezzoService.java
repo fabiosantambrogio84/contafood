@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class ListinoPrezzoService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ListinoPrezzoService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ListinoPrezzoService.class);
 
     private final ListinoPrezzoRepository listinoPrezzoRepository;
 
@@ -189,13 +189,16 @@ public class ListinoPrezzoService {
     public void computeListiniPrezziForArticolo(Articolo articolo){
         LOGGER.info("Recomputing 'listiniPrezzi' of articolo '{}'", articolo.getId());
         List<ListinoPrezzo> listiniPrezzi = listinoPrezzoRepository.findByArticoloId(articolo.getId());
-        listiniPrezzi.forEach(lp -> {
-            lp.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
-            Listino listino = lp.getListino();
-            Float variazionePrezzo = listino.getListiniPrezziVariazioni().stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(lpv -> lpv.getVariazionePrezzo()).findFirst().orElse(null);
-            String tipologiaVariazionePrezzo = listino.getListiniPrezziVariazioni().stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(lpv -> lpv.getTipologiaVariazionePrezzo()).findFirst().orElse(null);
-            lp.setPrezzo(computePrezzo(articolo, tipologiaVariazionePrezzo, variazionePrezzo));
-        });
+        listiniPrezzi
+                .stream()
+                .filter(lp -> lp.getListino() != null && !lp.getListino().getBloccaPrezzi())
+                .forEach(lp -> {
+                    lp.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
+                    Listino listino = lp.getListino();
+                    Float variazionePrezzo = listino.getListiniPrezziVariazioni().stream().filter(lpv -> lpv.getVariazionePrezzo() != null).map(ListinoPrezzoVariazione::getVariazionePrezzo).findFirst().orElse(null);
+                    String tipologiaVariazionePrezzo = listino.getListiniPrezziVariazioni().stream().filter(lpv -> lpv.getTipologiaVariazionePrezzo() != null).map(ListinoPrezzoVariazione::getTipologiaVariazionePrezzo).findFirst().orElse(null);
+                    lp.setPrezzo(computePrezzo(articolo, tipologiaVariazionePrezzo, variazionePrezzo));
+                });
         bulkInsertOrUpdate(listiniPrezzi);
         LOGGER.info("Recomputed 'listiniPrezzi' of articolo '{}'", articolo.getId());
     }

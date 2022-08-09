@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -31,17 +32,20 @@ public class OrdineClienteService {
     private final OrdineClienteRepository ordineClienteRepository;
     private final OrdineClienteArticoloService ordineClienteArticoloService;
     private final StatoOrdineService statoOrdineService;
+    private final ListinoPrezzoService listinoPrezzoService;
     private final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository;
     private final VOrdineClienteArticoloRepository vOrdineClienteArticoloRepository;
 
     public OrdineClienteService(final OrdineClienteRepository ordineClienteRepository,
                                 final OrdineClienteArticoloService ordineClienteArticoloService,
                                 final StatoOrdineService statoOrdineService,
+                                final ListinoPrezzoService listinoPrezzoService,
                                 final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository,
                                 final VOrdineClienteArticoloRepository vOrdineClienteArticoloRepository){
         this.ordineClienteRepository = ordineClienteRepository;
         this.ordineClienteArticoloService = ordineClienteArticoloService;
         this.statoOrdineService = statoOrdineService;
+        this.listinoPrezzoService = listinoPrezzoService;
         this.ddtArticoloOrdineClienteRepository = ddtArticoloOrdineClienteRepository;
         this.vOrdineClienteArticoloRepository = vOrdineClienteArticoloRepository;
     }
@@ -57,6 +61,19 @@ public class OrdineClienteService {
         LOGGER.info("Retrieving 'ordineCliente' '{}'", ordineClienteId);
         OrdineCliente ordineCliente = ordineClienteRepository.findById(ordineClienteId).orElseThrow(ResourceNotFoundException::new);
         LOGGER.info("Retrieved 'ordineCliente' '{}'", ordineCliente);
+        LOGGER.info("Setting prices...");
+        Listino listino = ordineCliente.getCliente().getListino();
+        if(listino != null){
+            List<ListinoPrezzo> listiniPrezzi = listinoPrezzoService.getByListinoId(listino.getId());
+            if(!listiniPrezzi.isEmpty()){
+                final Map<Long, BigDecimal> articoloPrezzoMap = listiniPrezzi
+                        .stream()
+                        .collect(Collectors.toMap(lp -> lp.getArticolo().getId(), ListinoPrezzo::getPrezzo));
+
+                ordineCliente.getOrdineClienteArticoli().forEach(a -> a.setPrezzo(articoloPrezzoMap.get(a.getId().getArticoloId())));
+            }
+        }
+        LOGGER.info("Prices successfully set");
         return ordineCliente;
     }
 
@@ -264,7 +281,7 @@ public class OrdineClienteService {
 
                     LOGGER.info("Numero pezzi ordinati: {}, numero pezzi evasi {}", numPezziOrdinati, numPezziEvasi);
 
-                    Integer newNumPezziDaEvadere = numPezziOrdinati - numPezziEvasi;
+                    int newNumPezziDaEvadere = numPezziOrdinati - numPezziEvasi;
                     if(newNumPezziDaEvadere > 0){
                         //numPezziEvasi = (numPezziOrdinati - numPezziEvasi);
                         numPezziEvasi = 0;
@@ -285,9 +302,7 @@ public class OrdineClienteService {
             ordiniClientiAggregati.forEach(oca -> {
                 String idsOrdiniClienti = oca.getIdsOrdiniClienti();
                 if(idsOrdiniClienti != null && !StringUtils.isEmpty(idsOrdiniClienti)){
-                    Arrays.stream(idsOrdiniClienti.split(",")).forEach(id -> {
-                        idOrdiniClienti.add(Long.valueOf(id));
-                    });
+                    Arrays.stream(idsOrdiniClienti.split(",")).forEach(id -> idOrdiniClienti.add(Long.valueOf(id)));
                 }
             });
             if(idOrdiniClienti != null && !idOrdiniClienti.isEmpty()){
@@ -321,9 +336,9 @@ public class OrdineClienteService {
         Set<OrdineClienteArticolo> ordineClienteArticoli = ordineClienteArticoloService.getOrdineClienteArticoli(idOrdineCliente);
         if(ordineClienteArticoli != null && !ordineClienteArticoli.isEmpty()){
             StatoOrdine statoOrdine = statoOrdineService.getDaEvadere();
-            Integer sumNumeroPezziOrdinati = ordineClienteArticoli.stream().map(oca -> oca.getNumeroPezziOrdinati()).reduce(0, Integer::sum);
+            Integer sumNumeroPezziOrdinati = ordineClienteArticoli.stream().map(OrdineClienteArticolo::getNumeroPezziOrdinati).reduce(0, Integer::sum);
             if(sumNumeroPezziOrdinati > 0){
-                Integer sumNumeroPezziDaEvadere = ordineClienteArticoli.stream().map(oca -> oca.getNumeroPezziDaEvadere()).reduce(0, Integer::sum);
+                Integer sumNumeroPezziDaEvadere = ordineClienteArticoli.stream().map(OrdineClienteArticolo::getNumeroPezziDaEvadere).reduce(0, Integer::sum);
                 if(sumNumeroPezziDaEvadere == 0){
                     statoOrdine = statoOrdineService.getEvaso();
                 } else if(sumNumeroPezziDaEvadere < sumNumeroPezziOrdinati){
@@ -395,7 +410,7 @@ public class OrdineClienteService {
         return 1;
     }*/
 
-    private class ArticoloGrouped {
+    private static class ArticoloGrouped {
         private String idsOrdiniClienti;
         private Integer numeroPezzi;
 
@@ -415,4 +430,5 @@ public class OrdineClienteService {
             this.numeroPezzi = numeroPezzi;
         }
     }
+
 }

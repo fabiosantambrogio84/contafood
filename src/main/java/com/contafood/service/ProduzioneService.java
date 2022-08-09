@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @Service
 public class ProduzioneService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ProduzioneService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProduzioneService.class);
 
     private final ProduzioneRepository produzioneRepository;
     private final VProduzioneRepository vProduzioneRepository;
@@ -36,8 +37,11 @@ public class ProduzioneService {
     private final GiacenzaArticoloService giacenzaArticoloService;
     private final GiacenzaIngredienteService giacenzaIngredienteService;
     private final ArticoloService articoloService;
+    private final IngredienteService ingredienteService;
     private final FornitoreService fornitoreService;
     private final ConfezioneService confezioneService;
+    private final UnitaMisuraService unitaMisuraService;
+    private final AliquotaIvaService aliquotaIvaService;
     private final RicettaRepository ricettaRepository;
 
     @Autowired
@@ -48,8 +52,11 @@ public class ProduzioneService {
                              final GiacenzaArticoloService giacenzaArticoloService,
                              final GiacenzaIngredienteService giacenzaIngredienteService,
                              final ArticoloService articoloService,
+                             final IngredienteService ingredienteService,
                              final FornitoreService fornitoreService,
                              final ConfezioneService confezioneService,
+                             final UnitaMisuraService unitaMisuraService,
+                             final AliquotaIvaService aliquotaIvaService,
                              final RicettaRepository ricettaRepository){
         this.produzioneRepository = produzioneRepository;
         this.vProduzioneRepository = vProduzioneRepository;
@@ -58,8 +65,11 @@ public class ProduzioneService {
         this.giacenzaArticoloService = giacenzaArticoloService;
         this.giacenzaIngredienteService = giacenzaIngredienteService;
         this.articoloService = articoloService;
+        this.ingredienteService = ingredienteService;
         this.fornitoreService = fornitoreService;
         this.confezioneService = confezioneService;
+        this.unitaMisuraService = unitaMisuraService;
+        this.aliquotaIvaService = aliquotaIvaService;
         this.ricettaRepository = ricettaRepository;
     }
 
@@ -91,6 +101,7 @@ public class ProduzioneService {
         produzione.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         Produzione createdProduzione = produzioneRepository.save(produzione);
+        String tipologia = createdProduzione.getTipologia();
         Long produzioneId = createdProduzione.getId();
         Date dataProduzione = createdProduzione.getDataProduzione();
         Date scadenzaProduzione = createdProduzione.getScadenza();
@@ -128,16 +139,26 @@ public class ProduzioneService {
             pc.getId().setProduzioneId(produzioneId);
             pc.setLottoProduzione(createdLotto);
 
-            // create, or retrieve, the associated Articolo
-            Articolo articolo = getOrCreateArticolo(pc, idRicetta, dataProduzione);
-            pc.setArticolo(articolo);
+            if(tipologia.equals("SCORTA")){
+                // create, or retrieve, the associated Ingrediente
+                Ingrediente ingrediente = getOrCreateIngrediente(pc, idRicetta);
+                pc.setIngrediente(ingrediente);
 
-            // compute 'giacenza articolo'
-            giacenzaArticoloService.computeGiacenza(articolo.getId(), createdLotto, scadenzaProduzione, pc.getNumConfezioniProdotte().floatValue(), Resource.PRODUZIONE);
+                // compute 'giacenza ingrediente'
+                giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), createdLotto, scadenzaProduzione, pc.getNumConfezioniProdotte().floatValue(), Resource.PRODUZIONE_INGREDIENTE);
 
+            } else {
+                // create, or retrieve, the associated Articolo
+                Articolo articolo = getOrCreateArticolo(pc, idRicetta, dataProduzione);
+                pc.setArticolo(articolo);
+
+                // compute 'giacenza articolo'
+                giacenzaArticoloService.computeGiacenza(articolo.getId(), createdLotto, scadenzaProduzione, pc.getNumConfezioniProdotte().floatValue(), Resource.PRODUZIONE);
+
+            }
             produzioneConfezioneService.create(pc);
         });
-        Integer numeroConfezioni = createdProduzione.getProduzioneConfezioni().stream().collect(Collectors.summingInt(pc -> pc.getNumConfezioni()));
+        Integer numeroConfezioni = createdProduzione.getProduzioneConfezioni().stream().collect(Collectors.summingInt(ProduzioneConfezione::getNumConfezioni));
 
         createdProduzione.setNumeroConfezioni(numeroConfezioni);
         createdProduzione = produzioneRepository.save(produzione);
@@ -146,6 +167,7 @@ public class ProduzioneService {
         return createdProduzione;
     }
 
+    /*
     @Transactional
     public Produzione update(Produzione produzione){
         LOGGER.info("Updating 'produzione'");
@@ -176,7 +198,7 @@ public class ProduzioneService {
             pc.getId().setProduzioneId(produzioneId);
             produzioneConfezioneService.create(pc);
         });
-        Integer numeroConfezioni = updatedProduzione.getProduzioneConfezioni().stream().collect(Collectors.summingInt(pc -> pc.getNumConfezioni()));
+        Integer numeroConfezioni = updatedProduzione.getProduzioneConfezioni().stream().collect(Collectors.summingInt(ProduzioneConfezione::getNumConfezioni));
 
         updatedProduzione.setCodice(produzioneId.intValue());
         updatedProduzione.setNumeroConfezioni(numeroConfezioni);
@@ -210,11 +232,13 @@ public class ProduzioneService {
         LOGGER.info("Updated 'produzione' '{}'", updatedProduzione);
         return updatedProduzione;
     }
+     */
 
     @Transactional
     public void delete(Long produzioneId){
         LOGGER.info("Deleting 'produzione' '{}'", produzioneId);
-        Produzione produzione = produzioneRepository.findById(produzioneId).get();
+        Produzione produzione = produzioneRepository.findById(produzioneId).orElseThrow(ResourceNotFoundException::new);
+        String tipologia = produzione.getTipologia();
 
         Set<ProduzioneConfezione> produzioneConfezioni = produzioneConfezioneService.findByProduzioneId(produzioneId);
         if(produzioneConfezioni != null && !produzioneConfezioni.isEmpty()){
@@ -222,13 +246,25 @@ public class ProduzioneService {
                 Ricetta ricetta = ricettaRepository.findById(produzione.getRicetta().getId()).orElse(null);
                 Confezione confezione = confezioneService.getOne(produzioneConfezione.getId().getConfezioneId());
 
-                String codiceArticolo = createCodiceArticolo(ricetta, confezione);
-                Optional<Articolo> optionalArticolo = articoloService.getByCodice(codiceArticolo);
-                if(optionalArticolo.isPresent()){
-                    Articolo articolo = optionalArticolo.get();
+                if(tipologia.equals("SCORTA")){
+                    String codiceIngrediente = createCodiceIngrediente(ricetta, confezione);
+                    Optional<Ingrediente> optionalIngrediente = ingredienteService.getByCodice(codiceIngrediente);
+                    if(optionalIngrediente.isPresent()){
+                        Ingrediente ingrediente = optionalIngrediente.get();
 
-                    // compute 'giacenza articolo'
-                    giacenzaArticoloService.computeGiacenza(articolo.getId(), produzioneConfezione.getLotto(), produzione.getScadenza(), (produzioneConfezione.getNumConfezioniProdotte() != null ? (produzioneConfezione.getNumConfezioniProdotte()*-1) : 0f), Resource.PRODUZIONE);
+                        // compute 'giacenza ingrediente'
+                        giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), produzioneConfezione.getLotto(), produzione.getScadenza(), (produzioneConfezione.getNumConfezioniProdotte() != null ? (produzioneConfezione.getNumConfezioniProdotte()*-1) : 0f), Resource.PRODUZIONE_INGREDIENTE);
+                    }
+
+                } else {
+                    String codiceArticolo = createCodiceArticolo(ricetta, confezione);
+                    Optional<Articolo> optionalArticolo = articoloService.getByCodice(codiceArticolo);
+                    if(optionalArticolo.isPresent()){
+                        Articolo articolo = optionalArticolo.get();
+
+                        // compute 'giacenza articolo'
+                        giacenzaArticoloService.computeGiacenza(articolo.getId(), produzioneConfezione.getLotto(), produzione.getScadenza(), (produzioneConfezione.getNumConfezioniProdotte() != null ? (produzioneConfezione.getNumConfezioniProdotte()*-1) : 0f), Resource.PRODUZIONE);
+                    }
                 }
             }
         }
@@ -297,8 +333,54 @@ public class ProduzioneService {
         return articolo;
     }
 
+    private Ingrediente getOrCreateIngrediente(ProduzioneConfezione produzioneConfezione, Long idRicetta){
+        LOGGER.info("Creating or retrieving associated 'ingrediente'...");
+
+        // retrieve Ricetta
+        Ricetta ricetta = ricettaRepository.findById(idRicetta).orElse(null);
+
+        // retrieve default Fornitore
+        Fornitore fornitore = fornitoreService.getByRagioneSociale(Constants.DEFAULT_FORNITORE);
+
+        // retrieve Confezione
+        Confezione confezione = confezioneService.getOne(produzioneConfezione.getId().getConfezioneId());
+
+        String codiceIngrediente = createCodiceIngrediente(ricetta, confezione);
+
+        Optional<Ingrediente> optionalIngrediente = ingredienteService.getByCodice(codiceIngrediente);
+        Ingrediente ingrediente;
+
+        if(!optionalIngrediente.isPresent()){
+            ingrediente = new Ingrediente();
+            ingrediente.setCodice(codiceIngrediente);
+            ingrediente.setDescrizione(createDescrizioneIngrediente(ricetta, confezione));
+            ingrediente.setFornitore(fornitore);
+            ingrediente.setPrezzo(new BigDecimal(1));
+            ingrediente.setUnitaMisura(unitaMisuraService.getByNome("kg"));
+            ingrediente.setAliquotaIva(aliquotaIvaService.getOne(1L));
+            ingrediente.setAttivo(Boolean.TRUE);
+            ingrediente = ingredienteService.create(ingrediente);
+            LOGGER.info("Created 'ingrediente' '{}' from produzione", ingrediente);
+        } else {
+            LOGGER.info("Retrieved 'ingrediente' with 'codice' '{}'", codiceIngrediente);
+            ingrediente = optionalIngrediente.get();
+        }
+
+        return ingrediente;
+    }
+
     private String createCodiceArticolo(Ricetta ricetta, Confezione confezione){
-        Float pesoConfezione = confezione.getPeso()/1000;
+        float pesoConfezione = confezione.getPeso()/1000;
+        String peso = Float.toString(pesoConfezione).replace(".", ",");
+        if(peso.contains(",0")){
+            peso = StringUtils.substringBefore(peso,",");
+        }
+
+        return Constants.DEFAULT_FORNITORE_INITIALS + (ricetta != null ? ricetta.getCodice() : "")+peso;
+    }
+
+    private String createCodiceIngrediente(Ricetta ricetta, Confezione confezione){
+        float pesoConfezione = confezione.getPeso()/1000;
         String peso = Float.toString(pesoConfezione).replace(".", ",");
         if(peso.contains(",0")){
             peso = StringUtils.substringBefore(peso,",");
@@ -308,7 +390,17 @@ public class ProduzioneService {
     }
 
     private String createDescrizioneArticolo(Ricetta ricetta, Confezione confezione){
-        Float pesoConfezione = confezione.getPeso()/1000;
+        float pesoConfezione = confezione.getPeso()/1000;
+        String peso = Float.toString(pesoConfezione).replace(".", ",");
+        if(peso.contains(",0")){
+            peso = StringUtils.substringBefore(peso,",");
+        }
+
+        return ricetta.getNome()+" "+peso+"gr";
+    }
+
+    private String createDescrizioneIngrediente(Ricetta ricetta, Confezione confezione){
+        float pesoConfezione = confezione.getPeso()/1000;
         String peso = Float.toString(pesoConfezione).replace(".", ",");
         if(peso.contains(",0")){
             peso = StringUtils.substringBefore(peso,",");

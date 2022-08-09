@@ -4,6 +4,7 @@ import com.contafood.exception.GenericException;
 import com.contafood.model.*;
 import com.contafood.util.RibaConstants;
 import com.contafood.util.RibaUtils;
+import com.contafood.util.enumeration.Mese;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +16,13 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.*;
 
 @Service
 public class RibaService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(RibaService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(RibaService.class);
 
     private final PagamentoService pagamentoService;
 
@@ -34,7 +30,7 @@ public class RibaService {
 
     private final SimpleDateFormat sdf = new SimpleDateFormat("ddMMyy");
 
-    private DecimalFormat df = new DecimalFormat();
+    private final DecimalFormat df = new DecimalFormat();
 
     @Autowired
     public RibaService(final PagamentoService pagamentoService,
@@ -93,7 +89,7 @@ public class RibaService {
                 for (Map.Entry<Date, List<PagamentoFattura>> innerEntry : entry.getValue().entrySet()) {
                     List<PagamentoFattura> pagamentoFatturaByPartitaIva = innerEntry.getValue();
 
-                    RiBaRow row = null;
+                    RiBaRow row;
                     // check if data must ne grouped
                     if (!clienteSimple.getRaggruppaRiba()) {
                         // create row for each Pagamento
@@ -141,16 +137,18 @@ public class RibaService {
                             Cliente cliente = RibaUtils.getGroupedCliente(pagamentoFatturaByPartitaIva);
 
                             // compute 'importo'
-                            Integer importoFattura = 0;
+                            int importoFattura = 0;
                             for (PagamentoFattura pagFatt : pagamentoFatturaByPartitaIva) {
                                 importoFattura = importoFattura + (int) (pagFatt.getPagamento().getImporto().doubleValue() * 100);
                             }
 
+                            Date dataFattura = null;
                             // create a string with list of 'Fattura.numeroProgressivo'
                             String logNumProgressivo = "";
                             for(PagamentoFattura pagamentoFattura : pagamentoFatturaByPartitaIva){
                                 Fattura fattura = pagamentoFattura.getFattura();
                                 if(fattura != null){
+                                    dataFattura = fattura.getData();
                                     Integer progressivo = fattura.getProgressivo();
                                     if(progressivo != null){
                                         logNumProgressivo = logNumProgressivo + progressivo + ",";
@@ -187,7 +185,7 @@ public class RibaService {
                             row.setCabCliente(cab);
                             row.setCapCliente(cliente.getCap());
                             row.setDataScadenza(innerEntry.getKey());
-                            row.setDescrizionePagamento("Pagamento fatture '" + cliente.getRagioneSociale() + "'");
+                            row.setDescrizionePagamento(createGroupedDescrizionePagamento(dataFattura));
                             row.setIdCliente(cliente.getId().intValue());
                             row.setIdPagamento(pagamentoAggregato.getId().intValue());
                             row.setImporto(importoFattura);
@@ -205,7 +203,7 @@ public class RibaService {
             }
 
             // order rows based on 'Fattura.progressivo'
-            Collections.sort(rows, (o1, o2) -> o1.getNumProgressivoFattura().compareTo(o2.getNumProgressivoFattura()));
+            rows.sort(Comparator.comparing(RiBaRow::getNumProgressivoFattura));
 
             for (RiBaRow row : rows) {
                 LOGGER.info("Create record...");
@@ -297,7 +295,7 @@ public class RibaService {
                 sb.append(String.format("%1$4s", ""));
                 sb.append("\n");
 
-                LOGGER.info("Successfully created record 50 for 'fattura' with progressivoa '" + fatturaNumProgressivo + "'");
+                LOGGER.info("Successfully created record 50 for 'fattura' with progressivo '" + fatturaNumProgressivo + "'");
 
                 // RECORD 51
                 sb.append(" ");
@@ -446,7 +444,19 @@ public class RibaService {
         return pagamentiFattureByPartitaIva;
     }
 
-    private class RiBaRow {
+    private String createGroupedDescrizionePagamento(Date dataFattura){
+        String prefix = "Saldo fatture del mese di ";
+        if(dataFattura == null){
+            return prefix + "??";
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dataFattura);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+        return prefix + (Mese.get(month) != null ? Mese.get(month).getLabel() : "??") + " " + year;
+    }
+
+    private static class RiBaRow {
         private Integer index;
 
         private Integer numProgressivoFattura;
@@ -479,9 +489,9 @@ public class RibaService {
 
         private String logNumProgressivo;
 
-        public Integer getIndex() {
+        /*public Integer getIndex() {
             return index;
-        }
+        }*/
 
         public void setIndex(Integer index) {
             this.index = index;
@@ -608,7 +618,7 @@ public class RibaService {
         }
     }
 
-    final private class ClienteSimple {
+    static final private class ClienteSimple {
 
         final private String partitaIva;
 
@@ -619,9 +629,9 @@ public class RibaService {
             this.isRaggruppaRiba = isRaggruppaRiba;
         }
 
-        public String getPartitaIva() {
+        /*public String getPartitaIva() {
             return partitaIva;
-        }
+        }*/
 
         public Boolean getRaggruppaRiba() {
             return isRaggruppaRiba;
@@ -641,13 +651,11 @@ public class RibaService {
             if (getClass() != obj.getClass())
                 return false;
             ClienteSimple other = (ClienteSimple) obj;
-            if (partitaIva != other.partitaIva)
-                return false;
-            return true;
+            return partitaIva.equals(other.partitaIva);
         }
     }
 
-    public class PagamentoFattura {
+    public static class PagamentoFattura {
 
         private Fattura fattura;
 

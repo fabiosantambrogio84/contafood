@@ -9,13 +9,11 @@ import com.contafood.repository.FatturaRepository;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.TipoPagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
-import com.contafood.util.Constants;
 import com.contafood.util.enumeration.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class FatturaService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(FatturaService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(FatturaService.class);
 
     private final FatturaRepository fatturaRepository;
     private final FatturaDdtService fatturaDdtService;
@@ -71,7 +69,7 @@ public class FatturaService {
 
         List<Long> idTipiPagamento = new ArrayList<>();
         if(!StringUtils.isEmpty(idTipoPagamento)){
-            Arrays.stream(idTipoPagamento.split(",")).mapToLong(id -> Long.parseLong(id)).forEach(l -> idTipiPagamento.add(l));
+            Arrays.stream(idTipoPagamento.split(",")).mapToLong(Long::parseLong).forEach(idTipiPagamento::add);
         }
 
         Predicate<VFattura> isFatturaDataDaGreaterOrEquals = fattura -> {
@@ -95,11 +93,7 @@ public class FatturaService {
         Predicate<VFattura> isFatturaImportoEquals = fattura -> {
             if(importo != null){
                 LOGGER.info("Importo {} - Fattura totale {} - Fattura totale float {}", importo, fattura.getTotale(), fattura.getTotale().floatValue());
-                if(importo.equals(fattura.getTotale().floatValue())){
-                    return true;
-                } else {
-                    return false;
-                }
+                return importo.equals(fattura.getTotale().floatValue());
                 //return fattura.getTotale().compareTo(new BigDecimal(importo).setScale(2, BigDecimal.ROUND_DOWN))==0;
             }
             return true;
@@ -122,9 +116,7 @@ public class FatturaService {
             if(cliente != null){
                 Cliente fatturaCliente = fattura.getCliente();
                 if(fatturaCliente != null){
-                    if((fatturaCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase())){
-                        return true;
-                    }
+                    return (fatturaCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase());
                 }
                 return false;
             }
@@ -136,9 +128,7 @@ public class FatturaService {
                 if(fatturaCliente != null){
                     Agente agente = fatturaCliente.getAgente();
                     if(agente != null){
-                        if(agente.getId().equals(Long.valueOf(idAgente))){
-                            return true;
-                        }
+                        return agente.getId().equals(Long.valueOf(idAgente));
                     }
                 }
                 return false;
@@ -149,7 +139,7 @@ public class FatturaService {
             if(idArticolo != null){
                 Set<DdtArticolo> ddtArticoli = getFatturaDdtArticoli(fattura.getId());
                 if(ddtArticoli != null && !ddtArticoli.isEmpty()){
-                    return ddtArticoli.stream().filter(da -> da.getId() != null).map(da -> da.getId()).filter(daId -> daId.getArticoloId() != null && daId.getArticoloId().equals(Long.valueOf(idArticolo))).findFirst().isPresent();
+                    return ddtArticoli.stream().filter(da -> da.getId() != null).map(DdtArticolo::getId).filter(daId -> daId.getArticoloId() != null && daId.getArticoloId().equals(Long.valueOf(idArticolo))).findFirst().isPresent();
                 }
                 return false;
             }
@@ -208,7 +198,7 @@ public class FatturaService {
 
     public Map<String, Integer> getAnnoAndProgressivo(){
         Integer anno = ZonedDateTime.now().getYear();
-        Integer progressivo = 1;
+        int progressivo = 1;
         List<VFattura> fatture = vFatturaRepository.findByAnnoOrderByProgressivoDesc(anno);
         if(fatture != null && !fatture.isEmpty()){
             Optional<VFattura> lastFattura = fatture.stream().findFirst();
@@ -223,23 +213,21 @@ public class FatturaService {
         return result;
     }
 
+    /*
     public Set<Pagamento> getFatturaDdtPagamenti(Long idFattura){
         Set<Pagamento> pagamenti = new HashSet<>();
         Fattura fattura = fatturaRepository.findById(idFattura).orElseThrow(ResourceNotFoundException::new);
         Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
-        fatturaDdts.forEach(fd -> {
-            pagamenti.addAll(fd.getDdt().getDdtPagamenti());
-        });
+        fatturaDdts.forEach(fd -> pagamenti.addAll(fd.getDdt().getDdtPagamenti()));
         return pagamenti;
     }
+    */
 
     public Set<DdtArticolo> getFatturaDdtArticoli(Long idFattura){
         Set<DdtArticolo> ddtArticoli = new HashSet<>();
         Fattura fattura = fatturaRepository.findById(idFattura).orElseThrow(ResourceNotFoundException::new);
         Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
-        fatturaDdts.forEach(fd -> {
-            ddtArticoli.addAll(fd.getDdt().getDdtArticoli());
-        });
+        fatturaDdts.forEach(fd -> ddtArticoli.addAll(fd.getDdt().getDdtArticoli()));
         return ddtArticoli;
     }
 
@@ -347,6 +335,7 @@ public class FatturaService {
     @Transactional
     public List<Fattura> createBulk(Map<String, Object> body){
         LOGGER.info("Creating bulk 'fatture'...");
+        List<Fattura> fattureToCreate = new ArrayList<>();
         List<Fattura> createdFatture = new ArrayList<>();
 
         Date data = Date.valueOf((String)body.get("data"));
@@ -371,7 +360,7 @@ public class FatturaService {
         ddts.forEach(ddt -> {
             Cliente cliente = ddt.getCliente();
             if(cliente != null){
-                clientiDdtsMap.computeIfAbsent(cliente.getId(), v -> new ArrayList<Ddt>());
+                clientiDdtsMap.computeIfAbsent(cliente.getId(), v -> new ArrayList<>());
                 clientiDdtsMap.computeIfPresent(cliente.getId(), (key, value) -> {
                     value.add(ddt);
                     return value;
@@ -414,9 +403,18 @@ public class FatturaService {
             });
             fattura.setFatturaDdts(fatturaDdts);
 
-            create(fattura);
+            fattureToCreate.add(fattura);
         }
         LOGGER.info("End of iteration on map with key=idCliente and value=List<Ddt>");
+
+        LOGGER.info("Creating fatture...");
+        Comparator<Fattura> comparator = Comparator.comparing(f -> f.getCliente().getRagioneSociale());
+        fattureToCreate.stream().sorted(comparator).forEach(f -> {
+            create(f);
+            createdFatture.add(f);
+        });
+
+        LOGGER.info("Fatture successfully created");
 
         LOGGER.info("Created {} bulk 'fatture'", createdFatture.size());
         return createdFatture;
@@ -458,22 +456,29 @@ public class FatturaService {
         Fattura fattura = fatturaRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         for(String key : patchFattura.keySet()){
             Object value = patchFattura.get(key);
-            if(key.equals("id")){
-                fattura.setId(Long.valueOf((Integer)value));
-            } else if(key.equals("speditoAde")){
-                if(value != null){
-                    fattura.setSpeditoAde((boolean)value);
-                } else {
-                    fattura.setSpeditoAde(Boolean.FALSE);
-                }
-            } else if(key.equals("progressivo")){
-                fattura.setProgressivo((Integer)value);
-            } else if(key.equals("anno")){
-                fattura.setAnno((Integer)value);
-            } else if(key.equals("data")){
-                fattura.setData(new Date(simpleDateFormat.parse((String) value).getTime()));
-            } else if(key.equals("note")){
-                fattura.setNote((String)value);
+            switch (key) {
+                case "id":
+                    fattura.setId(Long.valueOf((Integer) value));
+                    break;
+                case "speditoAde":
+                    if (value != null) {
+                        fattura.setSpeditoAde((boolean) value);
+                    } else {
+                        fattura.setSpeditoAde(Boolean.FALSE);
+                    }
+                    break;
+                case "progressivo":
+                    fattura.setProgressivo((Integer) value);
+                    break;
+                case "anno":
+                    fattura.setAnno((Integer) value);
+                    break;
+                case "data":
+                    fattura.setData(new Date(simpleDateFormat.parse((String) value).getTime()));
+                    break;
+                case "note":
+                    fattura.setNote((String) value);
+                    break;
             }
         }
         Fattura patchedFattura = fatturaRepository.save(fattura);
@@ -598,15 +603,6 @@ public class FatturaService {
         });
         LOGGER.info("Successfully set 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
 
-    }
-
-    public static HttpHeaders createHttpHeaders(String fileName){
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+fileName);
-        headers.add(HttpHeaders.CACHE_CONTROL, Constants.HTTP_HEADER_CACHE_CONTROL_VALUE);
-        headers.add(HttpHeaders.PRAGMA, Constants.HTTP_HEADER_PRAGMA_VALUE);
-        headers.add(HttpHeaders.EXPIRES, Constants.HTTP_HEADER_EXPIRES_VALUE);
-        return headers;
     }
 
 }

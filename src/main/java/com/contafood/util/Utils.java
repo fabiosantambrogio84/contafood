@@ -1,5 +1,12 @@
 package com.contafood.util;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+
+import java.io.File;
+import java.nio.file.Path;
+
+@Slf4j
 public class Utils {
 
     public static boolean stringContainsOnlyCertainCharacters(String input){
@@ -10,5 +17,20 @@ public class Utils {
             }
         }
         return true;
+    }
+
+    public static void removeFileOrDirectory(Path path){
+        try{
+            File file = path.toFile();
+            if(file.isDirectory()){
+                FileUtils.deleteDirectory(file);
+            } else{
+                file.delete();
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+            log.error("Error deleting file '{}'", path.toAbsolutePath());
+        }
     }
 }

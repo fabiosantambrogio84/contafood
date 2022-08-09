@@ -5,6 +5,7 @@ import com.contafood.model.reports.*;
 import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.service.StampaService;
 import com.contafood.util.Constants;
+import com.contafood.util.ZipUtils;
 import com.contafood.util.enumeration.Provincia;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperRunManager;
@@ -24,11 +25,15 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping(path="/stampe")
@@ -38,6 +43,8 @@ public class StampaController {
     private final static Logger LOGGER = LoggerFactory.getLogger(StampaController.class);
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 
     private final StampaService stampaService;
 
@@ -193,6 +200,36 @@ public class StampaController {
                 .headers(StampaService.createHttpHeaders("ddt-"+idDdt+".pdf"))
                 .contentLength(reportBytes.length)
                 .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
+    @RequestMapping(method = POST, path = "/ddts/checked", produces=Constants.MEDIA_TYPE_APPLICATION_ZIP)
+    @CrossOrigin
+    public ResponseEntity<Resource> printDdtsChecked(@RequestBody final Long[] ddts) throws Exception{
+        LOGGER.info("Creating zip for list of checked 'ddt'");
+
+        String zipFilename = "ddts-"+ dateTimeFormatter.format(LocalDateTime.now())+".zip";
+        byte[] zipContent;
+        Map<String, byte[]> ddtPdfs = new HashMap<>();
+
+        if(ddts == null || ddts.length == 0){
+            throw new RuntimeException("No DDT to print");
+        }
+
+        for(Long idDdt : ddts){
+            ddtPdfs.put("ddt-"+idDdt+".pdf", stampaService.generateDdt(idDdt));
+        }
+
+        zipContent = ZipUtils.createZipFile(ddtPdfs);
+
+        LOGGER.info("Successfully create zip for checked 'ddts'");
+
+        ByteArrayResource resource = new ByteArrayResource(zipContent);
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders(zipFilename))
+                .contentLength(zipContent.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_ZIP))
                 .body(resource);
     }
 
@@ -702,7 +739,6 @@ public class StampaController {
                 .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
                 .body(resource);
     }
-
 }
 
 

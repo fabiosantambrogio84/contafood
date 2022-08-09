@@ -1,7 +1,6 @@
 package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.Ddt;
 import com.contafood.model.Ingrediente;
 import com.contafood.repository.GiacenzaIngredienteRepository;
 import com.contafood.repository.IngredienteRepository;
@@ -12,13 +11,13 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class IngredienteService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(IngredienteService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(IngredienteService.class);
 
     private final IngredienteRepository ingredienteRepository;
     private final GiacenzaIngredienteRepository giacenzaIngredienteRepository;
@@ -44,6 +43,17 @@ public class IngredienteService {
         return ingrediente;
     }
 
+    public Optional<Ingrediente> getByCodice(String codice){
+        LOGGER.info("Retrieving 'ingrediente' with codice '{}'", codice);
+        Optional<Ingrediente> ingrediente = ingredienteRepository.findByCodice(codice);
+        if(ingrediente.isPresent()){
+            LOGGER.info("Retrieved 'ingrediente' '{}'", ingrediente.get());
+        } else {
+            LOGGER.info("'ingrediente' with codice '{}' not existing", codice);
+        }
+        return ingrediente;
+    }
+
     public Ingrediente create(Ingrediente ingrediente){
         LOGGER.info("Creating 'ingrediente'");
         ingrediente.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
@@ -62,13 +72,13 @@ public class IngredienteService {
         return updatedIngrediente;
     }
 
-    public void emptyAllByFornitoreId(Long idFornitore){
+    /*public void emptyAllByFornitoreId(Long idFornitore){
         List<Ingrediente> ingredienti = ingredienteRepository.findByFornitoreId(idFornitore);
         for(Ingrediente ingrediente : ingredienti){
             ingrediente.setFornitore(null);
             update(ingrediente);
         }
-    }
+    }*/
 
     public void delete(Long ingredienteId){
         LOGGER.info("Deleting 'giacenze' for 'ingrediente' '{}'", ingredienteId);

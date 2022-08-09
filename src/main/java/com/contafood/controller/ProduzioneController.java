@@ -58,6 +58,7 @@ public class ProduzioneController {
         return produzioneService.create(produzione);
     }
 
+    /*
     @RequestMapping(method = PUT, path = "/{produzioneId}")
     @CrossOrigin
     public Produzione update(@PathVariable final Long produzioneId, @RequestBody final Produzione produzione){
@@ -67,6 +68,7 @@ public class ProduzioneController {
         }
         return produzioneService.update(produzione);
     }
+    */
 
     @RequestMapping(method = DELETE, path = "/{produzioneId}")
     @ResponseStatus(NO_CONTENT)

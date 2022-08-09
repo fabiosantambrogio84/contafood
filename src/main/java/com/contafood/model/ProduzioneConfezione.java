@@ -1,10 +1,12 @@
 package com.contafood.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Data
 @Entity
 @Table(name = "produzione_confezione")
 public class ProduzioneConfezione implements Serializable {
@@ -42,84 +44,22 @@ public class ProduzioneConfezione implements Serializable {
     @JoinColumn(name="id_articolo")
     private Articolo articolo;
 
-    public ProduzioneConfezioneKey getId() {
-        return id;
-    }
-
-    public void setId(ProduzioneConfezioneKey id) {
-        this.id = id;
-    }
-
-    public Produzione getProduzione() {
-        return produzione;
-    }
-
-    public void setProduzione(Produzione produzione) {
-        this.produzione = produzione;
-    }
-
-    public Confezione getConfezione() {
-        return confezione;
-    }
-
-    public void setConfezione(Confezione confezione) {
-        this.confezione = confezione;
-    }
-
-    public Integer getNumConfezioni() {
-        return numConfezioni;
-    }
-
-    public void setNumConfezioni(Integer numConfezioni) {
-        this.numConfezioni = numConfezioni;
-    }
-
-    public String getLotto() {
-        return lotto;
-    }
-
-    public void setLotto(String lotto) {
-        this.lotto = lotto;
-    }
-
-    public String getLottoProduzione() {
-        return lottoProduzione;
-    }
-
-    public void setLottoProduzione(String lottoProduzione) {
-        this.lottoProduzione = lottoProduzione;
-    }
-
-    public Integer getNumConfezioniProdotte() {
-        return numConfezioniProdotte;
-    }
-
-    public void setNumConfezioniProdotte(Integer numConfezioniProdotte) {
-        this.numConfezioniProdotte = numConfezioniProdotte;
-    }
-
-    public Articolo getArticolo() {
-        return articolo;
-    }
-
-    public void setArticolo(Articolo articolo) {
-        this.articolo = articolo;
-    }
+    @ManyToOne
+    @JoinColumn(name="id_ingrediente")
+    private Ingrediente ingrediente;
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
 
-        result.append("{");
-        result.append("produzioneId: " + id.produzioneId);
-        result.append(", confezioneId: " + id.confezioneId);
-        result.append(", numConfezioni: " + numConfezioni);
-        result.append(", lotto: " + lotto);
-        result.append(", lottoProduzione: " + lottoProduzione);
-        result.append(", numConfezioniProdotte: " + numConfezioniProdotte);
-        result.append(", articolo: " + articolo);
-        result.append("}");
-
-        return result.toString();
+        return "{" +
+                "produzioneId: " + id.produzioneId +
+                ", confezioneId: " + id.confezioneId +
+                ", numConfezioni: " + numConfezioni +
+                ", lotto: " + lotto +
+                ", lottoProduzione: " + lottoProduzione +
+                ", numConfezioniProdotte: " + numConfezioniProdotte +
+                ", articolo: " + articolo +
+                ", ingrediente: " + ingrediente +
+                "}";
     }
 }

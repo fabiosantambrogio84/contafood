@@ -6,11 +6,11 @@ import com.contafood.service.jpa.NativeQueryService;
 import com.contafood.util.AccountingUtils;
 import com.contafood.util.AdeConstants;
 import com.contafood.util.Constants;
+import com.contafood.util.ZipUtils;
 import com.contafood.util.enumeration.Provincia;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -68,7 +67,7 @@ public class AdeService {
 
         Integer idExport = createFattureXmlFiles(fattureByCliente);
 
-        result = createZipFile(idExport, "export_fatture_elettroniche");
+        result = ZipUtils.createZipFile(nativeQueryService, baseDirectory, idExport, "export_fatture_elettroniche");
 
         LOGGER.info("Successfully created ZIP file for fatture");
 
@@ -83,7 +82,7 @@ public class AdeService {
 
         Integer idExport = createFattureAccompagnatorieXmlFiles(fattureAccompagnatorieByCliente);
 
-        result = createZipFile(idExport, "export_fatture_accompagnatorie_elettroniche");
+        result = ZipUtils.createZipFile(nativeQueryService, baseDirectory, idExport, "export_fatture_accompagnatorie_elettroniche");
 
         LOGGER.info("Successfully created ZIP file for fatture accompagnatorie");
 
@@ -98,7 +97,7 @@ public class AdeService {
 
         Integer idExport = createNoteAccreditoXmlFiles(noteAccreditoByCliente);
 
-        result = createZipFile(idExport, "export_note_accredito_elettroniche");
+        result = ZipUtils.createZipFile(nativeQueryService, baseDirectory, idExport, "export_note_accredito_elettroniche");
 
         LOGGER.info("Successfully created ZIP file for note accredito");
 
@@ -299,134 +298,6 @@ public class AdeService {
 
         result.put("fileName", fileName);
         result.put("content", xmlString);
-
-        return result;
-    }
-
-    private Map<String, Object> createZipFile(Integer idExport, String fileNamePrefix) throws Exception{
-
-        Map<String, Object> result = new HashMap<>();
-        String resultFilePath = "";
-        String resultFileName = "";
-        byte[] zipFile;
-
-        String destinationPath = baseDirectory + AdeConstants.FILE_SEPARATOR + idExport;
-        Path path = Paths.get(destinationPath);
-
-        long maxSize = AdeConstants.MAX_ZIP_FILE_SIZE;
-        long currentSize = 0;
-        int index = 1;
-
-        Map<Integer, List<Path>> filesGrouped = new LinkedHashMap<>();
-        filesGrouped.put(index, new ArrayList<>());
-
-        // create a map containing xml files to insert into zip file
-        try(DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)){
-            for (Path file: directoryStream) {
-                long fileSize = file.toFile().length();
-
-                if((currentSize + fileSize) < maxSize){
-                    currentSize = currentSize + fileSize;
-
-                    List<Path> filesByIndex = filesGrouped.getOrDefault(index, new ArrayList<>());
-                    filesByIndex.add(file);
-                    filesGrouped.put(index, filesByIndex);
-
-                } else{
-                    currentSize = fileSize;
-                    index = index + 1;
-                    List<Path> filesByIndex = new ArrayList<>();
-                    filesByIndex.add(file);
-                    filesGrouped.put(index, filesByIndex);
-                }
-            }
-
-        } catch(Exception e){
-            e.printStackTrace();
-            LOGGER.error("Error creating xml files map");
-            throw e;
-        }
-
-        if(!filesGrouped.isEmpty()){
-
-            // create a file zip for every key of the map
-            for(Map.Entry<Integer, List<Path>> entry : filesGrouped.entrySet()){
-
-                // create the progressivo for the zip file
-                Integer progressivoZip = nativeQueryService.getAdeNextId("zip_file");
-
-                // create zip file name
-                String fileName = AdeConstants.PAESE + AdeConstants.CODICE_FISCALE + "_" + StringUtils.leftPad(String.valueOf(progressivoZip), 5, '0')+".zip";
-
-                // retrieve the list of xml file to insert into zip file
-                List<Path> filesToZip = entry.getValue();
-
-                try(FileOutputStream fos = new FileOutputStream(path.toAbsolutePath() + AdeConstants.FILE_SEPARATOR + fileName);
-                    ZipOutputStream zipOut = new ZipOutputStream(fos)){
-
-                    for(Path fileToZip : filesToZip){
-                        try(FileInputStream fis = new FileInputStream(fileToZip.toFile())){
-                            ZipEntry zipEntry = new ZipEntry(fileToZip.getFileName().toString());
-                            zipOut.putNextEntry(zipEntry);
-
-                            byte[] bytes = new byte[1024];
-                            int length;
-                            while((length = fis.read(bytes)) >= 0) {
-                                zipOut.write(bytes, 0, length);
-                            }
-                        }
-                    }
-
-                    // delete xml files inserted into zip file
-                    //removeFiles(filesToZip, new ArrayList<>());
-
-                } catch(Exception e){
-                    e.printStackTrace();
-                    LOGGER.error("Error creating zip files");
-                    throw e;
-                }
-            }
-
-            // create the zip file containing all the zip files
-            SimpleDateFormat sdf = new SimpleDateFormat();
-            sdf.applyPattern("yyyyMMdd_HHmmss");
-
-            resultFileName = fileNamePrefix+"_"+sdf.format(new Date(System.currentTimeMillis()))+".zip";
-            resultFilePath = path.toAbsolutePath() + AdeConstants.FILE_SEPARATOR + resultFileName;
-
-            try(FileOutputStream fos = new FileOutputStream(resultFilePath);
-                ZipOutputStream zipOut = new ZipOutputStream(fos);
-                DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)){
-
-                for (Path file: directoryStream) {
-                    if(file.getFileName().toString().endsWith("zip") && !file.getFileName().toString().startsWith(fileNamePrefix)){
-                        try(FileInputStream fis = new FileInputStream(file.toFile())){
-                            ZipEntry zipEntry = new ZipEntry(file.getFileName().toString());
-                            zipOut.putNextEntry(zipEntry);
-
-                            byte[] bytes = new byte[1024];
-                            int length;
-                            while((length = fis.read(bytes)) >= 0) {
-                                zipOut.write(bytes, 0, length);
-                            }
-                        }
-                    }
-                }
-
-            } catch(Exception e){
-                e.printStackTrace();
-                LOGGER.error("Error creating final zip file");
-                throw e;
-            }
-        }
-
-        zipFile = Files.readAllBytes(Paths.get(resultFilePath));
-
-        // remove all zip files
-        removeFileOrDirectory(path);
-
-        result.put("fileName", resultFileName);
-        result.put("content", zipFile);
 
         return result;
     }
@@ -2231,22 +2102,6 @@ public class AdeService {
             }
         }
     }*/
-
-    private void removeFileOrDirectory(Path path){
-        try{
-            File file = path.toFile();
-            if(file.isDirectory()){
-                FileUtils.deleteDirectory(file);
-            } else{
-                file.delete();
-            }
-
-        } catch(Exception e){
-            e.printStackTrace();
-            LOGGER.error("Error deleting file '{}'", path.toAbsolutePath());
-        }
-
-    }
 
     private String transformToPrettyPrint(String xml) throws Exception{
         Transformer t = TransformerFactory.newInstance().newTransformer();

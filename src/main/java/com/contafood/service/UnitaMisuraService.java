@@ -38,6 +38,13 @@ public class UnitaMisuraService {
         return unitaMisura;
     }
 
+    public UnitaMisura getByNome(String nome){
+        LOGGER.info("Retrieving 'unitaMisura' by nome '{}'", nome);
+        UnitaMisura unitaMisura = unitaMisuraRepository.findByNome(nome).orElseThrow(ResourceNotFoundException::new);
+        LOGGER.info("Retrieved 'unitaMisura' '{}'", unitaMisura);
+        return unitaMisura;
+    }
+
     public UnitaMisura create(UnitaMisura unitaMisura){
         LOGGER.info("Creating 'unitaMisura'");
         unitaMisura.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));

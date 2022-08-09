@@ -28,6 +28,9 @@ public class VProduzione {
     @Column(name = "data_produzione")
     private Date dataProduzione;
 
+    @Column(name = "tipologia")
+    private String tipologia;
+
     @Column(name = "id_confezione")
     private Long idConfezione;
 
@@ -46,6 +49,15 @@ public class VProduzione {
     @Column(name = "descrizione_articolo")
     private String descrizioneArticolo;
 
+    @Column(name = "id_ingrediente")
+    private Long idIngrediente;
+
+    @Column(name = "codice_ingrediente")
+    private String codiceIngrediente;
+
+    @Column(name = "descrizione_ingrediente")
+    private String descrizioneIngrediente;
+
     @Column(name = "num_confezioni_prodotte")
     private Integer numConfezioniProdotte;
 
@@ -57,24 +69,25 @@ public class VProduzione {
 
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
 
-        result.append("{");
-        result.append("id: " + id);
-        result.append(", idProduzione: " + idProduzione);
-        result.append(", codiceProduzione: " + codiceProduzione);
-        result.append(", dataProduzione: " + dataProduzione);
-        result.append(", idConfezione: " + idConfezione);
-        result.append(", lotto: " + lotto);
-        result.append(", scadenza: " + scadenza);
-        result.append(", idArticolo: " + idArticolo);
-        result.append(", codiceArticolo: " + codiceArticolo);
-        result.append(", descrizioneArticolo: " + descrizioneArticolo);
-        result.append(", numConfezioniProdotte: " + numConfezioniProdotte);
-        result.append(", quantita: " + quantita);
-        result.append(", ricetta: " + ricetta);
-        result.append("}");
-
-        return result.toString();
+        return "{" +
+                "id: " + id +
+                ", idProduzione: " + idProduzione +
+                ", codiceProduzione: " + codiceProduzione +
+                ", dataProduzione: " + dataProduzione +
+                ", tipologia: " + tipologia +
+                ", idConfezione: " + idConfezione +
+                ", lotto: " + lotto +
+                ", scadenza: " + scadenza +
+                ", idArticolo: " + idArticolo +
+                ", codiceArticolo: " + codiceArticolo +
+                ", descrizioneArticolo: " + descrizioneArticolo +
+                ", idIngrediente: " + idIngrediente +
+                ", codiceIngrediente: " + codiceIngrediente +
+                ", descrizioneIngrediente: " + descrizioneIngrediente +
+                ", numConfezioniProdotte: " + numConfezioniProdotte +
+                ", quantita: " + quantita +
+                ", ricetta: " + ricetta +
+                "}";
     }
 }
