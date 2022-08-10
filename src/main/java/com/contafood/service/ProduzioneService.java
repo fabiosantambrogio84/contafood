@@ -145,7 +145,7 @@ public class ProduzioneService {
                 pc.setIngrediente(ingrediente);
 
                 // compute 'giacenza ingrediente'
-                giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), createdLotto, scadenzaProduzione, pc.getNumConfezioniProdotte().floatValue(), Resource.PRODUZIONE_INGREDIENTE);
+                giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), createdLotto, scadenzaProduzione, pc.getNumConfezioniProdotte().floatValue(), Resource.PRODUZIONE_SCORTA);
 
             } else {
                 // create, or retrieve, the associated Articolo
@@ -253,7 +253,7 @@ public class ProduzioneService {
                         Ingrediente ingrediente = optionalIngrediente.get();
 
                         // compute 'giacenza ingrediente'
-                        giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), produzioneConfezione.getLotto(), produzione.getScadenza(), (produzioneConfezione.getNumConfezioniProdotte() != null ? (produzioneConfezione.getNumConfezioniProdotte()*-1) : 0f), Resource.PRODUZIONE_INGREDIENTE);
+                        giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), produzioneConfezione.getLotto(), produzione.getScadenza(), (produzioneConfezione.getNumConfezioniProdotte() != null ? (produzioneConfezione.getNumConfezioniProdotte()*-1) : 0f), Resource.PRODUZIONE_SCORTA);
                     }
 
                 } else {
@@ -355,9 +355,9 @@ public class ProduzioneService {
             ingrediente.setCodice(codiceIngrediente);
             ingrediente.setDescrizione(createDescrizioneIngrediente(ricetta, confezione));
             ingrediente.setFornitore(fornitore);
-            ingrediente.setPrezzo(new BigDecimal(1));
+            ingrediente.setPrezzo(createPrezzoIngredienteScorta(ricetta));
             ingrediente.setUnitaMisura(unitaMisuraService.getByNome("kg"));
-            ingrediente.setAliquotaIva(aliquotaIvaService.getOne(1L));
+            ingrediente.setAliquotaIva(aliquotaIvaService.getOne(2L)); // 10%
             ingrediente.setAttivo(Boolean.TRUE);
             ingrediente = ingredienteService.create(ingrediente);
             LOGGER.info("Created 'ingrediente' '{}' from produzione", ingrediente);
@@ -407,6 +407,17 @@ public class ProduzioneService {
         }
 
         return ricetta.getNome()+" "+peso+"gr";
+    }
+
+    private BigDecimal createPrezzoIngredienteScorta(Ricetta ricetta){
+        BigDecimal prezzo = new BigDecimal(1);
+        BigDecimal costoTotale = ricetta.getCostoTotale();
+        Float pesoTotale = ricetta.getPesoTotale() != null ? ricetta.getPesoTotale() : 1f;
+
+        if(costoTotale != null){
+            prezzo = costoTotale.divide(BigDecimal.valueOf(pesoTotale));
+        }
+        return prezzo;
     }
 
 }

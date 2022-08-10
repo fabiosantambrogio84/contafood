@@ -4,7 +4,6 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.GiacenzaIngrediente;
 import com.contafood.model.Ingrediente;
 import com.contafood.model.Movimentazione;
-import com.contafood.model.MovimentazioneManualeIngrediente;
 import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.repository.GiacenzaIngredienteRepository;
 import com.contafood.repository.views.VGiacenzaIngredienteRepository;
@@ -19,12 +18,11 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class GiacenzaIngredienteService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(GiacenzaIngredienteService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(GiacenzaIngredienteService.class);
 
     private final GiacenzaIngredienteRepository giacenzaIngredienteRepository;
     private final VGiacenzaIngredienteRepository vGiacenzaIngredienteRepository;
@@ -97,12 +95,10 @@ public class GiacenzaIngredienteService {
         List<Movimentazione> movimentazioni = new ArrayList<>();
         Set<Movimentazione> movimentazioniIngrediente = new HashSet<>();
         if(giacenzeIngredienti != null && !giacenzeIngredienti.isEmpty()){
-            giacenzeIngredienti.stream().forEach(gi -> {
-                movimentazioniIngrediente.addAll(movimentazioneService.getMovimentazioniIngrediente(gi));
-            });
+            giacenzeIngredienti.stream().forEach(gi -> movimentazioniIngrediente.addAll(movimentazioneService.getMovimentazioniIngrediente(gi)));
         }
         if(!movimentazioniIngrediente.isEmpty()){
-            movimentazioni = movimentazioniIngrediente.stream().collect(Collectors.toList());
+            movimentazioni = new ArrayList<>(movimentazioniIngrediente);
             movimentazioni.sort(Comparator.comparing(Movimentazione::getData).reversed());
         }
 
@@ -135,23 +131,24 @@ public class GiacenzaIngredienteService {
             LOGGER.info("Retrieved 'giacenza ingrediente' {}", giacenzaIngrediente);
 
             Set<Movimentazione> movimentazioni = movimentazioneService.getMovimentazioniIngrediente(giacenzaIngrediente);
-            Float quantitaInput = 0f;
-            Float quantitaOutput = 0f;
-            Float newQuantita = 0f;
+            Float quantitaInput;
+            Float quantitaOutput;
+            float newQuantita;
 
             LOGGER.info("Computing input and output quantities");
 
             if(movimentazioni != null && !movimentazioni.isEmpty()){
                 // 'movimentazioni' in input
-                quantitaInput = movimentazioni.stream().filter(m -> m.getInputOutput().equals("INPUT") && m.getQuantita() != null).map(m -> m.getQuantita()).reduce(0f, Float::sum);
+                quantitaInput = movimentazioni.stream().filter(m -> m.getInputOutput().equals("INPUT") && m.getQuantita() != null).map(Movimentazione::getQuantita).reduce(0f, Float::sum);
 
                 // 'movimentazioni' in output
-                quantitaOutput = movimentazioni.stream().filter(m -> m.getInputOutput().equals("OUTPUT") && m.getQuantita() != null).map(m -> m.getQuantita()).reduce(0f, Float::sum);
+                quantitaOutput = movimentazioni.stream().filter(m -> m.getInputOutput().equals("OUTPUT") && m.getQuantita() != null).map(Movimentazione::getQuantita).reduce(0f, Float::sum);
 
                 quantita = (quantita != null ? quantita : 0f);
 
                 switch(resource){
                     case DDT_ACQUISTO:
+                    case PRODUZIONE_SCORTA:
                         quantitaInput = quantitaInput + quantita;
                         break;
                     case PRODUZIONE_INGREDIENTE:
@@ -174,7 +171,7 @@ public class GiacenzaIngredienteService {
 
         } else {
             LOGGER.info("Creating a new 'giacenza ingrediente'");
-            Float newQuantita = 0f;
+            float newQuantita = 0f;
             if(quantita != null){
                 newQuantita = quantita;
             }

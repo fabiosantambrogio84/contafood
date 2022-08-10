@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/listini")
 public class ListinoController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ListinoController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ListinoController.class);
 
     private final ListinoService listinoService;
 
@@ -102,6 +103,13 @@ public class ListinoController {
             return;
         }
         throw new ResourceNotFoundException();
+    }
+
+    @RequestMapping(method = POST, path = "/{listinoId}/duplicate")
+    @CrossOrigin
+    public Listino duplicateListino(@PathVariable final Long listinoId, @RequestBody final Map<String, String> body){
+        LOGGER.info("Performing POST request for duplicating listino '{}'", listinoId);
+        return listinoService.duplicate(listinoId, body);
     }
 
     @RequestMapping(method = DELETE, path = "/{listinoId}")

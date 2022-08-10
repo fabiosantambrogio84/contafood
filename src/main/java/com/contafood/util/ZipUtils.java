@@ -4,8 +4,6 @@ import com.contafood.service.jpa.NativeQueryService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.DirectoryStream;
@@ -149,6 +147,7 @@ public class ZipUtils {
         return result;
     }
 
+    /*
     public static byte[] createZipFile(Map<String, byte[]> entries) throws Exception{
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ZipOutputStream zipOut = new ZipOutputStream(baos);
@@ -168,6 +167,7 @@ public class ZipUtils {
 
         return baos.toByteArray();
     }
+    */
 
     /*
     private static void saveFile(byte[] content){

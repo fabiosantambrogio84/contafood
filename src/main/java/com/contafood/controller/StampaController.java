@@ -5,7 +5,6 @@ import com.contafood.model.reports.*;
 import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.service.StampaService;
 import com.contafood.util.Constants;
-import com.contafood.util.ZipUtils;
 import com.contafood.util.enumeration.Provincia;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperRunManager;
@@ -25,15 +24,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping(path="/stampe")
@@ -203,10 +199,11 @@ public class StampaController {
                 .body(resource);
     }
 
-    @RequestMapping(method = POST, path = "/ddts/checked", produces=Constants.MEDIA_TYPE_APPLICATION_ZIP)
+    /*
+    @RequestMapping(method = POST, path = "/ddts/selected", produces=Constants.MEDIA_TYPE_APPLICATION_ZIP)
     @CrossOrigin
-    public ResponseEntity<Resource> printDdtsChecked(@RequestBody final Long[] ddts) throws Exception{
-        LOGGER.info("Creating zip for list of checked 'ddt'");
+    public ResponseEntity<Resource> printDdtsSelected(@RequestBody final Long[] ddts) throws Exception{
+        LOGGER.info("Creating zip for list of selected 'ddt'");
 
         String zipFilename = "ddts-"+ dateTimeFormatter.format(LocalDateTime.now())+".zip";
         byte[] zipContent;
@@ -232,6 +229,7 @@ public class StampaController {
                 .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_ZIP))
                 .body(resource);
     }
+    */
 
     @RequestMapping(method = GET, path = "/ordini-autisti")
     @CrossOrigin
