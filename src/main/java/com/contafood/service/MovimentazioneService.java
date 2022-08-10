@@ -201,9 +201,10 @@ public class MovimentazioneService {
     public Set<Movimentazione> getMovimentazioniIngrediente(GiacenzaIngrediente giacenzaIngrediente){
         LOGGER.info("Retrieving 'movimentazioni' of 'giacenza ingrediente' '{}'", giacenzaIngrediente.getId());
         Set<Movimentazione> movimentazioni = new HashSet<>();
-        Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti = new HashSet<>();
-        Set<ProduzioneIngrediente> produzioneIngredienti = new HashSet<>();
-        Set<MovimentazioneManualeIngrediente> movimentazioniManualiIngredienti = new HashSet<>();
+        Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti;
+        Set<ProduzioneIngrediente> produzioneIngredienti;
+        Set<ProduzioneConfezione> produzioneConfezioni;
+        Set<MovimentazioneManualeIngrediente> movimentazioniManualiIngredienti;
 
         Ingrediente ingrediente = ingredienteRepository.findById(giacenzaIngrediente.getIngrediente().getId()).get();
 
@@ -212,6 +213,23 @@ public class MovimentazioneService {
 
         // retrieve the set of 'ProduzioneIngrediente'
         produzioneIngredienti = produzioneIngredienteService.getByIngredienteIdAndLottoAndScadenza(ingrediente.getId(), giacenzaIngrediente.getLotto(), giacenzaIngrediente.getScadenza());
+
+        // retrieve the set of 'ProduzioniConfezioni'
+        produzioneConfezioni = produzioneConfezioneRepository.findByIngredienteIdAndLottoProduzione(ingrediente.getId(), giacenzaIngrediente.getLotto());
+        if(produzioneConfezioni != null && !produzioneConfezioni.isEmpty()){
+            Set<Long> produzioniIds = new HashSet<>();
+            produzioneConfezioni.forEach(pc -> {
+                Produzione produzione = produzioneRepository.findById(pc.getId().getProduzioneId()).get();
+                if(giacenzaIngrediente.getScadenza() != null){
+                    if(produzione.getScadenza() != null && produzione.getScadenza().toLocalDate().compareTo(giacenzaIngrediente.getScadenza().toLocalDate())==0){
+                        produzioniIds.add(produzione.getId());
+                    }
+                } else {
+                    produzioniIds.add(produzione.getId());
+                }
+            });
+            produzioneConfezioni = produzioneConfezioni.stream().filter(pc -> (produzioniIds.contains(pc.getId().getProduzioneId()))).collect(Collectors.toSet());
+        }
 
         // retrieve the set of 'MovimentazioneManualeIngrediente'
         movimentazioniManualiIngredienti = movimentazioneManualeIngredienteService.getByIngredienteIdAndLottoAndScadenza(ingrediente.getId(), giacenzaIngrediente.getLotto(), giacenzaIngrediente.getScadenza());
@@ -243,6 +261,22 @@ public class MovimentazioneService {
                 movimentazione.setData(produzione.getDataProduzione());
                 movimentazione.setQuantita(pi.getQuantita());
                 movimentazione.setDescrizione(createDescrizione(produzione, giacenzaIngrediente.getLotto(), giacenzaIngrediente.getScadenza(), pi.getQuantita()));
+
+                movimentazioni.add(movimentazione);
+            });
+        }
+
+        // Create 'movimentazione' from 'ProduzioneConfezione'
+        if(produzioneConfezioni != null && !produzioneConfezioni.isEmpty()){
+            produzioneConfezioni.forEach(pc -> {
+                Produzione produzione = produzioneRepository.findById(pc.getId().getProduzioneId()).get();
+
+                Movimentazione movimentazione = new Movimentazione();
+                movimentazione.setIdGiacenza(giacenzaIngrediente.getId());
+                movimentazione.setInputOutput(INPUT);
+                movimentazione.setData(produzione.getDataProduzione());
+                movimentazione.setQuantita(pc.getNumConfezioniProdotte() != null ? pc.getNumConfezioniProdotte().floatValue() : 0f);
+                movimentazione.setDescrizione(createDescrizione(produzione, giacenzaIngrediente.getLotto(), giacenzaIngrediente.getScadenza(), (pc.getNumConfezioniProdotte() != null ? pc.getNumConfezioniProdotte().floatValue() : 0f)));
 
                 movimentazioni.add(movimentazione);
             });
@@ -359,7 +393,11 @@ public class MovimentazioneService {
             stringBuilder.append("ND");
         }
         stringBuilder.append("</b>");
-        stringBuilder.append(" (Produzione n. ").append(produzione.getCodice());
+        stringBuilder.append(" (Produzione");
+        if(produzione.getTipologia().equals("SCORTA")){
+            stringBuilder.append(" scorta");
+        }
+        stringBuilder.append(" n. ").append(produzione.getCodice());
         if(fornitore != null){
             stringBuilder.append(" da ");
             stringBuilder.append(fornitore.getRagioneSociale());

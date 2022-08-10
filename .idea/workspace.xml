@@ -24,13 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ListinoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ListinoController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ListinoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ListinoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/ZipUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/ZipUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/Resource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ProduzioneConfezioneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/ProduzioneConfezioneRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -584,14 +579,8 @@
       <workItem from="1659691752203" duration="2359000" />
       <workItem from="1659945206566" duration="14113000" />
       <workItem from="1660029812661" duration="7622000" />
-      <workItem from="1660116593083" duration="4879000" />
-    </task>
-    <task id="LOCAL-00060" summary="Fix computation of Statistiche">
-      <created>1585556840370</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1585556840370</updated>
+      <workItem from="1660116593083" duration="5528000" />
+      <workItem from="1660145205005" duration="1417000" />
     </task>
     <task id="LOCAL-00061" summary="Fix Statistiche computation">
       <created>1585581668408</created>
@@ -929,7 +918,14 @@
       <option name="project" value="LOCAL" />
       <updated>1660037037128</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="Fix step 36 and step 37">
+      <created>1660132606352</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1660132606352</updated>
+    </task>
+    <option name="localTasksCounter" value="110" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -954,7 +950,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Refactoring email handling" />
     <MESSAGE value="Fix clienti and causali" />
     <MESSAGE value="Fix report ordini autisti" />
     <MESSAGE value="Update logic for OrdineFornitore" />
@@ -979,7 +974,8 @@
     <MESSAGE value="Fix pdf fattura" />
     <MESSAGE value="Fix step 35" />
     <MESSAGE value="Step 36 and step 37" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 36 and step 37" />
+    <MESSAGE value="Fix step 36 and step 37" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix step 36 and step 37" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1124,6 +1120,16 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java</url>
           <line>141</line>
           <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/GiacenzaIngredienteService.java</url>
+          <line>89</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java</url>
+          <line>202</line>
+          <option name="timeStamp" value="53" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
