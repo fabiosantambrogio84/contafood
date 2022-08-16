@@ -140,12 +140,21 @@ public class ProduzioneService {
             pc.setLottoProduzione(createdLotto);
 
             if(tipologia.equals("SCORTA")){
+                Confezione confezione = confezioneService.getOne(pc.getId().getConfezioneId());
+
                 // create, or retrieve, the associated Ingrediente
-                Ingrediente ingrediente = getOrCreateIngrediente(pc, idRicetta);
+                Ingrediente ingrediente = getOrCreateIngrediente(confezione, idRicetta);
                 pc.setIngrediente(ingrediente);
 
+                float quantita = 0f;
+                if(confezione.getPeso() != null){
+                    BigDecimal quantitaBd = BigDecimal.valueOf(confezione.getPeso() / 1000);
+                    quantitaBd = quantitaBd.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                    quantita = quantitaBd.floatValue() * pc.getNumConfezioniProdotte();
+                }
+
                 // compute 'giacenza ingrediente'
-                giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), createdLotto, scadenzaProduzione, pc.getNumConfezioniProdotte().floatValue(), Resource.PRODUZIONE_SCORTA);
+                giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), createdLotto, scadenzaProduzione, quantita, Resource.PRODUZIONE_SCORTA);
 
             } else {
                 // create, or retrieve, the associated Articolo
@@ -252,8 +261,15 @@ public class ProduzioneService {
                     if(optionalIngrediente.isPresent()){
                         Ingrediente ingrediente = optionalIngrediente.get();
 
+                        float quantita = 0f;
+                        if(confezione.getPeso() != 0){
+                            BigDecimal quantitaBd = BigDecimal.valueOf(confezione.getPeso() / 1000);
+                            quantitaBd = quantitaBd.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                            quantita = quantitaBd.floatValue() * produzioneConfezione.getNumConfezioniProdotte();
+                        }
+
                         // compute 'giacenza ingrediente'
-                        giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), produzioneConfezione.getLotto(), produzione.getScadenza(), (produzioneConfezione.getNumConfezioniProdotte() != null ? (produzioneConfezione.getNumConfezioniProdotte()*-1) : 0f), Resource.PRODUZIONE_SCORTA);
+                        giacenzaIngredienteService.computeGiacenza(ingrediente.getId(), produzioneConfezione.getLotto(), produzione.getScadenza(), (quantita *-1 ), Resource.PRODUZIONE_SCORTA);
                     }
 
                 } else {
@@ -333,7 +349,7 @@ public class ProduzioneService {
         return articolo;
     }
 
-    private Ingrediente getOrCreateIngrediente(ProduzioneConfezione produzioneConfezione, Long idRicetta){
+    private Ingrediente getOrCreateIngrediente(Confezione confezione, Long idRicetta){
         LOGGER.info("Creating or retrieving associated 'ingrediente'...");
 
         // retrieve Ricetta
@@ -341,9 +357,6 @@ public class ProduzioneService {
 
         // retrieve default Fornitore
         Fornitore fornitore = fornitoreService.getByRagioneSociale(Constants.DEFAULT_FORNITORE);
-
-        // retrieve Confezione
-        Confezione confezione = confezioneService.getOne(produzioneConfezione.getId().getConfezioneId());
 
         String codiceIngrediente = createCodiceIngrediente(ricetta, confezione);
 
@@ -396,7 +409,7 @@ public class ProduzioneService {
             peso = StringUtils.substringBefore(peso,",");
         }
 
-        return ricetta.getNome()+" "+peso+"gr";
+        return ricetta.getNome()+" "+peso+"kg";
     }
 
     private String createDescrizioneIngrediente(Ricetta ricetta, Confezione confezione){
@@ -406,13 +419,13 @@ public class ProduzioneService {
             peso = StringUtils.substringBefore(peso,",");
         }
 
-        return ricetta.getNome()+" "+peso+"gr";
+        return ricetta.getNome()+" "+peso+"kg";
     }
 
     private BigDecimal createPrezzoIngredienteScorta(Ricetta ricetta){
         BigDecimal prezzo = new BigDecimal(1);
         BigDecimal costoTotale = ricetta.getCostoTotale();
-        Float pesoTotale = ricetta.getPesoTotale() != null ? ricetta.getPesoTotale() : 1f;
+        float pesoTotale = ricetta.getPesoTotale() != null ? ricetta.getPesoTotale() : 1f;
 
         if(costoTotale != null){
             prezzo = costoTotale.divide(BigDecimal.valueOf(pesoTotale));

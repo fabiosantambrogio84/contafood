@@ -12,6 +12,8 @@ import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.pdfbox.io.MemoryUsageSetting;
+import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -1176,6 +1180,22 @@ public class StampaService {
         // create report
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
 
+    }
+
+    public byte[] generateSingleDdt(Long[] ddts) throws Exception{
+        PDFMergerUtility pdfMergerUtility = new PDFMergerUtility();
+
+        for(Long idDdt : ddts){
+            byte[] ddtPdf = generateDdt(idDdt);
+            try(InputStream inputStream = new ByteArrayInputStream(ddtPdf)){
+                pdfMergerUtility.addSource(inputStream);
+            }
+        }
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        pdfMergerUtility.setDestinationStream(byteArrayOutputStream);
+        pdfMergerUtility.mergeDocuments(MemoryUsageSetting.setupMainMemoryOnly());
+
+        return byteArrayOutputStream.toByteArray();
     }
 
     @Transactional

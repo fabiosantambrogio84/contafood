@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ public class MovimentazioneService {
     private final ProduzioneConfezioneRepository produzioneConfezioneRepository;
     private final MovimentazioneManualeArticoloService movimentazioneManualeArticoloService;
     private final MovimentazioneManualeIngredienteService movimentazioneManualeIngredienteService;
+    private final ConfezioneService confezioneService;
 
     @Autowired
     public MovimentazioneService(final DdtAcquistoArticoloService ddtAcquistoArticoloService,
@@ -54,7 +56,8 @@ public class MovimentazioneService {
                                  final ProduzioneRepository produzioneRepository,
                                  final ProduzioneConfezioneRepository produzioneConfezioneRepository,
                                  final MovimentazioneManualeArticoloService movimentazioneManualeArticoloService,
-                                 final MovimentazioneManualeIngredienteService movimentazioneManualeIngredienteService){
+                                 final MovimentazioneManualeIngredienteService movimentazioneManualeIngredienteService,
+                                 final ConfezioneService confezioneService){
         this.ddtAcquistoArticoloService = ddtAcquistoArticoloService;
         this.ddtAcquistoIngredienteService = ddtAcquistoIngredienteService;
         this.ddtArticoloService = ddtArticoloService;
@@ -70,16 +73,17 @@ public class MovimentazioneService {
         this.produzioneConfezioneRepository = produzioneConfezioneRepository;
         this.movimentazioneManualeArticoloService = movimentazioneManualeArticoloService;
         this.movimentazioneManualeIngredienteService = movimentazioneManualeIngredienteService;
+        this.confezioneService = confezioneService;
     }
 
     public Set<Movimentazione> getMovimentazioniArticolo(GiacenzaArticolo giacenzaArticolo){
         LOGGER.info("Retrieving 'movimentazioni' of 'giacenza articolo' '{}'", giacenzaArticolo.getId());
         Set<Movimentazione> movimentazioni = new HashSet<>();
-        Set<DdtAcquistoArticolo> ddtAcquistoArticoli = new HashSet<>();
-        Set<DdtArticolo> ddtArticoli = new HashSet<>();
-        Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = new HashSet<>();
-        Set<ProduzioneConfezione> produzioneConfezioni = new HashSet<>();
-        Set<MovimentazioneManualeArticolo> movimentazioniManualiArticoli = new HashSet<>();
+        Set<DdtAcquistoArticolo> ddtAcquistoArticoli;
+        Set<DdtArticolo> ddtArticoli;
+        Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli;
+        Set<ProduzioneConfezione> produzioneConfezioni;
+        Set<MovimentazioneManualeArticolo> movimentazioniManualiArticoli;
 
         Articolo articolo = articoloRepository.findById(giacenzaArticolo.getArticolo().getId()).get();
 
@@ -93,7 +97,7 @@ public class MovimentazioneService {
         fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoloService.getByArticoloIdAndLottoAndScadenza(articolo.getId(), giacenzaArticolo.getLotto(), giacenzaArticolo.getScadenza());
 
         // retrieve the 'Ricetta' associated to the 'Articolo'
-        String codiceRicetta = articolo.getCodice().substring(2);
+        //String codiceRicetta = articolo.getCodice().substring(2);
 
         // retrieve the set of 'ProduzioniConfezioni'
         produzioneConfezioni = produzioneConfezioneRepository.findByArticoloIdAndLottoProduzione(articolo.getId(), giacenzaArticolo.getLotto());
@@ -270,13 +274,21 @@ public class MovimentazioneService {
         if(produzioneConfezioni != null && !produzioneConfezioni.isEmpty()){
             produzioneConfezioni.forEach(pc -> {
                 Produzione produzione = produzioneRepository.findById(pc.getId().getProduzioneId()).get();
+                Confezione confezione = confezioneService.getOne(pc.getId().getConfezioneId());
+
+                float quantita = 0f;
+                if(confezione.getPeso() != null){
+                    BigDecimal quantitaBd = BigDecimal.valueOf(confezione.getPeso() / 1000);
+                    quantitaBd = quantitaBd.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                    quantita = quantitaBd.floatValue() * pc.getNumConfezioniProdotte();
+                }
 
                 Movimentazione movimentazione = new Movimentazione();
                 movimentazione.setIdGiacenza(giacenzaIngrediente.getId());
                 movimentazione.setInputOutput(INPUT);
                 movimentazione.setData(produzione.getDataProduzione());
-                movimentazione.setQuantita(pc.getNumConfezioniProdotte() != null ? pc.getNumConfezioniProdotte().floatValue() : 0f);
-                movimentazione.setDescrizione(createDescrizione(produzione, giacenzaIngrediente.getLotto(), giacenzaIngrediente.getScadenza(), (pc.getNumConfezioniProdotte() != null ? pc.getNumConfezioniProdotte().floatValue() : 0f)));
+                movimentazione.setQuantita(quantita);
+                movimentazione.setDescrizione(createDescrizione(produzione, giacenzaIngrediente.getLotto(), giacenzaIngrediente.getScadenza(), quantita));
 
                 movimentazioni.add(movimentazione);
             });

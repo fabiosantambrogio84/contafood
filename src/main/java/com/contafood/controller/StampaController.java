@@ -24,12 +24,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @RequestMapping(path="/stampe")
@@ -199,37 +201,30 @@ public class StampaController {
                 .body(resource);
     }
 
-    /*
     @RequestMapping(method = POST, path = "/ddts/selected", produces=Constants.MEDIA_TYPE_APPLICATION_ZIP)
     @CrossOrigin
     public ResponseEntity<Resource> printDdtsSelected(@RequestBody final Long[] ddts) throws Exception{
-        LOGGER.info("Creating zip for list of selected 'ddt'");
+        LOGGER.info("Creating pdf merging pdfs of selected 'ddt'");
 
-        String zipFilename = "ddts-"+ dateTimeFormatter.format(LocalDateTime.now())+".zip";
-        byte[] zipContent;
-        Map<String, byte[]> ddtPdfs = new HashMap<>();
+        String fileName = "ddts-"+ dateTimeFormatter.format(LocalDateTime.now())+".pdf";
+        byte[] content;
 
         if(ddts == null || ddts.length == 0){
             throw new RuntimeException("No DDT to print");
         }
 
-        for(Long idDdt : ddts){
-            ddtPdfs.put("ddt-"+idDdt+".pdf", stampaService.generateDdt(idDdt));
-        }
+        content = stampaService.generateSingleDdt(ddts);
 
-        zipContent = ZipUtils.createZipFile(ddtPdfs);
+        LOGGER.info("Successfully create pdf for checked 'ddts'");
 
-        LOGGER.info("Successfully create zip for checked 'ddts'");
-
-        ByteArrayResource resource = new ByteArrayResource(zipContent);
+        ByteArrayResource resource = new ByteArrayResource(content);
 
         return ResponseEntity.ok()
-                .headers(StampaService.createHttpHeaders(zipFilename))
-                .contentLength(zipContent.length)
-                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_ZIP))
+                .headers(StampaService.createHttpHeaders(fileName))
+                .contentLength(content.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
                 .body(resource);
     }
-    */
 
     @RequestMapping(method = GET, path = "/ordini-autisti")
     @CrossOrigin
