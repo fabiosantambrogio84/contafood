@@ -408,7 +408,17 @@ public class FatturaService {
         LOGGER.info("End of iteration on map with key=idCliente and value=List<Ddt>");
 
         LOGGER.info("Creating fatture...");
-        Comparator<Fattura> comparator = Comparator.comparing(f -> f.getCliente().getRagioneSociale());
+        Comparator<Fattura> comparator = Comparator.comparing(f -> {
+            if(f.getCliente() != null){
+                Cliente cliente = f.getCliente();
+                if(cliente.getDittaIndividuale() || cliente.getPrivato()){
+                    return cliente.getCognome() + " " + cliente.getNome();
+                } else {
+                    return cliente.getRagioneSociale();
+                }
+            }
+            return "";
+        });
         fattureToCreate.stream().sorted(comparator).forEach(f -> {
             create(f);
             createdFatture.add(f);
