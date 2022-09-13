@@ -356,6 +356,7 @@ public class FatturaService {
 
         LOGGER.info("Retrieved {} 'ddt' with fatturato=false and data less or equal to {}", ddts.size(), data);
 
+        Map<Long, Cliente> clientiMap = new HashMap<>();
         Map<Long, List<Ddt>> clientiDdtsMap = new HashMap<>();
         ddts.forEach(ddt -> {
             Cliente cliente = ddt.getCliente();
@@ -365,22 +366,26 @@ public class FatturaService {
                     value.add(ddt);
                     return value;
                 });
+                clientiMap.computeIfAbsent(cliente.getId(), v -> cliente);
+                clientiMap.computeIfPresent(cliente.getId(), (key, value) -> cliente);
             }
         });
 
         LOGGER.info("Iterating on map with key=idCliente and value=List<Ddt>...");
+        Map<String, Integer> annoProgressivoMap = getAnnoAndProgressivo();
+        int anno = annoProgressivoMap.get("anno");
+        int progressivo = annoProgressivoMap.get("progressivo");
         for (Map.Entry<Long, List<Ddt>> entry : clientiDdtsMap.entrySet()) {
             Long idCliente = entry.getKey();
             List<Ddt> ddtsCliente = entry.getValue();
 
-            Map<String, Integer> annoProgressivoMap = getAnnoAndProgressivo();
+
             Fattura fattura = new Fattura();
             Set<FatturaDdt> fatturaDdts = new HashSet<>();
 
-            fattura.setProgressivo(annoProgressivoMap.get("progressivo"));
-            fattura.setAnno(annoProgressivoMap.get("anno"));
-            Cliente cliente = new Cliente();
-            cliente.setId(idCliente);
+            fattura.setProgressivo(progressivo);
+            fattura.setAnno(anno);
+            Cliente cliente = clientiMap.get(idCliente);
             fattura.setCliente(cliente);
             fattura.setData(Date.valueOf(LocalDate.now()));
 
@@ -404,6 +409,8 @@ public class FatturaService {
             fattura.setFatturaDdts(fatturaDdts);
 
             fattureToCreate.add(fattura);
+
+            progressivo = progressivo + 1;
         }
         LOGGER.info("End of iteration on map with key=idCliente and value=List<Ddt>");
 
