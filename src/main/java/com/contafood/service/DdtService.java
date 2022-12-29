@@ -97,14 +97,20 @@ public class DdtService {
         return result;
     }
 
+    public String getProgressiviDuplicates(){
+        String result = "";
+        List<Integer> progressivi = ddtRepository.getProgressiviDuplicates();
+        if(progressivi != null && !progressivi.isEmpty()){
+            result = progressivi.stream().map(p -> p.toString()).collect(Collectors.joining(","));
+        }
+        return result;
+    }
+
     private Integer getProgressivo(Integer annoContabile){
         Integer progressivo = 1;
-        List<Ddt> ddts = ddtRepository.findByAnnoContabileOrderByProgressivoDesc(annoContabile);
-        if(ddts != null && !ddts.isEmpty()){
-            Optional<Ddt> lastDdt = ddts.stream().findFirst();
-            if(lastDdt.isPresent()){
-                progressivo = lastDdt.get().getProgressivo() + 1;
-            }
+        Integer resultProgressivo = ddtRepository.getLastProgressivoByAnnoContabile(annoContabile);
+        if(resultProgressivo != null){
+            progressivo = resultProgressivo + 1;
         }
         return progressivo;
     }

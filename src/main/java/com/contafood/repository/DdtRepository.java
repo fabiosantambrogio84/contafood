@@ -17,11 +17,22 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
 
     Set<Ddt> findAllByOrderByAnnoContabileDescProgressivoDesc();
 
-    List<Ddt> findByAnnoContabileOrderByProgressivoDesc(Integer annoContabile);
+    List<Ddt> findByDataGreaterThanEqualOrderByProgressivoDesc(Date data);
 
+    @Query(nativeQuery = true,
+            value = "select d.* from ddt d where d.anno_contabile = ?1 and d.progressivo = ?2 and d.id <> ?3 for update"
+    )
     Optional<Ddt> findByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt);
 
-    List<Ddt> findByDataGreaterThanEqualOrderByProgressivoDesc(Date data);
+    @Query(nativeQuery = true,
+            value = "select d.progressivo from ddt d where d.anno_contabile = ?1 order by d.anno_contabile desc limit 1 for update"
+    )
+    Integer getLastProgressivoByAnnoContabile(Integer annoContabile);
+
+    @Query(nativeQuery = true,
+            value = "select d.progressivo from ddt d group by d.progressivo having count(d.id) > 1 order by d.progressivo"
+    )
+    List<Integer> getProgressiviDuplicates();
 
     @Query(nativeQuery = true,
             value = "select d.id,d.progressivo,d.data,cliente.ragione_sociale as cliente,d.quantita\n" +

@@ -1,25 +1,20 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.*;
+import com.contafood.model.Ddt;
 import com.contafood.model.beans.DdtRicercaLotto;
 import com.contafood.model.views.VDdt;
 import com.contafood.service.DdtService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -91,6 +86,13 @@ public class DdtController {
     public Map<String, Integer> getAnnoContabileAndProgressivo() {
         LOGGER.info("Performing GET request for retrieving 'annoContabile' and 'progressivo' for a new ddt");
         return ddtService.getAnnoContabileAndProgressivo();
+    }
+
+    @RequestMapping(method = GET, path = "/progressivi-duplicates")
+    @CrossOrigin
+    public String getProgressiviDuplicates() {
+        LOGGER.info("Performing GET request for retrieving list of 'ddt.progressivo' duplicates");
+        return ddtService.getProgressiviDuplicates();
     }
 
     @RequestMapping(method = POST)

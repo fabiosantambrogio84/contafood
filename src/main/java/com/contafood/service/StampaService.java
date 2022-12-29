@@ -229,6 +229,8 @@ public class StampaService {
                 ddtArticoloDataSources.add(ddtArticoloDataSource);
             });
         }
+        ddtArticoloDataSources.sort(Comparator.comparing(DdtArticoloDataSource::getCodiceArticolo).thenComparing(DdtArticoloDataSource::getDescrizioneArticolo));
+
         return ddtArticoloDataSources;
     }
 
@@ -577,6 +579,7 @@ public class StampaService {
                 fatturaAccompagnatoriaRigaDataSources.add(fatturaAccompagnatoriaRigaDataSource);
             });
         }
+        fatturaAccompagnatoriaRigaDataSources.sort(Comparator.comparing(FatturaAccompagnatoriaRigaDataSource::getCodiceArticolo).thenComparing(FatturaAccompagnatoriaRigaDataSource::getDescrizioneArticolo));
         return fatturaAccompagnatoriaRigaDataSources;
     }
 

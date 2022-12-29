@@ -1,17 +1,14 @@
 package com.contafood.controller;
 
-import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Produzione;
 import com.contafood.model.ProduzioneConfezione;
 import com.contafood.model.views.VProduzione;
 import com.contafood.service.ProduzioneService;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -22,7 +19,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping(path="/produzioni")
 public class ProduzioneController {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ProduzioneController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProduzioneController.class);
 
     private final ProduzioneService produzioneService;
 
@@ -33,14 +30,16 @@ public class ProduzioneController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<VProduzione> getAll(@RequestParam(name = "lotto", required = false) String lotto) {
+    public Set<VProduzione> getAll() {
         LOGGER.info("Performing GET request for retrieving list of 'produzioni'");
-        LOGGER.info("Request params: lotto {}", lotto);
-
-        if(!StringUtils.isEmpty(lotto)){
-            return produzioneService.getAllByLotto(lotto);
-        }
         return produzioneService.getAll();
+    }
+
+    @RequestMapping(method = GET, path = "/search-lotto")
+    @CrossOrigin
+    public Set<VProduzione> searchByLotto(@RequestParam(name = "lotto") String lotto) {
+        LOGGER.info("Performing GET request for retrieving list of 'produzioni' filtered by 'lotto' {}", lotto);
+        return produzioneService.getAllByLotto(lotto);
     }
 
     @RequestMapping(method = GET, path = "/{produzioneId}")

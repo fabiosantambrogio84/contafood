@@ -23,17 +23,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/FinalClass.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Interface1.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Interface2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/InterfaceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Temp2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sql-scripts/20221229.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/RicercaLottoIngredienteController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VDocumentoAcquistoIngrediente.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VProduzioneConfezione.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VProduzioneIngrediente.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VDocumentoAcquistoIngredienteRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VProduzioneConfezioneRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VProduzioneIngredienteRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicercaLottoService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/StampaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/MovimentazioneService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/DdtController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ProduzioneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ProduzioneController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/DdtRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/DdtRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VProduzioneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VProduzioneRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/FinalClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Interface1.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Interface2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/InterfaceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Temp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/xTemp/Temp2.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,25 +128,14 @@
       <recent name="com.contafood.model.views" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.contafood.controller" />
+      <recent name="com.contafood.repository.views" />
+      <recent name="com.contafood.service" />
+      <recent name="com.contafood.model.views" />
       <recent name="com.contafood.xTemp" />
-      <recent name="com.contafood.util.enumeration" />
-      <recent name="com.contafood.repository" />
-      <recent name="com.contafood.model" />
-      <recent name="com.contafood.model.beans" />
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="contafood [clean,install,-U]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -600,28 +600,16 @@
       <workItem from="1660029812661" duration="7622000" />
       <workItem from="1660116593083" duration="5528000" />
       <workItem from="1660145205005" duration="1625000" />
-      <workItem from="1660635192482" duration="9368000" />
-    </task>
-    <task id="LOCAL-00062" summary="Add logic for retrieving Articolo by barcode">
-      <created>1585756679636</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1585756679636</updated>
-    </task>
-    <task id="LOCAL-00063" summary="Remove not null on data_aggiornamento column">
-      <created>1586250795516</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1586250795518</updated>
-    </task>
-    <task id="LOCAL-00064" summary="Add Produzione.tempoImpiegato">
-      <created>1586330717998</created>
-      <option name="number" value="00064" />
-      <option name="presentableId" value="LOCAL-00064" />
-      <option name="project" value="LOCAL" />
-      <updated>1586330717999</updated>
+      <workItem from="1660635192482" duration="9961000" />
+      <workItem from="1662111650387" duration="1513000" />
+      <workItem from="1662206326182" duration="1437000" />
+      <workItem from="1662453852867" duration="2866000" />
+      <workItem from="1663053273906" duration="3542000" />
+      <workItem from="1663233855629" duration="2748000" />
+      <workItem from="1666686496165" duration="609000" />
+      <workItem from="1672132641274" duration="1625000" />
+      <workItem from="1672217554942" duration="4898000" />
+      <workItem from="1672302988677" duration="7403000" />
     </task>
     <task id="LOCAL-00065" summary="Fix barcode substring for Articolo with variable weight">
       <created>1586418629648</created>
@@ -945,7 +933,28 @@
       <option name="project" value="LOCAL" />
       <updated>1660146834815</updated>
     </task>
-    <option name="localTasksCounter" value="111" />
+    <task id="LOCAL-00111" summary="Fix produzione scorta and print selected ddts">
+      <created>1660664536945</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1660664536946</updated>
+    </task>
+    <task id="LOCAL-00112" summary="Fix create bulk fatture">
+      <created>1662206572471</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1662206572471</updated>
+    </task>
+    <task id="LOCAL-00113" summary="Fix set progressivo and ordering">
+      <created>1663053769489</created>
+      <option name="number" value="00113" />
+      <option name="presentableId" value="LOCAL-00113" />
+      <option name="project" value="LOCAL" />
+      <updated>1663053769490</updated>
+    </task>
+    <option name="localTasksCounter" value="114" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -970,9 +979,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix report ordini autisti" />
-    <MESSAGE value="Update logic for OrdineFornitore" />
-    <MESSAGE value="Update rows order for OrdineCliente" />
     <MESSAGE value="Update rows order for OrdineCliente (stato)" />
     <MESSAGE value="OrdiniAutisti date range. Save email sent for OrdineFornitore" />
     <MESSAGE value="Fix step 25" />
@@ -995,7 +1001,10 @@
     <MESSAGE value="Step 36 and step 37" />
     <MESSAGE value="Fix step 36 and step 37" />
     <MESSAGE value="Fix movimentazioni ingredienti for produzione scorta" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix movimentazioni ingredienti for produzione scorta" />
+    <MESSAGE value="Fix produzione scorta and print selected ddts" />
+    <MESSAGE value="Fix create bulk fatture" />
+    <MESSAGE value="Fix set progressivo and ordering" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix set progressivo and ordering" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1062,22 +1071,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java</url>
-          <line>1204</line>
+          <line>1207</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java</url>
-          <line>640</line>
+          <line>643</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java</url>
-          <line>1241</line>
+          <line>1244</line>
           <option name="timeStamp" value="33" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java</url>
-          <line>1243</line>
+          <line>1246</line>
           <option name="timeStamp" value="34" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -1090,7 +1099,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java</url>
-          <line>115</line>
+          <line>121</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

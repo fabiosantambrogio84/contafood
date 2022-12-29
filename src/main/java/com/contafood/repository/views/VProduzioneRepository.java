@@ -10,8 +10,6 @@ public interface VProduzioneRepository extends CrudRepository<VProduzione, Long>
     @Override
     Set<VProduzione> findAll();
 
-    Set<VProduzione> findAllByOrderByCodiceProduzioneDesc();
-
     Set<VProduzione> findAllByLotto(String lotto);
 
 }
