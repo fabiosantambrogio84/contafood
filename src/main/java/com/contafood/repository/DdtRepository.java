@@ -25,7 +25,7 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
     Optional<Ddt> findByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt);
 
     @Query(nativeQuery = true,
-            value = "select d.progressivo from ddt d where d.anno_contabile = ?1 order by d.anno_contabile desc limit 1 for update"
+            value = "select d.progressivo from ddt d where d.anno_contabile = ?1 order by d.progressivo desc limit 1 for update"
     )
     Integer getLastProgressivoByAnnoContabile(Integer annoContabile);
 

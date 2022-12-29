@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 public class DdtService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(DdtService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(DdtService.class);
 
     private final DdtRepository ddtRepository;
     private final DdtArticoloService ddtArticoloService;
@@ -101,7 +101,7 @@ public class DdtService {
         String result = "";
         List<Integer> progressivi = ddtRepository.getProgressiviDuplicates();
         if(progressivi != null && !progressivi.isEmpty()){
-            result = progressivi.stream().map(p -> p.toString()).collect(Collectors.joining(","));
+            result = progressivi.stream().map(Object::toString).collect(Collectors.joining(","));
         }
         return result;
     }
@@ -125,7 +125,7 @@ public class DdtService {
             ddt.setProgressivo(progressivo);
         }
 
-        checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), Long.valueOf(-1));
+        checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), -1L);
 
         ddt.setStatoDdt(statoDdtService.getDaPagare());
         ddt.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
