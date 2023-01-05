@@ -2,6 +2,7 @@ package com.contafood.service;
 
 import com.contafood.model.*;
 import com.contafood.model.stats.*;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.StatisticaOpzione;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +53,8 @@ public class StatisticaService {
             Float totaleQuantitaVenduta = computeTotaleQuantitaVenduta(computationObject);
             long numeroRighe = computeNumeroRighe(computationObject);
 
-            statistica.setTotaleVenduto(totaleVenduto.setScale(2, RoundingMode.HALF_DOWN));
-            statistica.setTotaleQuantitaVenduta(new BigDecimal(totaleQuantitaVenduta).setScale(2, RoundingMode.HALF_DOWN));
+            statistica.setTotaleVenduto(Utils.roundPrice(totaleVenduto));
+            statistica.setTotaleQuantitaVenduta(Utils.roundPrice(new BigDecimal(totaleQuantitaVenduta)));
             statistica.setNumeroRighe(Long.valueOf(numeroRighe).intValue());
 
             StatisticaOpzione opzione = statisticaFilter.getOpzione();
@@ -333,15 +334,15 @@ public class StatisticaService {
             int numRighe = statisticaArticoliByArticolo.size();
             BigDecimal totVenduto = statisticaArticoliByArticolo.stream().map(StatisticaArticolo::getTotale).reduce(BigDecimal.ZERO, BigDecimal::add);
             BigDecimal totQuantitaVenduta = statisticaArticoliByArticolo.stream().map(sa -> new BigDecimal(sa.getQuantita())).reduce(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal totVendutoMedio = totVenduto.divide(new BigDecimal(numRighe), 3, RoundingMode.HALF_DOWN);
+            BigDecimal totVendutoMedio = totVenduto.divide(new BigDecimal(numRighe), 3, RoundingMode.HALF_UP);
 
             StatisticaArticoloGroup statisticaArticoloGroup = new StatisticaArticoloGroupBuilder()
                     .setCodice(codice)
                     .setDescrizione(descrizione)
                     .setNumeroRighe(numRighe)
-                    .setTotaleQuantitaVenduta(totQuantitaVenduta.setScale(2, RoundingMode.HALF_DOWN))
-                    .setTotaleVenduto(totVenduto.setScale(2, RoundingMode.HALF_DOWN))
-                    .setTotaleVendutoMedio(totVendutoMedio.setScale(2, RoundingMode.HALF_DOWN))
+                    .setTotaleQuantitaVenduta(Utils.roundPrice(totQuantitaVenduta))
+                    .setTotaleVenduto(Utils.roundPrice(totVenduto))
+                    .setTotaleVendutoMedio(Utils.roundPrice(totVendutoMedio))
                     .build();
 
             statisticaArticoliGroups.add(statisticaArticoloGroup);

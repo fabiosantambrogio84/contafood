@@ -8,6 +8,7 @@ import com.contafood.model.views.VDdt;
 import com.contafood.repository.DdtRepository;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.views.VDdtRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -296,12 +296,12 @@ public class DdtService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
-        ddt.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
-        ddt.setTotaleIva(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
-        ddt.setTotaleCosto(totaleCosto.setScale(2, RoundingMode.HALF_DOWN));
-        ddt.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
+        ddt.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
+        ddt.setTotaleIva(Utils.roundPrice(totaleIva));
+        ddt.setTotaleCosto(Utils.roundPrice(totaleCosto));
+        ddt.setTotale(Utils.roundPrice(totale));
         ddt.setTotaleAcconto(new BigDecimal(0));
-        ddt.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.HALF_DOWN));
+        ddt.setTotaleQuantita(Utils.roundPrice(new BigDecimal(totaleQuantita)));
     }
 
     private Ddt filterDdtArticoli(Ddt ddt){

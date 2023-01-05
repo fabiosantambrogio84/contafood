@@ -3,15 +3,14 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
 import com.contafood.model.DdtAcquistoArticolo;
-import com.contafood.model.DdtAcquistoIngrediente;
 import com.contafood.repository.DdtAcquistoArticoloRepository;
+import com.contafood.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -112,7 +111,7 @@ public class DdtAcquistoArticoloService {
         BigDecimal quantitaPerPrezzo = prezzo.multiply(BigDecimal.valueOf(quantita));
         BigDecimal scontoValue = sconto.divide(BigDecimal.valueOf(100)).multiply(quantitaPerPrezzo);
 
-        imponibile = quantitaPerPrezzo.subtract(scontoValue).setScale(2, RoundingMode.HALF_DOWN);
+        imponibile = Utils.roundPrice(quantitaPerPrezzo.subtract(scontoValue));
         return imponibile;
     }
 

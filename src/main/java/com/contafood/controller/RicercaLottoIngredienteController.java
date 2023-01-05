@@ -1,6 +1,7 @@
 package com.contafood.controller;
 
 import com.contafood.model.views.VDocumentoAcquistoIngrediente;
+import com.contafood.model.views.VDocumentoVenditaIngrediente;
 import com.contafood.model.views.VProduzioneConfezione;
 import com.contafood.model.views.VProduzioneIngrediente;
 import com.contafood.service.RicercaLottoService;
@@ -46,5 +47,12 @@ public class RicercaLottoIngredienteController {
     public Set<VDocumentoAcquistoIngrediente> searchDocumentiAcquistiIngredientiByLotto(@RequestParam(name = "lotto") String lotto) {
         LOGGER.info("Performing GET request for retrieving list of 'documenti-acquisti-ingredientii' filtered by 'lotto' {}", lotto);
         return ricercaLottoService.getDocumentiAcquistiIngredientiByLotto(lotto);
+    }
+
+    @RequestMapping(method = GET, path = "/documenti-vendite")
+    @CrossOrigin
+    public Set<VDocumentoVenditaIngrediente> searchDocumentiVenditeIngredientiByLotto(@RequestParam(name = "lotto") String lotto) {
+        LOGGER.info("Performing GET request for retrieving list of 'documenti-vendite-ingredientii' filtered by 'lotto' {}", lotto);
+        return ricercaLottoService.getDocumentiVenditeIngredientiByLotto(lotto);
     }
 }

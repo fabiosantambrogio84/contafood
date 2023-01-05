@@ -210,7 +210,6 @@ public class DdtArticoloService {
                 ordineClienteService.computeStatoOrdineCliente(idOrdineCliente);
             }
         }
-
     }
 
     private Integer computeOrdineClienteArticoloNewPezziDaEvadere(String context, Integer pezzi, Integer pezziDaEvadere, Integer pezziOrdinati, Map<DdtArticoloKey, Integer> ddtArticoliPezziRemaining, DdtArticoloKey ddtArticoloKey){

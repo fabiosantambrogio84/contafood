@@ -6,6 +6,7 @@ import com.contafood.model.Listino;
 import com.contafood.model.ListinoPrezzo;
 import com.contafood.model.ListinoPrezzoVariazione;
 import com.contafood.repository.ListinoPrezzoRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.TipologiaListinoPrezzoVariazione;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -144,7 +145,7 @@ public class ListinoPrezzoService {
                 newPrezzo = newPrezzo.add(BigDecimal.valueOf(variazionePrezzo));
             }
         }
-        return newPrezzo;
+        return Utils.roundPrice(newPrezzo);
     }
 
     public BigDecimal computePrezzoInListinoCreation(Listino listino, Articolo articolo, String tipologiaVariazionePrezzo, Float variazionePrezzo){
@@ -183,7 +184,7 @@ public class ListinoPrezzoService {
                 }
             }
         }
-        return newPrezzo;
+        return Utils.roundPrice(newPrezzo);
     }
 
     public void computeListiniPrezziForArticolo(Articolo articolo){

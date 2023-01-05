@@ -8,6 +8,7 @@ import com.contafood.model.NotaResoRiga;
 import com.contafood.model.NotaResoTotale;
 import com.contafood.repository.NotaResoRepository;
 import com.contafood.repository.PagamentoRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -206,9 +206,9 @@ public class NotaResoService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
-        notaReso.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
+        notaReso.setTotale(Utils.roundPrice(totale));
         notaReso.setTotaleAcconto(new BigDecimal(0));
-        notaReso.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.HALF_DOWN));
+        notaReso.setTotaleQuantita(Utils.roundQuantity(new BigDecimal(totaleQuantita)));
     }
 
 }

@@ -1,9 +1,11 @@
 package com.contafood.service;
 
 import com.contafood.model.views.VDocumentoAcquistoIngrediente;
+import com.contafood.model.views.VDocumentoVenditaIngrediente;
 import com.contafood.model.views.VProduzioneConfezione;
 import com.contafood.model.views.VProduzioneIngrediente;
 import com.contafood.repository.views.VDocumentoAcquistoIngredienteRepository;
+import com.contafood.repository.views.VDocumentoVenditaIngredienteRepository;
 import com.contafood.repository.views.VProduzioneConfezioneRepository;
 import com.contafood.repository.views.VProduzioneIngredienteRepository;
 import org.slf4j.Logger;
@@ -21,13 +23,16 @@ public class RicercaLottoService {
     private final VProduzioneIngredienteRepository vProduzioneIngredienteRepository;
     private final VProduzioneConfezioneRepository vProduzioneConfezioneRepository;
     private final VDocumentoAcquistoIngredienteRepository vDocumentoAcquistoIngredienteRepository;
+    private final VDocumentoVenditaIngredienteRepository vDocumentoVenditaIngredienteRepository;
 
     public RicercaLottoService(final VProduzioneIngredienteRepository vProduzioneIngredienteRepository,
                                final VProduzioneConfezioneRepository vProduzioneConfezioneRepository,
-                               final VDocumentoAcquistoIngredienteRepository vDocumentoAcquistoIngredienteRepository){
+                               final VDocumentoAcquistoIngredienteRepository vDocumentoAcquistoIngredienteRepository,
+                               final VDocumentoVenditaIngredienteRepository vDocumentoVenditaIngredienteRepository){
         this.vProduzioneIngredienteRepository = vProduzioneIngredienteRepository;
         this.vProduzioneConfezioneRepository = vProduzioneConfezioneRepository;
         this.vDocumentoAcquistoIngredienteRepository = vDocumentoAcquistoIngredienteRepository;
+        this.vDocumentoVenditaIngredienteRepository = vDocumentoVenditaIngredienteRepository;
     }
 
     public Set<VProduzioneIngrediente> getProduzioniIngredientiByLotto(String lotto){
@@ -49,5 +54,12 @@ public class RicercaLottoService {
         Set<VDocumentoAcquistoIngrediente> documentiAcquistiIngredienti = vDocumentoAcquistoIngredienteRepository.findAllByLottoIngrediente(lotto);
         LOGGER.info("Retrieved {} 'documenti-acquisti-ingredienti'", documentiAcquistiIngredienti.size());
         return documentiAcquistiIngredienti;
+    }
+
+    public Set<VDocumentoVenditaIngrediente> getDocumentiVenditeIngredientiByLotto(String lotto){
+        LOGGER.info("Retrieving the list of 'documenti-vendite-ingredienti' filtered by 'lotto' '{}'", lotto);
+        Set<VDocumentoVenditaIngrediente> documentiVenditaIngredienti = vDocumentoVenditaIngredienteRepository.findAllByLottoIngrediente(lotto);
+        LOGGER.info("Retrieved {} 'documenti-vendite-ingredienti'", documentiVenditaIngredienti.size());
+        return documentiVenditaIngredienti;
     }
 }

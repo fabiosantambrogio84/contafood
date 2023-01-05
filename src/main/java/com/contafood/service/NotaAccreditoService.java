@@ -5,6 +5,7 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.NotaAccreditoRepository;
 import com.contafood.repository.PagamentoRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -64,7 +64,7 @@ public class NotaAccreditoService {
         };
         Predicate<NotaAccredito> isNotaAccreditoImportoEquals = notaAccredito -> {
             if(importo != null){
-                return notaAccredito.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.HALF_DOWN))==0;
+                return notaAccredito.getTotale().compareTo(Utils.roundPrice(new BigDecimal(importo)))==0;
             }
             return true;
         };
@@ -360,9 +360,9 @@ public class NotaAccreditoService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
-        notaAccredito.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
+        notaAccredito.setTotale(Utils.roundPrice(totale));
         notaAccredito.setTotaleAcconto(new BigDecimal(0));
-        notaAccredito.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.HALF_DOWN));
+        notaAccredito.setTotaleQuantita(Utils.roundQuantity(new BigDecimal(totaleQuantita)));
     }
 
 }

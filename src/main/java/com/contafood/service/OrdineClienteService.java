@@ -4,9 +4,11 @@ import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.views.VOrdineClienteArticolo;
+import com.contafood.model.views.VOrdineClienteArticoloDaEvadere;
 import com.contafood.model.views.VOrdineFornitoreArticolo;
 import com.contafood.repository.DdtArticoloOrdineClienteRepository;
 import com.contafood.repository.OrdineClienteRepository;
+import com.contafood.repository.views.VOrdineClienteArticoloDaEvadereRepository;
 import com.contafood.repository.views.VOrdineClienteArticoloRepository;
 import com.contafood.util.enumeration.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -35,19 +37,22 @@ public class OrdineClienteService {
     private final ListinoPrezzoService listinoPrezzoService;
     private final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository;
     private final VOrdineClienteArticoloRepository vOrdineClienteArticoloRepository;
+    private final VOrdineClienteArticoloDaEvadereRepository vOrdineClienteArticoloDaEvadereRepository;
 
     public OrdineClienteService(final OrdineClienteRepository ordineClienteRepository,
                                 final OrdineClienteArticoloService ordineClienteArticoloService,
                                 final StatoOrdineService statoOrdineService,
                                 final ListinoPrezzoService listinoPrezzoService,
                                 final DdtArticoloOrdineClienteRepository ddtArticoloOrdineClienteRepository,
-                                final VOrdineClienteArticoloRepository vOrdineClienteArticoloRepository){
+                                final VOrdineClienteArticoloRepository vOrdineClienteArticoloRepository,
+                                final VOrdineClienteArticoloDaEvadereRepository vOrdineClienteArticoloDaEvadereRepository){
         this.ordineClienteRepository = ordineClienteRepository;
         this.ordineClienteArticoloService = ordineClienteArticoloService;
         this.statoOrdineService = statoOrdineService;
         this.listinoPrezzoService = listinoPrezzoService;
         this.ddtArticoloOrdineClienteRepository = ddtArticoloOrdineClienteRepository;
         this.vOrdineClienteArticoloRepository = vOrdineClienteArticoloRepository;
+        this.vOrdineClienteArticoloDaEvadereRepository = vOrdineClienteArticoloDaEvadereRepository;
     }
 
     public Set<OrdineCliente> getAll(){
@@ -396,6 +401,10 @@ public class OrdineClienteService {
         }
 
         return vOrdineFornitoriArticoli;
+    }
+
+    public Set<VOrdineClienteArticoloDaEvadere> getOrdiniArticoliDaEvadereByIdCliente(Integer idCliente){
+        return vOrdineClienteArticoloDaEvadereRepository.findAllByIdCliente(idCliente);
     }
 
     /*

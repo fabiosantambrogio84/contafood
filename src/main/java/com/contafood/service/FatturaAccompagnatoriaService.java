@@ -7,6 +7,7 @@ import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -282,9 +282,8 @@ public class FatturaAccompagnatoriaService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
-        fatturaAccompagnatoria.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
+        fatturaAccompagnatoria.setTotale(Utils.roundPrice(totale));
         fatturaAccompagnatoria.setTotaleAcconto(new BigDecimal(0));
-        fatturaAccompagnatoria.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.HALF_DOWN));
+        fatturaAccompagnatoria.setTotaleQuantita(Utils.roundQuantity(new BigDecimal(totaleQuantita)));
     }
-
 }

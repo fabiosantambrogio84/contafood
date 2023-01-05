@@ -8,6 +8,7 @@ import com.contafood.repository.RicettaRepository;
 import com.contafood.repository.views.VProduzioneRepository;
 import com.contafood.util.Constants;
 import com.contafood.util.LottoUtils;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,7 +23,10 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -149,7 +153,7 @@ public class ProduzioneService {
                 float quantita = 0f;
                 if(confezione.getPeso() != null){
                     BigDecimal quantitaBd = BigDecimal.valueOf(confezione.getPeso() / 1000);
-                    quantitaBd = quantitaBd.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                    quantitaBd = Utils.roundQuantity(quantitaBd);
                     quantita = quantitaBd.floatValue() * pc.getNumConfezioniProdotte();
                 }
 
@@ -264,7 +268,7 @@ public class ProduzioneService {
                         float quantita = 0f;
                         if(confezione.getPeso() != 0){
                             BigDecimal quantitaBd = BigDecimal.valueOf(confezione.getPeso() / 1000);
-                            quantitaBd = quantitaBd.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                            quantitaBd = Utils.roundQuantity(quantitaBd);
                             quantita = quantitaBd.floatValue() * produzioneConfezione.getNumConfezioniProdotte();
                         }
 

@@ -7,6 +7,7 @@ import com.contafood.model.views.VFattura;
 import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.util.AccountingUtils;
 import com.contafood.util.Constants;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Provincia;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperRunManager;
@@ -221,9 +222,9 @@ public class StampaService {
                 }
                 ddtArticoloDataSource.setUdm(da.getArticolo().getUnitaMisura().getEtichetta());
                 ddtArticoloDataSource.setQuantita(da.getQuantita());
-                ddtArticoloDataSource.setPrezzo(da.getPrezzo() != null ? da.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
-                ddtArticoloDataSource.setSconto(da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
-                ddtArticoloDataSource.setImponibile(da.getImponibile() != null ? da.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
+                ddtArticoloDataSource.setPrezzo(da.getPrezzo() != null ? Utils.roundPrice(da.getPrezzo()) : Utils.roundPrice(new BigDecimal(0)));
+                ddtArticoloDataSource.setSconto(da.getSconto() != null ? Utils.roundPrice(da.getSconto()) : Utils.roundPrice(new BigDecimal(0)));
+                ddtArticoloDataSource.setImponibile(da.getImponibile() != null ? Utils.roundPrice(da.getImponibile()): Utils.roundPrice(new BigDecimal(0)));
                 ddtArticoloDataSource.setIva(da.getArticolo().getAliquotaIva().getValore().intValue());
 
                 ddtArticoloDataSources.add(ddtArticoloDataSource);
@@ -248,8 +249,8 @@ public class StampaService {
                 ddtDataSource.setData(simpleDateFormat.format(ddt.getData()));
                 ddtDataSource.setClienteDescrizione(ddt.getCliente());
 
-                BigDecimal totaleAcconto = ddt.getTotaleAcconto() != null ? ddt.getTotaleAcconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
-                BigDecimal totale = ddt.getTotale() != null ? ddt.getTotale().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
+                BigDecimal totaleAcconto = ddt.getTotaleAcconto() != null ? Utils.roundPrice(ddt.getTotaleAcconto()) : new BigDecimal(0);
+                BigDecimal totale = ddt.getTotale() != null ? Utils.roundPrice(ddt.getTotale()) : new BigDecimal(0);
                 ddtDataSource.setAcconto(totaleAcconto);
                 ddtDataSource.setTotale(totale);
                 ddtDataSource.setTotaleDaPagare(totale.subtract(totaleAcconto));
@@ -409,9 +410,9 @@ public class StampaService {
                 notaAccreditoRigaDataSource.setLotto(na.getLotto());
                 notaAccreditoRigaDataSource.setUdm(na.getArticolo() != null ? (na.getArticolo().getUnitaMisura() != null ? na.getArticolo().getUnitaMisura().getEtichetta() : "") : "");
                 notaAccreditoRigaDataSource.setQuantita(na.getQuantita());
-                notaAccreditoRigaDataSource.setPrezzo(na.getPrezzo() != null ? na.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                notaAccreditoRigaDataSource.setSconto(na.getSconto() != null ? na.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                notaAccreditoRigaDataSource.setImponibile(na.getImponibile() != null ? na.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                notaAccreditoRigaDataSource.setPrezzo(na.getPrezzo() != null ? Utils.roundPrice(na.getPrezzo()) : new BigDecimal(0));
+                notaAccreditoRigaDataSource.setSconto(na.getSconto() != null ? Utils.roundPrice(na.getSconto()) : new BigDecimal(0));
+                notaAccreditoRigaDataSource.setImponibile(na.getImponibile() != null ? Utils.roundPrice(na.getImponibile()) : new BigDecimal(0));
                 notaAccreditoRigaDataSource.setIva(na.getAliquotaIva() != null ? na.getAliquotaIva().getValore().intValue() : null);
 
                 notaAccreditoRigaDataSources.add(notaAccreditoRigaDataSource);
@@ -426,8 +427,8 @@ public class StampaService {
             notaAccredito.getNotaAccreditoTotali().stream().forEach(na -> {
                 NotaAccreditoTotaleDataSource notaAccreditoTotaleDataSource = new NotaAccreditoTotaleDataSource();
                 notaAccreditoTotaleDataSource.setAliquotaIva(na.getAliquotaIva().getValore().intValue());
-                notaAccreditoTotaleDataSource.setTotaleImponibile(na.getTotaleImponibile() != null ? na.getTotaleImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                notaAccreditoTotaleDataSource.setTotaleIva(na.getTotaleIva() != null ? na.getTotaleIva().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                notaAccreditoTotaleDataSource.setTotaleImponibile(na.getTotaleImponibile() != null ? Utils.roundPrice(na.getTotaleImponibile()) : new BigDecimal(0));
+                notaAccreditoTotaleDataSource.setTotaleIva(na.getTotaleIva() != null ? Utils.roundPrice(na.getTotaleIva()) : new BigDecimal(0));
 
                 notaAccreditoTotaleDataSources.add(notaAccreditoTotaleDataSource);
             });
@@ -460,8 +461,8 @@ public class StampaService {
                         notaAccreditoDataSource.setClienteDescrizione(notaAccreditoCliente.getRagioneSociale());
                     }
                 }
-                BigDecimal totaleAcconto = notaAccredito.getTotaleAcconto() != null ? notaAccredito.getTotaleAcconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
-                BigDecimal totale = notaAccredito.getTotale() != null ? notaAccredito.getTotale().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
+                BigDecimal totaleAcconto = notaAccredito.getTotaleAcconto() != null ? Utils.roundPrice(notaAccredito.getTotaleAcconto()) : new BigDecimal(0);
+                BigDecimal totale = notaAccredito.getTotale() != null ? Utils.roundPrice(notaAccredito.getTotale()) : new BigDecimal(0);
                 notaAccreditoDataSource.setAcconto(totaleAcconto);
                 notaAccreditoDataSource.setTotale(totale);
                 notaAccreditoDataSource.setTotaleDaPagare(totale.subtract(totaleAcconto));
@@ -492,8 +493,8 @@ public class StampaService {
                 if(clienteFattura != null){
                     fatturaDataSource.setClienteDescrizione(clienteFattura.getRagioneSociale());
                 }
-                BigDecimal totaleAcconto = fattura.getTotaleAcconto() != null ? fattura.getTotaleAcconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
-                BigDecimal totale = fattura.getTotale() != null ? fattura.getTotale().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
+                BigDecimal totaleAcconto = fattura.getTotaleAcconto() != null ? Utils.roundPrice(fattura.getTotaleAcconto()) : new BigDecimal(0);
+                BigDecimal totale = fattura.getTotale() != null ? Utils.roundPrice(fattura.getTotale()) : new BigDecimal(0);
                 fatturaDataSource.setAcconto(totaleAcconto);
                 fatturaDataSource.setTotale(totale);
                 fatturaDataSource.setTotaleDaPagare(totale.subtract(totaleAcconto));
@@ -571,9 +572,9 @@ public class StampaService {
                 fatturaAccompagnatoriaRigaDataSource.setLotto(faa.getLotto());
                 fatturaAccompagnatoriaRigaDataSource.setUdm(articolo != null ? (articolo.getUnitaMisura() != null ? articolo.getUnitaMisura().getEtichetta() : "") : "");
                 fatturaAccompagnatoriaRigaDataSource.setQuantita(faa.getQuantita());
-                fatturaAccompagnatoriaRigaDataSource.setPrezzo(faa.getPrezzo() != null ? faa.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                fatturaAccompagnatoriaRigaDataSource.setSconto(faa.getSconto() != null ? faa.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                fatturaAccompagnatoriaRigaDataSource.setImponibile(faa.getImponibile() != null ? faa.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                fatturaAccompagnatoriaRigaDataSource.setPrezzo(faa.getPrezzo() != null ? Utils.roundPrice(faa.getPrezzo()) : new BigDecimal(0));
+                fatturaAccompagnatoriaRigaDataSource.setSconto(faa.getSconto() != null ? Utils.roundPrice(faa.getSconto()) : new BigDecimal(0));
+                fatturaAccompagnatoriaRigaDataSource.setImponibile(faa.getImponibile() != null ? Utils.roundPrice(faa.getImponibile()) : new BigDecimal(0));
                 fatturaAccompagnatoriaRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
 
                 fatturaAccompagnatoriaRigaDataSources.add(fatturaAccompagnatoriaRigaDataSource);
@@ -589,8 +590,8 @@ public class StampaService {
             fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali() .stream().forEach(fat -> {
                 FatturaAccompagnatoriaTotaleDataSource fatturaAccompagnatoriaTotaleDataSource = new FatturaAccompagnatoriaTotaleDataSource();
                 fatturaAccompagnatoriaTotaleDataSource.setAliquotaIva(fat.getAliquotaIva().getValore().intValue());
-                fatturaAccompagnatoriaTotaleDataSource.setTotaleImponibile(fat.getTotaleImponibile() != null ? fat.getTotaleImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                fatturaAccompagnatoriaTotaleDataSource.setTotaleIva(fat.getTotaleIva() != null ? fat.getTotaleIva().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                fatturaAccompagnatoriaTotaleDataSource.setTotaleImponibile(fat.getTotaleImponibile() != null ? Utils.roundPrice(fat.getTotaleImponibile()) : new BigDecimal(0));
+                fatturaAccompagnatoriaTotaleDataSource.setTotaleIva(fat.getTotaleIva() != null ? Utils.roundPrice(fat.getTotaleIva()) : new BigDecimal(0));
 
                 fatturaAccompagnatoriaTotaleDataSources.add(fatturaAccompagnatoriaTotaleDataSource);
             });
@@ -678,11 +679,11 @@ public class StampaService {
                             fatturaRigaDataSource.setUdm(articolo != null ? (articolo.getUnitaMisura() != null ? articolo.getUnitaMisura().getEtichetta() : "") : "");
                             fatturaRigaDataSource.setQuantita(da.getQuantita());
 
-                            BigDecimal prezzo = da.getPrezzo() != null ? da.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
-                            BigDecimal sconto = da.getSconto() != null ? da.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
+                            BigDecimal prezzo = da.getPrezzo() != null ? Utils.roundPrice(da.getPrezzo()) : new BigDecimal(0);
+                            BigDecimal sconto = da.getSconto() != null ? Utils.roundPrice(da.getSconto()) : new BigDecimal(0);
                             fatturaRigaDataSource.setPrezzo(prezzo);
                             fatturaRigaDataSource.setSconto(sconto);
-                            fatturaRigaDataSource.setImponibile(da.getImponibile() != null ? da.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                            fatturaRigaDataSource.setImponibile(da.getImponibile() != null ? Utils.roundPrice(da.getImponibile()) : new BigDecimal(0));
 
                             fatturaRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
 
@@ -707,12 +708,12 @@ public class StampaService {
         for(AliquotaIva aliquotaIva : imponibiliByIva.keySet()){
             BigDecimal ivaValore = aliquotaIva.getValore();
             BigDecimal imponibile = imponibiliByIva.get(aliquotaIva);
-            BigDecimal totaleIva = imponibile.multiply(ivaValore.divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_DOWN)).setScale(2, RoundingMode.HALF_DOWN);
+            BigDecimal totaleIva = Utils.roundPrice(imponibile.multiply(Utils.roundPrice(ivaValore.divide(new BigDecimal(100)))));
 
             FatturaTotaleDataSource fatturaTotaleDataSource = new FatturaTotaleDataSource();
             fatturaTotaleDataSource.setAliquotaIva(ivaValore.intValue());
-            fatturaTotaleDataSource.setTotaleImponibile(imponibile.setScale(2, RoundingMode.HALF_DOWN));
-            fatturaTotaleDataSource.setTotaleIva(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
+            fatturaTotaleDataSource.setTotaleImponibile(Utils.roundPrice(imponibile));
+            fatturaTotaleDataSource.setTotaleIva(Utils.roundPrice(totaleIva));
 
             fatturaTotaleDataSources.add(fatturaTotaleDataSource);
         }
@@ -773,9 +774,9 @@ public class StampaService {
                 notaResoRigaDataSource.setLotto(nr.getLotto());
                 notaResoRigaDataSource.setUdm(unitaMisura != null ? unitaMisura.getEtichetta() : "");
                 notaResoRigaDataSource.setQuantita(nr.getQuantita());
-                notaResoRigaDataSource.setPrezzo(nr.getPrezzo() != null ? nr.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                notaResoRigaDataSource.setSconto(nr.getSconto() != null ? nr.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                notaResoRigaDataSource.setImponibile(nr.getImponibile() != null ? nr.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                notaResoRigaDataSource.setPrezzo(nr.getPrezzo() != null ? Utils.roundPrice(nr.getPrezzo()) : new BigDecimal(0));
+                notaResoRigaDataSource.setSconto(nr.getSconto() != null ? Utils.roundPrice(nr.getSconto()) : new BigDecimal(0));
+                notaResoRigaDataSource.setImponibile(nr.getImponibile() != null ? Utils.roundPrice(nr.getImponibile()) : new BigDecimal(0));
                 notaResoRigaDataSource.setIva(nr.getAliquotaIva() != null ? nr.getAliquotaIva().getValore().intValue() : null);
 
                 notaResoRigaDataSources.add(notaResoRigaDataSource);
@@ -790,8 +791,8 @@ public class StampaService {
             notaReso.getNotaResoTotali().forEach(nr -> {
                 NotaResoTotaleDataSource notaResoTotaleDataSource = new NotaResoTotaleDataSource();
                 notaResoTotaleDataSource.setAliquotaIva(nr.getAliquotaIva().getValore().intValue());
-                notaResoTotaleDataSource.setTotaleImponibile(nr.getTotaleImponibile() != null ? nr.getTotaleImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                notaResoTotaleDataSource.setTotaleIva(nr.getTotaleIva() != null ? nr.getTotaleIva().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                notaResoTotaleDataSource.setTotaleImponibile(nr.getTotaleImponibile() != null ? Utils.roundPrice(nr.getTotaleImponibile()) : new BigDecimal(0));
+                notaResoTotaleDataSource.setTotaleIva(nr.getTotaleIva() != null ? Utils.roundPrice(nr.getTotaleIva()) : new BigDecimal(0));
 
                 notaResoTotaleDataSources.add(notaResoTotaleDataSource);
             });
@@ -862,8 +863,8 @@ public class StampaService {
                 if(cliente != null){
                     ricevutaPrivatoDataSource.setClienteDescrizione(cliente.getNome()+" "+cliente.getCognome());
                 }
-                BigDecimal totaleAcconto = ricevutaPrivato.getTotaleAcconto() != null ? ricevutaPrivato.getTotaleAcconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
-                BigDecimal totale = ricevutaPrivato.getTotale() != null ? ricevutaPrivato.getTotale().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
+                BigDecimal totaleAcconto = ricevutaPrivato.getTotaleAcconto() != null ? Utils.roundPrice(ricevutaPrivato.getTotaleAcconto()) : new BigDecimal(0);
+                BigDecimal totale = ricevutaPrivato.getTotale() != null ? Utils.roundPrice(ricevutaPrivato.getTotale()) : new BigDecimal(0);
                 ricevutaPrivatoDataSource.setAcconto(totaleAcconto);
                 ricevutaPrivatoDataSource.setTotale(totale);
                 ricevutaPrivatoDataSource.setTotaleDaPagare(totale.subtract(totaleAcconto));
@@ -883,23 +884,23 @@ public class StampaService {
                 RicevutaPrivatoArticoloDataSource ricevutaPrivatoArticoloDataSource = new RicevutaPrivatoArticoloDataSource();
 
                 Float quantita = rpa.getQuantita();
-                BigDecimal imponibile = rpa.getImponibile() != null ? rpa.getImponibile().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0);
+                BigDecimal imponibile = rpa.getImponibile() != null ? Utils.roundPrice(rpa.getImponibile()) : new BigDecimal(0);
                 BigDecimal iva = rpa.getArticolo().getAliquotaIva().getValore();
 
                 BigDecimal totale = imponibile.add(imponibile.multiply(iva.divide(new BigDecimal(100))));
-                BigDecimal prezzoConIva = totale.divide(BigDecimal.valueOf(quantita), 2, RoundingMode.HALF_DOWN);
+                BigDecimal prezzoConIva = totale.divide(BigDecimal.valueOf(quantita), 2, RoundingMode.HALF_UP);
 
                 ricevutaPrivatoArticoloDataSource.setCodiceArticolo(rpa.getArticolo().getCodice());
                 ricevutaPrivatoArticoloDataSource.setDescrizioneArticolo(rpa.getArticolo().getDescrizione());
                 ricevutaPrivatoArticoloDataSource.setLotto(rpa.getLotto());
                 ricevutaPrivatoArticoloDataSource.setUdm(rpa.getArticolo().getUnitaMisura().getEtichetta());
                 ricevutaPrivatoArticoloDataSource.setQuantita(quantita);
-                ricevutaPrivatoArticoloDataSource.setPrezzo(rpa.getPrezzo() != null ? rpa.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
-                ricevutaPrivatoArticoloDataSource.setSconto(rpa.getSconto() != null ? rpa.getSconto().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0));
+                ricevutaPrivatoArticoloDataSource.setPrezzo(rpa.getPrezzo() != null ? Utils.roundPrice(rpa.getPrezzo()) : new BigDecimal(0));
+                ricevutaPrivatoArticoloDataSource.setSconto(rpa.getSconto() != null ? Utils.roundPrice(rpa.getSconto()) : new BigDecimal(0));
                 ricevutaPrivatoArticoloDataSource.setImponibile(imponibile);
                 ricevutaPrivatoArticoloDataSource.setIva(iva.intValue());
-                ricevutaPrivatoArticoloDataSource.setPrezzoConIva(prezzoConIva.setScale(2, RoundingMode.HALF_DOWN));
-                ricevutaPrivatoArticoloDataSource.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
+                ricevutaPrivatoArticoloDataSource.setPrezzoConIva(Utils.roundPrice(prezzoConIva));
+                ricevutaPrivatoArticoloDataSource.setTotale(Utils.roundPrice(totale));
 
                 ricevutaPrivatoArticoloDataSources.add(ricevutaPrivatoArticoloDataSource);
             });
@@ -988,9 +989,9 @@ public class StampaService {
                     }
 
                     FatturaCommercianteTotaleDataSource fatturaCommercianteTotaleDataSource = new FatturaCommercianteTotaleDataSource();
-                    fatturaCommercianteTotaleDataSource.setImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
+                    fatturaCommercianteTotaleDataSource.setImponibile(Utils.roundPrice(totaleImponibile));
                     fatturaCommercianteTotaleDataSource.setIva(iva.intValue());
-                    fatturaCommercianteTotaleDataSource.setImposta(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
+                    fatturaCommercianteTotaleDataSource.setImposta(Utils.roundPrice(totaleIva));
 
                     fatturaCommercianteTotaleDataSources.add(fatturaCommercianteTotaleDataSource);
                 }
@@ -1174,9 +1175,9 @@ public class StampaService {
         parameters.put("ddtTrasportoTipo", ddt.getTipoTrasporto());
         parameters.put("ddtTrasportoDataOra", ddtTrasportoDataOraParam);
         parameters.put("ddtNumeroColli", ddt.getNumeroColli());
-        parameters.put("ddtTotImponibile", ddt.getTotaleImponibile().setScale(2, RoundingMode.HALF_DOWN));
-        parameters.put("ddtTotIva", ddt.getTotaleIva().setScale(2, RoundingMode.HALF_DOWN));
-        parameters.put("ddtTotDocumento", ddt.getTotale().setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("ddtTotImponibile", Utils.roundPrice(ddt.getTotaleImponibile()));
+        parameters.put("ddtTotIva", Utils.roundPrice(ddt.getTotaleIva()));
+        parameters.put("ddtTotDocumento", Utils.roundPrice(ddt.getTotale()));
         parameters.put("ddtArticoliCollection", ddtArticoliCollectionDataSource);
         parameters.put("ddtCollection", ddtCollectionDataSource);
 
@@ -1275,7 +1276,7 @@ public class StampaService {
         parameters.put("nota", Constants.JASPER_PARAMETER_FATTURA_NOTA);
         parameters.put("totaleImponibile", totaleImponibile);
         parameters.put("totaleIva", totaleIva);
-        parameters.put("fatturaTotDocumento", fattura.getTotale().setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("fatturaTotDocumento", Utils.roundPrice(fattura.getTotale()));
         parameters.put("fatturaCollection", fatturaCollectionDataSource);
         parameters.put("fatturaRigheCollection", fatturaRigheCollectionDataSource);
         parameters.put("fatturaTotaliCollection", fatturaTotaliCollectionDataSource);
@@ -1385,7 +1386,7 @@ public class StampaService {
         parameters.put("dataOraTrasporto", simpleDateFormat.format(fatturaAccompagnatoria.getDataTrasporto())+" "+fatturaAccompagnatoria.getOraTrasporto());
         parameters.put("totaleImponibile", totaleImponibile);
         parameters.put("totaleIva", totaleIva);
-        parameters.put("fatturaAccompagnatoriaTotDocumento", totaleImponibile.add(totaleIva).setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("fatturaAccompagnatoriaTotDocumento", Utils.roundPrice(totaleImponibile.add(totaleIva)));
         parameters.put("fatturaAccompagnatoriaCollection", fatturaAccompagnatoriaCollectionDataSource);
         parameters.put("fatturaAccompagnatoriaRigheCollection", fatturaAccompagnatoriaRigheCollectionDataSource);
         parameters.put("fatturaAccompagnatoriaTotaliCollection", fatturaAccompagnatoriaTotaliCollectionDataSource);
@@ -1478,7 +1479,7 @@ public class StampaService {
         parameters.put("note", notaAccredito.getNote());
         parameters.put("totaleImponibile", totaleImponibile);
         parameters.put("totaleIva", totaleIva);
-        parameters.put("notaAccreditoTotDocumento", totaleImponibile.add(totaleIva).setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("notaAccreditoTotDocumento", Utils.roundPrice(totaleImponibile.add(totaleIva)));
         parameters.put("notaAccreditoCollection", notaAccreditoCollectionDataSource);
         parameters.put("notaAccreditoRigheCollection", notaAccreditoRigheCollectionDataSource);
         parameters.put("notaAccreditoTotaliCollection", notaAccreditoTotaliCollectionDataSource);
@@ -1564,7 +1565,7 @@ public class StampaService {
         if(!listinoPrezzi.isEmpty()){
             for(ListinoPrezzo lp : listinoPrezzi){
                 ListinoPrezzoDataSource listinoPrezzoDataSource = new ListinoPrezzoDataSource();
-                listinoPrezzoDataSource.setPrezzo(lp.getPrezzo() != null ? lp.getPrezzo().setScale(2, RoundingMode.HALF_DOWN) : new BigDecimal(0).setScale(2, RoundingMode.HALF_DOWN));
+                listinoPrezzoDataSource.setPrezzo(lp.getPrezzo() != null ? Utils.roundPrice(lp.getPrezzo()) : Utils.roundPrice(new BigDecimal(0)));
 
                 Articolo articolo = lp.getArticolo();
                 if(articolo != null){

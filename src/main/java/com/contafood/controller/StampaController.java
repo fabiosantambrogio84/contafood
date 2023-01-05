@@ -5,6 +5,7 @@ import com.contafood.model.reports.*;
 import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.service.StampaService;
 import com.contafood.util.Constants;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Provincia;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperRunManager;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -514,7 +514,7 @@ public class StampaController {
         parameters.put("note", notaReso.getNote());
         parameters.put("totaleImponibile", totaleImponibile);
         parameters.put("totaleIva", totaleIva);
-        parameters.put("notaResoTotDocumento", totaleImponibile.add(totaleIva).setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("notaResoTotDocumento", Utils.roundPrice(totaleImponibile.add(totaleIva)));
         parameters.put("notaResoCollection", notaResoCollectionDataSource);
         parameters.put("notaResoRigheCollection", notaResoRigheCollectionDataSource);
         parameters.put("notaResoTotaliCollection", notaResoTotaliCollectionDataSource);
@@ -674,9 +674,9 @@ public class StampaController {
         parameters.put("ricevutaPrivatoTrasportoTipo", ricevutaPrivato.getTipoTrasporto());
         parameters.put("ricevutaPrivatoTrasportoDataOra", ricevutaPrivatoTrasportoDataOraParam);
         parameters.put("ricevutaPrivatoNumeroColli", ricevutaPrivato.getNumeroColli());
-        parameters.put("ricevutaPrivatoTotImponibile", ricevutaPrivato.getTotaleImponibile().setScale(2, RoundingMode.HALF_DOWN));
-        parameters.put("ricevutaPrivatoTotIva", ricevutaPrivato.getTotaleIva().setScale(2, RoundingMode.HALF_DOWN));
-        parameters.put("ricevutaPrivatoTotDocumento", ricevutaPrivato.getTotale().setScale(2, RoundingMode.HALF_DOWN));
+        parameters.put("ricevutaPrivatoTotImponibile", Utils.roundPrice(ricevutaPrivato.getTotaleImponibile()));
+        parameters.put("ricevutaPrivatoTotIva", Utils.roundPrice(ricevutaPrivato.getTotaleIva()));
+        parameters.put("ricevutaPrivatoTotDocumento", Utils.roundPrice(ricevutaPrivato.getTotale()));
         parameters.put("ricevutaPrivatoArticoliCollection", ricevutaPrivatoArticoliCollectionDataSource);
         parameters.put("ricevutaPrivatoCollection", ricevutaPrivatoCollectionDataSource);
 

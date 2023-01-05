@@ -6,6 +6,7 @@ import com.contafood.model.*;
 import com.contafood.model.views.VPagamento;
 import com.contafood.repository.*;
 import com.contafood.repository.views.VPagamentoRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -241,7 +241,7 @@ public class PagamentoService {
         if(totale == null){
             totale = new BigDecimal(0);
         }
-        BigDecimal newTotaleAcconto = totaleAcconto.add(importo).setScale(2, RoundingMode.HALF_DOWN);
+        BigDecimal newTotaleAcconto = Utils.roundPrice(totaleAcconto.add(importo));
         if(newTotaleAcconto.compareTo(totale) == 1){
             LOGGER.error("The 'importo' '{}' sum to '{}' is greater than 'totale' '{}' (idDdt={}, idNotaAccredito={})", importo, totaleAcconto, totale, pagamento.getDdt().getId(), pagamento.getNotaAccredito().getId());
             throw new PagamentoExceedingException(resource);
@@ -379,7 +379,7 @@ public class PagamentoService {
         if(totaleAcconto == null){
             totaleAcconto = new BigDecimal(0);
         }
-        BigDecimal newTotaleAcconto = totaleAcconto.subtract(importo).setScale(2, RoundingMode.HALF_DOWN);
+        BigDecimal newTotaleAcconto = Utils.roundPrice(totaleAcconto.subtract(importo));
 
         switch(resource){
             case DDT:

@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class AccountingUtils {
         BigDecimal quantitaPerPrezzo = prezzo.multiply(BigDecimal.valueOf(quantita));
         BigDecimal scontoValue = sconto.divide(BigDecimal.valueOf(100)).multiply(quantitaPerPrezzo);
 
-        imponibile = quantitaPerPrezzo.subtract(scontoValue).setScale(2, RoundingMode.HALF_DOWN);
+        imponibile = Utils.roundPrice(quantitaPerPrezzo.subtract(scontoValue));
         return imponibile;
     }
 
@@ -51,7 +50,7 @@ public class AccountingUtils {
             }
         }
         LOGGER.info("Prezzo acquisto '{}'", prezzoAcquisto);
-        costo = (prezzoAcquisto.multiply(BigDecimal.valueOf(quantita))).setScale(2, RoundingMode.HALF_DOWN);
+        costo = Utils.roundPrice(prezzoAcquisto.multiply(BigDecimal.valueOf(quantita)));
         return costo;
     }
 
@@ -77,7 +76,7 @@ public class AccountingUtils {
         }
 
         BigDecimal ivaValue = aliquotaIvaValore.divide(BigDecimal.valueOf(100)).multiply(imponibile);
-        totale = imponibile.add(ivaValue).setScale(2, RoundingMode.HALF_DOWN);
+        totale = Utils.roundPrice(imponibile.add(ivaValue));
 
         return totale;
     }
@@ -119,17 +118,6 @@ public class AccountingUtils {
                 Set<DdtArticolo> ddtArticoliByIva = entry.getValue();
                 for(DdtArticolo ddtArticoloByIva : ddtArticoliByIva){
                     BigDecimal imponibile = ddtArticoloByIva.getImponibile();
-                    /*
-                    BigDecimal prezzo = ddtArticoloByIva.getPrezzo();
-                    if(prezzo != null){
-                        prezzo = prezzo.setScale(2, RoundingMode.HALF_DOWN);
-                    }
-                    BigDecimal sconto = ddtArticoloByIva.getSconto();
-                    if(sconto != null){
-                        sconto = sconto.setScale(2, RoundingMode.HALF_DOWN);
-                    }
-                    BigDecimal imponibile = computeImponibile(ddtArticoloByIva.getQuantita(), prezzo, sconto);
-                    */
                     totaleImponibile = totaleImponibile.add(imponibile);
                 }
                 ivaImponibileMap.put(aliquotaIva, totaleImponibile);

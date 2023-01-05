@@ -8,6 +8,7 @@ import com.contafood.model.RicevutaPrivato;
 import com.contafood.model.RicevutaPrivatoArticolo;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.RicevutaPrivatoRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -203,12 +203,11 @@ public class RicevutaPrivatoService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
-        ricevutaPrivato.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
-        ricevutaPrivato.setTotaleIva(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
-        ricevutaPrivato.setTotaleCosto(totaleCosto.setScale(2, RoundingMode.HALF_DOWN));
-        ricevutaPrivato.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
+        ricevutaPrivato.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
+        ricevutaPrivato.setTotaleIva(Utils.roundPrice(totaleIva));
+        ricevutaPrivato.setTotaleCosto(Utils.roundPrice(totaleCosto));
+        ricevutaPrivato.setTotale(Utils.roundPrice(totale));
         ricevutaPrivato.setTotaleAcconto(new BigDecimal(0));
-        ricevutaPrivato.setTotaleQuantita(new BigDecimal(totaleQuantita).setScale(2, RoundingMode.HALF_DOWN));
+        ricevutaPrivato.setTotaleQuantita(Utils.roundQuantity(new BigDecimal(totaleQuantita)));
     }
-
 }

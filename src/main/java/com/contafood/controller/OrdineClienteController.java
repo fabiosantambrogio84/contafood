@@ -2,6 +2,7 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
+import com.contafood.model.views.VOrdineClienteArticoloDaEvadere;
 import com.contafood.model.views.VOrdineFornitoreArticolo;
 import com.contafood.service.OrdineClienteService;
 import com.contafood.service.jpa.NativeQueryService;
@@ -153,6 +154,13 @@ public class OrdineClienteController {
                                                                         @RequestParam(name = "dataTo") Date dataTo) {
         LOGGER.info("Performing GET request for retrieving 'articoli-for-ordine-fornitore' for fornitore '{}', dataFrom '{}' and dataTo '{}'", idFornitore, dataFrom, dataTo);
         return ordineClienteService.getArticoliForOrdineFornitore(idFornitore.longValue(), dataFrom, dataTo);
+    }
+
+    @RequestMapping(method = GET, path = "/ordini-articoli-da-evadere")
+    @CrossOrigin
+    public Set<VOrdineClienteArticoloDaEvadere> getOrdiniArticoliDaEvadereByIdCliente(@RequestParam(name = "idCliente") Integer idCliente) {
+        LOGGER.info("Performing GET request for retrieving 'ordini-articoli-da-evadere' for cliente '{}'", idCliente);
+        return ordineClienteService.getOrdiniArticoliDaEvadereByIdCliente(idCliente);
     }
 
     @RequestMapping(method = POST)

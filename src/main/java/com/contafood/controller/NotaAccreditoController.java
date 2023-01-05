@@ -1,24 +1,17 @@
 package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
-import com.contafood.model.Agente;
-import com.contafood.model.Cliente;
 import com.contafood.model.NotaAccredito;
-import com.contafood.model.StatoNotaAccredito;
 import com.contafood.service.NotaAccreditoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;

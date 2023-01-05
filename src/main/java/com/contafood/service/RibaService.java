@@ -4,6 +4,7 @@ import com.contafood.exception.GenericException;
 import com.contafood.model.*;
 import com.contafood.util.RibaConstants;
 import com.contafood.util.RibaUtils;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Mese;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -387,7 +387,7 @@ public class RibaService {
 
             BigDecimal fatturaTotale = fattura.getTotale() != null ? fattura.getTotale() : BigDecimal.ZERO;
             BigDecimal fatturaTotaleAcconto = fattura.getTotaleAcconto() != null ? fattura.getTotaleAcconto() : BigDecimal.ZERO;
-            BigDecimal importoPagamento = fatturaTotale.subtract(fatturaTotaleAcconto).setScale(2, RoundingMode.HALF_DOWN);
+            BigDecimal importoPagamento = Utils.roundPrice(fatturaTotale.subtract(fatturaTotaleAcconto));
 
             Pagamento pagamento = new Pagamento();
             pagamento.setFattura(fattura);

@@ -5,13 +5,13 @@ import com.contafood.model.Fornitore;
 import com.contafood.model.NotaReso;
 import com.contafood.model.StatoNotaReso;
 import com.contafood.service.NotaResoService;
+import com.contafood.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.Map;
 import java.util.Objects;
@@ -69,7 +69,7 @@ public class NotaResoController {
         };
         Predicate<NotaReso> isNotaResoImportoEquals = notaReso -> {
             if(importo != null){
-                return notaReso.getTotale().compareTo(new BigDecimal(importo).setScale(2, RoundingMode.HALF_DOWN))==0;
+                return notaReso.getTotale().compareTo(Utils.roundPrice(new BigDecimal(importo)))==0;
             }
             return true;
         };

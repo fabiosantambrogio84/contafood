@@ -9,6 +9,7 @@ import com.contafood.repository.FatturaRepository;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.TipoPagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -395,8 +396,8 @@ public class FatturaService {
                 totale = totale.add(ddt.getTotale());
                 totaleAcconto = totaleAcconto.add(ddt.getTotaleAcconto());
             }
-            fattura.setTotale(totale);
-            fattura.setTotaleAcconto(totaleAcconto);
+            fattura.setTotale(Utils.roundPrice(totale));
+            fattura.setTotaleAcconto(Utils.roundPrice(totaleAcconto));
 
             ddtsCliente.forEach(ddt -> {
                 FatturaDdt fatturaDdt = new FatturaDdt();
@@ -519,7 +520,6 @@ public class FatturaService {
                 }
             }
         }
-
         LOGGER.info("Successfully updated fatture setting speditoAde={}", speditoAde);
     }
 
@@ -605,8 +605,7 @@ public class FatturaService {
             }
             totaleAcconto = totaleAcconto.add(ddtTotaleAcconto);
         }
-        fattura.setTotaleAcconto(totaleAcconto);
-
+        fattura.setTotaleAcconto(Utils.roundPrice(totaleAcconto));
     }
 
     private void setFatturaDdtsFatturato(Fattura fattura, boolean fatturato){
@@ -619,7 +618,5 @@ public class FatturaService {
             ddtService.patch(patchDdt);
         });
         LOGGER.info("Successfully set 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
-
     }
-
 }

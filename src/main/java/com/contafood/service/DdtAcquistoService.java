@@ -4,6 +4,7 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.beans.DdtAcquistoRicercaLotto;
 import com.contafood.repository.DdtAcquistoRepository;
+import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -232,9 +232,9 @@ public class DdtAcquistoService {
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
 
-        ddtAcquisto.setTotaleImponibile(totaleImponibile.setScale(2, RoundingMode.HALF_DOWN));
-        ddtAcquisto.setTotaleIva(totaleIva.setScale(2, RoundingMode.HALF_DOWN));
-        ddtAcquisto.setTotale(totale.setScale(2, RoundingMode.HALF_DOWN));
+        ddtAcquisto.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
+        ddtAcquisto.setTotaleIva(Utils.roundPrice(totaleIva));
+        ddtAcquisto.setTotale(Utils.roundPrice(totale));
     }
 
 }

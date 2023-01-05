@@ -3,6 +3,7 @@ package com.contafood.service;
 import com.contafood.model.*;
 import com.contafood.repository.*;
 import com.contafood.util.Constants;
+import com.contafood.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -279,7 +280,7 @@ public class MovimentazioneService {
                 float quantita = 0f;
                 if(confezione.getPeso() != null){
                     BigDecimal quantitaBd = BigDecimal.valueOf(confezione.getPeso() / 1000);
-                    quantitaBd = quantitaBd.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+                    quantitaBd = Utils.roundQuantity(quantitaBd);
                     quantita = quantitaBd.floatValue() * pc.getNumConfezioniProdotte();
                 }
 

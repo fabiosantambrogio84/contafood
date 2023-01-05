@@ -3,10 +3,7 @@ package com.contafood.service;
 import com.contafood.model.*;
 import com.contafood.properties.AdeExportProperties;
 import com.contafood.service.jpa.NativeQueryService;
-import com.contafood.util.AccountingUtils;
-import com.contafood.util.AdeConstants;
-import com.contafood.util.Constants;
-import com.contafood.util.ZipUtils;
+import com.contafood.util.*;
 import com.contafood.util.enumeration.Provincia;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
@@ -26,7 +23,6 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -891,7 +887,7 @@ public class AdeService {
         BigDecimal totaleFattura = fattura.getTotale();
         String totaleFattura_s;
         if(totaleFattura != null){
-            totaleFattura_s = totaleFattura.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+            totaleFattura_s = Utils.roundPrice(totaleFattura).toPlainString();
             xmlStreamWriter.writeStartElement("ImportoTotaleDocumento");
             xmlStreamWriter.writeCharacters(totaleFattura_s);
             xmlStreamWriter.writeEndElement();
@@ -1094,7 +1090,7 @@ public class AdeService {
         BigDecimal totaleFattura = fatturaAccompagnatoria.getTotale();
         String totaleFattura_s;
         if(totaleFattura != null){
-            totaleFattura_s = totaleFattura.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+            totaleFattura_s = Utils.roundPrice(totaleFattura).toPlainString();
             xmlStreamWriter.writeStartElement("ImportoTotaleDocumento");
             xmlStreamWriter.writeCharacters(totaleFattura_s);
             xmlStreamWriter.writeEndElement();
@@ -1203,7 +1199,7 @@ public class AdeService {
         BigDecimal totaleNotaAccredito = notaAccredito.getTotale();
         String totaleNotaAccredito_s;
         if(totaleNotaAccredito != null){
-            totaleNotaAccredito_s = totaleNotaAccredito.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+            totaleNotaAccredito_s = Utils.roundPrice(totaleNotaAccredito).toPlainString();
             xmlStreamWriter.writeStartElement("ImportoTotaleDocumento");
             xmlStreamWriter.writeCharacters(totaleNotaAccredito_s);
             xmlStreamWriter.writeEndElement();
@@ -1328,7 +1324,7 @@ public class AdeService {
                         BigDecimal prezzo = ddtArticolo.getPrezzo();
                         String prezzo_s = "";
                         if(prezzo != null){
-                            prezzo_s = prezzo.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                            prezzo_s = Utils.roundPrice(prezzo).toPlainString();
                         }
                         xmlStreamWriter.writeCharacters(prezzo_s);
                         xmlStreamWriter.writeEndElement();
@@ -1337,7 +1333,7 @@ public class AdeService {
                         BigDecimal sconto = ddtArticolo.getSconto();
                         String sconto_s = "";
                         if(sconto != null && sconto.compareTo(BigDecimal.ZERO) != 0){
-                            sconto_s = sconto.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                            sconto_s = Utils.roundPrice(sconto).toPlainString();
                         }
                         if(!sconto_s.equals("")){
                             xmlStreamWriter.writeStartElement("ScontoMaggiorazione");
@@ -1363,7 +1359,7 @@ public class AdeService {
 
                         // create node 'PrezzoTotale' 
                         xmlStreamWriter.writeStartElement("PrezzoTotale");
-                        BigDecimal prezzoTemp = ddtArticolo.getPrezzo().setScale(2, RoundingMode.HALF_DOWN);
+                        BigDecimal prezzoTemp = Utils.roundPrice(ddtArticolo.getPrezzo());
                         /*
                         if(sconto != null && sconto.compareTo(BigDecimal.ZERO) != 0){
                             BigDecimal scontoValue = prezzoTemp.multiply(sconto.divide(new BigDecimal(100)));
@@ -1373,7 +1369,7 @@ public class AdeService {
                         //prezzoTemp.multiply(BigDecimal.valueOf(ddtArticolo.getQuantita()));
                         String prezzoTotale_s = "";
                         if(prezzoTotale != null){
-                            prezzoTotale_s = prezzoTotale.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                            prezzoTotale_s = Utils.roundPrice(prezzoTotale).toPlainString();
                         }
                         xmlStreamWriter.writeCharacters(prezzoTotale_s);
                         xmlStreamWriter.writeEndElement();
@@ -1434,10 +1430,10 @@ public class AdeService {
                 if(imponibile != null){
 
                     // Calcolo l'imposta 
-                    imposta = imponibile.multiply(iva.divide(new BigDecimal(100)).setScale(2, RoundingMode.HALF_DOWN)).setScale(2, RoundingMode.HALF_DOWN);
+                    imposta = Utils.roundPrice(imponibile.multiply(Utils.roundPrice(iva.divide(new BigDecimal(100)))));
 
                     if(imponibile != null){
-                        imp_s = imponibile.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                        imp_s = Utils.roundPrice(imponibile).toPlainString();
                         //if(imp_s.endsWith("0")){
                         //    imp_s = StringUtils.substringBeforeLast(imp_s, "0");
                         //}
@@ -1513,7 +1509,7 @@ public class AdeService {
                 BigDecimal prezzo = fatturaAccompagnatoriaArticolo.getPrezzo();
                 String prezzo_s = "";
                 if(prezzo != null){
-                    prezzo_s = prezzo.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                    prezzo_s = Utils.roundPrice(prezzo).toPlainString();
                 }
                 xmlStreamWriter.writeCharacters(prezzo_s);
                 xmlStreamWriter.writeEndElement();
@@ -1522,7 +1518,7 @@ public class AdeService {
                 BigDecimal sconto = fatturaAccompagnatoriaArticolo.getSconto();
                 String sconto_s = "";
                 if(sconto != null && sconto.compareTo(BigDecimal.ZERO) != 0){
-                    sconto_s = sconto.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                    sconto_s = Utils.roundPrice(sconto).toPlainString();
                 }
                 if(!sconto_s.equals("")){
                     xmlStreamWriter.writeStartElement("ScontoMaggiorazione");
@@ -1551,7 +1547,7 @@ public class AdeService {
                 BigDecimal prezzoTotale = fatturaAccompagnatoriaArticolo.getTotale();
                 String prezzoTotale_s = "";
                 if(prezzoTotale != null){
-                    prezzoTotale_s = prezzoTotale.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                    prezzoTotale_s = Utils.roundPrice(prezzoTotale).toPlainString();
                 }
                 xmlStreamWriter.writeCharacters(prezzoTotale_s);
                 xmlStreamWriter.writeEndElement();
@@ -1672,7 +1668,7 @@ public class AdeService {
                 BigDecimal prezzo = notaAccreditoRiga.getPrezzo();
                 String prezzo_s = "";
                 if(prezzo != null){
-                    prezzo_s = prezzo.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                    prezzo_s = Utils.roundPrice(prezzo).toPlainString();
                 }
                 xmlStreamWriter.writeCharacters(prezzo_s);
                 xmlStreamWriter.writeEndElement();
@@ -1681,7 +1677,7 @@ public class AdeService {
                 BigDecimal sconto = notaAccreditoRiga.getSconto();
                 String sconto_s = "";
                 if(sconto != null && sconto.compareTo(BigDecimal.ZERO) != 0){
-                    sconto_s = sconto.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                    sconto_s = Utils.roundPrice(sconto).toPlainString();
                 }
                 if(!sconto_s.equals("")){
                     xmlStreamWriter.writeStartElement("ScontoMaggiorazione");
@@ -1710,7 +1706,7 @@ public class AdeService {
                 BigDecimal prezzoTotale = notaAccreditoRiga.getTotale();
                 String prezzoTotale_s = "";
                 if(prezzoTotale != null){
-                    prezzoTotale_s = prezzoTotale.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+                    prezzoTotale_s = Utils.roundPrice(prezzoTotale).toPlainString();
                 }
                 xmlStreamWriter.writeCharacters(prezzoTotale_s);
                 xmlStreamWriter.writeEndElement();
@@ -1824,7 +1820,7 @@ public class AdeService {
         BigDecimal totaleFattura = fattura.getTotale();
         String totaleFattura_s = "";
         if(totaleFattura != null){
-            totaleFattura_s = totaleFattura.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+            totaleFattura_s = Utils.roundPrice(totaleFattura).toPlainString();
         }
         xmlStreamWriter.writeStartElement("ImportoPagamento");
         xmlStreamWriter.writeCharacters(totaleFattura_s);
@@ -1871,7 +1867,7 @@ public class AdeService {
         BigDecimal totaleFattura = fatturaAccompagnatoria.getTotale();
         String totaleFattura_s = "";
         if(totaleFattura != null){
-            totaleFattura_s = totaleFattura.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+            totaleFattura_s = Utils.roundPrice(totaleFattura).toPlainString();
         }
         xmlStreamWriter.writeStartElement("ImportoPagamento");
         xmlStreamWriter.writeCharacters(totaleFattura_s);
@@ -1918,7 +1914,7 @@ public class AdeService {
         BigDecimal totaleFattura = notaAccredito.getTotale();
         String totaleFattura_s = "";
         if(totaleFattura != null){
-            totaleFattura_s = totaleFattura.setScale(2, RoundingMode.HALF_DOWN).toPlainString();
+            totaleFattura_s = Utils.roundPrice(totaleFattura).toPlainString();
         }
         xmlStreamWriter.writeStartElement("ImportoPagamento");
         xmlStreamWriter.writeCharacters(totaleFattura_s);
