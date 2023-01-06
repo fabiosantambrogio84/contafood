@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -127,6 +128,15 @@ public class DdtService {
 
         checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), -1L);
 
+        if(ddt.getNumeroColli() == null){
+            ddt.setNumeroColli(1);
+        }
+        if(ddt.getDataTrasporto() == null){
+            ddt.setDataTrasporto(new Date(System.currentTimeMillis()));
+        }
+        if(ddt.getOraTrasporto() == null){
+            ddt.setOraTrasporto(Time.valueOf("06:00:00"));
+        }
         ddt.setStatoDdt(statoDdtService.getDaPagare());
         ddt.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
@@ -166,6 +176,16 @@ public class DdtService {
         }
 
         checkExistsByAnnoContabileAndProgressivoAndIdNot(ddt.getAnnoContabile(),ddt.getProgressivo(), ddt.getId());
+
+        if(ddt.getNumeroColli() == null){
+            ddt.setNumeroColli(1);
+        }
+        if(ddt.getDataTrasporto() == null){
+            ddt.setDataTrasporto(new Date(System.currentTimeMillis()));
+        }
+        if(ddt.getOraTrasporto() == null){
+            ddt.setOraTrasporto(Time.valueOf("06:00:00"));
+        }
 
         Boolean modificaGiacenze = ddt.getModificaGiacenze();
 
