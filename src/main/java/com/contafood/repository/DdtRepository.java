@@ -30,7 +30,7 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
     Integer getLastProgressivoByAnnoContabile(Integer annoContabile);
 
     @Query(nativeQuery = true,
-            value = "select d.progressivo from ddt d group by d.progressivo having count(d.id) > 1 order by d.progressivo"
+            value = "select d.progressivo from ddt d where d.progressivo > 0 group by d.progressivo having count(d.id) > 1 order by d.progressivo"
     )
     List<Integer> getProgressiviDuplicates();
 

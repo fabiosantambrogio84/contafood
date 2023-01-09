@@ -668,7 +668,8 @@ public class StampaService {
                     numeroRiga += 1;
 
                     if(ddt.getDdtArticoli() != null && !ddt.getDdtArticoli().isEmpty()){
-                        for(DdtArticolo da : ddt.getDdtArticoli()){
+                        List<DdtArticolo> ddtArticoli = ddt.getDdtArticoli().stream().sorted(Comparator.comparing(da->da.getArticolo().getCodice())).collect(Collectors.toList());
+                        for(DdtArticolo da : ddtArticoli){
                             Articolo articolo = da.getArticolo();
 
                             FatturaRigaDataSource fatturaRigaDataSource = new FatturaRigaDataSource();
@@ -708,12 +709,13 @@ public class StampaService {
         for(AliquotaIva aliquotaIva : imponibiliByIva.keySet()){
             BigDecimal ivaValore = aliquotaIva.getValore();
             BigDecimal imponibile = imponibiliByIva.get(aliquotaIva);
-            BigDecimal totaleIva = Utils.roundPrice(imponibile.multiply(Utils.roundPrice(ivaValore.divide(new BigDecimal(100)))));
+            BigDecimal totaleIva = imponibile.multiply(ivaValore.divide(new BigDecimal(100)));
 
             FatturaTotaleDataSource fatturaTotaleDataSource = new FatturaTotaleDataSource();
             fatturaTotaleDataSource.setAliquotaIva(ivaValore.intValue());
             fatturaTotaleDataSource.setTotaleImponibile(Utils.roundPrice(imponibile));
             fatturaTotaleDataSource.setTotaleIva(Utils.roundPrice(totaleIva));
+            fatturaTotaleDataSource.setTotaleIvaNotRounded(totaleIva);
 
             fatturaTotaleDataSources.add(fatturaTotaleDataSource);
         }
@@ -1250,8 +1252,10 @@ public class StampaService {
 
         for(FatturaTotaleDataSource fatturaTotale: fatturaTotaleDataSources){
             totaleImponibile = totaleImponibile.add(fatturaTotale.getTotaleImponibile());
-            totaleIva = totaleIva.add(fatturaTotale.getTotaleIva());
+            totaleIva = totaleIva.add(fatturaTotale.getTotaleIvaNotRounded());
         }
+        totaleImponibile = Utils.roundPrice(totaleImponibile);
+        totaleIva = Utils.roundPrice(totaleIva);
 
 
         // fetching the .jrxml file from the resources folder.

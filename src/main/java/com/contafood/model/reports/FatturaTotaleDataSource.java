@@ -1,7 +1,10 @@
 package com.contafood.model.reports;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 
+@Data
 public class FatturaTotaleDataSource {
 
     private Integer aliquotaIva;
@@ -10,27 +13,6 @@ public class FatturaTotaleDataSource {
 
     private BigDecimal totaleIva;
 
-    public Integer getAliquotaIva() {
-        return aliquotaIva;
-    }
+    private BigDecimal totaleIvaNotRounded;
 
-    public void setAliquotaIva(Integer aliquotaIva) {
-        this.aliquotaIva = aliquotaIva;
-    }
-
-    public BigDecimal getTotaleImponibile() {
-        return totaleImponibile;
-    }
-
-    public void setTotaleImponibile(BigDecimal totaleImponibile) {
-        this.totaleImponibile = totaleImponibile;
-    }
-
-    public BigDecimal getTotaleIva() {
-        return totaleIva;
-    }
-
-    public void setTotaleIva(BigDecimal totaleIva) {
-        this.totaleIva = totaleIva;
-    }
 }
