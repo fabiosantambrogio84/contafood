@@ -23,11 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20230109.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaTotaleDataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/reports/FatturaTotaleDataSource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/DdtRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/DdtRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -602,14 +600,8 @@
       <workItem from="1673010096554" duration="605000" />
       <workItem from="1673021783754" duration="2492000" />
       <workItem from="1673253973664" duration="5259000" />
-      <workItem from="1673273419756" duration="1240000" />
-    </task>
-    <task id="LOCAL-00070" summary="Fix sort Articolo">
-      <created>1589384519804</created>
-      <option name="number" value="00070" />
-      <option name="presentableId" value="LOCAL-00070" />
-      <option name="project" value="LOCAL" />
-      <updated>1589384519805</updated>
+      <workItem from="1673273419756" duration="2495000" />
+      <workItem from="1673339446827" duration="306000" />
     </task>
     <task id="LOCAL-00071" summary="Add sql script for step 12">
       <created>1589532101333</created>
@@ -947,7 +939,14 @@
       <option name="project" value="LOCAL" />
       <updated>1673024453786</updated>
     </task>
-    <option name="localTasksCounter" value="119" />
+    <task id="LOCAL-00119" summary="Step Step 38 phase 3">
+      <created>1673275458146</created>
+      <option name="number" value="00119" />
+      <option name="presentableId" value="LOCAL-00119" />
+      <option name="project" value="LOCAL" />
+      <updated>1673275458146</updated>
+    </task>
+    <option name="localTasksCounter" value="120" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -972,7 +971,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix barcode scanner in ddt" />
     <MESSAGE value="Fix ddt pdf" />
     <MESSAGE value="Fix ddt acquisto" />
     <MESSAGE value="Step 27 fix" />
@@ -997,7 +995,8 @@
     <MESSAGE value="Fix getProgressivo DDT" />
     <MESSAGE value="Step 38 phase 2" />
     <MESSAGE value="Add defaults on ddt dataTrasporto,oraTrasporto,numColli" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add defaults on ddt dataTrasporto,oraTrasporto,numColli" />
+    <MESSAGE value="Step Step 38 phase 3" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step Step 38 phase 3" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1044,7 +1043,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java</url>
-          <line>252</line>
+          <line>257</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

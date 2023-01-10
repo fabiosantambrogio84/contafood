@@ -115,9 +115,9 @@ public class OrdineClienteService {
     }
 
     public Set<OrdineCliente> getOrdiniClientiEvasiAndExpired(){
-        LOGGER.info("Retrieving the list of 'ordini clienti' with stato 'EVASO' and expired (dataConsegna+2 >= now)");
+        LOGGER.info("Retrieving the list of 'ordini clienti' with stato 'EVASO' and expired (dataConsegna <= now-1)");
         Set<OrdineCliente> ordiniClienti = ordineClienteRepository.findByStatoOrdineId(statoOrdineService.getEvaso().getId());
-        ordiniClienti = ordiniClienti.stream().filter(oc -> oc.getDataConsegna().compareTo(Date.valueOf(LocalDate.now().minusDays(2)))<= 0).collect(Collectors.toSet());
+        ordiniClienti = ordiniClienti.stream().filter(oc -> oc.getDataConsegna().compareTo(Date.valueOf(LocalDate.now().minusDays(1)))<=0).collect(Collectors.toSet());
         LOGGER.info("Retrieved {} 'ordini clienti'", ordiniClienti.size());
         return ordiniClienti;
     }
@@ -155,7 +155,7 @@ public class OrdineClienteService {
             ordineCliente.setProgressivo(progressivo);
         }
 
-        checkExistsByAnnoContabileAndProgressivoAndIdNot(ordineCliente.getAnnoContabile(), ordineCliente.getProgressivo(), Long.valueOf(-1));
+        checkExistsByAnnoContabileAndProgressivoAndIdNot(ordineCliente.getAnnoContabile(), ordineCliente.getProgressivo(), -1L);
 
         ordineCliente.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
@@ -210,27 +210,32 @@ public class OrdineClienteService {
         Long id = Long.valueOf((Integer) patchOrdineCliente.get("id"));
         OrdineCliente ordineCliente = ordineClienteRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
         patchOrdineCliente.forEach((key, value) -> {
-            if(key.equals("id")){
-                ordineCliente.setId(Long.valueOf((Integer)value));
-            } else if(key.equals("dataConsegna")){
-                ordineCliente.setDataConsegna(Date.valueOf((String)value));
-            } else if(key.equals("idAutista")){
-                Autista autista = new Autista();
-                autista.setId(Long.valueOf((Integer)value));
-                ordineCliente.setAutista(autista);
-            } else if(key.equals("idTelefonata")){
-                if(value != null){
-                    Telefonata telefonata = new Telefonata();
-                    if(value instanceof Long){
-                        telefonata.setId((Long)value);
+            switch (key) {
+                case "id":
+                    ordineCliente.setId(Long.valueOf((Integer) value));
+                    break;
+                case "dataConsegna":
+                    ordineCliente.setDataConsegna(Date.valueOf((String) value));
+                    break;
+                case "idAutista":
+                    Autista autista = new Autista();
+                    autista.setId(Long.valueOf((Integer) value));
+                    ordineCliente.setAutista(autista);
+                    break;
+                case "idTelefonata":
+                    if (value != null) {
+                        Telefonata telefonata = new Telefonata();
+                        if (value instanceof Long) {
+                            telefonata.setId((Long) value);
+                        } else {
+                            telefonata.setId(Long.valueOf((Integer) value));
+                        }
+                        ordineCliente.setTelefonata(telefonata);
                     } else {
-                        telefonata.setId(Long.valueOf((Integer)value));
+                        ordineCliente.setTelefonata(null);
                     }
-                    ordineCliente.setTelefonata(telefonata);
-                } else {
-                    ordineCliente.setTelefonata(null);
-                }
 
+                    break;
             }
         });
         OrdineCliente patchedOrdineCliente = ordineClienteRepository.save(ordineCliente);
@@ -258,9 +263,7 @@ public class OrdineClienteService {
             for(OrdineClienteAggregate ordineClienteAggregate : ordiniClientiAggregati){
                 Set<Long> idOrdiniClienti = new HashSet<>();
                 if(ordineClienteAggregate.getIdsOrdiniClienti() != null && !StringUtils.isEmpty(ordineClienteAggregate.getIdsOrdiniClienti())){
-                    Arrays.stream(ordineClienteAggregate.getIdsOrdiniClienti().split(",")).forEach(id -> {
-                        idOrdiniClienti.add(Long.valueOf(id));
-                    });
+                    Arrays.stream(ordineClienteAggregate.getIdsOrdiniClienti().split(",")).forEach(id -> idOrdiniClienti.add(Long.valueOf(id)));
                 }
                 Integer numPezziEvasi = ordineClienteAggregate.getNumeroPezziDaEvadere();
                 numPezziEvasi = numPezziEvasi != null ? numPezziEvasi : 0;
