@@ -3,8 +3,11 @@ package com.contafood.controller;
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Ddt;
 import com.contafood.model.beans.DdtRicercaLotto;
+import com.contafood.model.beans.PageResponse;
 import com.contafood.model.views.VDdt;
 import com.contafood.service.DdtService;
+import com.contafood.util.ResponseUtils;
+import com.contafood.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +56,10 @@ public class DdtController {
 
     @RequestMapping(method = GET, path = "/search")
     @CrossOrigin
-    public List<VDdt> search(@RequestParam(name = "dataDa", required = false) Date dataDa,
+    public PageResponse search(@RequestParam(name = "draw", required = false) Integer draw,
+                             @RequestParam(name = "start", required = false) Integer start,
+                             @RequestParam(name = "length", required = false) Integer length,
+                             @RequestParam(name = "dataDa", required = false) Date dataDa,
                              @RequestParam(name = "dataA", required = false) Date dataA,
                              @RequestParam(name = "progressivo", required = false) Integer progressivo,
                              @RequestParam(name = "importo", required = false) Float importo,
@@ -65,13 +71,17 @@ public class DdtController {
                              @RequestParam(name = "stato", required = false) Integer idStato,
                              @RequestParam(name = "pagato", required = false) Boolean pagato,
                              @RequestParam(name = "idCliente", required = false) Integer idCliente,
-                             @RequestParam(name = "fatturato", required = false) Boolean fatturato) {
+                             @RequestParam(name = "fatturato", required = false) Boolean fatturato,
+                             @RequestParam Map<String,String> allRequestParams) {
         LOGGER.info("Performing GET request for searching list of 'ddts'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, pagato {}, idCliente {}, fatturato {}",
-                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, pagato, idCliente, fatturato);
+        LOGGER.info("Request params: draw {}, start {}, length {}, dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, pagato {}, idCliente {}, fatturato {}",
+                draw, start, length, dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, pagato, idCliente, fatturato);
         // /contafood-be/ddts?dataDa=&dataA=&progressivo=&importo=&tipoPagamento=&cliente=&agente=&autista=&articolo=
 
-        return ddtService.getAllByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
+        List<VDdt> data = ddtService.getAllByFilters(draw, start, length, Utils.getSortOrders(allRequestParams), dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
+        Integer recordsCount = ddtService.getCountByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
+
+        return ResponseUtils.createPageResponse(draw, recordsCount, recordsCount, data);
     }
 
     @RequestMapping(method = GET, path = "/{ddtId}")

@@ -2,13 +2,18 @@ package com.contafood.controller;
 
 import com.contafood.model.Produzione;
 import com.contafood.model.ProduzioneConfezione;
+import com.contafood.model.beans.PageResponse;
 import com.contafood.model.views.VProduzione;
 import com.contafood.service.ProduzioneService;
+import com.contafood.util.ResponseUtils;
+import com.contafood.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -30,9 +35,17 @@ public class ProduzioneController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<VProduzione> getAll() {
+    public PageResponse search(@RequestParam(name = "draw", required = false) Integer draw,
+                               @RequestParam(name = "start", required = false) Integer start,
+                               @RequestParam(name = "length", required = false) Integer length,
+                               @RequestParam Map<String,String> allRequestParams) {
         LOGGER.info("Performing GET request for retrieving list of 'produzioni'");
-        return produzioneService.getAll();
+        LOGGER.info("Request params: draw {}, start {}, length {}", draw, start, length);
+
+        List<VProduzione> data = produzioneService.getAllByFilters(draw, start, length, Utils.getSortOrders(allRequestParams));
+        Integer recordsCount = produzioneService.getCountByFilters();
+
+        return ResponseUtils.createPageResponse(draw, recordsCount, recordsCount, data);
     }
 
     @RequestMapping(method = GET, path = "/search-lotto")

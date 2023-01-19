@@ -4,6 +4,7 @@ import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.beans.DdtRicercaLotto;
+import com.contafood.model.beans.SortOrder;
 import com.contafood.model.views.VDdt;
 import com.contafood.repository.DdtRepository;
 import com.contafood.repository.PagamentoRepository;
@@ -63,11 +64,18 @@ public class DdtService {
         return ddts;
     }
 
-    public List<VDdt> getAllByFilters(Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
-        LOGGER.info("Retrieving the list of 'ddts' filtered by request paramters");
-        List<VDdt> ddts = vDdtRepository.findByFilter(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
+    public List<VDdt> getAllByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders, Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
+        LOGGER.info("Retrieving the list of 'ddts' filtered by request parameters");
+        List<VDdt> ddts = vDdtRepository.findByFilters(draw, start, length, sortOrders, dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
         LOGGER.info("Retrieved {} 'ddts'", ddts.size());
         return ddts;
+    }
+
+    public Integer getCountByFilters(Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
+        LOGGER.info("Retrieving the count of 'ddts' filtered by request parameters");
+        Integer count = vDdtRepository.countByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
+        LOGGER.info("Retrieved {} 'ddts'", count);
+        return count;
     }
 
     public Ddt getOne(Long ddtId){

@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Data
@@ -23,7 +24,7 @@ public class VProduzione {
     private Long idProduzione;
 
     @Column(name = "codice_produzione")
-    private String codiceProduzione;
+    private Integer codiceProduzione;
 
     @Column(name = "data_produzione")
     private Date dataProduzione;
@@ -62,7 +63,7 @@ public class VProduzione {
     private Integer numConfezioniProdotte;
 
     @Column(name = "quantita")
-    private Float quantita;
+    private BigDecimal quantita;
 
     @Column(name = "ricetta")
     private String ricetta;

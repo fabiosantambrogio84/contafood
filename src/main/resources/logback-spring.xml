@@ -30,4 +30,9 @@
         <appender-ref ref="Console" />
     </root>
 
+    <logger name="com.contafood.startup" additivity="false" level="info">
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="Console" />
+    </logger>
+
 </configuration>

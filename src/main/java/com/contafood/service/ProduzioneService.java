@@ -2,6 +2,7 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.beans.SortOrder;
 import com.contafood.model.views.VProduzione;
 import com.contafood.repository.ProduzioneRepository;
 import com.contafood.repository.RicettaRepository;
@@ -77,11 +78,18 @@ public class ProduzioneService {
         this.ricettaRepository = ricettaRepository;
     }
 
-    public Set<VProduzione> getAll(){
-        LOGGER.info("Retrieving the list of 'produzioni'");
-        Set<VProduzione> produzioni = vProduzioneRepository.findAll();
+    public List<VProduzione> getAllByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders){
+        LOGGER.info("Retrieving the list of 'produzioni' filtered by request parameters");
+        List<VProduzione> produzioni = vProduzioneRepository.findByFilters(draw, start, length, sortOrders);
         LOGGER.info("Retrieved {} 'produzioni'", produzioni.size());
         return produzioni;
+    }
+
+    public Integer getCountByFilters(){
+        LOGGER.info("Retrieving the count of 'produzioni' filtered by request parameters");
+        Integer count = vProduzioneRepository.countByFilters();
+        LOGGER.info("Retrieved {} 'ddts'", count);
+        return count;
     }
 
     public Set<VProduzione> getAllByLotto(String lotto){

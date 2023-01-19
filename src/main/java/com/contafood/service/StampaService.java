@@ -240,7 +240,7 @@ public class StampaService {
 
         List<DdtDataSource> ddtDataSources = new ArrayList<>();
 
-        List<VDdt> ddts = ddtService.getAllByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
+        List<VDdt> ddts = ddtService.getAllByFilters(-1, null, null, null, dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
 
         if(!ddts.isEmpty()){
             ddts.forEach(ddt -> {
