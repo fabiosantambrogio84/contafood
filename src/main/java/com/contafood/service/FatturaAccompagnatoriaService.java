@@ -82,12 +82,9 @@ public class FatturaAccompagnatoriaService {
 
     private Integer getProgressivo(Integer anno){
         Integer progressivo = 1;
-        List<VFattura> fattureAccompagnatorie = vFatturaRepository.findByAnnoOrderByProgressivoDesc(anno);
-        if(fattureAccompagnatorie != null && !fattureAccompagnatorie.isEmpty()){
-            Optional<VFattura> lastFatturaAccompagnatoria = fattureAccompagnatorie.stream().findFirst();
-            if(lastFatturaAccompagnatoria.isPresent()){
-                progressivo = lastFatturaAccompagnatoria.get().getProgressivo() + 1;
-            }
+        Integer resultProgressivo = fatturaAccompagnatoriaRepository.getLastProgressivoByAnnoContabile(anno);
+        if(resultProgressivo != null){
+            progressivo = resultProgressivo + 1;
         }
         return progressivo;
     }

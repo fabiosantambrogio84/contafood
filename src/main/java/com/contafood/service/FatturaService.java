@@ -4,6 +4,7 @@ import com.contafood.exception.GenericException;
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
+import com.contafood.model.beans.SortOrder;
 import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaRepository;
 import com.contafood.repository.PagamentoRepository;
@@ -66,8 +67,24 @@ public class FatturaService {
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
-    public Set<VFattura> search(Date dataDa, Date dataA, Integer progressivo, Float importo, String idTipoPagamento, String cliente, Integer idAgente, Integer idArticolo, Integer idStato, Integer idTipo){
+    public List<VFattura> getAllByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders, Date dataDa, Date dataA, Integer progressivo, Float importo, String idTipoPagamento, String cliente, Integer idAgente, Integer idArticolo, Integer idStato, Integer idTipo){
+        LOGGER.info("Retrieving the list of 'fatture' filtered by request parameters");
+        List<VFattura> fatture = vFatturaRepository.findByFilters(draw, start, length, sortOrders, dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
+        LOGGER.info("Retrieved {} 'fatture'", fatture.size());
+        return fatture;
+    }
 
+    public Integer getCountByFilters(Date dataDa, Date dataA, Integer progressivo, Float importo, String idTipoPagamento, String cliente, Integer idAgente, Integer idArticolo, Integer idStato, Integer idTipo){
+        LOGGER.info("Retrieving the count of 'fatture' filtered by request parameters");
+        Integer count = vFatturaRepository.countByFilters(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
+        LOGGER.info("Retrieved {} 'fatture'", count);
+        return count;
+    }
+
+    public List<VFattura> search(Date dataDa, Date dataA, Integer progressivo, Float importo, String idTipoPagamento, String cliente, Integer idAgente, Integer idArticolo, Integer idStato, Integer idTipo){
+        return vFatturaRepository.findByFilters(null, null, null, null, dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
+
+        /*
         List<Long> idTipiPagamento = new ArrayList<>();
         if(!StringUtils.isEmpty(idTipoPagamento)){
             Arrays.stream(idTipoPagamento.split(",")).mapToLong(Long::parseLong).forEach(idTipiPagamento::add);
@@ -177,6 +194,7 @@ public class FatturaService {
                 .and(isFatturaDdtArticoloEquals)
                 .and(isFatturaStatoEquals)
                 .and(isFatturaTipoEquals)).collect(Collectors.toSet());
+        */
     }
 
     public Set<VFattura> getAll(){
@@ -199,37 +217,16 @@ public class FatturaService {
 
     public Map<String, Integer> getAnnoAndProgressivo(){
         Integer anno = ZonedDateTime.now().getYear();
-        int progressivo = 1;
-        List<VFattura> fatture = vFatturaRepository.findByAnnoOrderByProgressivoDesc(anno);
-        if(fatture != null && !fatture.isEmpty()){
-            Optional<VFattura> lastFattura = fatture.stream().findFirst();
-            if(lastFattura.isPresent()){
-                progressivo = lastFattura.get().getProgressivo() + 1;
-            }
+        Integer progressivo = 1;
+        Integer resultProgressivo = fatturaRepository.getLastProgressivoByAnnoContabile(anno);
+        if(resultProgressivo != null){
+            progressivo = resultProgressivo + 1;
         }
         HashMap<String, Integer> result = new HashMap<>();
         result.put("anno", anno);
         result.put("progressivo", progressivo);
 
         return result;
-    }
-
-    /*
-    public Set<Pagamento> getFatturaDdtPagamenti(Long idFattura){
-        Set<Pagamento> pagamenti = new HashSet<>();
-        Fattura fattura = fatturaRepository.findById(idFattura).orElseThrow(ResourceNotFoundException::new);
-        Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
-        fatturaDdts.forEach(fd -> pagamenti.addAll(fd.getDdt().getDdtPagamenti()));
-        return pagamenti;
-    }
-    */
-
-    public Set<DdtArticolo> getFatturaDdtArticoli(Long idFattura){
-        Set<DdtArticolo> ddtArticoli = new HashSet<>();
-        Fattura fattura = fatturaRepository.findById(idFattura).orElseThrow(ResourceNotFoundException::new);
-        Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
-        fatturaDdts.forEach(fd -> ddtArticoli.addAll(fd.getDdt().getDdtArticoli()));
-        return ddtArticoli;
     }
 
     public Set<Fattura> getFattureForReport(Date dateFrom, Date dateTo, Integer progressivoFrom, Integer annoFrom, Integer progressivoTo, Integer annoTo, String modalitaInvioFatture){
@@ -285,7 +282,7 @@ public class FatturaService {
                 .filter(isFatturaDataDaGreaterOrEquals
                 .and(isFatturaDataALessOrEquals)).collect(Collectors.toSet());
 
-        if(fatture != null && !fatture.isEmpty()){
+        if(!fatture.isEmpty()){
             for(Fattura fattura : fatture){
                 Cliente cliente = fattura.getCliente();
 
@@ -314,7 +311,7 @@ public class FatturaService {
 
         Fattura createdFattura = fatturaRepository.save(fattura);
 
-        createdFattura.getFatturaDdts().stream().forEach(fd -> {
+        createdFattura.getFatturaDdts().forEach(fd -> {
             fd.getId().setFatturaId(createdFattura.getId());
             fd.getId().setUuid(UUID.randomUUID().toString());
             fatturaDdtService.create(fd);
@@ -346,7 +343,7 @@ public class FatturaService {
             Boolean fatturato = ddt.getFatturato();
             if(data != null){
                 if(ddt.getData().compareTo(data)<=0){
-                    return fatturato != null && fatturato == Boolean.FALSE;
+                    return fatturato == Boolean.FALSE;
                 } else {
                     return false;
                 }
@@ -550,10 +547,6 @@ public class FatturaService {
             throw new GenericException("Tipo pagamento '"+tipoPagamento.getDescrizione()+"' non valido per RiBa");
         }
     }
-
-    /*public TipoFattura getTipoFatturaVendita(){
-        return tipoFatturaService.getVendita();
-    }*/
 
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
         Optional<Fattura> fattura = fatturaRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);

@@ -716,11 +716,13 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/listini/{idListino}")
     @CrossOrigin
     public ResponseEntity<Resource> printListino(@PathVariable final Long idListino,
+                                                 @RequestParam(name = "fornitore", required = false) Long idFornitore,
+                                                 @RequestParam(name = "categoriaArticolo", required = false) Long idCategoriaArticolo,
                                                  @RequestParam(name = "orderBy", required = false) String orderBy) throws Exception{
-        LOGGER.info("Creating pdf for 'listino' with id '{}' order by '{}'", idListino, orderBy);
+        LOGGER.info("Creating pdf for 'listino' with id '{}', filtered by fornitore '{}' and categoria articolo '{}', order by '{}'", idListino, idFornitore, idCategoriaArticolo, orderBy);
 
         // create report
-        byte[] reportBytes = stampaService.generateListino(idListino, orderBy);
+        byte[] reportBytes = stampaService.generateListino(idListino, idFornitore, idCategoriaArticolo, orderBy);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 

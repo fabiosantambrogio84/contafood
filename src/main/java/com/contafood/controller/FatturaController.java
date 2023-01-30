@@ -2,8 +2,11 @@ package com.contafood.controller;
 
 import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.Fattura;
+import com.contafood.model.beans.PageResponse;
 import com.contafood.model.views.VFattura;
 import com.contafood.service.FatturaService;
+import com.contafood.util.ResponseUtils;
+import com.contafood.util.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +37,28 @@ public class FatturaController {
 
     @RequestMapping(method = GET)
     @CrossOrigin
-    public Set<VFattura> getAll(@RequestParam(name = "dataDa", required = false) Date dataDa,
-                                @RequestParam(name = "dataA", required = false) Date dataA,
-                                @RequestParam(name = "progressivo", required = false) Integer progressivo,
-                                @RequestParam(name = "importo", required = false) Float importo,
-                                @RequestParam(name = "tipoPagamento", required = false) String idTipoPagamento,
-                                @RequestParam(name = "cliente", required = false) String cliente,
-                                @RequestParam(name = "agente", required = false) Integer idAgente,
-                                @RequestParam(name = "articolo", required = false) Integer idArticolo,
-                                @RequestParam(name = "stato", required = false) Integer idStato,
-                                @RequestParam(name = "tipo", required = false) Integer idTipo) {
+    public PageResponse search(@RequestParam(name = "draw", required = false) Integer draw,
+                               @RequestParam(name = "start", required = false) Integer start,
+                               @RequestParam(name = "length", required = false) Integer length,
+                               @RequestParam(name = "dataDa", required = false) Date dataDa,
+                               @RequestParam(name = "dataA", required = false) Date dataA,
+                               @RequestParam(name = "progressivo", required = false) Integer progressivo,
+                               @RequestParam(name = "importo", required = false) Float importo,
+                               @RequestParam(name = "tipoPagamento", required = false) String idTipoPagamento,
+                               @RequestParam(name = "cliente", required = false) String cliente,
+                               @RequestParam(name = "agente", required = false) Integer idAgente,
+                               @RequestParam(name = "articolo", required = false) Integer idArticolo,
+                               @RequestParam(name = "stato", required = false) Integer idStato,
+                               @RequestParam(name = "tipo", required = false) Integer idTipo,
+                               @RequestParam Map<String,String> allRequestParams) {
         LOGGER.info("Performing GET request for retrieving list of 'fatture vendita and fatture accompagnatorie'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
-                dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
+        LOGGER.info("Request params: draw {}, start {}, length {}, dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
+                draw, start, length, dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
-        return fatturaService.search(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
+        List<VFattura> data = fatturaService.getAllByFilters(draw, start, length, Utils.getSortOrders(allRequestParams), dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
+        Integer recordsCount = fatturaService.getCountByFilters(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
+
+        return ResponseUtils.createPageResponse(draw, recordsCount, recordsCount, data);
     }
 
     @RequestMapping(method = GET, path = "/{fatturaId}")

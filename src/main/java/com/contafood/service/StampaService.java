@@ -424,7 +424,7 @@ public class StampaService {
     public List<NotaAccreditoTotaleDataSource> getNotaAccreditoTotaliDataSource(NotaAccredito notaAccredito){
         List<NotaAccreditoTotaleDataSource> notaAccreditoTotaleDataSources = new ArrayList<>();
         if(notaAccredito.getNotaAccreditoTotali() != null && !notaAccredito.getNotaAccreditoTotali().isEmpty()){
-            notaAccredito.getNotaAccreditoTotali().stream().forEach(na -> {
+            notaAccredito.getNotaAccreditoTotali().forEach(na -> {
                 NotaAccreditoTotaleDataSource notaAccreditoTotaleDataSource = new NotaAccreditoTotaleDataSource();
                 notaAccreditoTotaleDataSource.setAliquotaIva(na.getAliquotaIva().getValore().intValue());
                 notaAccreditoTotaleDataSource.setTotaleImponibile(na.getTotaleImponibile() != null ? Utils.roundPrice(na.getTotaleImponibile()) : new BigDecimal(0));
@@ -480,19 +480,14 @@ public class StampaService {
 
         List<FatturaDataSource> fatturaDataSources = new ArrayList<>();
 
-        List<VFattura> fatture = fatturaService.search(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo)
-                .stream().sorted(Comparator.comparing(VFattura::getProgressivo).reversed())
-                .collect(Collectors.toList());
+        List<VFattura> fatture = fatturaService.search(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
         if(!fatture.isEmpty()){
             fatture.forEach(fattura -> {
                 FatturaDataSource fatturaDataSource = new FatturaDataSource();
                 fatturaDataSource.setNumero(fattura.getProgressivo().toString());
                 fatturaDataSource.setData(simpleDateFormat.format(fattura.getData()));
-                Cliente clienteFattura = fattura.getCliente();
-                if(clienteFattura != null){
-                    fatturaDataSource.setClienteDescrizione(clienteFattura.getRagioneSociale());
-                }
+                fatturaDataSource.setClienteDescrizione(fattura.getCliente());
                 BigDecimal totaleAcconto = fattura.getTotaleAcconto() != null ? Utils.roundPrice(fattura.getTotaleAcconto()) : new BigDecimal(0);
                 BigDecimal totale = fattura.getTotale() != null ? Utils.roundPrice(fattura.getTotale()) : new BigDecimal(0);
                 fatturaDataSource.setAcconto(totaleAcconto);
@@ -563,7 +558,7 @@ public class StampaService {
     public List<FatturaAccompagnatoriaRigaDataSource> getFatturaAccompagnatoriaRigheDataSource(FatturaAccompagnatoria fatturaAccompagnatoria){
         List<FatturaAccompagnatoriaRigaDataSource> fatturaAccompagnatoriaRigaDataSources = new ArrayList<>();
         if(fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli() != null && !fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().isEmpty()){
-            fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().stream().forEach(faa -> {
+            fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().forEach(faa -> {
                 Articolo articolo = faa.getArticolo();
                 FatturaAccompagnatoriaRigaDataSource fatturaAccompagnatoriaRigaDataSource = new FatturaAccompagnatoriaRigaDataSource();
                 fatturaAccompagnatoriaRigaDataSource.setCodiceArticolo(articolo != null ? articolo.getCodice() : "");
@@ -587,7 +582,7 @@ public class StampaService {
     public List<FatturaAccompagnatoriaTotaleDataSource> getFatturaAccompagnatoriaTotaliDataSource(FatturaAccompagnatoria fatturaAccompagnatoria){
         List<FatturaAccompagnatoriaTotaleDataSource> fatturaAccompagnatoriaTotaleDataSources = new ArrayList<>();
         if(fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali() != null && !fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali() .isEmpty()){
-            fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali() .stream().forEach(fat -> {
+            fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali().forEach(fat -> {
                 FatturaAccompagnatoriaTotaleDataSource fatturaAccompagnatoriaTotaleDataSource = new FatturaAccompagnatoriaTotaleDataSource();
                 fatturaAccompagnatoriaTotaleDataSource.setAliquotaIva(fat.getAliquotaIva().getValore().intValue());
                 fatturaAccompagnatoriaTotaleDataSource.setTotaleImponibile(fat.getTotaleImponibile() != null ? Utils.roundPrice(fat.getTotaleImponibile()) : new BigDecimal(0));
@@ -1553,7 +1548,7 @@ public class StampaService {
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
     }
 
-    public byte[] generateListino(Long idListino, String orderBy) throws Exception{
+    public byte[] generateListino(Long idListino, Long idFornitore, Long idCategoriaArticolo, String orderBy) throws Exception{
 
         orderBy = StringUtils.isNotEmpty(orderBy) ? orderBy : "categoria-articolo";
 
@@ -1564,6 +1559,18 @@ public class StampaService {
 
         List<ListinoPrezzo> listinoPrezzi = listinoService.getListiniPrezziByListinoId(idListino);
         listinoPrezzi = listinoPrezzi.stream().filter(lp -> lp.getArticolo().getAttivo()).collect(Collectors.toList());
+        if(idFornitore != null){
+            listinoPrezzi = listinoPrezzi.stream()
+                    .filter(lp -> lp.getArticolo().getFornitore() != null)
+                    .filter(lp -> lp.getArticolo().getFornitore().getId().equals(idFornitore))
+                    .collect(Collectors.toList());
+        }
+        if(idCategoriaArticolo != null){
+            listinoPrezzi = listinoPrezzi.stream()
+                    .filter(lp -> lp.getArticolo().getCategoria() != null)
+                    .filter(lp -> lp.getArticolo().getCategoria().getId().equals(idCategoriaArticolo))
+                    .collect(Collectors.toList());
+        }
 
         List<ListinoPrezzoDataSource> listinoPrezziDataSource = new ArrayList<>();
         if(!listinoPrezzi.isEmpty()){

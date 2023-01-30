@@ -3,6 +3,7 @@ package com.contafood.model.views;
 import com.contafood.model.Cliente;
 import com.contafood.model.StatoFattura;
 import com.contafood.model.TipoFattura;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 
 @EqualsAndHashCode()
+@Data
 @Entity
 @Table(name = "v_fattura")
 public class VFattura {
@@ -28,17 +30,35 @@ public class VFattura {
     @Column(name = "data")
     private Date data;
 
-    @ManyToOne
-    @JoinColumn(name="id_tipo")
-    private TipoFattura tipoFattura;
+    @Column(name="id_tipo")
+    private Long idTipo;
 
-    @ManyToOne
-    @JoinColumn(name="id_cliente")
-    private Cliente cliente;
+    @Column(name="tipo_codice")
+    private String tipoCodice;
 
-    @ManyToOne
-    @JoinColumn(name="id_stato")
-    private StatoFattura statoFattura;
+    @Column(name="id_cliente")
+    private Long idCliente;
+
+    @Column(name="cliente")
+    private String cliente;
+
+    @Column(name="cliente_email")
+    private String clienteEmail;
+
+    @Column(name="id_tipo_pagamento")
+    private Long idTipoPagamento;
+
+    @Column(name="id_agente")
+    private Long idAgente;
+
+    @Column(name="agente")
+    private String agente;
+
+    @Column(name="id_stato")
+    private Long idStato;
+
+    @Column(name="stato_codice")
+    private String statoCodice;
 
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
@@ -58,109 +78,8 @@ public class VFattura {
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getProgressivo() {
-        return progressivo;
-    }
-
-    public void setProgressivo(Integer progressivo) {
-        this.progressivo = progressivo;
-    }
-
-    public Integer getAnno() {
-        return anno;
-    }
-
-    public void setAnno(Integer anno) {
-        this.anno = anno;
-    }
-
-    public Date getData() {
-        return data;
-    }
-
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public TipoFattura getTipoFattura() {
-        return tipoFattura;
-    }
-
-    public void setTipoFattura(TipoFattura tipoFattura) {
-        this.tipoFattura = tipoFattura;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-
-    public StatoFattura getStatoFattura() {
-        return statoFattura;
-    }
-
-    public void setStatoFattura(StatoFattura statoFattura) {
-        this.statoFattura = statoFattura;
-    }
-
-    public Boolean getSpeditoAde() {
-        return speditoAde;
-    }
-
-    public void setSpeditoAde(Boolean speditoAde) {
-        this.speditoAde = speditoAde;
-    }
-
-    public BigDecimal getTotale() {
-        return totale;
-    }
-
-    public void setTotale(BigDecimal totale) {
-        this.totale = totale;
-    }
-
-    public BigDecimal getTotaleAcconto() {
-        return totaleAcconto;
-    }
-
-    public void setTotaleAcconto(BigDecimal totaleAcconto) {
-        this.totaleAcconto = totaleAcconto;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Timestamp getDataInserimento() {
-        return dataInserimento;
-    }
-
-    public void setDataInserimento(Timestamp dataInserimento) {
-        this.dataInserimento = dataInserimento;
-    }
-
-    public Timestamp getDataAggiornamento() {
-        return dataAggiornamento;
-    }
-
-    public void setDataAggiornamento(Timestamp dataAggiornamento) {
-        this.dataAggiornamento = dataAggiornamento;
-    }
+    @Column(name = "id_articoli")
+    private String idArticoli;
 
     @Override
     public String toString() {
@@ -171,9 +90,16 @@ public class VFattura {
         result.append(", progressivo: " + progressivo);
         result.append(", anno: " + anno);
         result.append(", data: " + data);
-        result.append(", tipoFattura: " + tipoFattura);
+        result.append(", idTipo: " + idTipo);
+        result.append(", tipoCodice: " + tipoCodice);
+        result.append(", idCliente: " + idCliente);
         result.append(", cliente: " + cliente);
-        result.append(", statoFattura: " + statoFattura);
+        result.append(", clienteEmail: " + clienteEmail);
+        result.append(", idTipoPagamento: " + idTipoPagamento);
+        result.append(", idAgente: " + idAgente);
+        result.append(", agente: " + agente);
+        result.append(", stato: " + idStato);
+        result.append(", statoCodice: " + statoCodice);
         result.append(", speditoAde: " + speditoAde);
         result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", totale: " + totale);
