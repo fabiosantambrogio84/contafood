@@ -187,7 +187,7 @@ public class VFatturaCustomRepositoryImpl implements VFatturaCustomRepository{
             query.setParameter("importo", importo);
         }
         if(idTipoPagamento != null) {
-            query.setParameter("idAutista", idTipoPagamento);
+            query.setParameter("idTipoPagamento", idTipoPagamento);
         }
         if(cliente != null) {
             query.setParameter("cliente", cliente.toLowerCase());
