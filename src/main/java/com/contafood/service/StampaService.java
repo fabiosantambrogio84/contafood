@@ -884,20 +884,21 @@ public class StampaService {
                 BigDecimal imponibile = rpa.getImponibile() != null ? Utils.roundPrice(rpa.getImponibile()) : new BigDecimal(0);
                 BigDecimal iva = rpa.getArticolo().getAliquotaIva().getValore();
 
-                BigDecimal totale = imponibile.add(imponibile.multiply(iva.divide(new BigDecimal(100))));
-                BigDecimal prezzoConIva = totale.divide(BigDecimal.valueOf(quantita), 2, RoundingMode.HALF_UP);
+                BigDecimal ivaValore = iva.divide(BigDecimal.valueOf(100)).multiply(imponibile);
 
                 ricevutaPrivatoArticoloDataSource.setCodiceArticolo(rpa.getArticolo().getCodice());
                 ricevutaPrivatoArticoloDataSource.setDescrizioneArticolo(rpa.getArticolo().getDescrizione());
                 ricevutaPrivatoArticoloDataSource.setLotto(rpa.getLotto());
                 ricevutaPrivatoArticoloDataSource.setUdm(rpa.getArticolo().getUnitaMisura().getEtichetta());
                 ricevutaPrivatoArticoloDataSource.setQuantita(quantita);
+                ricevutaPrivatoArticoloDataSource.setPezzi(rpa.getNumeroPezzi() != null ? rpa.getNumeroPezzi() : 0);
                 ricevutaPrivatoArticoloDataSource.setPrezzo(rpa.getPrezzo() != null ? Utils.roundPrice(rpa.getPrezzo()) : new BigDecimal(0));
                 ricevutaPrivatoArticoloDataSource.setSconto(rpa.getSconto() != null ? Utils.roundPrice(rpa.getSconto()) : new BigDecimal(0));
                 ricevutaPrivatoArticoloDataSource.setImponibile(imponibile);
                 ricevutaPrivatoArticoloDataSource.setIva(iva.intValue());
-                ricevutaPrivatoArticoloDataSource.setPrezzoConIva(Utils.roundPrice(prezzoConIva));
-                ricevutaPrivatoArticoloDataSource.setTotale(Utils.roundPrice(totale));
+                ricevutaPrivatoArticoloDataSource.setPrezzoConIva(rpa.getPrezzoIva() != null ? Utils.roundPrice(rpa.getPrezzoIva()) : new BigDecimal(0));
+                ricevutaPrivatoArticoloDataSource.setTotale(rpa.getTotale() != null ? Utils.roundPrice(rpa.getTotale()) : new BigDecimal(0));
+                ricevutaPrivatoArticoloDataSource.setIvaValore(ivaValore != null ? Utils.roundPrice(ivaValore) : new BigDecimal(0));
 
                 ricevutaPrivatoArticoloDataSources.add(ricevutaPrivatoArticoloDataSource);
             });

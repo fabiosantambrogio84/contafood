@@ -135,16 +135,16 @@ public class RicevutaPrivatoArticoloService {
 
     private BigDecimal computeImponibile(RicevutaPrivatoArticolo ricevutaPrivatoArticolo){
 
-        return AccountingUtils.computeImponibile(ricevutaPrivatoArticolo.getQuantita(), ricevutaPrivatoArticolo.getPrezzo(), ricevutaPrivatoArticolo.getSconto());
+        return AccountingUtils.computeImponibile(ricevutaPrivatoArticolo.getNumeroPezzi().floatValue(), ricevutaPrivatoArticolo.getPrezzo(), ricevutaPrivatoArticolo.getSconto());
     }
 
     private BigDecimal computeCosto(RicevutaPrivatoArticolo ricevutaPrivatoArticolo){
 
-        return AccountingUtils.computeCosto(ricevutaPrivatoArticolo.getQuantita(), ricevutaPrivatoArticolo.getId().getArticoloId(), articoloService);
+        return AccountingUtils.computeCosto(ricevutaPrivatoArticolo.getNumeroPezzi().floatValue(), ricevutaPrivatoArticolo.getId().getArticoloId(), articoloService);
     }
 
     private BigDecimal computeTotale(RicevutaPrivatoArticolo ricevutaPrivatoArticolo){
-        return AccountingUtils.computeTotale(ricevutaPrivatoArticolo.getQuantita(), ricevutaPrivatoArticolo.getPrezzo(), ricevutaPrivatoArticolo.getSconto(), null, ricevutaPrivatoArticolo.getId().getArticoloId(), articoloService);
+        return AccountingUtils.computeTotale(ricevutaPrivatoArticolo.getNumeroPezzi().floatValue(), ricevutaPrivatoArticolo.getPrezzo(), ricevutaPrivatoArticolo.getSconto(), null, ricevutaPrivatoArticolo.getId().getArticoloId(), articoloService);
     }
 
 }

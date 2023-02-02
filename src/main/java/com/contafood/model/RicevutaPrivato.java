@@ -85,6 +85,9 @@ public class RicevutaPrivato {
     @Column(name = "totale_quantita")
     private BigDecimal totaleQuantita;
 
+    @Column(name = "totale_pezzi")
+    private Integer totalePezzi;
+
     @Column(name = "note")
     private String note;
 
@@ -277,6 +280,14 @@ public class RicevutaPrivato {
         this.totaleQuantita = totaleQuantita;
     }
 
+    public Integer getTotalePezzi() {
+        return totalePezzi;
+    }
+
+    public void setTotalePezzi(Integer totalePezzi) {
+        this.totalePezzi = totalePezzi;
+    }
+
     public String getNote() {
         return note;
     }
@@ -359,6 +370,7 @@ public class RicevutaPrivato {
         result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", totale: " + totale);
         result.append(", totaleQuantita: " + totaleQuantita);
+        result.append(", totalePezzi: " + totalePezzi);
         result.append(", note: " + note);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);

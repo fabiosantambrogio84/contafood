@@ -179,7 +179,9 @@ public class RicevutaPrivatoService {
             ricevutaPrivatoArticoliByIva.add(faa);
             ivaRicevutaPrivatoArticoliMap.put(iva, ricevutaPrivatoArticoliByIva);
         });
+
         Float totaleQuantita = 0f;
+        Integer totalePezzi = 0;
         BigDecimal totaleImponibile = new BigDecimal(0);
         BigDecimal totaleIva = new BigDecimal(0);
         BigDecimal totaleCosto = new BigDecimal(0);
@@ -195,6 +197,7 @@ public class RicevutaPrivatoService {
                 totaleImponibile = totaleImponibile.add(imponibile);
                 totaleCosto = totaleCosto.add(costo);
                 totaleQuantita = totaleQuantita + (ricevutaPrivatoArticolo.getQuantita() != null ? ricevutaPrivatoArticolo.getQuantita() : 0f);
+                totalePezzi = totalePezzi + (ricevutaPrivatoArticolo.getNumeroPezzi() != null ? ricevutaPrivatoArticolo.getNumeroPezzi() : 0);
 
                 BigDecimal partialIva = imponibile.multiply(iva.divide(new BigDecimal(100)));
                 totaleIva = totaleIva.add(partialIva);
@@ -209,5 +212,6 @@ public class RicevutaPrivatoService {
         ricevutaPrivato.setTotale(Utils.roundPrice(totale));
         ricevutaPrivato.setTotaleAcconto(new BigDecimal(0));
         ricevutaPrivato.setTotaleQuantita(Utils.roundQuantity(new BigDecimal(totaleQuantita)));
+        ricevutaPrivato.setTotalePezzi(totalePezzi);
     }
 }

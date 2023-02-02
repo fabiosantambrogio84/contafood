@@ -652,6 +652,11 @@ public class StampaController {
         // create list of RicevutaPrivatoArticoloDataSource from RicevutaPrivatoArticolo
         List<RicevutaPrivatoArticoloDataSource> ricevutaPrivatoArticoloDataSources = stampaService.getRicevutaPrivatoArticoliDataSource(ricevutaPrivato);
 
+        BigDecimal totaleIva = BigDecimal.ZERO;
+        if(!ricevutaPrivatoArticoloDataSources.isEmpty()){
+            totaleIva = ricevutaPrivatoArticoloDataSources.stream().map(RicevutaPrivatoArticoloDataSource::getIvaValore).reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_RICEVUTA_PRIVATO);
 
@@ -671,6 +676,7 @@ public class StampaController {
         parameters.put("note", ricevutaPrivato.getNote());
         parameters.put("trasportatore", ricevutaPrivato.getTrasportatore());
         parameters.put("nota", Constants.JASPER_PARAMETER_RICEVUTA_PRIVATO_NOTA);
+        parameters.put("totaleIva", totaleIva);
         parameters.put("ricevutaPrivatoTrasportoTipo", ricevutaPrivato.getTipoTrasporto());
         parameters.put("ricevutaPrivatoTrasportoDataOra", ricevutaPrivatoTrasportoDataOraParam);
         parameters.put("ricevutaPrivatoNumeroColli", ricevutaPrivato.getNumeroColli());
