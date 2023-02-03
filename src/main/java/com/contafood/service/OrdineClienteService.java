@@ -300,6 +300,8 @@ public class OrdineClienteService {
                         numPezziEvasi = 0;
                     }
                     ordineClienteArticolo.setNumeroPezziDaEvadere(newNumPezziDaEvadere);
+                    ordineClienteArticolo.setIdDdts(ordineClienteAggregate.getIdsDdts());
+
                     LOGGER.info("Updating ordine cliente {}, articolo {} setting 'numPezziDaEvadere'={}", idOrdineCliente, ordineClienteAggregate.getIdArticolo(), newNumPezziDaEvadere);
                     saveOrdineClienteArticolo(ordineClienteArticolo);
                 }

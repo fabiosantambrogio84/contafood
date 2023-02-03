@@ -27,6 +27,8 @@ public class OrdineClienteAggregate {
 
     private String note;
 
+    private String idsDdts;
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
@@ -41,6 +43,7 @@ public class OrdineClienteAggregate {
         result.append(", idsOrdiniClienti: " + idsOrdiniClienti);
         result.append(", codiciOrdiniClienti: " + codiciOrdiniClienti);
         result.append(", note: " + note);
+        result.append(", idsDdts: " + idsDdts);
         result.append("}");
 
         return result.toString();

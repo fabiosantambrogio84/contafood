@@ -27,7 +27,8 @@ public class NativeQueryService {
             "sum(ordine_cliente_articolo.num_da_evadere) as num_da_evadere,\n" +
             "group_concat(ordine_cliente_articolo.id_ordine_cliente separator ',') as ordini_clienti,\n" +
             "group_concat(concat(ordine_cliente.progressivo,'/', ordine_cliente.anno_contabile) separator ',') as codici_ordini_clienti,\n" +
-            "group_concat(concat(ordine_cliente.progressivo,'/', ordine_cliente.anno_contabile,': ',ordine_cliente.note) separator ',') as note\n" +
+            "group_concat(concat(ordine_cliente.progressivo,'/', ordine_cliente.anno_contabile,': ',ordine_cliente.note) separator ',') as note,\n" +
+            "group_concat(ordine_cliente_articolo.id_ddts separator ',') as id_ddts\n" +
             "from contafood.ordine_cliente_articolo\n" +
             "join contafood.ordine_cliente on ordine_cliente_articolo.id_ordine_cliente = ordine_cliente.id\n" +
             "join contafood.articolo on ordine_cliente_articolo.id_articolo = articolo.id\n" +
@@ -75,6 +76,7 @@ public class NativeQueryService {
                     ordineClienteAggregate.setIdsOrdiniClienti((String)rl[5]);
                     ordineClienteAggregate.setCodiciOrdiniClienti((String)rl[6]);
                     ordineClienteAggregate.setNote((String)rl[7]);
+                    ordineClienteAggregate.setIdsDdts((String)rl[8]);
 
                     ordiniClientiAggregate.add(ordineClienteAggregate);
                 });

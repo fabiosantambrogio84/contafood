@@ -34,3 +34,6 @@ JOIN (
 ) t ON
     ricevuta_privato.id = t.id_ricevuta_privato
 SET ricevuta_privato.totale_pezzi = t.totale_pezzi;
+
+
+alter table contafood.ordine_cliente_articolo add column id_ddts text after id_ordine_fornitore;

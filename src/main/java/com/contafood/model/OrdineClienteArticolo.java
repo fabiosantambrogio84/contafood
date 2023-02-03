@@ -35,6 +35,9 @@ public class OrdineClienteArticolo implements Serializable {
     @Column(name = "num_da_evadere")
     private Integer numeroPezziDaEvadere;
 
+    @Column(name = "id_ddts")
+    private String idDdts;
+
     @Column(name = "id_ordine_fornitore")
     private Long ordineFornitoreId;
 
@@ -87,6 +90,14 @@ public class OrdineClienteArticolo implements Serializable {
         this.numeroPezziDaEvadere = numeroPezziDaEvadere;
     }
 
+    public String getIdDdts() {
+        return idDdts;
+    }
+
+    public void setIdDdts(String idDdts) {
+        this.idDdts = idDdts;
+    }
+
     public Long getOrdineFornitoreId() {
         return ordineFornitoreId;
     }
@@ -128,6 +139,7 @@ public class OrdineClienteArticolo implements Serializable {
         result.append(", articoloId: " + id.articoloId);
         result.append(", numeroPezziOrdinati: " + numeroPezziOrdinati);
         result.append(", numeroPezziDaEvadere: " + numeroPezziDaEvadere);
+        result.append(", idDdts: " + idDdts);
         result.append(", dataInserimento: " + dataInserimento);
         result.append(", dataAggiornamento: " + dataAggiornamento);
         result.append("}");
