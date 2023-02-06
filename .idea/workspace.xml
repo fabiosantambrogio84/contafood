@@ -24,11 +24,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql-scripts/20230202.sql" beforeDir="false" afterPath="$PROJECT_DIR$/sql-scripts/20230202.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineClienteAggregate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineClienteAggregate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineClienteArticolo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/OrdineClienteArticolo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/jpa/NativeQueryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/jpa/NativeQueryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoArticoloService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/RicevutaPrivatoArticoloService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +115,7 @@
       <recent name="com.contafood.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Remote JVM Debug.Contafood-remote">
+  <component name="RunManager" selected="Maven.contafood [clean,package]">
     <configuration name="Utils" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.contafood.util.Utils" />
       <module name="contafood" />
@@ -129,19 +125,6 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -650,14 +633,8 @@
       <workItem from="1675153006416" duration="1252000" />
       <workItem from="1675262192410" duration="2122000" />
       <workItem from="1675326598551" duration="9369000" />
-      <workItem from="1675413956927" duration="7800000" />
-    </task>
-    <task id="LOCAL-00076" summary="Add GiacenzaIngrediente">
-      <created>1592569213175</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1592569213176</updated>
+      <workItem from="1675413956927" duration="8404000" />
+      <workItem from="1675681719335" duration="1754000" />
     </task>
     <task id="LOCAL-00077" summary="Add GiacenzaIngrediente, fix bugs">
       <created>1592811496559</created>
@@ -995,7 +972,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675337749149</updated>
     </task>
-    <option name="localTasksCounter" value="125" />
+    <task id="LOCAL-00125" summary="Step 39 - DDT modifica">
+      <created>1675437583352</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1675437583352</updated>
+    </task>
+    <option name="localTasksCounter" value="126" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1050,7 +1034,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix step 29,30,31" />
     <MESSAGE value="Fix decimal places" />
     <MESSAGE value="Fix step 32" />
     <MESSAGE value="Step 33" />
@@ -1075,7 +1058,8 @@
     <MESSAGE value="Step 39 - phase 2" />
     <MESSAGE value="Step 39 - fix" />
     <MESSAGE value="Step 39 - ricevute a privati" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 39 - ricevute a privati" />
+    <MESSAGE value="Step 39 - DDT modifica" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step 39 - DDT modifica" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -3,8 +3,6 @@ package com.contafood.service;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.Articolo;
 import com.contafood.model.RicevutaPrivatoArticolo;
-import com.contafood.model.RicevutaPrivatoArticoloKey;
-import com.contafood.repository.RicevutaPrivatoArticoloOrdineClienteRepository;
 import com.contafood.repository.RicevutaPrivatoArticoloRepository;
 import com.contafood.util.AccountingUtils;
 import org.slf4j.Logger;
@@ -13,35 +11,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class RicevutaPrivatoArticoloService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(RicevutaPrivatoArticoloService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RicevutaPrivatoArticoloService.class);
 
-    private static final String CONTEXT_CREATE_RICEVUTA_PRIVATO = "create_ricevuta_privato";
-    private static final String CONTEXT_DELETE_RICEVAUTA_PRIVATO = "delete_ricevuta_privato";
+    //private static final String CONTEXT_CREATE_RICEVUTA_PRIVATO = "create_ricevuta_privato";
+    //private static final String CONTEXT_DELETE_RICEVAUTA_PRIVATO = "delete_ricevuta_privato";
 
     private final RicevutaPrivatoArticoloRepository ricevutaPrivatoArticoloRepository;
     private final ArticoloService articoloService;
-    private final RicevutaPrivatoArticoloOrdineClienteRepository ricevutaPrivatoArticoloOrdineClienteRepository;
-    private final OrdineClienteService ordineClienteService;
+    //private final RicevutaPrivatoArticoloOrdineClienteRepository ricevutaPrivatoArticoloOrdineClienteRepository;
+    //private final OrdineClienteService ordineClienteService;
 
     @Autowired
     public RicevutaPrivatoArticoloService(final RicevutaPrivatoArticoloRepository ricevutaPrivatoArticoloRepository,
-                                          final ArticoloService articoloService,
-                                          final RicevutaPrivatoArticoloOrdineClienteRepository ricevutaPrivatoArticoloOrdineClienteRepository,
-                                          final OrdineClienteService ordineClienteService){
+                                          final ArticoloService articoloService){
+                                          //final RicevutaPrivatoArticoloOrdineClienteRepository ricevutaPrivatoArticoloOrdineClienteRepository,
+                                          //final OrdineClienteService ordineClienteService){
         this.ricevutaPrivatoArticoloRepository = ricevutaPrivatoArticoloRepository;
         this.articoloService = articoloService;
-        this.ricevutaPrivatoArticoloOrdineClienteRepository = ricevutaPrivatoArticoloOrdineClienteRepository;
-        this.ordineClienteService = ordineClienteService;
+        //this.ricevutaPrivatoArticoloOrdineClienteRepository = ricevutaPrivatoArticoloOrdineClienteRepository;
+        //this.ordineClienteService = ordineClienteService;
     }
 
     public Set<RicevutaPrivatoArticolo> findAll(){
@@ -96,6 +91,7 @@ public class RicevutaPrivatoArticoloService {
         return articoloService.getOne(articoloId);
     }
 
+    /*
     public Set<RicevutaPrivatoArticolo> getByArticoloIdAndLottoAndScadenza(Long idArticolo, String lotto, Date scadenza){
         LOGGER.info("Retrieving 'ricevuta privato articoli' by 'idArticolo' '{}', 'lotto' '{}' and 'scadenza' '{}'", idArticolo, lotto, scadenza);
         Set<RicevutaPrivatoArticolo> ricevutaPrivatoArticoli = ricevutaPrivatoArticoloRepository.findByArticoloIdAndLotto(idArticolo, lotto);
@@ -131,20 +127,18 @@ public class RicevutaPrivatoArticoloService {
         LOGGER.info("Context {}: pezzi: {}, pezzi da evadere {} pezzi ordinati {}, nuovi pezzi da evadere {}", context, pezzi, pezziDaEvadere, pezziOrdinati, newNumeroPezziDaEvadere);
         return newNumeroPezziDaEvadere;
     }
-
+    */
 
     private BigDecimal computeImponibile(RicevutaPrivatoArticolo ricevutaPrivatoArticolo){
-
-        return AccountingUtils.computeImponibile(ricevutaPrivatoArticolo.getNumeroPezzi().floatValue(), ricevutaPrivatoArticolo.getPrezzo(), ricevutaPrivatoArticolo.getSconto());
+        return AccountingUtils.computeImponibile(ricevutaPrivatoArticolo.getQuantita(), ricevutaPrivatoArticolo.getPrezzo(), ricevutaPrivatoArticolo.getSconto());
     }
 
     private BigDecimal computeCosto(RicevutaPrivatoArticolo ricevutaPrivatoArticolo){
-
-        return AccountingUtils.computeCosto(ricevutaPrivatoArticolo.getNumeroPezzi().floatValue(), ricevutaPrivatoArticolo.getId().getArticoloId(), articoloService);
+        return AccountingUtils.computeCosto(ricevutaPrivatoArticolo.getQuantita(), ricevutaPrivatoArticolo.getId().getArticoloId(), articoloService);
     }
 
     private BigDecimal computeTotale(RicevutaPrivatoArticolo ricevutaPrivatoArticolo){
-        return AccountingUtils.computeTotale(ricevutaPrivatoArticolo.getNumeroPezzi().floatValue(), ricevutaPrivatoArticolo.getPrezzo(), ricevutaPrivatoArticolo.getSconto(), null, ricevutaPrivatoArticolo.getId().getArticoloId(), articoloService);
+        return AccountingUtils.computeTotale(ricevutaPrivatoArticolo.getQuantita(), ricevutaPrivatoArticolo.getPrezzo(), ricevutaPrivatoArticolo.getSconto(), null, ricevutaPrivatoArticolo.getId().getArticoloId(), articoloService);
     }
 
 }
