@@ -15,6 +15,8 @@ public class ListinoPrezzoDataSource {
 
     private String categoriaArticolo;
 
+    private String unitaDiMisura;
+
     private BigDecimal prezzo;
 
     private String groupField;

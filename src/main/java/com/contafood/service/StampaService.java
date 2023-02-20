@@ -1586,6 +1586,9 @@ public class StampaService {
                     if(articolo.getCategoria() != null) {
                         listinoPrezzoDataSource.setCategoriaArticolo(articolo.getCategoria().getNome());
                     }
+                    if(articolo.getUnitaMisura() != null){
+                        listinoPrezzoDataSource.setUnitaDiMisura(articolo.getUnitaMisura().getNome());
+                    }
                     Fornitore fornitore = null;
                     if(articolo.getFornitore() != null){
                         fornitore = articolo.getFornitore();

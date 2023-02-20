@@ -111,6 +111,9 @@ public class Cliente {
     @Column(name = "note")
     private String note;
 
+    @Column(name = "note_documenti")
+    private String noteDocumenti;
+
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
 
@@ -374,6 +377,14 @@ public class Cliente {
         this.note = note;
     }
 
+    public String getNoteDocumenti() {
+        return noteDocumenti;
+    }
+
+    public void setNoteDocumenti(String noteDocumenti) {
+        this.noteDocumenti = noteDocumenti;
+    }
+
     public Timestamp getDataInserimento() {
         return dataInserimento;
     }
@@ -465,6 +476,7 @@ public class Cliente {
         result.append(", nomeGruppoRiba: " + nomeGruppoRiba);
         result.append(", codiceUnivocoSdi: " + codiceUnivocoSdi);
         result.append(", note: " + note);
+        result.append(", noteDocumenti: " + noteDocumenti);
         result.append(", dataInserimento: " + dataInserimento);
         result.append("}");
 

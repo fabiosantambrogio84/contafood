@@ -6,6 +6,7 @@ import com.contafood.model.ClienteArticolo;
 import com.contafood.model.ListinoAssociato;
 import com.contafood.model.PuntoConsegna;
 import com.contafood.repository.ClienteRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ClienteService {
@@ -112,6 +110,26 @@ public class ClienteService {
 
         LOGGER.info("Updated 'cliente' '{}'", updatedCliente);
         return updatedCliente;
+    }
+
+    @Transactional
+    public Cliente patch(Map<String,Object> patchCliente){
+        LOGGER.info("Patching 'cliente'");
+
+        Long id = Long.valueOf((Integer) patchCliente.get("id"));
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        patchCliente.forEach((key, value) -> {
+            if(key.equals("id")){
+                cliente.setId(Long.valueOf((Integer)value));
+            } else if(key.equals("noteDocumenti")){
+                String noteDocumenti = !StringUtils.isEmpty((String)value) ? (String)value : null;
+                cliente.setNoteDocumenti(noteDocumenti);
+            }
+        });
+        Cliente patchedCliente = clienteRepository.save(cliente);
+
+        LOGGER.info("Patched 'cliente' '{}'", patchedCliente);
+        return patchedCliente;
     }
 
     @Transactional

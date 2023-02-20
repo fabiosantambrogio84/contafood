@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -100,6 +97,17 @@ public class ClienteController {
             throw new CannotChangeResourceIdException();
         }
         return clienteService.update(cliente);
+    }
+
+    @RequestMapping(method = PATCH, path = "/{clienteId}")
+    @CrossOrigin
+    public Cliente patch(@PathVariable final Long clienteId, @RequestBody final Map<String,Object> patchCliente){
+        LOGGER.info("Performing PATCH request for updating 'cliente' '{}'", clienteId);
+        Long id = Long.valueOf((Integer) patchCliente.get("id"));
+        if (!Objects.equals(clienteId, id)) {
+            throw new CannotChangeResourceIdException();
+        }
+        return clienteService.patch(patchCliente);
     }
 
     @RequestMapping(method = DELETE, path = "/{clienteId}")

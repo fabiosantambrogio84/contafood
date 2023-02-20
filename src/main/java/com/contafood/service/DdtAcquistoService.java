@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -20,7 +21,7 @@ import java.util.*;
 @Service
 public class DdtAcquistoService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(DdtAcquistoService.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(DdtAcquistoService.class);
 
     private final DdtAcquistoRepository ddtAcquistoRepository;
     private final DdtAcquistoArticoloService ddtAcquistoArticoloService;
@@ -70,7 +71,7 @@ public class DdtAcquistoService {
 
         DdtAcquisto createdDdtAcquisto = ddtAcquistoRepository.save(ddtAcquisto);
 
-        createdDdtAcquisto.getDdtAcquistoArticoli().stream().forEach(daa -> {
+        createdDdtAcquisto.getDdtAcquistoArticoli().forEach(daa -> {
             daa.getId().setDdtAcquistoId(createdDdtAcquisto.getId());
             daa.getId().setUuid(UUID.randomUUID().toString());
             ddtAcquistoArticoloService.create(daa);
@@ -79,7 +80,7 @@ public class DdtAcquistoService {
             giacenzaArticoloService.computeGiacenza(daa.getId().getArticoloId(), daa.getLotto(), daa.getDataScadenza(), daa.getQuantita(), Resource.DDT_ACQUISTO);
         });
 
-        createdDdtAcquisto.getDdtAcquistoIngredienti().stream().forEach(dai -> {
+        createdDdtAcquisto.getDdtAcquistoIngredienti().forEach(dai -> {
             dai.getId().setDdtAcquistoId(createdDdtAcquisto.getId());
             dai.getId().setUuid(UUID.randomUUID().toString());
             ddtAcquistoIngredienteService.create(dai);
@@ -115,7 +116,7 @@ public class DdtAcquistoService {
         ddtAcquisto.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         DdtAcquisto updatedDdtAcquisto = ddtAcquistoRepository.save(ddtAcquisto);
-        ddtAcquistoArticoli.stream().forEach(daa -> {
+        ddtAcquistoArticoli.forEach(daa -> {
             daa.getId().setDdtAcquistoId(updatedDdtAcquisto.getId());
             daa.getId().setUuid(UUID.randomUUID().toString());
 
@@ -125,13 +126,13 @@ public class DdtAcquistoService {
             }
             ddtAcquistoArticoloService.create(daa);
         });
-        ddtAcquistoIngredienti.stream().forEach(dai -> {
+        ddtAcquistoIngredienti.forEach(dai -> {
             dai.getId().setDdtAcquistoId(updatedDdtAcquisto.getId());
             dai.getId().setUuid(UUID.randomUUID().toString());
 
             if(modificaGiacenze != null && modificaGiacenze.equals(Boolean.TRUE)){
                 // compute 'giacenza ingrediente'
-                giacenzaIngredienteService.computeGiacenza(dai.getIngrediente().getId(), dai.getLotto(), dai.getDataScadenza(), dai.getQuantita(), Resource.DDT_ACQUISTO);
+                giacenzaIngredienteService.computeGiacenza(dai.getId().getIngredienteId(), dai.getLotto(), dai.getDataScadenza(), dai.getQuantita(), Resource.DDT_ACQUISTO);
             }
             ddtAcquistoIngredienteService.create(dai);
         });
@@ -170,7 +171,7 @@ public class DdtAcquistoService {
     private void computeTotali(DdtAcquisto ddtAcquisto, Set<DdtAcquistoArticolo> ddtAcquistoArticoli, Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti){
         // create and populate map for DdtAcquistoArticolo
         Map<AliquotaIva, Set<DdtAcquistoArticolo>> ivaDdtArticoliMap = new HashMap<>();
-        ddtAcquistoArticoli.stream().forEach(da -> {
+        ddtAcquistoArticoli.forEach(da -> {
             Articolo articolo = ddtAcquistoArticoloService.getArticolo(da);
             AliquotaIva iva = articolo.getAliquotaIva();
             Set<DdtAcquistoArticolo> ddtArticoliByIva;
@@ -185,7 +186,7 @@ public class DdtAcquistoService {
 
         // create and populate map for DdtAcquistoIngrediente
         Map<AliquotaIva, Set<DdtAcquistoIngrediente>> ivaDdtIngredientiMap = new HashMap<>();
-        ddtAcquistoIngredienti.stream().forEach(dai -> {
+        ddtAcquistoIngredienti.forEach(dai -> {
             Ingrediente ingrediente = ddtAcquistoIngredienteService.getIngrediente(dai);
             AliquotaIva iva = ingrediente.getAliquotaIva();
             Set<DdtAcquistoIngrediente> ddtIngredientiByIva;
@@ -210,12 +211,12 @@ public class DdtAcquistoService {
             for(DdtAcquistoArticolo ddtAcquistoArticolo: ddtAcquistoArticoliByIva){
                 totaleImponibile = totaleImponibile.add(ddtAcquistoArticolo.getImponibile());
 
-                BigDecimal partialIva = ddtAcquistoArticolo.getImponibile().multiply(iva.divide(new BigDecimal(100)));
+                BigDecimal partialIva = ddtAcquistoArticolo.getImponibile().multiply(iva.divide(new BigDecimal(100), RoundingMode.HALF_UP));
                 totaleIva = totaleIva.add(partialIva);
 
                 totaleByIva = totaleByIva.add(ddtAcquistoArticolo.getImponibile());
             }
-            totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
+            totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100), RoundingMode.HALF_UP))));
         }
         for (Map.Entry<AliquotaIva, Set<DdtAcquistoIngrediente>> entry : ivaDdtIngredientiMap.entrySet()) {
             BigDecimal iva = entry.getKey().getValore();
@@ -224,12 +225,12 @@ public class DdtAcquistoService {
             for(DdtAcquistoIngrediente DdtAcquistoIngrediente: ddtAcquistoingredientiByIva){
                 totaleImponibile = totaleImponibile.add(DdtAcquistoIngrediente.getImponibile());
 
-                BigDecimal partialIva = DdtAcquistoIngrediente.getImponibile().multiply(iva.divide(new BigDecimal(100)));
+                BigDecimal partialIva = DdtAcquistoIngrediente.getImponibile().multiply(iva.divide(new BigDecimal(100), RoundingMode.HALF_UP));
                 totaleIva = totaleIva.add(partialIva);
 
                 totaleByIva = totaleByIva.add(DdtAcquistoIngrediente.getImponibile());
             }
-            totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
+            totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100), RoundingMode.HALF_UP))));
         }
 
         ddtAcquisto.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
