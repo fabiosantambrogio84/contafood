@@ -1,0 +1,1 @@
+ALTER TABLE contafood.telefonata MODIFY COLUMN data_esecuzione timestamp NULL;

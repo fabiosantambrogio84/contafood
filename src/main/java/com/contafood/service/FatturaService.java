@@ -543,7 +543,7 @@ public class FatturaService {
     public void checkTipoPagamentoRicevutaBancaria(Long idTipoPagamento){
         TipoPagamento tipoPagamento = tipoPagamentoRepository.findById(idTipoPagamento).orElseThrow(ResourceNotFoundException::new);
         String descrizione = tipoPagamento.getDescrizione().toLowerCase().replace(" ","");
-        if(!descrizione.contains("ricevutabancaria")){
+        if(!descrizione.contains("ricevutabanc")){
             throw new GenericException("Tipo pagamento '"+tipoPagamento.getDescrizione()+"' non valido per RiBa");
         }
     }

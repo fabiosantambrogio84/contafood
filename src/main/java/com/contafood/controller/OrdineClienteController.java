@@ -57,7 +57,11 @@ public class OrdineClienteController {
             if(cliente != null){
                 Cliente ordineClienteCliente = ordineCliente.getCliente();
                 if(ordineClienteCliente != null){
-                    return (ordineClienteCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase());
+                    if(ordineClienteCliente.getPrivato()){
+                        return ((ordineClienteCliente.getNome() + " " +ordineClienteCliente.getCognome()).toLowerCase()).contains(cliente.toLowerCase());
+                    } else {
+                        return (ordineClienteCliente.getRagioneSociale().toLowerCase()).contains(cliente.toLowerCase());
+                    }
                 }
                 return false;
             }
