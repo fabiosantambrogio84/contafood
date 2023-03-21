@@ -9,6 +9,7 @@ public enum Resource {
     DDT_ACQUISTO("ddt acquisto"),
     FATTURA("fattura"),
     FATTURA_ACCOMPAGNATORIA("fattura accompagnatoria"),
+    FATTURA_ACQUISTO("fattura acquisto"),
     FORNITORE("fornitore"),
     MOVIMENTAZIONE_MANUALE_ARTICOLO("movimentazione manuale articolo"),
     MOVIMENTAZIONE_MANUALE_INGREDIENTE("movimentazione manuale ingrediente"),

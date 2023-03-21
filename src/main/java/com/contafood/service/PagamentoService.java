@@ -8,8 +8,7 @@ import com.contafood.repository.*;
 import com.contafood.repository.views.VPagamentoRepository;
 import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class PagamentoService {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(PagamentoService.class);
-
     private final PagamentoRepository pagamentoRepository;
     private final DdtRepository ddtRepository;
+    private final DdtAcquistoRepository ddtAcquistoRepository;
     private final NotaAccreditoRepository notaAccreditoRepository;
     private final NotaResoRepository notaResoRepository;
     private final RicevutaPrivatoRepository ricevutaPrivatoRepository;
     private final FatturaRepository fatturaRepository;
     private final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository;
+    private final FatturaAcquistoRepository fatturaAcquistoRepository;
     private final StatoDdtService statoDdtService;
     private final StatoNotaAccreditoService statoNotaAccreditoService;
     private final StatoNotaResoService statoNotaResoService;
@@ -44,11 +44,13 @@ public class PagamentoService {
     @Autowired
     public PagamentoService(final PagamentoRepository pagamentoRepository,
                             final DdtRepository ddtRepository,
+                            final DdtAcquistoRepository ddtAcquistoRepository,
                             final NotaAccreditoRepository notaAccreditoRepository,
                             final NotaResoRepository notaResoRepository,
                             final RicevutaPrivatoRepository ricevutaPrivatoRepository,
                             final FatturaRepository fatturaRepository,
                             final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository,
+                            final FatturaAcquistoRepository fatturaAcquistoRepository,
                             final StatoDdtService statoDdtService,
                             final StatoNotaAccreditoService statoNotaAccreditoService,
                             final StatoNotaResoService statoNotaResoService,
@@ -57,11 +59,13 @@ public class PagamentoService {
                             final VPagamentoRepository vPagamentoRepository){
         this.pagamentoRepository = pagamentoRepository;
         this.ddtRepository = ddtRepository;
+        this.ddtAcquistoRepository = ddtAcquistoRepository;
         this.notaAccreditoRepository = notaAccreditoRepository;
         this.notaResoRepository = notaResoRepository;
         this.ricevutaPrivatoRepository = ricevutaPrivatoRepository;
         this.fatturaRepository = fatturaRepository;
         this.fatturaAccompagnatoriaRepository = fatturaAccompagnatoriaRepository;
+        this.fatturaAcquistoRepository = fatturaAcquistoRepository;
         this.statoDdtService = statoDdtService;
         this.statoNotaAccreditoService = statoNotaAccreditoService;
         this.statoNotaResoService = statoNotaResoService;
@@ -71,71 +75,85 @@ public class PagamentoService {
     }
 
     public Set<Pagamento> getPagamenti(){
-        LOGGER.info("Retrieving 'pagamenti'");
+        log.info("Retrieving 'pagamenti'");
         Set<Pagamento> pagamenti = pagamentoRepository.findAllByOrderByDataDesc();
-        LOGGER.info("Retrieved {} 'pagamenti'", pagamenti.size());
+        log.info("Retrieved {} 'pagamenti'", pagamenti.size());
         return pagamenti;
     }
 
     public List<VPagamento> getAllByFilters(String tipologia, Date dataDa, Date dataA, String cliente, String fornitore, Float importo){
-        LOGGER.info("Retrieving the list of 'pagamenti' filtered by request paramters");
+        log.info("Retrieving the list of 'pagamenti' filtered by request paramters");
         List<VPagamento> pagamenti = vPagamentoRepository.findByFilter(tipologia, dataDa, dataA, cliente, fornitore, importo);
-        LOGGER.info("Retrieved {} 'pagamenti'", pagamenti.size());
+        log.info("Retrieved {} 'pagamenti'", pagamenti.size());
         return pagamenti;
     }
 
     public Set<Pagamento> getDdtPagamentiByIdDdt(Long ddtId){
-        LOGGER.info("Retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
+        log.info("Retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
         Set<Pagamento> pagamenti = pagamentoRepository.findByDdtIdOrderByDataDesc(ddtId);
-        LOGGER.info("Retrieved {} 'pagamenti' of 'ddt' '{}'", pagamenti.size(), ddtId);
+        log.info("Retrieved {} 'pagamenti' of 'ddt' '{}'", pagamenti.size(), ddtId);
+        return pagamenti;
+    }
+
+    public Set<Pagamento> getDdtAcquistoPagamentiByIdDdtAcquisto(Long ddtAcquistoId){
+        log.info("Retrieving 'pagamenti' of 'ddt acquisto' '{}'", ddtAcquistoId);
+        Set<Pagamento> pagamenti = pagamentoRepository.findByDdtAcquistoIdOrderByDataDesc(ddtAcquistoId);
+        log.info("Retrieved {} 'pagamenti' of 'ddt acquisto' '{}'", pagamenti.size(), ddtAcquistoId);
         return pagamenti;
     }
 
     public Set<Pagamento> getNotaAccreditoPagamentiByIdNotaAccredito(Long notaAccreditoId){
-        LOGGER.info("Retrieving 'pagamenti' of 'notaAccredito' '{}'", notaAccreditoId);
+        log.info("Retrieving 'pagamenti' of 'notaAccredito' '{}'", notaAccreditoId);
         Set<Pagamento> pagamenti = pagamentoRepository.findByNotaAccreditoIdOrderByDataDesc(notaAccreditoId);
-        LOGGER.info("Retrieved {} 'pagamenti' of 'notaAccredito' '{}'", pagamenti.size(), notaAccreditoId);
+        log.info("Retrieved {} 'pagamenti' of 'notaAccredito' '{}'", pagamenti.size(), notaAccreditoId);
         return pagamenti;
     }
 
     public Set<Pagamento> getNotaResoPagamentiByIdNotaReso(Long notaResoId){
-        LOGGER.info("Retrieving 'pagamenti' of 'notaReso' '{}'", notaResoId);
+        log.info("Retrieving 'pagamenti' of 'notaReso' '{}'", notaResoId);
         Set<Pagamento> pagamenti = pagamentoRepository.findByNotaResoIdOrderByDataDesc(notaResoId);
-        LOGGER.info("Retrieved {} 'pagamenti' of 'notaReso' '{}'", pagamenti.size(), notaResoId);
+        log.info("Retrieved {} 'pagamenti' of 'notaReso' '{}'", pagamenti.size(), notaResoId);
         return pagamenti;
     }
 
     public Set<Pagamento> getRicevutaPrivatoPagamentiByIdRicevutaPrivato(Long ricevutaPrivatoId){
-        LOGGER.info("Retrieving 'pagamenti' of 'ricevutaPrivato' '{}'", ricevutaPrivatoId);
+        log.info("Retrieving 'pagamenti' of 'ricevutaPrivato' '{}'", ricevutaPrivatoId);
         Set<Pagamento> pagamenti = pagamentoRepository.findByRicevutaPrivatoIdOrderByDataDesc(ricevutaPrivatoId);
-        LOGGER.info("Retrieved {} 'pagamenti' of 'ricevutaPrivato' '{}'", pagamenti.size(), ricevutaPrivatoId);
+        log.info("Retrieved {} 'pagamenti' of 'ricevutaPrivato' '{}'", pagamenti.size(), ricevutaPrivatoId);
         return pagamenti;
     }
 
-    public Set<Pagamento> getFatturaPagamentiByIdRicevutaPrivato(Long fatturaId){
-        LOGGER.info("Retrieving 'pagamenti' of 'fattura' '{}'", fatturaId);
+    public Set<Pagamento> getFatturaPagamentiByIdFattura(Long fatturaId){
+        log.info("Retrieving 'pagamenti' of 'fattura' '{}'", fatturaId);
         Set<Pagamento> pagamenti = pagamentoRepository.findByFatturaIdOrderByDataDesc(fatturaId);
-        LOGGER.info("Retrieved {} 'pagamenti' of 'fattura' '{}'", pagamenti.size(), fatturaId);
+        log.info("Retrieved {} 'pagamenti' of 'fattura' '{}'", pagamenti.size(), fatturaId);
         return pagamenti;
     }
 
-    public Set<Pagamento> getFatturaAccompagnatoriaPagamentiByIdRicevutaPrivato(Long fatturaAccompagnatoriaId){
-        LOGGER.info("Retrieving 'pagamenti' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoriaId);
+    public Set<Pagamento> getFatturaAccompagnatoriaPagamentiByIdFatturaAccompagnatoria(Long fatturaAccompagnatoriaId){
+        log.info("Retrieving 'pagamenti' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoriaId);
         Set<Pagamento> pagamenti = pagamentoRepository.findByFatturaAccompagnatoriaIdOrderByDataDesc(fatturaAccompagnatoriaId);
-        LOGGER.info("Retrieved {} 'pagamenti' of 'fatturaAccompagnatoria' '{}'", pagamenti.size(), fatturaAccompagnatoriaId);
+        log.info("Retrieved {} 'pagamenti' of 'fatturaAccompagnatoria' '{}'", pagamenti.size(), fatturaAccompagnatoriaId);
+        return pagamenti;
+    }
+
+    public Set<Pagamento> getFatturaAcquistoPagamentiByIdFatturaAcquisto(Long fatturaAcquistoId){
+        log.info("Retrieving 'pagamenti' of 'fatturaAcquisto' '{}'", fatturaAcquistoId);
+        Set<Pagamento> pagamenti = pagamentoRepository.findByFatturaAcquistoIdOrderByDataDesc(fatturaAcquistoId);
+        log.info("Retrieved {} 'pagamenti' of 'fatturaAcquisto' '{}'", pagamenti.size(), fatturaAcquistoId);
         return pagamenti;
     }
 
     public Pagamento getPagamento(Long pagamentoId){
-        LOGGER.info("Retrieving 'pagamento' '{}'", pagamentoId);
+        log.info("Retrieving 'pagamento' '{}'", pagamentoId);
         Pagamento pagamento = pagamentoRepository.findById(pagamentoId).orElseThrow(ResourceNotFoundException::new);
-        LOGGER.info("Retrieved 'pagamento' '{}'", pagamento);
+        log.info("Retrieved 'pagamento' '{}'", pagamento);
         return pagamento;
     }
 
     @Transactional
     public Pagamento createPagamento(Pagamento pagamento){
-        LOGGER.info("Creating 'pagamento'");
+        log.info("Creating 'pagamento'");
 
         if(pagamento.getTipoPagamento() != null && pagamento.getTipoPagamento().getId() == null){
             pagamento.setTipoPagamento(null);
@@ -150,23 +168,42 @@ public class PagamentoService {
 
         Resource resource = null;
         Ddt ddt = null;
+        DdtAcquisto ddtAcquisto = null;
         NotaAccredito notaAccredito = null;
         NotaReso notaReso = null;
         RicevutaPrivato ricevutaPrivato = null;
         Fattura fattura = null;
         FatturaAccompagnatoria fatturaAccompagnatoria = null;
+        FatturaAcquisto fatturaAcquisto = null;
         if(pagamento.getDdt() != null && pagamento.getDdt().getId() != null){
             ddt = ddtRepository.findById(pagamento.getDdt().getId()).orElseThrow(ResourceNotFoundException::new);
             totaleAcconto = ddt.getTotaleAcconto();
             totale = ddt.getTotale();
 
+            pagamento.setDdtAcquisto(null);
             pagamento.setNotaAccredito(null);
             pagamento.setNotaReso(null);
             pagamento.setRicevutaPrivato(null);
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
+            pagamento.setFatturaAcquisto(null);
 
             resource = Resource.DDT;
+
+        } else if(pagamento.getDdtAcquisto() != null && pagamento.getDdtAcquisto().getId() != null){
+            ddtAcquisto = ddtAcquistoRepository.findById(pagamento.getDdtAcquisto().getId()).orElseThrow(ResourceNotFoundException::new);
+            totaleAcconto = ddtAcquisto.getTotaleAcconto();
+            totale = ddtAcquisto.getTotale();
+
+            pagamento.setDdt(null);
+            pagamento.setNotaAccredito(null);
+            pagamento.setNotaReso(null);
+            pagamento.setRicevutaPrivato(null);
+            pagamento.setFattura(null);
+            pagamento.setFatturaAccompagnatoria(null);
+            pagamento.setFatturaAcquisto(null);
+
+            resource = Resource.DDT_ACQUISTO;
 
         } else if(pagamento.getNotaAccredito() != null && pagamento.getNotaAccredito().getId() != null){
             notaAccredito = notaAccreditoRepository.findById(pagamento.getNotaAccredito().getId()).orElseThrow(ResourceNotFoundException::new);
@@ -174,10 +211,12 @@ public class PagamentoService {
             totale = notaAccredito.getTotale();
 
             pagamento.setDdt(null);
+            pagamento.setDdtAcquisto(null);
             pagamento.setNotaReso(null);
             pagamento.setRicevutaPrivato(null);
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
+            pagamento.setFatturaAcquisto(null);
 
             resource= Resource.NOTA_ACCREDITO;
 
@@ -187,10 +226,12 @@ public class PagamentoService {
             totale = notaReso.getTotale();
 
             pagamento.setDdt(null);
+            pagamento.setDdtAcquisto(null);
             pagamento.setNotaAccredito(null);
             pagamento.setRicevutaPrivato(null);
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
+            pagamento.setFatturaAcquisto(null);
 
             resource= Resource.NOTA_RESO;
 
@@ -200,10 +241,12 @@ public class PagamentoService {
             totale = ricevutaPrivato.getTotale();
 
             pagamento.setDdt(null);
+            pagamento.setDdtAcquisto(null);
             pagamento.setNotaAccredito(null);
             pagamento.setNotaReso(null);
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
+            pagamento.setFatturaAcquisto(null);
 
             resource= Resource.RICEVUTA_PRIVATO;
 
@@ -213,10 +256,12 @@ public class PagamentoService {
             totale = fattura.getTotale();
 
             pagamento.setDdt(null);
+            pagamento.setDdtAcquisto(null);
             pagamento.setNotaAccredito(null);
             pagamento.setNotaReso(null);
             pagamento.setRicevutaPrivato(null);
             pagamento.setFatturaAccompagnatoria(null);
+            pagamento.setFatturaAcquisto(null);
 
             resource= Resource.FATTURA;
 
@@ -226,15 +271,32 @@ public class PagamentoService {
             totale = fatturaAccompagnatoria.getTotale();
 
             pagamento.setDdt(null);
+            pagamento.setDdtAcquisto(null);
             pagamento.setNotaAccredito(null);
             pagamento.setNotaReso(null);
             pagamento.setRicevutaPrivato(null);
             pagamento.setFattura(null);
+            pagamento.setFatturaAcquisto(null);
 
             resource= Resource.FATTURA_ACCOMPAGNATORIA;
+            
+        } else if(pagamento.getFatturaAcquisto() != null && pagamento.getFatturaAcquisto().getId() != null){
+            fatturaAcquisto = fatturaAcquistoRepository.findById(pagamento.getFatturaAcquisto().getId()).orElseThrow(ResourceNotFoundException::new);
+            totaleAcconto = fatturaAcquisto.getTotaleAcconto();
+            totale = fatturaAcquisto.getTotale();
+
+            pagamento.setDdt(null);
+            pagamento.setDdtAcquisto(null);
+            pagamento.setNotaAccredito(null);
+            pagamento.setNotaReso(null);
+            pagamento.setRicevutaPrivato(null);
+            pagamento.setFattura(null);
+            pagamento.setFatturaAccompagnatoria(null);
+
+            resource= Resource.FATTURA_ACQUISTO;
         }
 
-        LOGGER.info("Resource {}", resource);
+        log.info("Resource {}", resource);
         if(totaleAcconto == null){
             totaleAcconto = new BigDecimal(0);
         }
@@ -242,81 +304,95 @@ public class PagamentoService {
             totale = new BigDecimal(0);
         }
         BigDecimal newTotaleAcconto = Utils.roundPrice(totaleAcconto.add(importo));
-        if(newTotaleAcconto.compareTo(totale) == 1){
-            LOGGER.error("The 'importo' '{}' sum to '{}' is greater than 'totale' '{}' (idDdt={}, idNotaAccredito={})", importo, totaleAcconto, totale, pagamento.getDdt().getId(), pagamento.getNotaAccredito().getId());
+        if(newTotaleAcconto.compareTo(totale) > 0){
+            log.error("The 'importo' '{}' sum to '{}' is greater than 'totale' '{}' (idDdt={}, idNotaAccredito={})", importo, totaleAcconto, totale, pagamento.getDdt().getId(), pagamento.getNotaAccredito().getId());
             throw new PagamentoExceedingException(resource);
         }
         String descrizione = pagamento.getDescrizione();
         if(newTotaleAcconto.compareTo(totale) == 0){
             descrizione = descrizione.replace("Pagamento", "Saldo");
-        } else if(newTotaleAcconto.compareTo(totale) == -1){
+        } else if(newTotaleAcconto.compareTo(totale) < 0){
             descrizione = descrizione.replace("Pagamento", "Acconto");
         }
         pagamento.setDescrizione(descrizione);
         pagamento.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         Pagamento createdPagamento = pagamentoRepository.save(pagamento);
-        LOGGER.info("Created 'pagamento' '{}'", createdPagamento);
+        log.info("Created 'pagamento' '{}'", createdPagamento);
 
         switch(resource){
             case DDT:
-                LOGGER.info("Updating 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
+                log.info("Updating 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
                 ddt.setTotaleAcconto(newTotaleAcconto);
                 computeStato(ddt, true, importo, "CREATE_PAGAMENTO");
                 ddtRepository.save(ddt);
-                LOGGER.info("Updated 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
+                log.info("Updated 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
+                break;
+            case DDT_ACQUISTO:
+                log.info("Updating 'totaleAcconto' of 'ddt acquisto' '{}'", ddtAcquisto.getId());
+                ddtAcquisto.setTotaleAcconto(newTotaleAcconto);
+                computeStato(ddtAcquisto, true, importo, "CREATE_PAGAMENTO");
+                ddtAcquistoRepository.save(ddtAcquisto);
+                log.info("Updated 'totaleAcconto' of 'ddt acquisto' '{}'", ddtAcquisto.getId());
                 break;
             case NOTA_ACCREDITO:
-                LOGGER.info("Updating 'totaleAcconto' of 'notaAccredito' '{}'", notaAccredito.getId());
+                log.info("Updating 'totaleAcconto' of 'notaAccredito' '{}'", notaAccredito.getId());
                 notaAccredito.setTotaleAcconto(newTotaleAcconto);
                 computeStato(notaAccredito);
                 notaAccreditoRepository.save(notaAccredito);
-                LOGGER.info("Updated 'totaleAcconto' of 'notaAccredito' '{}'", notaAccredito.getId());
+                log.info("Updated 'totaleAcconto' of 'notaAccredito' '{}'", notaAccredito.getId());
                 break;
             case NOTA_RESO:
-                LOGGER.info("Updating 'totaleAcconto' of 'notaReso' '{}'", notaReso.getId());
+                log.info("Updating 'totaleAcconto' of 'notaReso' '{}'", notaReso.getId());
                 notaReso.setTotaleAcconto(newTotaleAcconto);
                 computeStato(notaReso);
                 notaResoRepository.save(notaReso);
-                LOGGER.info("Updated 'totaleAcconto' of 'notaReso' '{}'", notaReso.getId());
+                log.info("Updated 'totaleAcconto' of 'notaReso' '{}'", notaReso.getId());
                 break;
             case RICEVUTA_PRIVATO:
-                LOGGER.info("Updating 'totaleAcconto' of 'ricevutaPrivato' '{}'", ricevutaPrivato.getId());
+                log.info("Updating 'totaleAcconto' of 'ricevutaPrivato' '{}'", ricevutaPrivato.getId());
                 ricevutaPrivato.setTotaleAcconto(newTotaleAcconto);
                 computeStato(ricevutaPrivato);
                 ricevutaPrivatoRepository.save(ricevutaPrivato);
-                LOGGER.info("Updated 'totaleAcconto' of 'ricevutaPrivato' '{}'", ricevutaPrivato.getId());
+                log.info("Updated 'totaleAcconto' of 'ricevutaPrivato' '{}'", ricevutaPrivato.getId());
                 break;
             case FATTURA:
-                LOGGER.info("Updating 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
+                log.info("Updating 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
                 fattura.setTotaleAcconto(newTotaleAcconto);
                 computeStato(fattura, true, importo, "CREATE_PAGAMENTO");
                 fatturaRepository.save(fattura);
-                LOGGER.info("Updated 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
+                log.info("Updated 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
                 break;
             case FATTURA_ACCOMPAGNATORIA:
-                LOGGER.info("Updating 'totaleAcconto' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoria.getId());
+                log.info("Updating 'totaleAcconto' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoria.getId());
                 fatturaAccompagnatoria.setTotaleAcconto(newTotaleAcconto);
                 computeStato(fatturaAccompagnatoria);
                 fatturaAccompagnatoriaRepository.save(fatturaAccompagnatoria);
-                LOGGER.info("Updated 'totaleAcconto' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoria.getId());
+                log.info("Updated 'totaleAcconto' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoria.getId());
+                break;
+            case FATTURA_ACQUISTO:
+                log.info("Updating 'totaleAcconto' of 'fattura acquisto' '{}'", fatturaAcquisto.getId());
+                fatturaAcquisto.setTotaleAcconto(newTotaleAcconto);
+                computeStato(fatturaAcquisto, true, importo, "CREATE_PAGAMENTO");
+                fatturaAcquistoRepository.save(fatturaAcquisto);
+                log.info("Updated 'totaleAcconto' of 'fattura' '{}'", fatturaAcquisto.getId());
                 break;
             default:
-                LOGGER.info("No case found for updating 'totaleAcconto' on ddt or notaAccredito");
+                log.info("No case found for updating 'totaleAcconto' on ddt or notaAccredito");
         }
         return createdPagamento;
     }
 
     public Pagamento updateSimple(Pagamento pagamento){
-        LOGGER.info("Updating 'pagamento'");
+        log.info("Updating 'pagamento'");
         Pagamento updatedPagamento = pagamentoRepository.save(pagamento);
-        LOGGER.info("Updated 'pagamento' '{}'", updatedPagamento);
+        log.info("Updated 'pagamento' '{}'", updatedPagamento);
         return updatedPagamento;
     }
 
     @Transactional
     public void deletePagamento(Long pagamentoId){
-        LOGGER.info("Deleting 'pagamento' '{}'", pagamentoId);
+        log.info("Deleting 'pagamento' '{}'", pagamentoId);
         Pagamento pagamento = pagamentoRepository.findById(pagamentoId).orElseThrow(ResourceNotFoundException::new);
         BigDecimal importo = pagamento.getImporto();
         if(importo == null){
@@ -325,11 +401,13 @@ public class PagamentoService {
         BigDecimal totaleAcconto = new BigDecimal(0);
         Resource resource = null;
         Ddt ddt = null;
+        DdtAcquisto ddtAcquisto = null;
         NotaAccredito notaAccredito = null;
         NotaReso notaReso = null;
         RicevutaPrivato ricevutaPrivato = null;
         Fattura fattura = null;
         FatturaAccompagnatoria fatturaAccompagnatoria = null;
+        FatturaAcquisto fatturaAcquisto = null;
 
         if(pagamento.getDdt() != null){
             ddt = pagamento.getDdt();
@@ -337,6 +415,13 @@ public class PagamentoService {
                 totaleAcconto = ddt.getTotaleAcconto();
 
                 resource = Resource.DDT;
+            }
+        } else if(pagamento.getDdtAcquisto() != null){
+            ddtAcquisto = pagamento.getDdtAcquisto();
+            if(ddtAcquisto.getId() != null){
+                totaleAcconto = ddtAcquisto.getTotaleAcconto();
+
+                resource = Resource.DDT_ACQUISTO;
             }
         } else if(pagamento.getNotaAccredito() != null){
             notaAccredito = pagamento.getNotaAccredito();
@@ -374,6 +459,13 @@ public class PagamentoService {
 
                 resource = Resource.FATTURA_ACCOMPAGNATORIA;
             }
+        } else if(pagamento.getFatturaAcquisto() != null){
+            fatturaAcquisto = pagamento.getFatturaAcquisto();
+            if(fatturaAcquisto.getId() != null){
+                totaleAcconto = fatturaAcquisto.getTotaleAcconto();
+
+                resource = Resource.FATTURA_ACQUISTO;
+            }
         }
 
         if(totaleAcconto == null){
@@ -383,52 +475,66 @@ public class PagamentoService {
 
         switch(resource){
             case DDT:
-                LOGGER.info("Updating 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
+                log.info("Updating 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
                 ddt.setTotaleAcconto(newTotaleAcconto);
                 computeStato(ddt, true, importo, "DELETE_PAGAMENTO");
                 ddtRepository.save(ddt);
-                LOGGER.info("Updated 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
+                log.info("Updated 'totaleAcconto' of 'ddt' '{}'", ddt.getId());
+                break;
+            case DDT_ACQUISTO:
+                log.info("Updating 'totaleAcconto' of 'ddt acquisto' '{}'", ddtAcquisto.getId());
+                ddtAcquisto.setTotaleAcconto(newTotaleAcconto);
+                computeStato(ddtAcquisto, true, importo, "DELETE_PAGAMENTO");
+                ddtAcquistoRepository.save(ddtAcquisto);
+                log.info("Updated 'totaleAcconto' of 'ddt acquisto' '{}'", ddtAcquisto.getId());
                 break;
             case NOTA_ACCREDITO:
-                LOGGER.info("Updating 'totaleAcconto' of 'notaAccredito' '{}'", notaAccredito.getId());
+                log.info("Updating 'totaleAcconto' of 'notaAccredito' '{}'", notaAccredito.getId());
                 notaAccredito.setTotaleAcconto(newTotaleAcconto);
                 computeStato(notaAccredito);
                 notaAccreditoRepository.save(notaAccredito);
-                LOGGER.info("Updated 'totaleAcconto' of 'notaAccredito' '{}'", notaAccredito.getId());
+                log.info("Updated 'totaleAcconto' of 'notaAccredito' '{}'", notaAccredito.getId());
                 break;
             case NOTA_RESO:
-                LOGGER.info("Updating 'totaleAcconto' of 'notaReso' '{}'", notaReso.getId());
+                log.info("Updating 'totaleAcconto' of 'notaReso' '{}'", notaReso.getId());
                 notaReso.setTotaleAcconto(newTotaleAcconto);
                 computeStato(notaReso);
                 notaResoRepository.save(notaReso);
-                LOGGER.info("Updated 'totaleAcconto' of 'notaReso' '{}'", notaReso.getId());
+                log.info("Updated 'totaleAcconto' of 'notaReso' '{}'", notaReso.getId());
                 break;
             case RICEVUTA_PRIVATO:
-                LOGGER.info("Updating 'totaleAcconto' of 'ricevutaPrivato' '{}'", ricevutaPrivato.getId());
+                log.info("Updating 'totaleAcconto' of 'ricevutaPrivato' '{}'", ricevutaPrivato.getId());
                 ricevutaPrivato.setTotaleAcconto(newTotaleAcconto);
                 computeStato(ricevutaPrivato);
                 ricevutaPrivatoRepository.save(ricevutaPrivato);
-                LOGGER.info("Updated 'totaleAcconto' of 'ricevutaPrivato' '{}'", ricevutaPrivato.getId());
+                log.info("Updated 'totaleAcconto' of 'ricevutaPrivato' '{}'", ricevutaPrivato.getId());
                 break;
             case FATTURA:
-                LOGGER.info("Updating 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
+                log.info("Updating 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
                 fattura.setTotaleAcconto(newTotaleAcconto);
                 computeStato(fattura, true, importo, "DELETE_PAGAMENTO");
                 fatturaRepository.save(fattura);
-                LOGGER.info("Updated 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
+                log.info("Updated 'totaleAcconto' of 'fattura' '{}'", fattura.getId());
                 break;
             case FATTURA_ACCOMPAGNATORIA:
-                LOGGER.info("Updating 'totaleAcconto' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoria.getId());
+                log.info("Updating 'totaleAcconto' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoria.getId());
                 fatturaAccompagnatoria.setTotaleAcconto(newTotaleAcconto);
                 computeStato(fatturaAccompagnatoria);
                 fatturaAccompagnatoriaRepository.save(fatturaAccompagnatoria);
-                LOGGER.info("Updated 'totaleAcconto' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoria.getId());
+                log.info("Updated 'totaleAcconto' of 'fatturaAccompagnatoria' '{}'", fatturaAccompagnatoria.getId());
+                break;
+            case FATTURA_ACQUISTO:
+                log.info("Updating 'totaleAcconto' of 'fattura acquisto' '{}'", fatturaAcquisto.getId());
+                fatturaAcquisto.setTotaleAcconto(newTotaleAcconto);
+                computeStato(fatturaAcquisto, true, importo, "DELETE_PAGAMENTO");
+                fatturaAcquistoRepository.save(fatturaAcquisto);
+                log.info("Updated 'totaleAcconto' of 'fattura acquisto' '{}'", fatturaAcquisto.getId());
                 break;
             default:
-                LOGGER.info("No case found for updating 'totaleAcconto' on ddt or notaAccredito");
+                log.info("No case found for updating 'totaleAcconto' on ddt or notaAccredito");
         }
         pagamentoRepository.deleteById(pagamentoId);
-        LOGGER.info("Deleted 'pagamento' '{}'", pagamentoId);
+        log.info("Deleted 'pagamento' '{}'", pagamentoId);
     }
 
     private void computeStato(Ddt ddt, boolean aggiornaFatture, BigDecimal importoPagamento, String context){
@@ -444,7 +550,7 @@ public class PagamentoService {
                 totale = new BigDecimal(0);
             }
             BigDecimal result = totale.subtract(totaleAcconto);
-            if(result.compareTo(BigDecimal.ZERO) == -1 || result.compareTo(BigDecimal.ZERO) == 0){
+            if(result.compareTo(BigDecimal.ZERO) <= 0){
                 ddt.setStatoDdt(statoDdtService.getPagato());
             } else {
                 ddt.setStatoDdt(statoDdtService.getParzialmentePagato());
@@ -483,22 +589,22 @@ public class PagamentoService {
                 // calcolo statoFattura
 
                 // compute totaleAcconto and stato for associated Fatture
-                if(fatture != null && !fatture.isEmpty()){
+                if(!fatture.isEmpty()){
                     for(Fattura fattura: fatture){
-                        LOGGER.info("Updating totaleAcconto for fattura '{}' associated to ddt '{}'", fattura.getId(), ddt.getId());
-                        BigDecimal newFatturaTotaleAcconto = BigDecimal.ZERO;
+                        log.info("Updating totaleAcconto for fattura '{}' associated to ddt '{}'", fattura.getId(), ddt.getId());
+                        BigDecimal newFatturaTotaleAcconto;
                         BigDecimal fatturaTotaleAcconto = fattura.getTotaleAcconto();
                         BigDecimal fatturaTotale = fattura.getTotale();
                         BigDecimal accontoPlusPagamento = fatturaTotaleAcconto.add(newImportoPagamento);
-                        if(accontoPlusPagamento.compareTo(fatturaTotale) == 1){
+                        if(accontoPlusPagamento.compareTo(fatturaTotale) > 0){
                             newFatturaTotaleAcconto = fatturaTotale.subtract(fatturaTotaleAcconto);
                             newImportoPagamento = newImportoPagamento.subtract(newFatturaTotaleAcconto);
                         } else {
                             newFatturaTotaleAcconto = fatturaTotaleAcconto.add(newImportoPagamento);
                             newImportoPagamento = BigDecimal.ZERO;
                         }
-                        LOGGER.info("Update 'totaleAcconto' with value={} for fattura '{}'", newFatturaTotaleAcconto, fattura.getId());
-                        if(newFatturaTotaleAcconto.compareTo(BigDecimal.ZERO) == -1){
+                        log.info("Update 'totaleAcconto' with value={} for fattura '{}'", newFatturaTotaleAcconto, fattura.getId());
+                        if(newFatturaTotaleAcconto.compareTo(BigDecimal.ZERO) < 0){
                             newFatturaTotaleAcconto = BigDecimal.ZERO;
                         }
                         fattura.setTotaleAcconto(newFatturaTotaleAcconto);
@@ -520,21 +626,20 @@ public class PagamentoService {
                 //          newImportoPagamento = 0
                 // aggiorno Fattura.totaleAcconto=newTotaleAcconto
                 // calcolo statoFattura
-                if(fatture != null && !fatture.isEmpty()) {
+                if(!fatture.isEmpty()) {
                     for (Fattura fattura : fatture) {
-                        LOGGER.info("Updating totaleAcconto for fattura '{}' associated to ddt '{}'", fattura.getId(), ddt.getId());
+                        log.info("Updating totaleAcconto for fattura '{}' associated to ddt '{}'", fattura.getId(), ddt.getId());
                         BigDecimal newFatturaTotaleAcconto = BigDecimal.ZERO;
                         BigDecimal fatturaTotaleAcconto = fattura.getTotaleAcconto();
                         BigDecimal accontoMinusPagamento = fatturaTotaleAcconto.subtract(newImportoPagamento);
-                        if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) == 1){
+                        if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) > 0){
                             newFatturaTotaleAcconto = fatturaTotaleAcconto.subtract(newImportoPagamento);
                             newImportoPagamento = BigDecimal.ZERO;
                         } else {
-                            newFatturaTotaleAcconto = BigDecimal.ZERO;
                             newImportoPagamento = newImportoPagamento.subtract(fatturaTotaleAcconto);
                         }
-                        LOGGER.info("Update 'totaleAcconto' with value={} for fattura '{}'", newFatturaTotaleAcconto, fattura.getId());
-                        if(newFatturaTotaleAcconto.compareTo(BigDecimal.ZERO) == -1){
+                        log.info("Update 'totaleAcconto' with value={} for fattura '{}'", newFatturaTotaleAcconto, fattura.getId());
+                        if(newFatturaTotaleAcconto.compareTo(BigDecimal.ZERO) < 0){
                             newFatturaTotaleAcconto = BigDecimal.ZERO;
                         }
                         fattura.setTotaleAcconto(newFatturaTotaleAcconto);
@@ -546,7 +651,121 @@ public class PagamentoService {
             }
 
         }
+    }
 
+    private void computeStato(DdtAcquisto ddtAcquisto, boolean aggiornaFatture, BigDecimal importoPagamento, String context){
+        BigDecimal totaleAcconto = ddtAcquisto.getTotaleAcconto();
+        if(totaleAcconto == null){
+            totaleAcconto = new BigDecimal(0);
+        }
+        if(totaleAcconto.compareTo(BigDecimal.ZERO) == 0){
+            ddtAcquisto.setStatoDdt(statoDdtService.getDaPagare());
+        } else {
+            BigDecimal totale = ddtAcquisto.getTotale();
+            if(totale == null){
+                totale = new BigDecimal(0);
+            }
+            BigDecimal result = totale.subtract(totaleAcconto);
+            if(result.compareTo(BigDecimal.ZERO) <= 0){
+                ddtAcquisto.setStatoDdt(statoDdtService.getPagato());
+            } else {
+                ddtAcquisto.setStatoDdt(statoDdtService.getParzialmentePagato());
+            }
+        }
+
+        if(aggiornaFatture){
+
+            BigDecimal newImportoPagamento = importoPagamento;
+
+            // compute stato for associated list of FatturaAcquisto
+            List<FatturaAcquisto> fattureAcquisto = new ArrayList<>();
+            fatturaAcquistoRepository.findAll().forEach(fa -> {
+                Set<FatturaAcquistoDdtAcquisto> fatturaDdtsAcquisto = fa.getFatturaAcquistoDdtAcquisti();
+                if(fatturaDdtsAcquisto != null && ! fatturaDdtsAcquisto.isEmpty()){
+                    for(FatturaAcquistoDdtAcquisto fatturaAcquistoDdtAcquisto: fatturaDdtsAcquisto){
+                        DdtAcquisto d = fatturaAcquistoDdtAcquisto.getDdtAcquisto();
+                        if(d != null && d.getId().equals(ddtAcquisto.getId())){
+                            fattureAcquisto.add(fa);
+                        }
+                    }
+                }
+            });
+
+            if(context.equals("CREATE_PAGAMENTO")) {
+                // newImportoPagamento = importoPagamento
+                // per ogni fatturaAcquisto associata al DDT Acquisto
+                // prendo il totaleAcconto
+                // caso 1) totaleAcconto+newImportoPagamento > totaleFattura
+                //          newTotaleAcconto = totaleFattura-totaleAcconto
+                //          newImportoPagamento = newImportoPagamento-newTotaleAcconto
+                // caso 2) totaleAcconto+newImportoPagamento <= totaleFattura
+                //          newTotaleAcconto = totaleAcconto+importoPagamento
+                //          newImportoPagamento = 0
+                // aggiorno Fattura.totaleAcconto=newTotaleAcconto
+                // calcolo statoFattura
+
+                // compute totaleAcconto and stato for associated list of FatturaAcquisto
+                if(!fattureAcquisto.isEmpty()){
+                    for(FatturaAcquisto fatturaAcquisto: fattureAcquisto){
+                        log.info("Updating totaleAcconto for fattura acquisto '{}' associated to ddt acquisto '{}'", fatturaAcquisto.getId(), ddtAcquisto.getId());
+                        BigDecimal newFatturaAcquistoTotaleAcconto;
+                        BigDecimal fatturaAcquistoTotaleAcconto = fatturaAcquisto.getTotaleAcconto();
+                        BigDecimal fatturaTotale = fatturaAcquisto.getTotale();
+                        BigDecimal accontoPlusPagamento = fatturaAcquistoTotaleAcconto.add(newImportoPagamento);
+                        if(accontoPlusPagamento.compareTo(fatturaTotale) > 0){
+                            newFatturaAcquistoTotaleAcconto = fatturaTotale.subtract(fatturaAcquistoTotaleAcconto);
+                            newImportoPagamento = newImportoPagamento.subtract(newFatturaAcquistoTotaleAcconto);
+                        } else {
+                            newFatturaAcquistoTotaleAcconto = fatturaAcquistoTotaleAcconto.add(newImportoPagamento);
+                            newImportoPagamento = BigDecimal.ZERO;
+                        }
+                        log.info("Update 'totaleAcconto' with value={} for fattura acquisto '{}'", newFatturaAcquistoTotaleAcconto, fatturaAcquisto.getId());
+                        if(newFatturaAcquistoTotaleAcconto.compareTo(BigDecimal.ZERO) < 0){
+                            newFatturaAcquistoTotaleAcconto = BigDecimal.ZERO;
+                        }
+                        fatturaAcquisto.setTotaleAcconto(newFatturaAcquistoTotaleAcconto);
+                        fatturaAcquistoRepository.save(fatturaAcquisto);
+
+                        computeStato(fatturaAcquisto, false, null, null);
+                    }
+                }
+
+            } else {
+                // newImportoPagamento = importoPagamento
+                // per ogni fattura acquisto associata al DDT acquisto
+                // prendo il totaleAcconto
+                // caso 1) totaleAcconto-newImportoPagamento <= 0
+                //          newTotaleAcconto = 0
+                //          newImportoPagamento = newImportoPagamento-totaleAcconto
+                // caso 2) totaleAcconto-newImportoPagamento > 0
+                //          newTotaleAcconto = totaleAcconto-importoPagamento
+                //          newImportoPagamento = 0
+                // aggiorno Fattura.totaleAcconto=newTotaleAcconto
+                // calcolo statoFattura
+                if(!fattureAcquisto.isEmpty()) {
+                    for (FatturaAcquisto fatturaAcquisto : fattureAcquisto) {
+                        log.info("Updating totaleAcconto for fattura acquisto '{}' associated to ddt acquisto '{}'", fatturaAcquisto.getId(), ddtAcquisto.getId());
+                        BigDecimal newFatturaAcquistoTotaleAcconto = BigDecimal.ZERO;
+                        BigDecimal fatturaAcquistoTotaleAcconto = fatturaAcquisto.getTotaleAcconto();
+                        BigDecimal accontoMinusPagamento = fatturaAcquistoTotaleAcconto.subtract(newImportoPagamento);
+                        if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) > 0){
+                            newFatturaAcquistoTotaleAcconto = fatturaAcquistoTotaleAcconto.subtract(newImportoPagamento);
+                            newImportoPagamento = BigDecimal.ZERO;
+                        } else {
+                            newImportoPagamento = newImportoPagamento.subtract(fatturaAcquistoTotaleAcconto);
+                        }
+                        log.info("Update 'totaleAcconto' with value={} for fattura acquisto '{}'", newFatturaAcquistoTotaleAcconto, fatturaAcquisto.getId());
+                        if(newFatturaAcquistoTotaleAcconto.compareTo(BigDecimal.ZERO) < 0){
+                            newFatturaAcquistoTotaleAcconto = BigDecimal.ZERO;
+                        }
+                        fatturaAcquisto.setTotaleAcconto(newFatturaAcquistoTotaleAcconto);
+                        fatturaAcquistoRepository.save(fatturaAcquisto);
+
+                        computeStato(fatturaAcquisto, false, null, null);
+                    }
+                }
+            }
+        }
     }
 
     private void computeStato(NotaAccredito notaAccredito){
@@ -562,7 +781,7 @@ public class PagamentoService {
                 totale = new BigDecimal(0);
             }
             BigDecimal result = totale.subtract(totaleAcconto);
-            if(result.compareTo(BigDecimal.ZERO) == -1 || result.compareTo(BigDecimal.ZERO) == 0){
+            if(result.compareTo(BigDecimal.ZERO) < 0 || result.compareTo(BigDecimal.ZERO) == 0){
                 notaAccredito.setStatoNotaAccredito(statoNotaAccreditoService.getPagato());
             } else {
                 notaAccredito.setStatoNotaAccredito(statoNotaAccreditoService.getParzialmentePagata());
@@ -583,7 +802,7 @@ public class PagamentoService {
                 totale = new BigDecimal(0);
             }
             BigDecimal result = totale.subtract(totaleAcconto);
-            if(result.compareTo(BigDecimal.ZERO) == -1 || result.compareTo(BigDecimal.ZERO) == 0){
+            if(result.compareTo(BigDecimal.ZERO) < 0 || result.compareTo(BigDecimal.ZERO) == 0){
                 notaReso.setStatoNotaReso(statoNotaResoService.getPagato());
             } else {
                 notaReso.setStatoNotaReso(statoNotaResoService.getParzialmentePagata());
@@ -604,7 +823,7 @@ public class PagamentoService {
                 totale = new BigDecimal(0);
             }
             BigDecimal result = totale.subtract(totaleAcconto);
-            if(result.compareTo(BigDecimal.ZERO) == -1 || result.compareTo(BigDecimal.ZERO) == 0){
+            if(result.compareTo(BigDecimal.ZERO) <= 0){
                 ricevutaPrivato.setStatoRicevutaPrivato(statoRicevutaPrivatoService.getPagata());
             } else {
                 ricevutaPrivato.setStatoRicevutaPrivato(statoRicevutaPrivatoService.getParzialmentePagata());
@@ -625,7 +844,7 @@ public class PagamentoService {
                 totale = new BigDecimal(0);
             }
             BigDecimal result = totale.subtract(totaleAcconto);
-            if(result.compareTo(BigDecimal.ZERO) == -1 || result.compareTo(BigDecimal.ZERO) == 0){
+            if(result.compareTo(BigDecimal.ZERO) <= 0){
                 fattura.setStatoFattura(statoFatturaService.getPagata());
             } else {
                 fattura.setStatoFattura(statoFatturaService.getParzialmentePagata());
@@ -654,15 +873,15 @@ public class PagamentoService {
 
                 if(fatturaDdts != null && ! fatturaDdts.isEmpty()){
                     for(FatturaDdt fatturaDdt: fatturaDdts){
-                        BigDecimal newDdtTotaleAcconto = BigDecimal.ZERO;
+                        BigDecimal newDdtTotaleAcconto;
 
                         Ddt ddt = fatturaDdt.getDdt();
                         if(ddt != null){
-                            LOGGER.info("Updating 'totaleAcconto' for ddt '{}' associated to fattura '{}'", ddt.getId(), fattura.getId());
+                            log.info("Updating 'totaleAcconto' for ddt '{}' associated to fattura '{}'", ddt.getId(), fattura.getId());
                             BigDecimal ddtTotaleAcconto = ddt.getTotaleAcconto();
                             BigDecimal ddtTotale = ddt.getTotale();
                             BigDecimal accontoPlusPagamento = ddtTotaleAcconto.add(newImportoPagamento);
-                            if(accontoPlusPagamento.compareTo(ddtTotale) == 1){
+                            if(accontoPlusPagamento.compareTo(ddtTotale) > 0){
                                 newDdtTotaleAcconto = ddtTotale.subtract(ddtTotaleAcconto);
                                 newImportoPagamento = newImportoPagamento.subtract(newDdtTotaleAcconto);
                                 newDdtTotaleAcconto = ddtTotaleAcconto.add(newDdtTotaleAcconto);
@@ -670,8 +889,8 @@ public class PagamentoService {
                                 newDdtTotaleAcconto = ddtTotaleAcconto.add(newImportoPagamento);
                                 newImportoPagamento = BigDecimal.ZERO;
                             }
-                            LOGGER.info("Update 'totaleAcconto' with value={} for ddt '{}'", newDdtTotaleAcconto, ddt.getId());
-                            if(newDdtTotaleAcconto.compareTo(BigDecimal.ZERO) == -1){
+                            log.info("Update 'totaleAcconto' with value={} for ddt '{}'", newDdtTotaleAcconto, ddt.getId());
+                            if(newDdtTotaleAcconto.compareTo(BigDecimal.ZERO) < 0){
                                 newDdtTotaleAcconto = BigDecimal.ZERO;
                             }
                             ddt.setTotaleAcconto(newDdtTotaleAcconto);
@@ -701,18 +920,17 @@ public class PagamentoService {
 
                         Ddt ddt = fatturaDdt.getDdt();
                         if(ddt != null){
-                            LOGGER.info("Updating 'totaleAcconto' for ddt '{}' associated to fattura '{}'", ddt.getId(), fattura.getId());
+                            log.info("Updating 'totaleAcconto' for ddt '{}' associated to fattura '{}'", ddt.getId(), fattura.getId());
                             BigDecimal ddtTotaleAcconto = ddt.getTotaleAcconto();
                             BigDecimal accontoMinusPagamento = ddtTotaleAcconto.subtract(newImportoPagamento);
-                            if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) == 1){
+                            if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) > 0){
                                 newDdtTotaleAcconto = ddtTotaleAcconto.subtract(newImportoPagamento);
                                 newImportoPagamento = BigDecimal.ZERO;
                             } else {
-                                newDdtTotaleAcconto = BigDecimal.ZERO;
                                 newImportoPagamento = newImportoPagamento.subtract(ddtTotaleAcconto);
                             }
-                            LOGGER.info("Update 'totaleAcconto' with value={} for ddt '{}'", newDdtTotaleAcconto, ddt.getId());
-                            if(newDdtTotaleAcconto.compareTo(BigDecimal.ZERO) == -1){
+                            log.info("Update 'totaleAcconto' with value={} for ddt '{}'", newDdtTotaleAcconto, ddt.getId());
+                            if(newDdtTotaleAcconto.compareTo(BigDecimal.ZERO) < 0){
                                 newDdtTotaleAcconto = BigDecimal.ZERO;
                             }
                             ddt.setTotaleAcconto(newDdtTotaleAcconto);
@@ -723,9 +941,7 @@ public class PagamentoService {
                     }
                 }
             }
-
         }
-
     }
 
     private void computeStato(FatturaAccompagnatoria fatturaAccompagnatoria){
@@ -741,10 +957,123 @@ public class PagamentoService {
                 totale = new BigDecimal(0);
             }
             BigDecimal result = totale.subtract(totaleAcconto);
-            if(result.compareTo(BigDecimal.ZERO) == -1 || result.compareTo(BigDecimal.ZERO) == 0){
+            if(result.compareTo(BigDecimal.ZERO) <= 0){
                 fatturaAccompagnatoria.setStatoFattura(statoFatturaService.getPagata());
             } else {
                 fatturaAccompagnatoria.setStatoFattura(statoFatturaService.getParzialmentePagata());
+            }
+        }
+    }
+
+    private void computeStato(FatturaAcquisto fatturaAcquisto, boolean aggiornaDdtAcquisto, BigDecimal importoPagamento, String context){
+        BigDecimal totaleAcconto = fatturaAcquisto.getTotaleAcconto();
+        if(totaleAcconto == null){
+            totaleAcconto = new BigDecimal(0);
+        }
+        if(totaleAcconto.compareTo(BigDecimal.ZERO) == 0){
+            fatturaAcquisto.setStatoFattura(statoFatturaService.getDaPagare());
+        } else {
+            BigDecimal totale = fatturaAcquisto.getTotale();
+            if(totale == null){
+                totale = new BigDecimal(0);
+            }
+            BigDecimal result = totale.subtract(totaleAcconto);
+            if(result.compareTo(BigDecimal.ZERO) <= 0){
+                fatturaAcquisto.setStatoFattura(statoFatturaService.getPagata());
+            } else {
+                fatturaAcquisto.setStatoFattura(statoFatturaService.getParzialmentePagata());
+            }
+        }
+
+        if(aggiornaDdtAcquisto){
+            BigDecimal newImportoPagamento = importoPagamento;
+            Set<FatturaAcquistoDdtAcquisto> fatturaDdtsAcquisto = fatturaAcquisto.getFatturaAcquistoDdtAcquisti();
+
+            if(context.equals("CREATE_PAGAMENTO")){
+                // newImportoPagamento = importoPagamento
+                // per ogni ddt acquisto associato alla fattura acquisto
+                // prendo il totaleAcconto
+                // caso 1) totaleAcconto+newImportoPagamento > totaleDdt
+                //          newTotaleAcconto = totaleDdt-totaleAcconto
+                //          newImportoPagamento = newImportoPagamento-newTotaleAcconto
+                // caso 2) totaleAcconto+newImportoPagamento <= totaleDdt
+                //          newTotaleAcconto = totaleAcconto+importoPagamento
+                //          newImportoPagamento = 0
+                // aggiorno DDT.totaleAcconto=newTotaleAcconto
+                // calcolo statoDdt
+
+                // compute totaleAcconto and stato for associated DDTs
+
+                if(fatturaDdtsAcquisto != null && ! fatturaDdtsAcquisto.isEmpty()){
+                    for(FatturaAcquistoDdtAcquisto fatturaDdtAcquisto: fatturaDdtsAcquisto){
+                        BigDecimal newDdtAcquistoTotaleAcconto;
+
+                        DdtAcquisto ddtAcquisto = fatturaDdtAcquisto.getDdtAcquisto();
+                        if(ddtAcquisto != null){
+                            log.info("Updating 'totaleAcconto' for ddt acquisto '{}' associated to fattura acquisto '{}'", ddtAcquisto.getId(), fatturaAcquisto.getId());
+                            BigDecimal ddtAcquistoTotaleAcconto = ddtAcquisto.getTotaleAcconto();
+                            BigDecimal ddtAcquistoTotale = ddtAcquisto.getTotale();
+                            BigDecimal accontoPlusPagamento = ddtAcquistoTotaleAcconto.add(newImportoPagamento);
+                            if(accontoPlusPagamento.compareTo(ddtAcquistoTotale) > 0){
+                                newDdtAcquistoTotaleAcconto = ddtAcquistoTotale.subtract(ddtAcquistoTotaleAcconto);
+                                newImportoPagamento = newImportoPagamento.subtract(newDdtAcquistoTotaleAcconto);
+                                newDdtAcquistoTotaleAcconto = ddtAcquistoTotaleAcconto.add(ddtAcquistoTotaleAcconto);
+                            } else {
+                                newDdtAcquistoTotaleAcconto = ddtAcquistoTotaleAcconto.add(newImportoPagamento);
+                                newImportoPagamento = BigDecimal.ZERO;
+                            }
+                            log.info("Update 'totaleAcconto' with value={} for ddt acquisto '{}'", newDdtAcquistoTotaleAcconto, ddtAcquisto.getId());
+                            if(newDdtAcquistoTotaleAcconto.compareTo(BigDecimal.ZERO) < 0){
+                                newDdtAcquistoTotaleAcconto = BigDecimal.ZERO;
+                            }
+                            ddtAcquisto.setTotaleAcconto(newDdtAcquistoTotaleAcconto);
+                            ddtAcquistoRepository.save(ddtAcquisto);
+
+                            computeStato(ddtAcquisto, false, null, null);
+                        }
+                    }
+                }
+
+            } else {
+                // newImportoPagamento = importoPagamento
+                // per ogni ddt acquisto associato alla fattura acquisto
+                // prendo il totaleAcconto
+                // caso 1) totaleAcconto-newImportoPagamento <= 0
+                //          newTotaleAcconto = 0
+                //          newImportoPagamento = newImportoPagamento-totaleAcconto
+                // caso 2) totaleAcconto-newImportoPagamento > 0
+                //          newTotaleAcconto = totaleAcconto-importoPagamento
+                //          newImportoPagamento = 0
+                // aggiorno DDT.totaleAcconto=newTotaleAcconto
+                // calcolo statoDdt
+
+                if(fatturaDdtsAcquisto != null && ! fatturaDdtsAcquisto.isEmpty()){
+                    for(FatturaAcquistoDdtAcquisto fatturaDdtAcquisto: fatturaDdtsAcquisto){
+                        BigDecimal newDdtAcquistoTotaleAcconto;
+
+                        DdtAcquisto ddtAcquisto = fatturaDdtAcquisto.getDdtAcquisto();
+                        if(ddtAcquisto != null){
+                            log.info("Updating 'totaleAcconto' for ddt '{}' associated to fattura '{}'", ddtAcquisto.getId(), fatturaAcquisto.getId());
+                            BigDecimal ddtAcquistoTotaleAcconto = ddtAcquisto.getTotaleAcconto();
+                            BigDecimal accontoMinusPagamento = ddtAcquistoTotaleAcconto.subtract(newImportoPagamento);
+                            if(accontoMinusPagamento.compareTo(BigDecimal.ZERO) > 0){
+                                newDdtAcquistoTotaleAcconto = ddtAcquistoTotaleAcconto.subtract(newImportoPagamento);
+                                newImportoPagamento = BigDecimal.ZERO;
+                            } else {
+                                newDdtAcquistoTotaleAcconto = BigDecimal.ZERO;
+                                newImportoPagamento = newImportoPagamento.subtract(ddtAcquistoTotaleAcconto);
+                            }
+                            log.info("Update 'totaleAcconto' with value={} for ddt acquisto '{}'", newDdtAcquistoTotaleAcconto, ddtAcquisto.getId());
+                            if(newDdtAcquistoTotaleAcconto.compareTo(BigDecimal.ZERO) < 0){
+                                newDdtAcquistoTotaleAcconto = BigDecimal.ZERO;
+                            }
+                            ddtAcquisto.setTotaleAcconto(newDdtAcquistoTotaleAcconto);
+                            ddtAcquistoRepository.save(ddtAcquisto);
+
+                            computeStato(ddtAcquisto, false, null, null);
+                        }
+                    }
+                }
             }
         }
     }

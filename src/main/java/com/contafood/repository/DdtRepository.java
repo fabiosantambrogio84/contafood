@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,9 +31,9 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
     Integer getLastProgressivoByAnnoContabile(Integer annoContabile);
 
     @Query(nativeQuery = true,
-            value = "select d.progressivo from ddt d where d.progressivo > 0 group by d.progressivo having count(d.id) > 1 order by d.progressivo"
+            value = "select d.progressivo from ddt d where d.progressivo > 0 and d.anno_contabile = ?1 group by d.progressivo having count(d.id) > 1 order by d.progressivo"
     )
-    List<Integer> getProgressiviDuplicates();
+    List<Integer> getProgressiviDuplicates(Integer anno);
 
     @Query(nativeQuery = true,
             value = "select d.id,d.progressivo,d.data,cliente.ragione_sociale as cliente,d.quantita\n" +

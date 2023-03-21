@@ -226,6 +226,38 @@ public class StampaController {
                 .body(resource);
     }
 
+    @RequestMapping(method = POST, path = "/documenti-acquisto/distinta")
+    @CrossOrigin
+    public ResponseEntity<Resource> printDocumentiAcquistoDistinta(@RequestBody final List<String> idsDocumentiAcquisto) throws Exception{
+        LOGGER.info("Creating pdf of selected 'documenti acquisto'");
+
+        // retrieve the list of DocumentiAcquisto
+        List<DocumentoAcquistoDataSource> documentiAcquisto = stampaService.getDocumentoAcquistoDataSources(idsDocumentiAcquisto);
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_DOCUMENTI_ACQUISTO);
+
+        // create report datasource
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(documentiAcquisto);
+
+        // create report parameters
+        Map<String, Object> parameters = stampaService.createParameters();
+        parameters.put("documentiAcquistoCollection", dataSource);
+
+        // create report
+        byte[] reportBytes = JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+
+        ByteArrayResource resource = new ByteArrayResource(reportBytes);
+
+        LOGGER.info("Successfully create pdf for selected 'documenti-acquisto'");
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders("documenti-acquisto-distinta.pdf"))
+                .contentLength(reportBytes.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
     @RequestMapping(method = GET, path = "/ordini-autisti")
     @CrossOrigin
     public ResponseEntity<Resource> printOrdiniAutisti(

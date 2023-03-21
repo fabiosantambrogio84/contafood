@@ -3,20 +3,20 @@ package com.contafood.service;
 import com.contafood.model.*;
 import com.contafood.model.reports.*;
 import com.contafood.model.views.VDdt;
+import com.contafood.model.views.VDocumentoAcquisto;
 import com.contafood.model.views.VFattura;
 import com.contafood.model.views.VGiacenzaIngrediente;
 import com.contafood.util.AccountingUtils;
 import com.contafood.util.Constants;
 import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Provincia;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,10 +35,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Comparator.naturalOrder;
 
+@Slf4j
 @Service
 public class StampaService {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(StampaService.class);
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -67,6 +65,8 @@ public class StampaService {
 
     private final ListinoService listinoService;
 
+    private final DocumentoAcquistoService documentoAcquistoService;
+
     @Autowired
     public StampaService(final GiacenzaIngredienteService giacenzaIngredienteService, final DdtService ddtService, final PagamentoService pagamentoService,
                          final AutistaService autistaService,
@@ -77,7 +77,8 @@ public class StampaService {
                          final NotaResoService notaResoService,
                          final RicevutaPrivatoService ricevutaPrivatoService,
                          final OrdineFornitoreService ordineFornitoreService,
-                         final ListinoService listinoService){
+                         final ListinoService listinoService,
+                         final DocumentoAcquistoService documentoAcquistoService){
         this.giacenzaIngredienteService = giacenzaIngredienteService;
         this.ddtService = ddtService;
         this.pagamentoService = pagamentoService;
@@ -90,10 +91,11 @@ public class StampaService {
         this.ricevutaPrivatoService = ricevutaPrivatoService;
         this.ordineFornitoreService = ordineFornitoreService;
         this.listinoService = listinoService;
+        this.documentoAcquistoService = documentoAcquistoService;
     }
 
     public List<VGiacenzaIngrediente> getGiacenzeIngredienti(String ids){
-        LOGGER.info("Retrieving the list of 'giacenze-ingredienti' with id in '{}' for creating pdf file", ids);
+        log.info("Retrieving the list of 'giacenze-ingredienti' with id in '{}' for creating pdf file", ids);
 
         List<VGiacenzaIngrediente> giacenzeIngredienti = giacenzaIngredienteService.getAll().stream()
                 .filter(gi -> ids.contains(gi.getIdIngrediente().toString()))
@@ -101,12 +103,12 @@ public class StampaService {
                 .sorted(Comparator.comparing(VGiacenzaIngrediente::getFornitore))
                 .sorted(Comparator.comparingDouble(VGiacenzaIngrediente::getQuantita))
                 .collect(Collectors.toList());
-        LOGGER.info("Retrieved {} 'giacenze-ingredienti'", giacenzeIngredienti.size());
+        log.info("Retrieved {} 'giacenze-ingredienti'", giacenzeIngredienti.size());
         return giacenzeIngredienti;
     }
 
     public List<PagamentoDataSource> getPagamenti(String ids){
-        LOGGER.info("Retrieving the list of 'pagamenti' with id in '{}' for creating pdf file", ids);
+        log.info("Retrieving the list of 'pagamenti' with id in '{}' for creating pdf file", ids);
 
         List<Pagamento> pagamenti = pagamentoService.getPagamenti().stream()
                 .filter(p -> ids.contains(p.getId().toString()))
@@ -156,14 +158,14 @@ public class StampaService {
             });
         }
 
-        LOGGER.info("Retrieved {} 'pagamenti'", pagamentiDataSource.size());
+        log.info("Retrieved {} 'pagamenti'", pagamentiDataSource.size());
         return pagamentiDataSource;
     }
 
     public Ddt getDdt(Long idDdt){
-        LOGGER.info("Retrieving 'ddt' with id '{}' for creating pdf file", idDdt);
+        log.info("Retrieving 'ddt' with id '{}' for creating pdf file", idDdt);
         Ddt ddt = ddtService.getOne(idDdt);
-        LOGGER.info("Retrieved 'ddt' with id '{}'", idDdt);
+        log.info("Retrieved 'ddt' with id '{}'", idDdt);
         return ddt;
     }
 
@@ -236,7 +238,7 @@ public class StampaService {
     }
 
     public List<DdtDataSource> getDdtDataSources(java.sql.Date dataDa, java.sql.Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
-        LOGGER.info("Retrieving the list of 'ddts' for creating pdf file");
+        log.info("Retrieving the list of 'ddts' for creating pdf file");
 
         List<DdtDataSource> ddtDataSources = new ArrayList<>();
 
@@ -259,16 +261,33 @@ public class StampaService {
             });
         }
 
-        LOGGER.info("Retrieved {} 'ddts'", ddtDataSources.size());
+        log.info("Retrieved {} 'ddts'", ddtDataSources.size());
         return ddtDataSources;
     }
 
+    public List<DocumentoAcquistoDataSource> getDocumentoAcquistoDataSources(List<String> idsDocumentiAcquisto){
+        log.info("Retrieving the list of 'documento-acquisto' for creating pdf file");
+
+        List<DocumentoAcquistoDataSource> documentoAcquistoDataSources = new ArrayList<>();
+
+        List<VDocumentoAcquisto> documentiAcquisto = documentoAcquistoService.getAllByIds(idsDocumentiAcquisto);
+
+        if(!documentiAcquisto.isEmpty()){
+            documentiAcquisto.forEach(da -> {
+                documentoAcquistoDataSources.add(da.toDocumentoAcquistoDataSource(simpleDateFormat));
+            });
+        }
+
+        log.info("Retrieved {} 'documento-acquisto'", documentoAcquistoDataSources.size());
+        return documentoAcquistoDataSources;
+    }
+    
     public Autista getAutista(Long idAutista){
         return autistaService.getOne(idAutista);
     }
 
     public List<OrdineAutistaDataSource> getOrdiniAutista(Long idAutista, Date dataConsegnaDa, Date dataConsegnaA){
-        LOGGER.info("Retrieving the list of 'ordini-clienti' of autista '{}', dataConsegnaDa '{}' and  dataConsegnaA '{}' for creating pdf file", idAutista, dataConsegnaDa, dataConsegnaA);
+        log.info("Retrieving the list of 'ordini-clienti' of autista '{}', dataConsegnaDa '{}' and  dataConsegnaA '{}' for creating pdf file", idAutista, dataConsegnaDa, dataConsegnaA);
 
         Predicate<OrdineCliente> isOrdineClienteDataConsegnaGreaterOrEquals = ordineCliente -> {
             if(dataConsegnaDa != null){
@@ -350,14 +369,14 @@ public class StampaService {
             });
         }
 
-        LOGGER.info("Retrieved {} 'ordini-clienti'", ordiniAutistaDataSource.size());
+        log.info("Retrieved {} 'ordini-clienti'", ordiniAutistaDataSource.size());
         return ordiniAutistaDataSource;
     }
 
     public NotaAccredito getNotaAccredito(Long idNotaAccredito){
-        LOGGER.info("Retrieving 'nota-accredito' with id '{}' for creating pdf file", idNotaAccredito);
+        log.info("Retrieving 'nota-accredito' with id '{}' for creating pdf file", idNotaAccredito);
         NotaAccredito notaAccredito = notaAccreditoService.getOne(idNotaAccredito);
-        LOGGER.info("Retrieved 'nota-accredito' with id '{}'", idNotaAccredito);
+        log.info("Retrieved 'nota-accredito' with id '{}'", idNotaAccredito);
         return notaAccredito;
     }
 
@@ -438,7 +457,7 @@ public class StampaService {
     }
 
     public List<NotaAccreditoDataSource> getNotaAccreditoDataSources(java.sql.Date dataDa, java.sql.Date dataA, Integer progressivo, Float importo, String cliente, Integer idAgente, Integer idArticolo, Integer idStato){
-        LOGGER.info("Retrieving the list of 'note accredito' for creating pdf file");
+        log.info("Retrieving the list of 'note accredito' for creating pdf file");
 
         List<NotaAccreditoDataSource> notaAccreditoDataSources = new ArrayList<>();
 
@@ -471,12 +490,12 @@ public class StampaService {
             });
         }
 
-        LOGGER.info("Retrieved {} 'note accredito'", notaAccreditoDataSources.size());
+        log.info("Retrieved {} 'note accredito'", notaAccreditoDataSources.size());
         return notaAccreditoDataSources;
     }
 
     public List<FatturaDataSource> getFatturaDataSources(java.sql.Date dataDa, java.sql.Date dataA, Integer progressivo, Float importo, String idTipoPagamento, String cliente, Integer idAgente, Integer idArticolo, Integer idStato, Integer idTipo){
-        LOGGER.info("Retrieving the list of 'fatture' for creating pdf file");
+        log.info("Retrieving the list of 'fatture' for creating pdf file");
 
         List<FatturaDataSource> fatturaDataSources = new ArrayList<>();
 
@@ -498,21 +517,21 @@ public class StampaService {
             });
         }
 
-        LOGGER.info("Retrieved {} 'fatture'", fatturaDataSources.size());
+        log.info("Retrieved {} 'fatture'", fatturaDataSources.size());
         return fatturaDataSources;
     }
 
     public Fattura getFattura(Long idFattura){
-        LOGGER.info("Retrieving 'fattura' with id '{}' for creating pdf file", idFattura);
+        log.info("Retrieving 'fattura' with id '{}' for creating pdf file", idFattura);
         Fattura fattura = fatturaService.getOne(idFattura);
-        LOGGER.info("Retrieved 'fattura' with id '{}'", idFattura);
+        log.info("Retrieved 'fattura' with id '{}'", idFattura);
         return fattura;
     }
 
     public FatturaAccompagnatoria getFatturaAccompagnatoria(Long idFatturaAccompagnatoria){
-        LOGGER.info("Retrieving 'fattura accompagnatoria' with id '{}' for creating pdf file", idFatturaAccompagnatoria);
+        log.info("Retrieving 'fattura accompagnatoria' with id '{}' for creating pdf file", idFatturaAccompagnatoria);
         FatturaAccompagnatoria fatturaAccompagnatoria = fatturaAccompagnatoriaService.getOne(idFatturaAccompagnatoria);
-        LOGGER.info("Retrieved 'fattura accompagnatoria' with id '{}'", idFatturaAccompagnatoria);
+        log.info("Retrieved 'fattura accompagnatoria' with id '{}'", idFatturaAccompagnatoria);
         return fatturaAccompagnatoria;
     }
 
@@ -720,9 +739,9 @@ public class StampaService {
     }
 
     public NotaReso getNotaReso(Long idNotaReso){
-        LOGGER.info("Retrieving 'nota reso' with id '{}' for creating pdf file", idNotaReso);
+        log.info("Retrieving 'nota reso' with id '{}' for creating pdf file", idNotaReso);
         NotaReso notaReso = notaResoService.getOne(idNotaReso);
-        LOGGER.info("Retrieved 'nota reso' with id '{}'", idNotaReso);
+        log.info("Retrieved 'nota reso' with id '{}'", idNotaReso);
         return notaReso;
     }
 
@@ -799,9 +818,9 @@ public class StampaService {
     }
 
     public RicevutaPrivato getRicevutaPrivato(Long idRicevutaPrivato){
-        LOGGER.info("Retrieving 'ricevuta privato' with id '{}' for creating pdf file", idRicevutaPrivato);
+        log.info("Retrieving 'ricevuta privato' with id '{}' for creating pdf file", idRicevutaPrivato);
         RicevutaPrivato ricevutaPrivato = ricevutaPrivatoService.getOne(idRicevutaPrivato);
-        LOGGER.info("Retrieved 'ricevuta privato' with id '{}'", idRicevutaPrivato);
+        log.info("Retrieved 'ricevuta privato' with id '{}'", idRicevutaPrivato);
         return ricevutaPrivato;
     }
 
@@ -842,7 +861,7 @@ public class StampaService {
     }
 
     public List<RicevutaPrivatoDataSource> getRicevutaPrivatoDataSources(String ids){
-        LOGGER.info("Retrieving the list of 'ricevute privati' with id in '{}' for creating pdf file", ids);
+        log.info("Retrieving the list of 'ricevute privati' with id in '{}' for creating pdf file", ids);
 
         List<RicevutaPrivatoDataSource> ricevutaPrivatoDataSources = new ArrayList<>();
 
@@ -870,7 +889,7 @@ public class StampaService {
             });
         }
 
-        LOGGER.info("Retrieved {} 'ricevute privati'", ricevutaPrivatoDataSources.size());
+        log.info("Retrieved {} 'ricevute privati'", ricevutaPrivatoDataSources.size());
         return ricevutaPrivatoDataSources;
     }
 
@@ -907,7 +926,7 @@ public class StampaService {
     }
 
     private List<FatturaCommercianteDataSource> getFattureCommercianti(Set<Fattura> inputFatture){
-        LOGGER.info("Retrieving the list of 'fatture commercianti' for creating pdf file");
+        log.info("Retrieving the list of 'fatture commercianti' for creating pdf file");
 
         List<Fattura> fatture = inputFatture.stream()
                 .sorted(Comparator.comparing(Fattura::getProgressivo))
@@ -1001,7 +1020,7 @@ public class StampaService {
             });
         }
 
-        LOGGER.info("Retrieved {} 'fatture commercianti'", fatturaCommercianteDataSources.size());
+        log.info("Retrieved {} 'fatture commercianti'", fatturaCommercianteDataSources.size());
         return fatturaCommercianteDataSources;
     }
 
@@ -1051,9 +1070,9 @@ public class StampaService {
     }
 
     public OrdineFornitore getOrdineFornitore(Long idOrdineFornitore){
-        LOGGER.info("Retrieving 'ordine-fornitore' with id '{}' for creating pdf file", idOrdineFornitore);
+        log.info("Retrieving 'ordine-fornitore' with id '{}' for creating pdf file", idOrdineFornitore);
         OrdineFornitore ordineFornitore = ordineFornitoreService.getOne(idOrdineFornitore);
-        LOGGER.info("Retrieved 'ordine-fornitore' with id '{}'", idOrdineFornitore);
+        log.info("Retrieved 'ordine-fornitore' with id '{}'", idOrdineFornitore);
         return ordineFornitore;
     }
 

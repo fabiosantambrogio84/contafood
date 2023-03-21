@@ -1,6 +1,5 @@
 package com.contafood.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,17 +14,20 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"ddtAcquistoArticoli", "ddtAcquistoIngredienti", "ddtAcquistoPagamenti", "fatturaAcquistoDdtAcquisti"})
+@EqualsAndHashCode(exclude = {"fatturaAcquistoDdtAcquisti", "fatturaAcquistoPagamenti"})
 @Entity
-@Table(name = "ddt_acquisto")
-public class DdtAcquisto {
+@Table(name = "fattura_acquisto")
+public class FatturaAcquisto {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "numero")
-    private String numero;
+    @Column(name = "progressivo")
+    private Integer progressivo;
+
+    @Column(name = "anno")
+    private Integer anno;
 
     @Column(name = "data")
     private Date data;
@@ -36,13 +38,17 @@ public class DdtAcquisto {
 
     @ManyToOne
     @JoinColumn(name="id_stato")
-    private StatoDdt statoDdt;
+    private StatoFattura statoFattura;
 
-    @Column(name = "numero_colli")
-    private Integer numeroColli;
+    @ManyToOne
+    @JoinColumn(name="id_causale")
+    private Causale causale;
 
     @Column(name = "totale_imponibile")
     private BigDecimal totaleImponibile;
+
+    @Column(name = "totale_acconto")
+    private BigDecimal totaleAcconto;
 
     @Column(name = "totale_iva")
     private BigDecimal totaleIva;
@@ -50,17 +56,8 @@ public class DdtAcquisto {
     @Column(name = "totale")
     private BigDecimal totale;
 
-    @Column(name = "totale_acconto")
-    private BigDecimal totaleAcconto;
-
-    @Column(name = "fatturato")
-    private Boolean fatturato;
-
     @Column(name = "note")
     private String note;
-
-    @Transient
-    private Boolean modificaGiacenze;
 
     @Column(name = "data_inserimento")
     private Timestamp dataInserimento;
@@ -68,39 +65,30 @@ public class DdtAcquisto {
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
 
-    @OneToMany(mappedBy = "ddtAcquisto")
-    @JsonIgnoreProperties("ddtAcquisto")
-    private Set<DdtAcquistoArticolo> ddtAcquistoArticoli = new HashSet<>();
-
-    @OneToMany(mappedBy = "ddtAcquisto")
-    @JsonIgnoreProperties("ddtAcquisto")
-    private Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti = new HashSet<>();
-
-    @OneToMany(mappedBy = "ddtAcquisto")
-    @JsonIgnoreProperties("ddtAcquisto")
-    private Set<Pagamento> ddtAcquistoPagamenti = new HashSet<>();
-
-    @OneToMany(mappedBy = "ddtAcquisto")
-    @JsonIgnore
+    @OneToMany(mappedBy = "fatturaAcquisto")
+    @JsonIgnoreProperties("fatturaAcquisto")
     private Set<FatturaAcquistoDdtAcquisto> fatturaAcquistoDdtAcquisti = new HashSet<>();
+
+    @OneToMany(mappedBy = "fatturaAcquisto")
+    @JsonIgnoreProperties("fatturaAcquisto")
+    private Set<Pagamento> fatturaAcquistoPagamenti = new HashSet<>();
 
     @Override
     public String toString() {
 
         return "{" +
                 "id: " + id +
-                ", numero: " + numero +
+                ", progressivo: " + progressivo +
+                ", anno: " + anno +
                 ", data: " + data +
                 ", fornitore: " + fornitore +
-                ", stato: " + statoDdt +
-                ", numeroColli: " + numeroColli +
+                ", statoFattura: " + statoFattura +
+                ", causale: " + causale +
                 ", totaleImponibile: " + totaleImponibile +
+                ", totaleAcconto: " + totaleAcconto +
                 ", totaleIva: " + totaleIva +
                 ", totale: " + totale +
-                ", totaleAcconto: " + totaleAcconto +
-                ", fatturato: " + fatturato +
                 ", note: " + note +
-                ", modificaGiacenze: " + modificaGiacenze +
                 ", dataInserimento: " + dataInserimento +
                 ", dataAggiornamento: " + dataAggiornamento +
                 "}";

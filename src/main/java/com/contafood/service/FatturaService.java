@@ -496,6 +496,7 @@ public class FatturaService {
                     break;
             }
         }
+        checkExistsByAnnoAndProgressivoAndIdNot(fattura.getAnno(), fattura.getProgressivo(), fattura.getId());
         Fattura patchedFattura = fatturaRepository.save(fattura);
 
         LOGGER.info("Patched 'fattura' '{}'", patchedFattura);

@@ -15,8 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"ddtArticoli", "ddtPagamenti", "fatturaDdts"})
 @Entity
 @Table(name = "ddt")
-public class
-Ddt {
+public class Ddt {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

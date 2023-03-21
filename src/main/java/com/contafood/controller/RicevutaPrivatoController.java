@@ -1,5 +1,6 @@
 package com.contafood.controller;
 
+import com.contafood.exception.CannotChangeResourceIdException;
 import com.contafood.model.*;
 import com.contafood.service.RicevutaPrivatoService;
 import com.contafood.util.Utils;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -173,6 +175,16 @@ public class RicevutaPrivatoController {
     public RicevutaPrivato create(@RequestBody final RicevutaPrivato ricevutaPrivato){
         LOGGER.info("Performing POST request for creating 'ricevuta privato'");
         return ricevutaPrivatoService.create(ricevutaPrivato);
+    }
+
+    @RequestMapping(method = PUT, path = "/{ricevutaPrivatoId}")
+    @CrossOrigin
+    public RicevutaPrivato update(@PathVariable final Long ricevutaPrivatoId, @RequestBody final RicevutaPrivato ricevutaPrivato){
+        LOGGER.info("Performing PUT request for updating 'ricevuta privato' '{}'", ricevutaPrivatoId);
+        if (!Objects.equals(ricevutaPrivatoId, ricevutaPrivato.getId())) {
+            throw new CannotChangeResourceIdException();
+        }
+        return ricevutaPrivatoService.update(ricevutaPrivato);
     }
 
     @RequestMapping(method = DELETE, path = "/{ricevutaPrivatoId}")

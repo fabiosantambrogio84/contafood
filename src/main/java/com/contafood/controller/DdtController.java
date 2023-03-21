@@ -100,7 +100,7 @@ public class DdtController {
 
     @RequestMapping(method = GET, path = "/progressivi-duplicates")
     @CrossOrigin
-    public String getProgressiviDuplicates() {
+    public Map<String, String> getProgressiviDuplicates() {
         LOGGER.info("Performing GET request for retrieving list of 'ddt.progressivo' duplicates");
         return ddtService.getProgressiviDuplicates();
     }

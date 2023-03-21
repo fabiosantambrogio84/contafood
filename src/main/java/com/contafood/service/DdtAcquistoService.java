@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -28,18 +30,21 @@ public class DdtAcquistoService {
     private final DdtAcquistoIngredienteService ddtAcquistoIngredienteService;
     private final GiacenzaArticoloService giacenzaArticoloService;
     private final GiacenzaIngredienteService giacenzaIngredienteService;
+    private final StatoDdtService statoDdtService;
 
     @Autowired
     public DdtAcquistoService(final DdtAcquistoRepository ddtAcquistoRepository,
                               final DdtAcquistoArticoloService ddtAcquistoArticoloService,
                               final DdtAcquistoIngredienteService ddtAcquistoIngredienteService,
                               final GiacenzaArticoloService giacenzaArticoloService,
-                              final GiacenzaIngredienteService giacenzaIngredienteService){
+                              final GiacenzaIngredienteService giacenzaIngredienteService,
+                              final StatoDdtService statoDdtService){
         this.ddtAcquistoRepository = ddtAcquistoRepository;
         this.ddtAcquistoArticoloService = ddtAcquistoArticoloService;
         this.ddtAcquistoIngredienteService = ddtAcquistoIngredienteService;
         this.giacenzaArticoloService = giacenzaArticoloService;
         this.giacenzaIngredienteService = giacenzaIngredienteService;
+        this.statoDdtService = statoDdtService;
     }
 
     public Set<DdtAcquisto> getAll(){
@@ -67,6 +72,10 @@ public class DdtAcquistoService {
     public DdtAcquisto create(DdtAcquisto ddtAcquisto){
         LOGGER.info("Creating 'ddt acquisto'");
 
+        if(ddtAcquisto.getNumeroColli() == null){
+            ddtAcquisto.setNumeroColli(1);
+        }
+        ddtAcquisto.setStatoDdt(statoDdtService.getDaPagare());
         ddtAcquisto.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
         DdtAcquisto createdDdtAcquisto = ddtAcquistoRepository.save(ddtAcquisto);
@@ -142,6 +151,27 @@ public class DdtAcquistoService {
         ddtAcquistoRepository.save(updatedDdtAcquisto);
         LOGGER.info("Updated 'ddt acquisto' '{}'", updatedDdtAcquisto);
         return updatedDdtAcquisto;
+    }
+
+    @Transactional
+    public DdtAcquisto patch(Map<String,Object> patchDdtAcquisto){
+        LOGGER.info("Patching 'ddt acquisto'");
+
+        Long id = Long.valueOf((Integer) patchDdtAcquisto.get("id"));
+        DdtAcquisto ddtAcquisto = ddtAcquistoRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        patchDdtAcquisto.forEach((key, value) -> {
+            if(key.equals("id")){
+                ddtAcquisto.setId(Long.valueOf((Integer)value));
+            } else if(key.equals("fatturato")){
+                if(value != null){
+                    ddtAcquisto.setFatturato((Boolean)value);
+                }
+            }
+        });
+        DdtAcquisto patchedDdtAcquisto = ddtAcquistoRepository.save(ddtAcquisto);
+
+        LOGGER.info("Patched 'ddt acquisto' '{}'", patchedDdtAcquisto);
+        return patchedDdtAcquisto;
     }
 
     @Transactional
@@ -236,6 +266,6 @@ public class DdtAcquistoService {
         ddtAcquisto.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
         ddtAcquisto.setTotaleIva(Utils.roundPrice(totaleIva));
         ddtAcquisto.setTotale(Utils.roundPrice(totale));
+        ddtAcquisto.setTotaleAcconto(new BigDecimal(0));
     }
-
 }

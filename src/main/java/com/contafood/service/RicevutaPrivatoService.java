@@ -2,30 +2,26 @@ package com.contafood.service;
 
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
-import com.contafood.model.AliquotaIva;
-import com.contafood.model.Articolo;
-import com.contafood.model.RicevutaPrivato;
-import com.contafood.model.RicevutaPrivatoArticolo;
+import com.contafood.model.*;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.RicevutaPrivatoRepository;
 import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+@Slf4j
 @Service
 public class RicevutaPrivatoService {
-
-    private static Logger LOGGER = LoggerFactory.getLogger(RicevutaPrivatoService.class);
 
     private final RicevutaPrivatoRepository ricevutaPrivatoRepository;
     private final RicevutaPrivatoArticoloService ricevutaPrivatoArticoloService;
@@ -50,16 +46,16 @@ public class RicevutaPrivatoService {
     }
 
     public Set<RicevutaPrivato> getAll(){
-        LOGGER.info("Retrieving the list of 'ricevute privato'");
+        log.info("Retrieving the list of 'ricevute privato'");
         Set<RicevutaPrivato> ricevutePrivato = ricevutaPrivatoRepository.findAllByOrderByAnnoDescProgressivoDesc();
-        LOGGER.info("Retrieved {} 'ricevute privato'", ricevutePrivato.size());
+        log.info("Retrieved {} 'ricevute privato'", ricevutePrivato.size());
         return ricevutePrivato;
     }
 
     public RicevutaPrivato getOne(Long ricevutaPrivatoId){
-        LOGGER.info("Retrieving 'fattura accompagnatoria' '{}'", ricevutaPrivatoId);
+        log.info("Retrieving 'fattura accompagnatoria' '{}'", ricevutaPrivatoId);
         RicevutaPrivato ricevutaPrivato = ricevutaPrivatoRepository.findById(ricevutaPrivatoId).orElseThrow(ResourceNotFoundException::new);
-        LOGGER.info("Retrieved 'fattura accompagnatoria' '{}'", ricevutaPrivato);
+        log.info("Retrieved 'fattura accompagnatoria' '{}'", ricevutaPrivato);
         return ricevutaPrivato;
     }
 
@@ -85,16 +81,18 @@ public class RicevutaPrivatoService {
         return progressivo;
     }
 
+    /*
     public List<RicevutaPrivato> getByDataGreaterThanEqual(Date data){
-        LOGGER.info("Retrieving 'ricevute privato' with 'data' greater or equals to '{}'", data);
+        log.info("Retrieving 'ricevute privato' with 'data' greater or equals to '{}'", data);
         List<RicevutaPrivato> ricevutePrivato = ricevutaPrivatoRepository.findByDataGreaterThanEqualOrderByProgressivoDesc(data);
-        LOGGER.info("Retrieved {} 'ricevute privato' with 'data' greater or equals to '{}'", ricevutePrivato.size(), data);
+        log.info("Retrieved {} 'ricevute privato' with 'data' greater or equals to '{}'", ricevutePrivato.size(), data);
         return ricevutePrivato;
     }
+    */
 
     @Transactional
     public RicevutaPrivato create(RicevutaPrivato ricevutaPrivato){
-        LOGGER.info("Creating 'ricevuta privato'");
+        log.info("Creating 'ricevuta privato'");
 
         Integer progressivo = ricevutaPrivato.getProgressivo();
         if(progressivo == null){
@@ -102,13 +100,23 @@ public class RicevutaPrivatoService {
             ricevutaPrivato.setProgressivo(progressivo);
         }
 
-        checkExistsByAnnoAndProgressivoAndIdNot(ricevutaPrivato.getAnno(),ricevutaPrivato.getProgressivo(), Long.valueOf(-1));
+        checkExistsByAnnoAndProgressivoAndIdNot(ricevutaPrivato.getAnno(),ricevutaPrivato.getProgressivo(), -1L);
+
+        if(ricevutaPrivato.getNumeroColli() == null){
+            ricevutaPrivato.setNumeroColli(1);
+        }
+        if(ricevutaPrivato.getDataTrasporto() == null){
+            ricevutaPrivato.setDataTrasporto(new Date(System.currentTimeMillis()));
+        }
+        if(ricevutaPrivato.getOraTrasporto() == null){
+            ricevutaPrivato.setOraTrasporto(Time.valueOf("06:00:00"));
+        }
 
         ricevutaPrivato.setStatoRicevutaPrivato(statoRicevutaPrivatoService.getDaPagare());
         ricevutaPrivato.setSpeditoAde(false);
         ricevutaPrivato.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
-        LOGGER.info(ricevutaPrivato.getScannerLog());
+        log.info(ricevutaPrivato.getScannerLog());
 
         RicevutaPrivato createdRicevutaPrivato = ricevutaPrivatoRepository.save(ricevutaPrivato);
 
@@ -121,7 +129,7 @@ public class RicevutaPrivatoService {
                 // compute 'giacenza articolo'
                 giacenzaArticoloService.computeGiacenza(faa.getId().getArticoloId(), faa.getLotto(), faa.getScadenza(), faa.getQuantita(), Resource.RICEVUTA_PRIVATO);
             } else {
-                LOGGER.info("RicevutaPrivatoArticolo not saved because quantity null or zero ({}) or prezzo zero ({})", faa.getQuantita(), faa.getPrezzo());
+                log.info("RicevutaPrivatoArticolo not saved because quantity null or zero ({}) or prezzo zero ({})", faa.getQuantita(), faa.getPrezzo());
             }
         });
 
@@ -134,14 +142,86 @@ public class RicevutaPrivatoService {
         computeTotali(createdRicevutaPrivato, createdRicevutaPrivato.getRicevutaPrivatoArticoli());
 
         ricevutaPrivatoRepository.save(createdRicevutaPrivato);
-        LOGGER.info("Created 'ricevuta privato' '{}'", createdRicevutaPrivato);
+        log.info("Created 'ricevuta privato' '{}'", createdRicevutaPrivato);
 
         return createdRicevutaPrivato;
     }
 
     @Transactional
+    public RicevutaPrivato update(RicevutaPrivato ricevutaPrivato){
+        log.info("Updating 'ricevuta privato'");
+
+        Integer progressivo = ricevutaPrivato.getProgressivo();
+        if(progressivo == null){
+            progressivo = getProgressivo(ricevutaPrivato.getAnno());
+            ricevutaPrivato.setProgressivo(progressivo);
+        }
+
+        checkExistsByAnnoAndProgressivoAndIdNot(ricevutaPrivato.getAnno(),ricevutaPrivato.getProgressivo(), ricevutaPrivato.getId());
+
+        if(ricevutaPrivato.getNumeroColli() == null){
+            ricevutaPrivato.setNumeroColli(1);
+        }
+        if(ricevutaPrivato.getDataTrasporto() == null){
+            ricevutaPrivato.setDataTrasporto(new Date(System.currentTimeMillis()));
+        }
+        if(ricevutaPrivato.getOraTrasporto() == null){
+            ricevutaPrivato.setOraTrasporto(Time.valueOf("06:00:00"));
+        }
+
+        Boolean modificaGiacenze = ricevutaPrivato.getModificaGiacenze();
+
+        Set<RicevutaPrivatoArticolo> ricevutaPrivatoArticoli = ricevutaPrivato.getRicevutaPrivatoArticoli();
+        ricevutaPrivato.setRicevutaPrivatoArticoli(new HashSet<>());
+        ricevutaPrivatoArticoloService.deleteByRicevutaPrivatoId(ricevutaPrivato.getId());
+
+        Set<RicevutaPrivatoTotale> ricevutaPrivatoTotali = ricevutaPrivato.getRicevutaPrivatoTotali();
+        ricevutaPrivato.setRicevutaPrivatoTotali(new HashSet<>());
+        ricevutaPrivatoTotaleService.deleteByRicevutaPrivatoId(ricevutaPrivato.getId());
+
+        RicevutaPrivato ricevutaPrivatoCurrent = ricevutaPrivatoRepository.findById(ricevutaPrivato.getId()).orElseThrow(ResourceNotFoundException::new);
+        ricevutaPrivato.setStatoRicevutaPrivato(ricevutaPrivatoCurrent.getStatoRicevutaPrivato());
+        ricevutaPrivato.setSpeditoAde(ricevutaPrivatoCurrent.getSpeditoAde());
+        ricevutaPrivato.setDataInserimento(ricevutaPrivatoCurrent.getDataInserimento());
+        ricevutaPrivato.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
+
+        log.info(ricevutaPrivato.getScannerLog());
+
+        RicevutaPrivato updatedRicevutaPrivato = ricevutaPrivatoRepository.save(ricevutaPrivato);
+
+        ricevutaPrivatoArticoli.stream().forEach(faa -> {
+            if(faa.getQuantita() != null && faa.getQuantita() != 0 && faa.getPrezzo() != null){
+                faa.getId().setRicevutaPrivatoId(updatedRicevutaPrivato.getId());
+                faa.getId().setUuid(UUID.randomUUID().toString());
+                ricevutaPrivatoArticoloService.create(faa);
+
+                if(modificaGiacenze != null && modificaGiacenze.equals(Boolean.TRUE)) {
+                    // compute 'giacenza articolo'
+                    giacenzaArticoloService.computeGiacenza(faa.getId().getArticoloId(), faa.getLotto(), faa.getScadenza(), faa.getQuantita(), Resource.RICEVUTA_PRIVATO);
+                }
+
+            } else {
+                log.info("RicevutaPrivatoArticolo not saved because quantity null or zero ({}) or prezzo zero ({})", faa.getQuantita(), faa.getPrezzo());
+            }
+        });
+
+        ricevutaPrivatoTotali.stream().forEach(fat -> {
+            fat.getId().setRicevutaPrivatoId(updatedRicevutaPrivato.getId());
+            fat.getId().setUuid(UUID.randomUUID().toString());
+            ricevutaPrivatoTotaleService.create(fat);
+        });
+
+        computeTotali(updatedRicevutaPrivato, ricevutaPrivatoArticoli);
+
+        ricevutaPrivatoRepository.save(updatedRicevutaPrivato);
+        log.info("Updated 'ricevuta privato' '{}'", updatedRicevutaPrivato);
+
+        return updatedRicevutaPrivato;
+    }
+
+    @Transactional
     public void delete(Long ricevutaPrivatoId){
-        LOGGER.info("Deleting 'ricevuta privato' '{}'", ricevutaPrivatoId);
+        log.info("Deleting 'ricevuta privato' '{}'", ricevutaPrivatoId);
 
         Set<RicevutaPrivatoArticolo> ricevutaPrivatoArticoli = ricevutaPrivatoArticoloService.findByRicevutaPrivatoId(ricevutaPrivatoId);
 
@@ -155,7 +235,7 @@ public class RicevutaPrivatoService {
             giacenzaArticoloService.computeGiacenza(ricevutaPrivatoArticolo.getId().getArticoloId(), ricevutaPrivatoArticolo.getLotto(), ricevutaPrivatoArticolo.getScadenza(), ricevutaPrivatoArticolo.getQuantita(), Resource.RICEVUTA_PRIVATO);
         }
 
-        LOGGER.info("Deleted 'ricevuta privato' '{}'", ricevutaPrivatoId);
+        log.info("Deleted 'ricevuta privato' '{}'", ricevutaPrivatoId);
     }
 
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){

@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -106,11 +107,13 @@ public class DdtService {
         return result;
     }
 
-    public String getProgressiviDuplicates(){
-        String result = "";
-        List<Integer> progressivi = ddtRepository.getProgressiviDuplicates();
+    public Map<String, String> getProgressiviDuplicates(){
+        Map<String, String> result = new HashMap<>();
+        Integer year = LocalDate.now().getYear();
+        result.put("anno", year.toString());
+        List<Integer> progressivi = ddtRepository.getProgressiviDuplicates(year);
         if(progressivi != null && !progressivi.isEmpty()){
-            result = progressivi.stream().map(Object::toString).collect(Collectors.joining(","));
+            result.put("progressivi", progressivi.stream().map(Object::toString).collect(Collectors.joining(",")));
         }
         return result;
     }

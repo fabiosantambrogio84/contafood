@@ -100,6 +100,9 @@ public class RicevutaPrivato {
     @Transient
     private String scannerLog;
 
+    @Transient
+    private Boolean modificaGiacenze;
+
     @OneToMany(mappedBy = "ricevutaPrivato")
     @JsonIgnoreProperties("ricevutaPrivato")
     private Set<RicevutaPrivatoArticolo> ricevutaPrivatoArticoli = new HashSet<>();
@@ -318,6 +321,14 @@ public class RicevutaPrivato {
 
     public void setScannerLog(String scannerLog) {
         this.scannerLog = scannerLog;
+    }
+
+    public Boolean getModificaGiacenze() {
+        return modificaGiacenze;
+    }
+
+    public void setModificaGiacenze(Boolean modificaGiacenze) {
+        this.modificaGiacenze = modificaGiacenze;
     }
 
     public Set<RicevutaPrivatoArticolo> getRicevutaPrivatoArticoli() {

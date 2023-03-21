@@ -1,12 +1,16 @@
 package com.contafood.model;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+@Getter
+@Setter
 @EqualsAndHashCode
 @Entity
 @Table(name = "pagamento")
@@ -31,6 +35,10 @@ public class Pagamento {
     private Ddt ddt;
 
     @ManyToOne
+    @JoinColumn(name="id_ddt_acquisto")
+    private DdtAcquisto ddtAcquisto;
+
+    @ManyToOne
     @JoinColumn(name="id_nota_accredito")
     private NotaAccredito notaAccredito;
 
@@ -49,6 +57,10 @@ public class Pagamento {
     @ManyToOne
     @JoinColumn(name="id_fattura_accom")
     private FatturaAccompagnatoria fatturaAccompagnatoria;
+
+    @ManyToOne
+    @JoinColumn(name="id_fattura_acquisto")
+    private FatturaAcquisto fatturaAcquisto;
 
     @Column(name = "descrizione")
     private String descrizione;
@@ -69,150 +81,17 @@ public class Pagamento {
     @Column(name = "data_aggiornamento")
     private Timestamp dataAggiornamento;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getData() {
-        return data;
-    }
-
-    public void setData(Date data) {
-        this.data = data;
-    }
-
-    public String getTipologia() {
-        return tipologia;
-    }
-
-    public void setTipologia(String tipologia) {
-        this.tipologia = tipologia;
-    }
-
-    public TipoPagamento getTipoPagamento() {
-        return tipoPagamento;
-    }
-
-    public void setTipoPagamento(TipoPagamento tipoPagamento) {
-        this.tipoPagamento = tipoPagamento;
-    }
-
-    public Ddt getDdt() {
-        return ddt;
-    }
-
-    public void setDdt(Ddt ddt) {
-        this.ddt = ddt;
-    }
-
-    public NotaAccredito getNotaAccredito() {
-        return notaAccredito;
-    }
-
-    public void setNotaAccredito(NotaAccredito notaAccredito) {
-        this.notaAccredito = notaAccredito;
-    }
-
-    public NotaReso getNotaReso() {
-        return notaReso;
-    }
-
-    public void setNotaReso(NotaReso notaReso) {
-        this.notaReso = notaReso;
-    }
-
-    public RicevutaPrivato getRicevutaPrivato() {
-        return ricevutaPrivato;
-    }
-
-    public void setRicevutaPrivato(RicevutaPrivato ricevutaPrivato) {
-        this.ricevutaPrivato = ricevutaPrivato;
-    }
-
-    public Fattura getFattura() {
-        return fattura;
-    }
-
-    public void setFattura(Fattura fattura) {
-        this.fattura = fattura;
-    }
-
-    public FatturaAccompagnatoria getFatturaAccompagnatoria() {
-        return fatturaAccompagnatoria;
-    }
-
-    public void setFatturaAccompagnatoria(FatturaAccompagnatoria fatturaAccompagnatoria) {
-        this.fatturaAccompagnatoria = fatturaAccompagnatoria;
-    }
-
-    public String getDescrizione() {
-        return descrizione;
-    }
-
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
-
-    public BigDecimal getImporto() {
-        return importo;
-    }
-
-    public void setImporto(BigDecimal importo) {
-        this.importo = importo;
-    }
-
-    public PagamentoAggregato getPagamentoAggregato() {
-        return pagamentoAggregato;
-    }
-
-    public void setPagamentoAggregato(PagamentoAggregato pagamentoAggregato) {
-        this.pagamentoAggregato = pagamentoAggregato;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Timestamp getDataInserimento() {
-        return dataInserimento;
-    }
-
-    public void setDataInserimento(Timestamp dataInserimento) {
-        this.dataInserimento = dataInserimento;
-    }
-
-    public Timestamp getDataAggiornamento() {
-        return dataAggiornamento;
-    }
-
-    public void setDataAggiornamento(Timestamp dataAggiornamento) {
-        this.dataAggiornamento = dataAggiornamento;
-    }
-
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
 
-        result.append("{");
-        result.append("id: " + id);
-        result.append(", data: " + data);
-        result.append(", tipologia: " + tipologia);
-        result.append(", descrizione: " + descrizione);
-        result.append(", importo: " + importo);
-        result.append(", note: " + note);
-        result.append(", dataInserimento: " + dataInserimento);
-        result.append("}");
-
-        return result.toString();
-
+        return "{" +
+                "id: " + id +
+                ", data: " + data +
+                ", tipologia: " + tipologia +
+                ", descrizione: " + descrizione +
+                ", importo: " + importo +
+                ", note: " + note +
+                ", dataInserimento: " + dataInserimento +
+                "}";
     }
-
 }
