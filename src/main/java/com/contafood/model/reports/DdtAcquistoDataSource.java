@@ -5,23 +5,19 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class FatturaDataSource {
+public class DdtAcquistoDataSource {
 
     private String numero;
 
     private String data;
 
-    private String clientePartitaIva;
+    private String fornitorePartitaIva;
 
-    private String clienteCodiceFiscale;
+    private String fornitoreCodiceFiscale;
 
-    private String clienteDescrizione;
-
-    private String causale;
+    private String fornitoreDescrizione;
 
     private String pagamento;
-
-    private String agente;
 
     private BigDecimal acconto;
 

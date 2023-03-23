@@ -32,6 +32,7 @@ public interface Constants {
     String JASPER_REPORT_DDTS = "/reports/ddts.jasper";
     String JASPER_REPORT_DDT = "/reports/ddt.jasper";
     String JASPER_REPORT_DOCUMENTI_ACQUISTO = "/reports/documenti_acquisto.jasper";
+    String JASPER_REPORT_DDT_ACQUISTO = "/reports/ddt_acquisto.jasper";
     String JASPER_REPORT_ORDINI_AUTISTI = "/reports/ordini_autisti.jasper";
     String JASPER_REPORT_PAGAMENTI = "/reports/pagamenti.jasper";
     String JASPER_REPORT_NOTE_ACCREDITO = "/reports/note_accredito.jasper";
@@ -39,6 +40,7 @@ public interface Constants {
     String JASPER_REPORT_FATTURE = "/reports/fatture.jasper";
     String JASPER_REPORT_FATTURA = "/reports/fattura.jasper";
     String JASPER_REPORT_FATTURA_ACCOMPAGNATORIA = "/reports/fattura_accompagnatoria.jasper";
+    String JASPER_REPORT_FATTURA_ACQUISTO = "/reports/fattura_acquisto.jasper";
     String JASPER_REPORT_NOTA_RESO = "/reports/nota_reso.jasper";
     String JASPER_REPORT_RICEVUTE_PRIVATI = "/reports/ricevute_privati.jasper";
     String JASPER_REPORT_RICEVUTA_PRIVATO = "/reports/ricevuta_privato.jasper";

@@ -1,19 +1,21 @@
 package com.contafood.model.reports;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
-public class FatturaRigaDataSource {
-
-    private Integer numeroRiga;
+@Getter
+@Setter
+public class DdtAcquistoArticoloDataSource {
 
     private String codiceArticolo;
 
     private String descrizioneArticolo;
 
     private String lotto;
+
+    private String dataScadenza;
 
     private String udm;
 
@@ -26,4 +28,5 @@ public class FatturaRigaDataSource {
     private BigDecimal imponibile;
 
     private Integer iva;
+
 }

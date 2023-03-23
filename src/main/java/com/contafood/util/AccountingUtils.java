@@ -125,4 +125,78 @@ public class AccountingUtils {
         }
         return ivaImponibileMap;
     }
+
+    public static Map<AliquotaIva, BigDecimal> createFatturaAcquistoTotaliImponibiliByIva(FatturaAcquisto fatturaAcquisto) {
+
+        Map<AliquotaIva, BigDecimal> ivaImponibileMap = new HashMap<>();
+        Map<AliquotaIva, Set<DdtAcquistoArticolo>> ivaDdtAcquistoArticoliMap = new HashMap<>();
+        Map<AliquotaIva, Set<DdtAcquistoIngrediente>> ivaDdtAcquistoIngredientiMap = new HashMap<>();
+
+        Set<FatturaAcquistoDdtAcquisto> fatturaAcquistoDdtAcquisti = fatturaAcquisto.getFatturaAcquistoDdtAcquisti();
+        if(fatturaAcquistoDdtAcquisti != null && !fatturaAcquistoDdtAcquisti.isEmpty()){
+
+            Set<DdtAcquistoArticolo> ddtAcquistoArticoli = new HashSet<>();
+            Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti = new HashSet<>();
+            for(FatturaAcquistoDdtAcquisto fatturaAcquistoDdtAcquisto: fatturaAcquistoDdtAcquisti){
+                DdtAcquisto ddtAcquisto = fatturaAcquistoDdtAcquisto.getDdtAcquisto();
+                if(ddtAcquisto != null){
+                    ddtAcquistoArticoli.addAll(ddtAcquisto.getDdtAcquistoArticoli());
+                    ddtAcquistoIngredienti.addAll(ddtAcquisto.getDdtAcquistoIngredienti());
+                }
+            }
+
+            if(!ddtAcquistoArticoli.isEmpty()){
+                ddtAcquistoArticoli.forEach(ddtAcquistoArticolo -> {
+                    Articolo articolo = ddtAcquistoArticolo.getArticolo();
+                    AliquotaIva iva = articolo.getAliquotaIva();
+
+                    Set<DdtAcquistoArticolo> ddtAcquistoArticoliByIva = ivaDdtAcquistoArticoliMap.getOrDefault(iva, new HashSet<>());
+                    ddtAcquistoArticoliByIva.add(ddtAcquistoArticolo);
+
+                    ivaDdtAcquistoArticoliMap.put(iva, ddtAcquistoArticoliByIva);
+                });
+
+                // compute totaleImponibile for all AliquotaIva
+                for (Map.Entry<AliquotaIva, Set<DdtAcquistoArticolo>> entry : ivaDdtAcquistoArticoliMap.entrySet()) {
+                    AliquotaIva aliquotaIva = entry.getKey();
+                    BigDecimal totaleImponibile = new BigDecimal(0);
+
+                    Set<DdtAcquistoArticolo> ddtAcquistoArticoliByIva = entry.getValue();
+                    for(DdtAcquistoArticolo ddtAcquistoArticoloByIva : ddtAcquistoArticoliByIva){
+                        BigDecimal imponibile = ddtAcquistoArticoloByIva.getImponibile();
+                        totaleImponibile = totaleImponibile.add(imponibile);
+                    }
+                    ivaImponibileMap.put(aliquotaIva, totaleImponibile);
+                }
+            }
+
+            if(!ddtAcquistoIngredienti.isEmpty()){
+                ddtAcquistoIngredienti.forEach(ddtAcquistoIngrediente -> {
+                    Ingrediente ingrediente = ddtAcquistoIngrediente.getIngrediente();
+                    AliquotaIva iva = ingrediente.getAliquotaIva();
+
+                    Set<DdtAcquistoIngrediente> ddtAcquistoIngredientiByIva = ivaDdtAcquistoIngredientiMap.getOrDefault(iva, new HashSet<>());
+                    ddtAcquistoIngredientiByIva.add(ddtAcquistoIngrediente);
+
+                    ivaDdtAcquistoIngredientiMap.put(iva, ddtAcquistoIngredientiByIva);
+                });
+
+                // compute totaleImponibile for all AliquotaIva
+                for (Map.Entry<AliquotaIva, Set<DdtAcquistoIngrediente>> entry : ivaDdtAcquistoIngredientiMap.entrySet()) {
+                    AliquotaIva aliquotaIva = entry.getKey();
+                    BigDecimal totaleImponibile = new BigDecimal(0);
+
+                    Set<DdtAcquistoIngrediente> ddtAcquistoIngredientiByIva = entry.getValue();
+                    for(DdtAcquistoIngrediente ddtAcquistoIngredienteByIva : ddtAcquistoIngredientiByIva){
+                        BigDecimal imponibile = ddtAcquistoIngredienteByIva.getImponibile();
+                        totaleImponibile = totaleImponibile.add(imponibile);
+                    }
+                    ivaImponibileMap.put(aliquotaIva, totaleImponibile);
+                }
+            }
+
+        }
+
+        return ivaImponibileMap;
+    }
 }

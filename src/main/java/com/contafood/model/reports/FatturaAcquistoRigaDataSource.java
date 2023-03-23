@@ -5,7 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class FatturaRigaDataSource {
+public class FatturaAcquistoRigaDataSource {
 
     private Integer numeroRiga;
 

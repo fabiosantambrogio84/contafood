@@ -89,8 +89,8 @@ public class VDocumentoAcquistoCustomRepositoryImpl implements VDocumentoAcquist
                     vDocumentoAcquisto.setTotaleAcconto((BigDecimal)queryResult[13]);
                 }
                 if(queryResult[14] != null){
-                    BigDecimal fatturatoResult = (BigDecimal)queryResult[14];
-                    vDocumentoAcquisto.setFatturato(fatturatoResult.compareTo(BigDecimal.ONE)==0 ? Boolean.TRUE : Boolean.FALSE);
+                    BigInteger fatturatoResult = (BigInteger)queryResult[14];
+                    vDocumentoAcquisto.setFatturato(fatturatoResult.compareTo(BigInteger.ONE)==0 ? Boolean.TRUE : Boolean.FALSE);
                 }
                 result.add(vDocumentoAcquisto);
             }

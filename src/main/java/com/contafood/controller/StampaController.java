@@ -258,6 +258,25 @@ public class StampaController {
                 .body(resource);
     }
 
+    @RequestMapping(method = GET, path = "/ddts-acquisto/{idDdtAcquisto}")
+    @CrossOrigin
+    public ResponseEntity<Resource> printDdtAcquisto(@PathVariable final Long idDdtAcquisto) throws Exception{
+        LOGGER.info("Creating pdf for 'ddt acquisto' with id '{}'", idDdtAcquisto);
+
+        // create report
+        byte[] reportBytes = stampaService.generateDdtAcquisto(idDdtAcquisto);
+
+        ByteArrayResource resource = new ByteArrayResource(reportBytes);
+
+        LOGGER.info("Successfully create pdf for 'ddt acquisto' with id '{}'", idDdtAcquisto);
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders("ddt-acquisto"+idDdtAcquisto+".pdf"))
+                .contentLength(reportBytes.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
     @RequestMapping(method = GET, path = "/ordini-autisti")
     @CrossOrigin
     public ResponseEntity<Resource> printOrdiniAutisti(
@@ -467,6 +486,24 @@ public class StampaController {
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("fattura-accompagnatoria-"+idFatturaAccompagnatoria+".pdf"))
+                .contentLength(reportBytes.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
+    @RequestMapping(method = GET, path = "/fatture-acquisto/{idFatturaAcquisto}")
+    @CrossOrigin
+    public ResponseEntity<Resource> printFatturaAcquisto(@PathVariable final Long idFatturaAcquisto) throws Exception{
+        LOGGER.info("Creating pdf for 'fattura acquisto' with id '{}'", idFatturaAcquisto);
+
+        byte[] reportBytes = stampaService.generateFatturaAcquisto(idFatturaAcquisto);
+
+        ByteArrayResource resource = new ByteArrayResource(reportBytes);
+
+        LOGGER.info("Successfully create pdf for 'fattura acquisto' with id '{}'", idFatturaAcquisto);
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders("fattura-acquisto"+idFatturaAcquisto+".pdf"))
                 .contentLength(reportBytes.length)
                 .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
                 .body(resource);

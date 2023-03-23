@@ -5,17 +5,17 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class FatturaDataSource {
+public class FatturaAcquistoDataSource {
 
     private String numero;
 
     private String data;
 
-    private String clientePartitaIva;
+    private String fornitorePartitaIva;
 
-    private String clienteCodiceFiscale;
+    private String fornitoreCodiceFiscale;
 
-    private String clienteDescrizione;
+    private String fornitoreDescrizione;
 
     private String causale;
 

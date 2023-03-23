@@ -67,6 +67,10 @@ public class StampaService {
 
     private final DocumentoAcquistoService documentoAcquistoService;
 
+    private final DdtAcquistoService ddtAcquistoService;
+
+    private final FatturaAcquistoService fatturaAcquistoService;
+
     @Autowired
     public StampaService(final GiacenzaIngredienteService giacenzaIngredienteService, final DdtService ddtService, final PagamentoService pagamentoService,
                          final AutistaService autistaService,
@@ -78,7 +82,9 @@ public class StampaService {
                          final RicevutaPrivatoService ricevutaPrivatoService,
                          final OrdineFornitoreService ordineFornitoreService,
                          final ListinoService listinoService,
-                         final DocumentoAcquistoService documentoAcquistoService){
+                         final DocumentoAcquistoService documentoAcquistoService,
+                         final DdtAcquistoService ddtAcquistoService,
+                         final FatturaAcquistoService fatturaAcquistoService){
         this.giacenzaIngredienteService = giacenzaIngredienteService;
         this.ddtService = ddtService;
         this.pagamentoService = pagamentoService;
@@ -92,6 +98,8 @@ public class StampaService {
         this.ordineFornitoreService = ordineFornitoreService;
         this.listinoService = listinoService;
         this.documentoAcquistoService = documentoAcquistoService;
+        this.ddtAcquistoService = ddtAcquistoService;
+        this.fatturaAcquistoService = fatturaAcquistoService;
     }
 
     public List<VGiacenzaIngrediente> getGiacenzeIngredienti(String ids){
@@ -281,7 +289,62 @@ public class StampaService {
         log.info("Retrieved {} 'documento-acquisto'", documentoAcquistoDataSources.size());
         return documentoAcquistoDataSources;
     }
-    
+
+    public DdtAcquisto getDdtAcquisto(Long idDdtAcquisto){
+        log.info("Retrieving 'ddt acquisto' with id '{}' for creating pdf file", idDdtAcquisto);
+        DdtAcquisto ddtAcquisto = ddtAcquistoService.getOne(idDdtAcquisto);
+        log.info("Retrieved 'ddt acquisto' with id '{}'", idDdtAcquisto);
+        return ddtAcquisto;
+    }
+
+    public DdtAcquistoDataSource getDdtAcquistoDataSource(DdtAcquisto ddtAcquisto){
+        Fornitore fornitore = ddtAcquisto.getFornitore();
+
+        DdtAcquistoDataSource ddtAcquistoDataSource = new DdtAcquistoDataSource();
+        ddtAcquistoDataSource.setNumero(ddtAcquisto.getNumero());
+        ddtAcquistoDataSource.setData(simpleDateFormat.format(ddtAcquisto.getData()));
+        ddtAcquistoDataSource.setFornitorePartitaIva("");
+        ddtAcquistoDataSource.setFornitoreDescrizione("");
+        ddtAcquistoDataSource.setFornitoreCodiceFiscale("");
+        ddtAcquistoDataSource.setPagamento("");
+        if(fornitore != null){
+            if(!StringUtils.isEmpty(fornitore.getPartitaIva())){
+                ddtAcquistoDataSource.setFornitorePartitaIva(fornitore.getPartitaIva());
+            }
+            if(!StringUtils.isEmpty(fornitore.getCodiceFiscale())){
+                ddtAcquistoDataSource.setFornitoreCodiceFiscale(fornitore.getCodiceFiscale());
+            }
+            if(!StringUtils.isEmpty(fornitore.getPagamento())){
+                ddtAcquistoDataSource.setPagamento(fornitore.getPagamento());
+            }
+        }
+        return ddtAcquistoDataSource;
+    }
+
+    public List<DdtAcquistoArticoloDataSource> getDdtAcquistoArticoliDataSource(DdtAcquisto ddtAcquisto){
+        List<DdtAcquistoArticoloDataSource> ddtAcquistoArticoloDataSources = new ArrayList<>();
+        if(ddtAcquisto.getDdtAcquistoArticoli() != null && !ddtAcquisto.getDdtAcquistoArticoli().isEmpty()){
+            ddtAcquisto.getDdtAcquistoArticoli().forEach(da -> {
+                DdtAcquistoArticoloDataSource ddtAquistoArticoloDataSource = new DdtAcquistoArticoloDataSource();
+                ddtAquistoArticoloDataSource.setCodiceArticolo(da.getArticolo().getCodice());
+                ddtAquistoArticoloDataSource.setDescrizioneArticolo(da.getArticolo().getDescrizione());
+                ddtAquistoArticoloDataSource.setLotto(da.getLotto());
+                ddtAquistoArticoloDataSource.setDataScadenza(da.getDataScadenza() != null ? simpleDateFormat.format(da.getDataScadenza()) : "");
+                ddtAquistoArticoloDataSource.setUdm(da.getArticolo().getUnitaMisura().getEtichetta());
+                ddtAquistoArticoloDataSource.setQuantita(da.getQuantita());
+                ddtAquistoArticoloDataSource.setPrezzo(da.getPrezzo() != null ? Utils.roundPrice(da.getPrezzo()) : Utils.roundPrice(new BigDecimal(0)));
+                ddtAquistoArticoloDataSource.setSconto(da.getSconto() != null ? Utils.roundPrice(da.getSconto()) : Utils.roundPrice(new BigDecimal(0)));
+                ddtAquistoArticoloDataSource.setImponibile(da.getImponibile() != null ? Utils.roundPrice(da.getImponibile()): Utils.roundPrice(new BigDecimal(0)));
+                ddtAquistoArticoloDataSource.setIva(da.getArticolo().getAliquotaIva().getValore().intValue());
+
+                ddtAcquistoArticoloDataSources.add(ddtAquistoArticoloDataSource);
+            });
+        }
+        ddtAcquistoArticoloDataSources.sort(Comparator.comparing(DdtAcquistoArticoloDataSource::getCodiceArticolo).thenComparing(DdtAcquistoArticoloDataSource::getDescrizioneArticolo));
+
+        return ddtAcquistoArticoloDataSources;
+    }
+
     public Autista getAutista(Long idAutista){
         return autistaService.getOne(idAutista);
     }
@@ -528,93 +591,7 @@ public class StampaService {
         return fattura;
     }
 
-    public FatturaAccompagnatoria getFatturaAccompagnatoria(Long idFatturaAccompagnatoria){
-        log.info("Retrieving 'fattura accompagnatoria' with id '{}' for creating pdf file", idFatturaAccompagnatoria);
-        FatturaAccompagnatoria fatturaAccompagnatoria = fatturaAccompagnatoriaService.getOne(idFatturaAccompagnatoria);
-        log.info("Retrieved 'fattura accompagnatoria' with id '{}'", idFatturaAccompagnatoria);
-        return fatturaAccompagnatoria;
-    }
-
-    public FatturaAccompagnatoriaDataSource getFatturaAccompagnatoriaDataSource(FatturaAccompagnatoria fatturaAccompagnatoria){
-        Cliente cliente = fatturaAccompagnatoria.getCliente();
-        TipoPagamento tipoPagamento = cliente.getTipoPagamento();
-        Agente agente = cliente.getAgente();
-
-        FatturaAccompagnatoriaDataSource fatturaAccompagnatoriaDataSource = new FatturaAccompagnatoriaDataSource();
-        fatturaAccompagnatoriaDataSource.setNumero(fatturaAccompagnatoria.getProgressivo()+"/"+fatturaAccompagnatoria.getAnno());
-        fatturaAccompagnatoriaDataSource.setData(simpleDateFormat.format(fatturaAccompagnatoria.getData()));
-        fatturaAccompagnatoriaDataSource.setClientePartitaIva("");
-        fatturaAccompagnatoriaDataSource.setClienteCodiceFiscale("");
-        fatturaAccompagnatoriaDataSource.setCausale(fatturaAccompagnatoria.getCausale() != null ? fatturaAccompagnatoria.getCausale().getDescrizione() : "");
-        fatturaAccompagnatoriaDataSource.setPagamento("");
-        fatturaAccompagnatoriaDataSource.setAgente("");
-        if(cliente != null){
-            if(!StringUtils.isEmpty(cliente.getPartitaIva())){
-                fatturaAccompagnatoriaDataSource.setClientePartitaIva(cliente.getPartitaIva());
-            }
-            if(!StringUtils.isEmpty(cliente.getCodiceFiscale())){
-                fatturaAccompagnatoriaDataSource.setClienteCodiceFiscale(cliente.getCodiceFiscale());
-            }
-        }
-        if(tipoPagamento != null){
-            if(!StringUtils.isEmpty(tipoPagamento.getDescrizione())){
-                fatturaAccompagnatoriaDataSource.setPagamento(tipoPagamento.getDescrizione());
-            }
-        }
-        if(agente != null){
-            StringBuilder sb = new StringBuilder();
-            if(!StringUtils.isEmpty(agente.getNome())){
-                sb.append(agente.getNome()+" ");
-            }
-            if(!StringUtils.isEmpty(agente.getCognome())){
-                sb.append(agente.getCognome());
-            }
-            fatturaAccompagnatoriaDataSource.setAgente(sb.toString());
-        }
-        return fatturaAccompagnatoriaDataSource;
-    }
-
-    public List<FatturaAccompagnatoriaRigaDataSource> getFatturaAccompagnatoriaRigheDataSource(FatturaAccompagnatoria fatturaAccompagnatoria){
-        List<FatturaAccompagnatoriaRigaDataSource> fatturaAccompagnatoriaRigaDataSources = new ArrayList<>();
-        if(fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli() != null && !fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().isEmpty()){
-            fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().forEach(faa -> {
-                Articolo articolo = faa.getArticolo();
-                FatturaAccompagnatoriaRigaDataSource fatturaAccompagnatoriaRigaDataSource = new FatturaAccompagnatoriaRigaDataSource();
-                fatturaAccompagnatoriaRigaDataSource.setCodiceArticolo(articolo != null ? articolo.getCodice() : "");
-                fatturaAccompagnatoriaRigaDataSource.setDescrizioneArticolo(articolo != null ? articolo.getDescrizione() : "");
-                fatturaAccompagnatoriaRigaDataSource.setScadenza(faa.getScadenza() != null ? simpleDateFormat.format(faa.getScadenza()) : "");
-                fatturaAccompagnatoriaRigaDataSource.setLotto(faa.getLotto());
-                fatturaAccompagnatoriaRigaDataSource.setUdm(articolo != null ? (articolo.getUnitaMisura() != null ? articolo.getUnitaMisura().getEtichetta() : "") : "");
-                fatturaAccompagnatoriaRigaDataSource.setQuantita(faa.getQuantita());
-                fatturaAccompagnatoriaRigaDataSource.setPrezzo(faa.getPrezzo() != null ? Utils.roundPrice(faa.getPrezzo()) : new BigDecimal(0));
-                fatturaAccompagnatoriaRigaDataSource.setSconto(faa.getSconto() != null ? Utils.roundPrice(faa.getSconto()) : new BigDecimal(0));
-                fatturaAccompagnatoriaRigaDataSource.setImponibile(faa.getImponibile() != null ? Utils.roundPrice(faa.getImponibile()) : new BigDecimal(0));
-                fatturaAccompagnatoriaRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
-
-                fatturaAccompagnatoriaRigaDataSources.add(fatturaAccompagnatoriaRigaDataSource);
-            });
-        }
-        fatturaAccompagnatoriaRigaDataSources.sort(Comparator.comparing(FatturaAccompagnatoriaRigaDataSource::getCodiceArticolo).thenComparing(FatturaAccompagnatoriaRigaDataSource::getDescrizioneArticolo));
-        return fatturaAccompagnatoriaRigaDataSources;
-    }
-
-    public List<FatturaAccompagnatoriaTotaleDataSource> getFatturaAccompagnatoriaTotaliDataSource(FatturaAccompagnatoria fatturaAccompagnatoria){
-        List<FatturaAccompagnatoriaTotaleDataSource> fatturaAccompagnatoriaTotaleDataSources = new ArrayList<>();
-        if(fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali() != null && !fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali() .isEmpty()){
-            fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali().forEach(fat -> {
-                FatturaAccompagnatoriaTotaleDataSource fatturaAccompagnatoriaTotaleDataSource = new FatturaAccompagnatoriaTotaleDataSource();
-                fatturaAccompagnatoriaTotaleDataSource.setAliquotaIva(fat.getAliquotaIva().getValore().intValue());
-                fatturaAccompagnatoriaTotaleDataSource.setTotaleImponibile(fat.getTotaleImponibile() != null ? Utils.roundPrice(fat.getTotaleImponibile()) : new BigDecimal(0));
-                fatturaAccompagnatoriaTotaleDataSource.setTotaleIva(fat.getTotaleIva() != null ? Utils.roundPrice(fat.getTotaleIva()) : new BigDecimal(0));
-
-                fatturaAccompagnatoriaTotaleDataSources.add(fatturaAccompagnatoriaTotaleDataSource);
-            });
-        }
-        return fatturaAccompagnatoriaTotaleDataSources.stream().sorted(Comparator.comparing(FatturaAccompagnatoriaTotaleDataSource::getAliquotaIva))
-                .collect(Collectors.toList());
-    }
-
-    public FatturaDataSource getFatturaDataSource(Fattura fattura){
+    private FatturaDataSource getFatturaDataSource(Fattura fattura){
         Cliente cliente = fattura.getCliente();
         TipoPagamento tipoPagamento = cliente.getTipoPagamento();
         Agente agente = cliente.getAgente();
@@ -653,7 +630,7 @@ public class StampaService {
         return fatturaDataSource;
     }
 
-    public List<FatturaRigaDataSource> getFatturaRigheDataSource(Fattura fattura){
+    private List<FatturaRigaDataSource> getFatturaRigheDataSource(Fattura fattura){
         int numeroRiga = 0;
 
         List<FatturaRigaDataSource> fatturaRigaDataSources = new ArrayList<>();
@@ -669,8 +646,8 @@ public class StampaService {
 
         if(fatturaDdtsOrdered != null && !fatturaDdtsOrdered.isEmpty()){
             for(FatturaDdt fatturaDdt : fatturaDdtsOrdered){
-               Ddt ddt = fatturaDdt.getDdt();
-               if(ddt != null){
+                Ddt ddt = fatturaDdt.getDdt();
+                if(ddt != null){
                     String descrizione = "Riferimento ns. DDT n. "+ddt.getProgressivo()+"/"+ddt.getAnnoContabile()+" del "+simpleDateFormat.format(ddt.getData());
                     FatturaRigaDataSource fatturaRigaDdtDataSource = new FatturaRigaDataSource();
                     fatturaRigaDdtDataSource.setNumeroRiga(numeroRiga);
@@ -707,7 +684,7 @@ public class StampaService {
                             numeroRiga += 1;
                         }
                     }
-               }
+                }
             }
         }
 
@@ -715,7 +692,7 @@ public class StampaService {
                 .collect(Collectors.toList());
     }
 
-    public List<FatturaTotaleDataSource> getFatturaTotaliDataSource(Fattura fattura){
+    private List<FatturaTotaleDataSource> getFatturaTotaliDataSource(Fattura fattura){
         List<FatturaTotaleDataSource> fatturaTotaleDataSources = new ArrayList<>();
 
         Map<AliquotaIva, BigDecimal> imponibiliByIva = AccountingUtils.createFatturaTotaliImponibiliByIva(fattura);
@@ -735,6 +712,235 @@ public class StampaService {
         }
 
         return fatturaTotaleDataSources.stream().sorted(Comparator.comparing(FatturaTotaleDataSource::getAliquotaIva))
+                .collect(Collectors.toList());
+    }
+
+    private FatturaAccompagnatoria getFatturaAccompagnatoria(Long idFatturaAccompagnatoria){
+        log.info("Retrieving 'fattura accompagnatoria' with id '{}' for creating pdf file", idFatturaAccompagnatoria);
+        FatturaAccompagnatoria fatturaAccompagnatoria = fatturaAccompagnatoriaService.getOne(idFatturaAccompagnatoria);
+        log.info("Retrieved 'fattura accompagnatoria' with id '{}'", idFatturaAccompagnatoria);
+        return fatturaAccompagnatoria;
+    }
+
+    private FatturaAccompagnatoriaDataSource getFatturaAccompagnatoriaDataSource(FatturaAccompagnatoria fatturaAccompagnatoria){
+        Cliente cliente = fatturaAccompagnatoria.getCliente();
+        TipoPagamento tipoPagamento = cliente.getTipoPagamento();
+        Agente agente = cliente.getAgente();
+
+        FatturaAccompagnatoriaDataSource fatturaAccompagnatoriaDataSource = new FatturaAccompagnatoriaDataSource();
+        fatturaAccompagnatoriaDataSource.setNumero(fatturaAccompagnatoria.getProgressivo()+"/"+fatturaAccompagnatoria.getAnno());
+        fatturaAccompagnatoriaDataSource.setData(simpleDateFormat.format(fatturaAccompagnatoria.getData()));
+        fatturaAccompagnatoriaDataSource.setClientePartitaIva("");
+        fatturaAccompagnatoriaDataSource.setClienteCodiceFiscale("");
+        fatturaAccompagnatoriaDataSource.setCausale(fatturaAccompagnatoria.getCausale() != null ? fatturaAccompagnatoria.getCausale().getDescrizione() : "");
+        fatturaAccompagnatoriaDataSource.setPagamento("");
+        fatturaAccompagnatoriaDataSource.setAgente("");
+        if(cliente != null){
+            if(!StringUtils.isEmpty(cliente.getPartitaIva())){
+                fatturaAccompagnatoriaDataSource.setClientePartitaIva(cliente.getPartitaIva());
+            }
+            if(!StringUtils.isEmpty(cliente.getCodiceFiscale())){
+                fatturaAccompagnatoriaDataSource.setClienteCodiceFiscale(cliente.getCodiceFiscale());
+            }
+        }
+        if(tipoPagamento != null){
+            if(!StringUtils.isEmpty(tipoPagamento.getDescrizione())){
+                fatturaAccompagnatoriaDataSource.setPagamento(tipoPagamento.getDescrizione());
+            }
+        }
+        if(agente != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(agente.getNome())){
+                sb.append(agente.getNome()+" ");
+            }
+            if(!StringUtils.isEmpty(agente.getCognome())){
+                sb.append(agente.getCognome());
+            }
+            fatturaAccompagnatoriaDataSource.setAgente(sb.toString());
+        }
+        return fatturaAccompagnatoriaDataSource;
+    }
+
+    private List<FatturaAccompagnatoriaRigaDataSource> getFatturaAccompagnatoriaRigheDataSource(FatturaAccompagnatoria fatturaAccompagnatoria){
+        List<FatturaAccompagnatoriaRigaDataSource> fatturaAccompagnatoriaRigaDataSources = new ArrayList<>();
+        if(fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli() != null && !fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().isEmpty()){
+            fatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli().forEach(faa -> {
+                Articolo articolo = faa.getArticolo();
+                FatturaAccompagnatoriaRigaDataSource fatturaAccompagnatoriaRigaDataSource = new FatturaAccompagnatoriaRigaDataSource();
+                fatturaAccompagnatoriaRigaDataSource.setCodiceArticolo(articolo != null ? articolo.getCodice() : "");
+                fatturaAccompagnatoriaRigaDataSource.setDescrizioneArticolo(articolo != null ? articolo.getDescrizione() : "");
+                fatturaAccompagnatoriaRigaDataSource.setScadenza(faa.getScadenza() != null ? simpleDateFormat.format(faa.getScadenza()) : "");
+                fatturaAccompagnatoriaRigaDataSource.setLotto(faa.getLotto());
+                fatturaAccompagnatoriaRigaDataSource.setUdm(articolo != null ? (articolo.getUnitaMisura() != null ? articolo.getUnitaMisura().getEtichetta() : "") : "");
+                fatturaAccompagnatoriaRigaDataSource.setQuantita(faa.getQuantita());
+                fatturaAccompagnatoriaRigaDataSource.setPrezzo(faa.getPrezzo() != null ? Utils.roundPrice(faa.getPrezzo()) : new BigDecimal(0));
+                fatturaAccompagnatoriaRigaDataSource.setSconto(faa.getSconto() != null ? Utils.roundPrice(faa.getSconto()) : new BigDecimal(0));
+                fatturaAccompagnatoriaRigaDataSource.setImponibile(faa.getImponibile() != null ? Utils.roundPrice(faa.getImponibile()) : new BigDecimal(0));
+                fatturaAccompagnatoriaRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
+
+                fatturaAccompagnatoriaRigaDataSources.add(fatturaAccompagnatoriaRigaDataSource);
+            });
+        }
+        fatturaAccompagnatoriaRigaDataSources.sort(Comparator.comparing(FatturaAccompagnatoriaRigaDataSource::getCodiceArticolo).thenComparing(FatturaAccompagnatoriaRigaDataSource::getDescrizioneArticolo));
+        return fatturaAccompagnatoriaRigaDataSources;
+    }
+
+    private List<FatturaAccompagnatoriaTotaleDataSource> getFatturaAccompagnatoriaTotaliDataSource(FatturaAccompagnatoria fatturaAccompagnatoria){
+        List<FatturaAccompagnatoriaTotaleDataSource> fatturaAccompagnatoriaTotaleDataSources = new ArrayList<>();
+        if(fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali() != null && !fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali() .isEmpty()){
+            fatturaAccompagnatoria.getFatturaAccompagnatoriaTotali().forEach(fat -> {
+                FatturaAccompagnatoriaTotaleDataSource fatturaAccompagnatoriaTotaleDataSource = new FatturaAccompagnatoriaTotaleDataSource();
+                fatturaAccompagnatoriaTotaleDataSource.setAliquotaIva(fat.getAliquotaIva().getValore().intValue());
+                fatturaAccompagnatoriaTotaleDataSource.setTotaleImponibile(fat.getTotaleImponibile() != null ? Utils.roundPrice(fat.getTotaleImponibile()) : new BigDecimal(0));
+                fatturaAccompagnatoriaTotaleDataSource.setTotaleIva(fat.getTotaleIva() != null ? Utils.roundPrice(fat.getTotaleIva()) : new BigDecimal(0));
+
+                fatturaAccompagnatoriaTotaleDataSources.add(fatturaAccompagnatoriaTotaleDataSource);
+            });
+        }
+        return fatturaAccompagnatoriaTotaleDataSources.stream().sorted(Comparator.comparing(FatturaAccompagnatoriaTotaleDataSource::getAliquotaIva))
+                .collect(Collectors.toList());
+    }
+
+    private FatturaAcquisto getFatturaAcquisto(Long idFatturaAcquisto){
+        log.info("Retrieving 'fattura acquisto' with id '{}' for creating pdf file", idFatturaAcquisto);
+        FatturaAcquisto fatturaAcquisto = fatturaAcquistoService.getOne(idFatturaAcquisto);
+        log.info("Retrieved 'fattura acquisto' with id '{}'", idFatturaAcquisto);
+        return fatturaAcquisto;
+    }
+
+    private FatturaAcquistoDataSource getFatturaAcquistoDataSource(FatturaAcquisto fatturaAcquisto){
+        Fornitore fornitore = fatturaAcquisto.getFornitore();
+
+        FatturaAcquistoDataSource fatturaAcquistoDataSource = new FatturaAcquistoDataSource();
+        fatturaAcquistoDataSource.setNumero(fatturaAcquisto.getProgressivo()+"/"+fatturaAcquisto.getAnno());
+        fatturaAcquistoDataSource.setData(simpleDateFormat.format(fatturaAcquisto.getData()));
+        fatturaAcquistoDataSource.setFornitorePartitaIva("");
+        fatturaAcquistoDataSource.setFornitoreCodiceFiscale("");
+        fatturaAcquistoDataSource.setCausale(fatturaAcquisto.getCausale() != null ? fatturaAcquisto.getCausale().getDescrizione() : "");
+        fatturaAcquistoDataSource.setPagamento("");
+        fatturaAcquistoDataSource.setAgente("");
+        if(fornitore != null){
+            if(!StringUtils.isEmpty(fornitore.getPartitaIva())){
+                fatturaAcquistoDataSource.setFornitorePartitaIva(fornitore.getPartitaIva());
+            }
+            if(!StringUtils.isEmpty(fornitore.getCodiceFiscale())){
+                fatturaAcquistoDataSource.setFornitoreCodiceFiscale(fornitore.getCodiceFiscale());
+            }
+            if(!StringUtils.isEmpty(fornitore.getPagamento())){
+                fatturaAcquistoDataSource.setPagamento(fornitore.getPagamento());
+            }
+        }
+        return fatturaAcquistoDataSource;
+    }
+
+    private List<FatturaAcquistoRigaDataSource> getFatturaAcquistoRigheDataSource(FatturaAcquisto fatturaAcquisto){
+        int numeroRiga = 0;
+
+        List<FatturaAcquistoRigaDataSource> fatturaAcquistoRigaDataSources = new ArrayList<>();
+        Set<FatturaAcquistoDdtAcquisto> fatturaAcquistoDdtAcquisti = fatturaAcquisto.getFatturaAcquistoDdtAcquisti();
+
+        Comparator<FatturaAcquistoDdtAcquisto> compareByDdtAcquistoProgressivo = (fd1, fd2) -> {
+            DdtAcquisto ddtAcquisto1 = fd1.getDdtAcquisto();
+            DdtAcquisto ddtAcquisto2 = fd2.getDdtAcquisto();
+            return ddtAcquisto1.getNumero().compareTo(ddtAcquisto2.getNumero());
+        };
+
+        List<FatturaAcquistoDdtAcquisto> fatturaAcquistoDdtAcquistiOrdered = fatturaAcquistoDdtAcquisti.stream().sorted(compareByDdtAcquistoProgressivo).collect(Collectors.toList());
+
+        if(fatturaAcquistoDdtAcquistiOrdered != null && !fatturaAcquistoDdtAcquistiOrdered.isEmpty()){
+            for(FatturaAcquistoDdtAcquisto fatturaAcquistoDdtAcquisto : fatturaAcquistoDdtAcquistiOrdered){
+                DdtAcquisto ddtAcquisto = fatturaAcquistoDdtAcquisto.getDdtAcquisto();
+                if(ddtAcquisto != null){
+                    String descrizione = "Riferimento ns. DDT n. "+ddtAcquisto.getNumero()+" del "+simpleDateFormat.format(ddtAcquisto.getData());
+                    FatturaAcquistoRigaDataSource fatturaAcquistoRigaDdtDataSource = new FatturaAcquistoRigaDataSource();
+                    fatturaAcquistoRigaDdtDataSource.setNumeroRiga(numeroRiga);
+                    fatturaAcquistoRigaDdtDataSource.setDescrizioneArticolo(descrizione);
+                    fatturaAcquistoRigaDdtDataSource.setCodiceArticolo("");
+                    fatturaAcquistoRigaDdtDataSource.setLotto("");
+                    fatturaAcquistoRigaDataSources.add(fatturaAcquistoRigaDdtDataSource);
+
+                    numeroRiga += 1;
+
+                    if(ddtAcquisto.getDdtAcquistoArticoli() != null && !ddtAcquisto.getDdtAcquistoArticoli().isEmpty()){
+                        List<DdtAcquistoArticolo> ddtAcquistoArticoli = ddtAcquisto.getDdtAcquistoArticoli().stream().sorted(Comparator.comparing(da->da.getArticolo().getCodice())).collect(Collectors.toList());
+                        for(DdtAcquistoArticolo da : ddtAcquistoArticoli){
+                            Articolo articolo = da.getArticolo();
+
+                            FatturaAcquistoRigaDataSource fatturaAcquistoRigaDataSource = new FatturaAcquistoRigaDataSource();
+                            fatturaAcquistoRigaDataSource.setNumeroRiga(numeroRiga);
+                            fatturaAcquistoRigaDataSource.setCodiceArticolo(articolo != null ? articolo.getCodice() : "");
+                            fatturaAcquistoRigaDataSource.setDescrizioneArticolo(articolo != null ? articolo.getDescrizione() : "");
+                            fatturaAcquistoRigaDataSource.setLotto(da.getLotto());
+                            fatturaAcquistoRigaDataSource.setUdm(articolo != null ? (articolo.getUnitaMisura() != null ? articolo.getUnitaMisura().getEtichetta() : "") : "");
+                            fatturaAcquistoRigaDataSource.setQuantita(da.getQuantita());
+
+                            BigDecimal prezzo = da.getPrezzo() != null ? Utils.roundPrice(da.getPrezzo()) : new BigDecimal(0);
+                            BigDecimal sconto = da.getSconto() != null ? Utils.roundPrice(da.getSconto()) : new BigDecimal(0);
+                            fatturaAcquistoRigaDataSource.setPrezzo(prezzo);
+                            fatturaAcquistoRigaDataSource.setSconto(sconto);
+                            fatturaAcquistoRigaDataSource.setImponibile(da.getImponibile() != null ? Utils.roundPrice(da.getImponibile()) : new BigDecimal(0));
+
+                            fatturaAcquistoRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
+
+                            fatturaAcquistoRigaDataSources.add(fatturaAcquistoRigaDataSource);
+
+                            numeroRiga += 1;
+                        }
+                    }
+                    if(ddtAcquisto.getDdtAcquistoIngredienti() != null && !ddtAcquisto.getDdtAcquistoIngredienti().isEmpty()){
+                        List<DdtAcquistoIngrediente> ddtAcquistoIngredienti = ddtAcquisto.getDdtAcquistoIngredienti().stream().sorted(Comparator.comparing(da->da.getIngrediente().getCodice())).collect(Collectors.toList());
+                        for(DdtAcquistoIngrediente di : ddtAcquistoIngredienti){
+                            Ingrediente ingrediente = di.getIngrediente();
+
+                            FatturaAcquistoRigaDataSource fatturaAcquistoRigaDataSource = new FatturaAcquistoRigaDataSource();
+                            fatturaAcquistoRigaDataSource.setNumeroRiga(numeroRiga);
+                            fatturaAcquistoRigaDataSource.setCodiceArticolo(ingrediente != null ? ingrediente.getCodice() : "");
+                            fatturaAcquistoRigaDataSource.setDescrizioneArticolo(ingrediente != null ? ingrediente.getDescrizione() : "");
+                            fatturaAcquistoRigaDataSource.setLotto(di.getLotto());
+                            fatturaAcquistoRigaDataSource.setUdm(ingrediente != null ? (ingrediente.getUnitaMisura() != null ? ingrediente.getUnitaMisura().getEtichetta() : "") : "");
+                            fatturaAcquistoRigaDataSource.setQuantita(di.getQuantita());
+
+                            BigDecimal prezzo = di.getPrezzo() != null ? Utils.roundPrice(di.getPrezzo()) : new BigDecimal(0);
+                            BigDecimal sconto = di.getSconto() != null ? Utils.roundPrice(di.getSconto()) : new BigDecimal(0);
+                            fatturaAcquistoRigaDataSource.setPrezzo(prezzo);
+                            fatturaAcquistoRigaDataSource.setSconto(sconto);
+                            fatturaAcquistoRigaDataSource.setImponibile(di.getImponibile() != null ? Utils.roundPrice(di.getImponibile()) : new BigDecimal(0));
+
+                            fatturaAcquistoRigaDataSource.setIva(ingrediente != null ? (ingrediente.getAliquotaIva() != null ? ingrediente.getAliquotaIva().getValore().intValue() : null) : null);
+
+                            fatturaAcquistoRigaDataSources.add(fatturaAcquistoRigaDataSource);
+
+                            numeroRiga += 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        return fatturaAcquistoRigaDataSources.stream().sorted(Comparator.comparing(FatturaAcquistoRigaDataSource::getNumeroRiga))
+                .collect(Collectors.toList());
+    }
+
+    private List<FatturaAcquistoTotaleDataSource> getFatturaAcquistoTotaliDataSource(FatturaAcquisto fatturaAcquisto){
+        List<FatturaAcquistoTotaleDataSource> fatturaAcquistoTotaleDataSources = new ArrayList<>();
+
+        Map<AliquotaIva, BigDecimal> imponibiliByIva = AccountingUtils.createFatturaAcquistoTotaliImponibiliByIva(fatturaAcquisto);
+
+        for(AliquotaIva aliquotaIva : imponibiliByIva.keySet()){
+            BigDecimal ivaValore = aliquotaIva.getValore();
+            BigDecimal imponibile = imponibiliByIva.get(aliquotaIva);
+            BigDecimal totaleIva = imponibile.multiply(ivaValore.divide(new BigDecimal(100)));
+
+            FatturaAcquistoTotaleDataSource fatturaAcquistoTotaleDataSource = new FatturaAcquistoTotaleDataSource();
+            fatturaAcquistoTotaleDataSource.setAliquotaIva(ivaValore.intValue());
+            fatturaAcquistoTotaleDataSource.setTotaleImponibile(Utils.roundPrice(imponibile));
+            fatturaAcquistoTotaleDataSource.setTotaleIva(Utils.roundPrice(totaleIva));
+            fatturaAcquistoTotaleDataSource.setTotaleIvaNotRounded(totaleIva);
+
+            fatturaAcquistoTotaleDataSources.add(fatturaAcquistoTotaleDataSource);
+        }
+
+        return fatturaAcquistoTotaleDataSources.stream().sorted(Comparator.comparing(FatturaAcquistoTotaleDataSource::getAliquotaIva))
                 .collect(Collectors.toList());
     }
 
@@ -1198,9 +1404,7 @@ public class StampaService {
         parameters.put("ddtArticoliCollection", ddtArticoliCollectionDataSource);
         parameters.put("ddtCollection", ddtCollectionDataSource);
 
-        // create report
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
-
     }
 
     public byte[] generateSingleDdt(Long[] ddts) throws Exception{
@@ -1219,7 +1423,67 @@ public class StampaService {
         return byteArrayOutputStream.toByteArray();
     }
 
-    @Transactional
+    public byte[] generateDdtAcquisto(Long idDdtAcquisto) throws Exception{
+
+        DdtAcquisto ddtAcquisto = getDdtAcquisto(idDdtAcquisto);
+        Fornitore fornitore = ddtAcquisto.getFornitore();
+
+        List<DdtAcquistoDataSource> ddtAcquistoDataSources = new ArrayList<>();
+        ddtAcquistoDataSources.add(getDdtAcquistoDataSource(ddtAcquisto));
+
+        String ddtAcquistoTitleParam = ddtAcquisto.getNumero()+" del "+simpleDateFormat.format(ddtAcquisto.getData());
+        String destinatarioParam = "";
+
+        if(fornitore != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(fornitore.getRagioneSociale())){
+                sb.append(fornitore.getRagioneSociale()).append("\n");
+            }
+            if(!StringUtils.isEmpty(fornitore.getIndirizzo())){
+                sb.append(fornitore.getIndirizzo()).append("\n");
+            }
+            if(!StringUtils.isEmpty(fornitore.getCap())){
+                sb.append(fornitore.getCap()).append(" ");
+            }
+            if(!StringUtils.isEmpty(fornitore.getCitta())){
+                sb.append(fornitore.getCitta()).append(" ");
+            }
+            if(!StringUtils.isEmpty(fornitore.getProvincia())){
+                sb.append("(").append(Provincia.getByLabel(fornitore.getProvincia()).getSigla()).append(")");
+            }
+            destinatarioParam = sb.toString();
+        }
+
+        // create list of DdtAcquistoArticoloDataSource from DdtAcquistoArticolo
+        List<DdtAcquistoArticoloDataSource> ddtAcquistoArticoloDataSources = getDdtAcquistoArticoliDataSource(ddtAcquisto);
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_DDT_ACQUISTO);
+
+        // create report datasource for DdtAcquisto
+        JRBeanCollectionDataSource ddtAcquistoCollectionDataSource = new JRBeanCollectionDataSource(ddtAcquistoDataSources);
+
+        // create report datasource for DdtArticoli
+        JRBeanCollectionDataSource ddtAcquistoArticoliCollectionDataSource = new JRBeanCollectionDataSource(ddtAcquistoArticoloDataSources);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("ddtAcquistoTitle", ddtAcquistoTitleParam);
+        parameters.put("destinatario", destinatarioParam);
+        parameters.put("note", ddtAcquisto.getNote());
+        parameters.put("nota", Constants.JASPER_PARAMETER_DDT_NOTA);
+        parameters.put("ddtAcquistoNumeroColli", ddtAcquisto.getNumeroColli());
+        parameters.put("ddtAcquistoTotImponibile", Utils.roundPrice(ddtAcquisto.getTotaleImponibile()));
+        parameters.put("ddtAcquistoTotIva", Utils.roundPrice(ddtAcquisto.getTotaleIva()));
+        parameters.put("ddtAcquistoTotDocumento", Utils.roundPrice(ddtAcquisto.getTotale()));
+        parameters.put("ddtAcquistoArticoliCollection", ddtAcquistoArticoliCollectionDataSource);
+        parameters.put("ddtAcquistoCollection", ddtAcquistoCollectionDataSource);
+
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+    }
+
     public byte[] generateFattura(Long idFattura) throws Exception{
 
         // retrieve the Fattura
@@ -1410,6 +1674,86 @@ public class StampaService {
         parameters.put("fatturaAccompagnatoriaRigheCollection", fatturaAccompagnatoriaRigheCollectionDataSource);
         parameters.put("fatturaAccompagnatoriaTotaliCollection", fatturaAccompagnatoriaTotaliCollectionDataSource);
 
+
+        // create report
+        return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());
+    }
+
+    public byte[] generateFatturaAcquisto(Long idFatturaAcquisto) throws Exception{
+
+        FatturaAcquisto fatturaAcquisto = getFatturaAcquisto(idFatturaAcquisto);
+        Fornitore fornitore = fatturaAcquisto.getFornitore();
+
+        String fatturaAcquistoTitleParam = fatturaAcquisto.getProgressivo()+"/"+fatturaAcquisto.getAnno()+" del "+simpleDateFormat.format(fatturaAcquisto.getData());
+        String destinatarioParam = "";
+
+        if(fornitore != null){
+            StringBuilder sb = new StringBuilder();
+            if(!StringUtils.isEmpty(fornitore.getRagioneSociale())){
+                sb.append(fornitore.getRagioneSociale()).append("\n");
+            }
+            if(!StringUtils.isEmpty(fornitore.getIndirizzo())){
+                sb.append(fornitore.getIndirizzo()).append("\n");
+            }
+            if(!StringUtils.isEmpty(fornitore.getCap())){
+                sb.append(fornitore.getCap()).append(" ");
+            }
+            if(!StringUtils.isEmpty(fornitore.getCitta())){
+                sb.append(fornitore.getCitta()).append(" ");
+            }
+            if(!StringUtils.isEmpty(fornitore.getProvincia())){
+                sb.append("(").append(Provincia.getByLabel(fornitore.getProvincia()).getSigla()).append(")");
+            }
+
+            destinatarioParam = sb.toString();
+        }
+
+        // create FatturaAcquistoDataSource
+        List<FatturaAcquistoDataSource> fatturaAcquistoDataSources = new ArrayList<>();
+        fatturaAcquistoDataSources.add(getFatturaAcquistoDataSource(fatturaAcquisto));
+
+        // create list of FatturaAcquistoRigheDataSource from FatturaAcquistoDdtAcquisti
+        List<FatturaAcquistoRigaDataSource> fatturaAcquistoRigaDataSources = getFatturaAcquistoRigheDataSource(fatturaAcquisto);
+
+        // create list of FatturaAcquistoTotaliDataSource from FatturaAcquistoTotale
+        List<FatturaAcquistoTotaleDataSource> fatturaAcquistoTotaleDataSources = getFatturaAcquistoTotaliDataSource(fatturaAcquisto);
+
+        BigDecimal totaleImponibile = new BigDecimal(0);
+        BigDecimal totaleIva = new BigDecimal(0);
+
+        for(FatturaAcquistoTotaleDataSource fatturaAcquistoTotale: fatturaAcquistoTotaleDataSources){
+            totaleImponibile = totaleImponibile.add(fatturaAcquistoTotale.getTotaleImponibile());
+            totaleIva = totaleIva.add(fatturaAcquistoTotale.getTotaleIvaNotRounded());
+        }
+        totaleImponibile = Utils.roundPrice(totaleImponibile);
+        totaleIva = Utils.roundPrice(totaleIva);
+
+        // fetching the .jrxml file from the resources folder.
+        final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_FATTURA_ACQUISTO);
+
+        // create report datasource for FatturaAcquisto
+        JRBeanCollectionDataSource fatturaAcquistoCollectionDataSource = new JRBeanCollectionDataSource(fatturaAcquistoDataSources);
+
+        // create report datasource for FatturaAcquistoRighe
+        JRBeanCollectionDataSource fatturaAcquistoRigheCollectionDataSource = new JRBeanCollectionDataSource(fatturaAcquistoRigaDataSources);
+
+        // create report datasource for FatturaAcquistoTotali
+        JRBeanCollectionDataSource fatturaAcquistoTotaliCollectionDataSource = new JRBeanCollectionDataSource(fatturaAcquistoTotaleDataSources);
+
+        // create report parameters
+        Map<String, Object> parameters = createParameters();
+
+        // add data to parameters
+        parameters.put("fatturaAcquistoTitle", fatturaAcquistoTitleParam);
+        parameters.put("destinatario", destinatarioParam);
+        parameters.put("note", fatturaAcquisto.getNote());
+        parameters.put("nota", Constants.JASPER_PARAMETER_FATTURA_NOTA);
+        parameters.put("totaleImponibile", totaleImponibile);
+        parameters.put("totaleIva", totaleIva);
+        parameters.put("fatturaAcquistoTotDocumento", Utils.roundPrice(fatturaAcquisto.getTotale()));
+        parameters.put("fatturaAcquistoCollection", fatturaAcquistoCollectionDataSource);
+        parameters.put("fatturaAcquistoRigheCollection", fatturaAcquistoRigheCollectionDataSource);
+        parameters.put("fatturaAcquistoTotaliCollection", fatturaAcquistoTotaliCollectionDataSource);
 
         // create report
         return JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());

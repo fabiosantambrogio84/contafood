@@ -58,7 +58,10 @@ select
     ddt_acquisto.totale_iva,
     ddt_acquisto.totale,
     ddt_acquisto.totale_acconto,
-    ddt_acquisto.fatturato
+    case
+        when ddt_acquisto.fatturato = 1 then 1
+        else 0
+    end as fatturato
 from ddt_acquisto
          join fornitore on
         ddt_acquisto.id_fornitore = fornitore.id
