@@ -122,7 +122,7 @@ public class VDocumentoAcquistoCustomRepositoryImpl implements VDocumentoAcquist
             sb.append(" AND lower(ragione_sociale_fornitore) LIKE concat('%',:fornitore,'%') ");
         }
         if(numDocumento != null) {
-            sb.append(" AND lower(num_documento) LIKE concat('%',:numDocumento,'%') ");
+            sb.append(" AND num_documento = :numDocumento ");
         }
         if(tipoDocumento != null) {
             sb.append(" AND tipo_documento = :tipoDocumento ");

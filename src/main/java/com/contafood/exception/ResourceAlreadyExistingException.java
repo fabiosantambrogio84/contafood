@@ -17,6 +17,10 @@ public class ResourceAlreadyExistingException extends RuntimeException {
         super(String.format("%s già presente con progressivo %d e anno %d", StringUtils.capitalize(resource.getLabel()), progressivo, anno));
     }
 
+    public ResourceAlreadyExistingException(Resource resource, Integer anno, String numero) {
+        super(String.format("%s già presente con numero %d e anno %d", StringUtils.capitalize(resource.getLabel()), numero, anno));
+    }
+
     public ResourceAlreadyExistingException(Resource resource, String abi, String cab) {
         super(String.format("%s già presente con abi %s e cab %s", StringUtils.capitalize(resource.getLabel()), abi, cab));
     }

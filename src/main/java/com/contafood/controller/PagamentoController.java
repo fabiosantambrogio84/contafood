@@ -3,8 +3,7 @@ package com.contafood.controller;
 import com.contafood.model.Pagamento;
 import com.contafood.model.views.VPagamento;
 import com.contafood.service.PagamentoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +15,10 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+@Slf4j
 @RestController
 @RequestMapping(path="/pagamenti")
 public class PagamentoController {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(PagamentoController.class);
 
     private final PagamentoService pagamentoService;
 
@@ -38,35 +36,39 @@ public class PagamentoController {
                                        @RequestParam(name = "idRicevutaPrivato", required = false) Integer idRicevutaPrivato,
                                        @RequestParam(name = "idFattura", required = false) Integer idFattura,
                                        @RequestParam(name = "idFatturaAccompagnatoria", required = false) Integer idFatturaAccompagnatoria,
-                                       @RequestParam(name = "idFatturaAcquisto", required = false) Integer idFatturaAcquisto) {
-        LOGGER.info("Performing GET request for retrieving all 'pagamenti'");
-        LOGGER.info("Request params: idDdt {}, idDdtAcquisto {}, idNotaAccredito {}, idNotaReso {}, idRicevutaPrivato {}, idFattura {}, idFatturaAccompagnatoria {}, idFatturaAcquisto {}",
-                idDdt, idDdtAcquisto, idNotaAccredito, idNotaReso, idRicevutaPrivato, idFattura, idFatturaAccompagnatoria, idFatturaAcquisto);
+                                       @RequestParam(name = "idFatturaAcquisto", required = false) Integer idFatturaAcquisto,
+                                       @RequestParam(name = "idFatturaAccompagnatoriaAcquisto", required = false) Integer idFatturaAccompagnatoriaAcquisto) {
+        log.info("Performing GET request for retrieving all 'pagamenti'");
+        log.info("Request params: idDdt {}, idDdtAcquisto {}, idNotaAccredito {}, idNotaReso {}, idRicevutaPrivato {}, idFattura {}, idFatturaAccompagnatoria {}, idFatturaAcquisto {}, idFatturaAccompagnatoriaAcquisto {}",
+                idDdt, idDdtAcquisto, idNotaAccredito, idNotaReso, idRicevutaPrivato, idFattura, idFatturaAccompagnatoria, idFatturaAcquisto, idFatturaAccompagnatoriaAcquisto);
 
         if(idDdt != null){
-            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'ddt' '{}'", idDdt);
+            log.info("Performing GET request for retrieving 'pagamenti' of 'ddt' '{}'", idDdt);
             return pagamentoService.getDdtPagamentiByIdDdt(idDdt.longValue());
         } else if(idDdtAcquisto != null){
-            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'ddt-acquisto' '{}'", idDdtAcquisto);
+            log.info("Performing GET request for retrieving 'pagamenti' of 'ddt-acquisto' '{}'", idDdtAcquisto);
             return pagamentoService.getDdtAcquistoPagamentiByIdDdtAcquisto(idDdtAcquisto.longValue());
         } else if(idNotaAccredito != null){
-            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'notaAccredito' '{}'", idNotaAccredito);
+            log.info("Performing GET request for retrieving 'pagamenti' of 'notaAccredito' '{}'", idNotaAccredito);
             return pagamentoService.getNotaAccreditoPagamentiByIdNotaAccredito(idNotaAccredito.longValue());
         } else if(idNotaReso != null){
-            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'notaReso' '{}'", idNotaReso);
+            log.info("Performing GET request for retrieving 'pagamenti' of 'notaReso' '{}'", idNotaReso);
             return pagamentoService.getNotaResoPagamentiByIdNotaReso(idNotaReso.longValue());
         } else if(idRicevutaPrivato != null){
-            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'ricevutaPrivato' '{}'", idRicevutaPrivato);
+            log.info("Performing GET request for retrieving 'pagamenti' of 'ricevutaPrivato' '{}'", idRicevutaPrivato);
             return pagamentoService.getRicevutaPrivatoPagamentiByIdRicevutaPrivato(idRicevutaPrivato.longValue());
         } else if(idFattura != null){
-            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'fattura' '{}'", idFattura);
+            log.info("Performing GET request for retrieving 'pagamenti' of 'fattura' '{}'", idFattura);
             return pagamentoService.getFatturaPagamentiByIdFattura(idFattura.longValue());
         } else if(idFatturaAccompagnatoria != null){
-            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'fatturaAccompagnatoria' '{}'", idFatturaAccompagnatoria);
+            log.info("Performing GET request for retrieving 'pagamenti' of 'fatturaAccompagnatoria' '{}'", idFatturaAccompagnatoria);
             return pagamentoService.getFatturaAccompagnatoriaPagamentiByIdFatturaAccompagnatoria(idFatturaAccompagnatoria.longValue());
         } else if(idFatturaAcquisto != null){
-            LOGGER.info("Performing GET request for retrieving 'pagamenti' of 'fatturaAcquisto' '{}'", idFatturaAcquisto);
+            log.info("Performing GET request for retrieving 'pagamenti' of 'fatturaAcquisto' '{}'", idFatturaAcquisto);
             return pagamentoService.getFatturaAcquistoPagamentiByIdFatturaAcquisto(idFatturaAcquisto.longValue());
+        } else if(idFatturaAccompagnatoriaAcquisto != null){
+            log.info("Performing GET request for retrieving 'pagamenti' of 'fatturaAccompagnatoriaAcquisto' '{}'", idFatturaAccompagnatoriaAcquisto);
+            return pagamentoService.getFatturaAccompagnatoriaAcquistoPagamentiByIdFatturaAccompagnatoriaAcquisto(idFatturaAccompagnatoriaAcquisto.longValue());
         }
         return null;
     }
@@ -79,8 +81,8 @@ public class PagamentoController {
                                    @RequestParam(name = "fornitore", required = false) String fornitore,
                                    @RequestParam(name = "importo", required = false) Float importo,
                                    @RequestParam(name = "tipologia", required = false) String tipologia) {
-        LOGGER.info("Performing GET request for searching list of 'pagamenti'");
-        LOGGER.info("Request params: tipologia {}, dataDa {}, dataA {}, cliente {}, fornitore {}, importo {}",
+        log.info("Performing GET request for searching list of 'pagamenti'");
+        log.info("Request params: tipologia {}, dataDa {}, dataA {}, cliente {}, fornitore {}, importo {}",
                 tipologia, dataDa, dataA, cliente, fornitore, importo);
 
         return pagamentoService.getAllByFilters(tipologia, dataDa, dataA, cliente, fornitore, importo);
@@ -89,7 +91,7 @@ public class PagamentoController {
     @RequestMapping(method = GET, path = "/{pagamentoId}")
     @CrossOrigin
     public Pagamento getPagamento(@PathVariable final Long pagamentoId) {
-        LOGGER.info("Performing GET request for retrieving 'pagamento' '{}'", pagamentoId);
+        log.info("Performing GET request for retrieving 'pagamento' '{}'", pagamentoId);
         return pagamentoService.getPagamento(pagamentoId);
     }
 
@@ -97,7 +99,7 @@ public class PagamentoController {
     @ResponseStatus(CREATED)
     @CrossOrigin
     public Pagamento createPagamento(@RequestBody final Pagamento pagamento){
-        LOGGER.info("Performing POST request for creating 'pagamento'");
+        log.info("Performing POST request for creating 'pagamento'");
         return pagamentoService.createPagamento(pagamento);
     }
 
@@ -105,7 +107,7 @@ public class PagamentoController {
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
     public void deletePagamento(@PathVariable final Long pagamentoId){
-        LOGGER.info("Performing DELETE request for deleting 'pagamento' '{}'", pagamentoId);
+        log.info("Performing DELETE request for deleting 'pagamento' '{}'", pagamentoId);
         pagamentoService.deletePagamento(pagamentoId);
     }
 }

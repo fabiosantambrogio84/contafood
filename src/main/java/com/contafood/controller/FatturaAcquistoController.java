@@ -33,13 +33,6 @@ public class FatturaAcquistoController {
         return fatturaAcquistoService.getOne(fatturaAcquistoId);
     }
 
-    @RequestMapping(method = GET, path = "/progressivo")
-    @CrossOrigin
-    public Map<String, Integer> getAnnoAndProgressivo() {
-        log.info("Performing GET request for retrieving 'anno' and 'progressivo' for a new 'fattura acquisto'");
-        return fatturaAcquistoService.getAnnoAndProgressivo();
-    }
-
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
     @CrossOrigin

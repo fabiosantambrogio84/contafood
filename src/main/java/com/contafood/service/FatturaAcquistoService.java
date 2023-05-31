@@ -1,12 +1,10 @@
 package com.contafood.service;
 
-import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.repository.FatturaAcquistoRepository;
 import com.contafood.repository.PagamentoRepository;
 import com.contafood.util.Utils;
-import com.contafood.util.enumeration.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,26 +53,16 @@ public class FatturaAcquistoService {
         return fatturaAcquisto;
     }
 
-    public Map<String, Integer> getAnnoAndProgressivo(){
-        Integer anno = ZonedDateTime.now().getYear();
-        Integer progressivo = 1;
-        Integer resultProgressivo = fatturaAcquistoRepository.getLastProgressivoByAnnoContabile(anno);
-        if(resultProgressivo != null){
-            progressivo = resultProgressivo + 1;
-        }
-        HashMap<String, Integer> result = new HashMap<>();
-        result.put("anno", anno);
-        result.put("progressivo", progressivo);
-
-        return result;
-    }
-    
     @Transactional
     public FatturaAcquisto create(FatturaAcquisto fatturaAcquisto){
         log.info("Creating 'fattura acquisto'");
 
-        checkExistsByAnnoAndProgressivoAndIdNot(fatturaAcquisto.getAnno(),fatturaAcquisto.getProgressivo(), -1L);
+        Integer anno = null;
+        if(fatturaAcquisto.getData() != null){
+            anno = fatturaAcquisto.getData().toLocalDate().getYear();
+        }
 
+        fatturaAcquisto.setAnno(anno);
         fatturaAcquisto.setStatoFattura(statoFatturaService.getDaPagare());
         fatturaAcquisto.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
@@ -86,8 +74,8 @@ public class FatturaAcquistoService {
             fatturaAcquistoDdtAcquistoService.create(fada);
         });
 
-        // compute acconto
-        computeTotaleAcconto(createdFatturaAcquisto);
+        // compute totali
+        computeTotali(createdFatturaAcquisto);
 
         // compute stato
         computeStato(createdFatturaAcquisto);
@@ -139,8 +127,8 @@ public class FatturaAcquistoService {
                 case "id":
                     fatturaAcquisto.setId(Long.valueOf((Integer) value));
                     break;
-                case "progressivo":
-                    fatturaAcquisto.setProgressivo((Integer) value);
+                case "numero":
+                    fatturaAcquisto.setNumero((String) value);
                     break;
                 case "anno":
                     fatturaAcquisto.setAnno((Integer) value);
@@ -153,7 +141,6 @@ public class FatturaAcquistoService {
                     break;
             }
         }
-        checkExistsByAnnoAndProgressivoAndIdNot(fatturaAcquisto.getAnno(), fatturaAcquisto.getProgressivo(), fatturaAcquisto.getId());
         FatturaAcquisto patchedFatturaAcquisto = fatturaAcquistoRepository.save(fatturaAcquisto);
 
         log.info("Patched 'fattura acquisto' '{}'", patchedFatturaAcquisto);
@@ -182,13 +169,6 @@ public class FatturaAcquistoService {
     }
     */
 
-    private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
-        Optional<FatturaAcquisto> fatturaAcquisto = fatturaAcquistoRepository.findByAnnoAndProgressivoAndIdNot(anno, progressivo, idFattura);
-        if(fatturaAcquisto.isPresent()){
-            throw new ResourceAlreadyExistingException(Resource.FATTURA_ACQUISTO, anno, progressivo);
-        }
-    }
-
     private void computeStato(FatturaAcquisto fatturaAcquisto){
         StatoDdt ddtStatoPagato = statoDdtService.getPagato();
         StatoDdt ddtStatoDaPagare = statoDdtService.getDaPagare();
@@ -200,12 +180,12 @@ public class FatturaAcquistoService {
         });
         int ddtsAcquistoSize = ddtsAcquisto.size();
         log.info("Fattura ddtsAcquisto size {}", ddtsAcquistoSize);
-        Set<DdtAcquisto> ddtsAcquistoPagati = ddtsAcquisto.stream().filter(da -> da.getStatoDdt().equals(ddtStatoPagato)).collect(Collectors.toSet());
+        Set<DdtAcquisto> ddtsAcquistoPagati = ddtsAcquisto.stream().filter(da -> da.getStatoDdt() != null).filter(da -> da.getStatoDdt().equals(ddtStatoPagato)).collect(Collectors.toSet());
         if(ddtsAcquistoSize == ddtsAcquistoPagati.size()){
             fatturaAcquisto.setStatoFattura(statoFatturaService.getPagata());
             return;
         }
-        Set<DdtAcquisto> ddtsAcquistoDaPagare = ddtsAcquisto.stream().filter(da -> da.getStatoDdt().equals(ddtStatoDaPagare)).collect(Collectors.toSet());
+        Set<DdtAcquisto> ddtsAcquistoDaPagare = ddtsAcquisto.stream().filter(da -> da.getStatoDdt() != null).filter(da -> da.getStatoDdt().equals(ddtStatoDaPagare)).collect(Collectors.toSet());
         if(ddtsAcquistoSize == ddtsAcquistoDaPagare.size()){
             fatturaAcquisto.setStatoFattura(statoFatturaService.getDaPagare());
             return;
@@ -213,6 +193,7 @@ public class FatturaAcquistoService {
         fatturaAcquisto.setStatoFattura(statoFatturaService.getParzialmentePagata());
     }
 
+    /*
     private void computeTotaleAcconto(FatturaAcquisto fatturaAcquisto){
         log.info("Computing totaleAcconto...");
 
@@ -234,6 +215,63 @@ public class FatturaAcquistoService {
         }
         fatturaAcquisto.setTotaleAcconto(Utils.roundPrice(totaleAcconto));
     }
+    */
+
+    private void computeTotali(FatturaAcquisto fatturaAcquisto){
+
+        BigDecimal totaleAcconto = BigDecimal.ZERO;
+        BigDecimal totaleImponibile = BigDecimal.ZERO;
+        BigDecimal totaleIva = BigDecimal.ZERO;
+
+        Set<DdtAcquisto> ddtsAcquisto = new HashSet<>();
+        fatturaAcquisto.getFatturaAcquistoDdtAcquisti().forEach(fada -> {
+            Long idDdtAcquisto = fada.getId().getDdtAcquistoId();
+            ddtsAcquisto.add(ddtAcquistoService.getOne(idDdtAcquisto));
+        });
+
+        if(!ddtsAcquisto.isEmpty()){
+            Set<DdtAcquistoArticolo> ddtAcquistoArticoli = new HashSet<>();
+            Set<DdtAcquistoIngrediente> ddtAcquistoIngredienti = new HashSet<>();
+
+            for(DdtAcquisto ddtAcquisto: ddtsAcquisto){
+                BigDecimal ddtAcquistoTotaleAcconto = ddtAcquisto.getTotaleAcconto();
+                if(ddtAcquistoTotaleAcconto == null){
+                    ddtAcquistoTotaleAcconto = BigDecimal.ZERO;
+                }
+                totaleAcconto = totaleAcconto.add(ddtAcquistoTotaleAcconto);
+
+                ddtAcquistoArticoli.addAll(ddtAcquisto.getDdtAcquistoArticoli());
+                ddtAcquistoIngredienti.addAll(ddtAcquisto.getDdtAcquistoIngredienti());
+            }
+            if(!ddtAcquistoArticoli.isEmpty()){
+                for(DdtAcquistoArticolo ddtAcquistoArticolo : ddtAcquistoArticoli){
+                    Articolo articolo = ddtAcquistoArticolo.getArticolo();
+                    AliquotaIva aliquotaIva = articolo.getAliquotaIva();
+
+                    BigDecimal ivaValore = aliquotaIva.getValore();
+                    BigDecimal imponibile = ddtAcquistoArticolo.getImponibile();
+                    totaleImponibile = totaleImponibile.add(imponibile);
+                    totaleIva = totaleIva.add(imponibile.multiply(ivaValore.divide(new BigDecimal(100))));
+                }
+            }
+            if(!ddtAcquistoIngredienti.isEmpty()){
+                for(DdtAcquistoIngrediente ddtAcquistoIngrediente : ddtAcquistoIngredienti){
+                    Ingrediente ingrediente = ddtAcquistoIngrediente.getIngrediente();
+                    AliquotaIva aliquotaIva = ingrediente.getAliquotaIva();
+
+                    BigDecimal ivaValore = aliquotaIva.getValore();
+                    BigDecimal imponibile = ddtAcquistoIngrediente.getImponibile();
+                    totaleImponibile = totaleImponibile.add(imponibile);
+                    totaleIva = totaleIva.add(imponibile.multiply(ivaValore.divide(new BigDecimal(100))));
+                }
+
+            }
+        }
+
+        fatturaAcquisto.setTotaleAcconto(Utils.roundPrice(totaleAcconto));
+        fatturaAcquisto.setTotaleIva(Utils.roundPrice(totaleIva));
+        fatturaAcquisto.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
+    }
 
     private void setFatturaAcquistoDdtAcquistiFatturato(FatturaAcquisto fatturaAcquisto, boolean fatturato){
         log.info("Setting 'fatturato'={} on all 'ddt-acquisto' of 'fattura acquisto' '{}'", fatturato, fatturaAcquisto.getId());
@@ -246,5 +284,4 @@ public class FatturaAcquistoService {
         });
         log.info("Successfully set 'fatturato'={} on all 'ddt-acquisto' of 'fattura acquisto' '{}'", fatturato, fatturaAcquisto.getId());
     }
-    
 }

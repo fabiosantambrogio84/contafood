@@ -121,6 +121,7 @@ public class DdtAcquistoService {
         ddtAcquistoIngredienteService.deleteByDdtAcquistoId(ddtAcquisto.getId());
 
         DdtAcquisto ddtAcquistoCurrent = ddtAcquistoRepository.findById(ddtAcquisto.getId()).orElseThrow(ResourceNotFoundException::new);
+        ddtAcquisto.setStatoDdt(ddtAcquistoCurrent.getStatoDdt());
         ddtAcquisto.setDataInserimento(ddtAcquistoCurrent.getDataInserimento());
         ddtAcquisto.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
 

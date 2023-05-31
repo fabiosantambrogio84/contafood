@@ -23,8 +23,8 @@ public class FatturaAcquisto {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "progressivo")
-    private Integer progressivo;
+    @Column(name = "numero")
+    private String numero;
 
     @Column(name = "anno")
     private Integer anno;
@@ -78,7 +78,7 @@ public class FatturaAcquisto {
 
         return "{" +
                 "id: " + id +
-                ", progressivo: " + progressivo +
+                ", numero: " + numero +
                 ", anno: " + anno +
                 ", data: " + data +
                 ", fornitore: " + fornitore +

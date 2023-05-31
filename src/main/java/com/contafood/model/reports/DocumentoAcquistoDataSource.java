@@ -3,7 +3,6 @@ package com.contafood.model.reports;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 
 @Data
 public class DocumentoAcquistoDataSource {

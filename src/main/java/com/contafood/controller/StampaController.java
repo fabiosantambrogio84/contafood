@@ -7,12 +7,11 @@ import com.contafood.service.StampaService;
 import com.contafood.util.Constants;
 import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Provincia;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -33,12 +32,11 @@ import java.util.Map;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+@Slf4j
 @RestController
 @RequestMapping(path="/stampe")
 @SuppressWarnings("unused")
 public class StampaController {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(StampaController.class);
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -56,7 +54,7 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/giacenze-ingredienti")
     @CrossOrigin
     public ResponseEntity<Resource> printGiacenzeIngredienti(@RequestParam(name = "ids") String ids) throws Exception{
-        LOGGER.info("Creating pdf for 'giacenze-ingredienti' with ids {}", ids);
+        log.info("Creating pdf for 'giacenze-ingredienti' with ids {}", ids);
 
         // retrieve the list of GiacenzeIngredienti
         List<VGiacenzaIngrediente> giacenzeIngredienti = stampaService.getGiacenzeIngredienti(ids);
@@ -78,7 +76,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'giacenze-ingredienti'");
+        log.info("Successfully create pdf for 'giacenze-ingredienti'");
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("giacenze-ingredienti.pdf"))
@@ -90,7 +88,7 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/pagamenti")
     @CrossOrigin
     public ResponseEntity<Resource> printPagamenti(@RequestParam(name = "ids") String ids) throws Exception{
-        LOGGER.info("Creating pdf for 'pagamenti' with ids {}", ids);
+        log.info("Creating pdf for 'pagamenti' with ids {}", ids);
 
         // retrieve the list of Pagamenti
         List<PagamentoDataSource> pagamenti = stampaService.getPagamenti(ids);
@@ -112,7 +110,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'pagamenti'");
+        log.info("Successfully create pdf for 'pagamenti'");
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("pagamenti.pdf"))
@@ -136,8 +134,8 @@ public class StampaController {
                                               @RequestParam(name = "pagato", required = false) Boolean pagato,
                                               @RequestParam(name = "idCliente", required = false) Integer idCliente,
                                               @RequestParam(name = "fatturato", required = false) Boolean fatturato) throws Exception{
-        LOGGER.info("Creating pdf for list of 'ddt'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, pagato {}, idCliente {}, fatturato {}",
+        log.info("Creating pdf for list of 'ddt'");
+        log.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, autista {}, articolo {}, stato {}, pagato {}, idCliente {}, fatturato {}",
                 dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idAutista, idArticolo, idStato, pagato, idCliente, fatturato);
 
         // retrieve the list of Ddt
@@ -173,7 +171,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ddts'");
+        log.info("Successfully create pdf for 'ddts'");
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("elenco_ddt.pdf"))
@@ -185,14 +183,14 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/ddts/{idDdt}")
     @CrossOrigin
     public ResponseEntity<Resource> printDdt(@PathVariable final Long idDdt) throws Exception{
-        LOGGER.info("Creating pdf for 'ddt' with id '{}'", idDdt);
+        log.info("Creating pdf for 'ddt' with id '{}'", idDdt);
 
         // create report
         byte[] reportBytes = stampaService.generateDdt(idDdt);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ddt' with id '{}'", idDdt);
+        log.info("Successfully create pdf for 'ddt' with id '{}'", idDdt);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("ddt-"+idDdt+".pdf"))
@@ -204,7 +202,7 @@ public class StampaController {
     @RequestMapping(method = POST, path = "/ddts/selected", produces=Constants.MEDIA_TYPE_APPLICATION_ZIP)
     @CrossOrigin
     public ResponseEntity<Resource> printDdtsSelected(@RequestBody final Long[] ddts) throws Exception{
-        LOGGER.info("Creating pdf merging pdfs of selected 'ddt'");
+        log.info("Creating pdf merging pdfs of selected 'ddt'");
 
         String fileName = "ddts-"+ dateTimeFormatter.format(LocalDateTime.now())+".pdf";
         byte[] content;
@@ -215,7 +213,7 @@ public class StampaController {
 
         content = stampaService.generateSingleDdt(ddts);
 
-        LOGGER.info("Successfully create pdf for checked 'ddts'");
+        log.info("Successfully create pdf for checked 'ddts'");
 
         ByteArrayResource resource = new ByteArrayResource(content);
 
@@ -226,13 +224,18 @@ public class StampaController {
                 .body(resource);
     }
 
-    @RequestMapping(method = POST, path = "/documenti-acquisto/distinta")
+    @RequestMapping(method = GET, path = "/documenti-acquisto/distinta")
     @CrossOrigin
-    public ResponseEntity<Resource> printDocumentiAcquistoDistinta(@RequestBody final List<String> idsDocumentiAcquisto) throws Exception{
-        LOGGER.info("Creating pdf of selected 'documenti acquisto'");
+    public ResponseEntity<Resource> printDocumentiAcquistoDistinta(@RequestParam(name = "fornitore", required = false) String fornitore,
+                                                                   @RequestParam(name = "numDocumento", required = false) String numDocumento,
+                                                                   @RequestParam(name = "tipoDocumento", required = false) String tipoDocumento,
+                                                                   @RequestParam(name = "dataDa", required = false) Date dataDa,
+                                                                   @RequestParam(name = "dataA", required = false) Date dataA) throws Exception{
+        log.info("Creating pdf for list of 'documenti acquisto'");
+        log.info("Request params: fornitore{}, numDocumento {}, tipoDocumento{}, dataDa {}, dataA {}", fornitore, numDocumento, tipoDocumento, dataDa, dataA);
 
         // retrieve the list of DocumentiAcquisto
-        List<DocumentoAcquistoDataSource> documentiAcquisto = stampaService.getDocumentoAcquistoDataSources(idsDocumentiAcquisto);
+        List<DocumentoAcquistoDataSource> documentiAcquisto = stampaService.getDocumentoAcquistoDataSources(fornitore, numDocumento, tipoDocumento, dataDa, dataA);
 
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_DOCUMENTI_ACQUISTO);
@@ -249,7 +252,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for selected 'documenti-acquisto'");
+        log.info("Successfully create pdf for selected 'documenti-acquisto'");
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("documenti-acquisto-distinta.pdf"))
@@ -261,14 +264,14 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/ddts-acquisto/{idDdtAcquisto}")
     @CrossOrigin
     public ResponseEntity<Resource> printDdtAcquisto(@PathVariable final Long idDdtAcquisto) throws Exception{
-        LOGGER.info("Creating pdf for 'ddt acquisto' with id '{}'", idDdtAcquisto);
+        log.info("Creating pdf for 'ddt acquisto' with id '{}'", idDdtAcquisto);
 
         // create report
         byte[] reportBytes = stampaService.generateDdtAcquisto(idDdtAcquisto);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ddt acquisto' with id '{}'", idDdtAcquisto);
+        log.info("Successfully create pdf for 'ddt acquisto' with id '{}'", idDdtAcquisto);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("ddt-acquisto"+idDdtAcquisto+".pdf"))
@@ -283,7 +286,7 @@ public class StampaController {
             @RequestParam(name = "idAutista") Long idAutista,
             @RequestParam(name = "dataConsegnaDa") Date dataConsegnaDa,
             @RequestParam(name = "dataConsegnaA") Date dataConsegnaA) throws Exception{
-        LOGGER.info("Creating pdf for 'ordini-clienti' of 'autista' {}, 'dataConsegnaDa' {} and 'dataConsegnaA' {}", idAutista, dataConsegnaDa, dataConsegnaA);
+        log.info("Creating pdf for 'ordini-clienti' of 'autista' {}, 'dataConsegnaDa' {} and 'dataConsegnaA' {}", idAutista, dataConsegnaDa, dataConsegnaA);
 
         // retrieve Autista with id 'idAutista'
         Autista autista = stampaService.getAutista(idAutista);
@@ -315,7 +318,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ordini-clienti' of 'autista' {}, 'dataConsegnaDa' {} and 'dataConsegnaA' {}", idAutista, dataConsegnaDa, dataConsegnaA);
+        log.info("Successfully create pdf for 'ordini-clienti' of 'autista' {}, 'dataConsegnaDa' {} and 'dataConsegnaA' {}", idAutista, dataConsegnaDa, dataConsegnaA);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("ordini-clienti-autista.pdf"))
@@ -334,7 +337,7 @@ public class StampaController {
                                                        @RequestParam(name = "agente", required = false) Integer idAgente,
                                                        @RequestParam(name = "articolo", required = false) Integer idArticolo,
                                                        @RequestParam(name = "stato", required = false) Integer idStato) throws Exception{
-        LOGGER.info("Creating pdf for list of 'note accredito'");
+        log.info("Creating pdf for list of 'note accredito'");
 
         // retrieve the list of NoteAccredito
         List<NotaAccreditoDataSource> noteAccredito = stampaService.getNotaAccreditoDataSources(dataDa, dataA, progressivo, importo, cliente, idAgente, idArticolo, idStato);
@@ -369,7 +372,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'note accredito'");
+        log.info("Successfully create pdf for 'note accredito'");
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("elenco_note_accredito.pdf"))
@@ -381,14 +384,14 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/note-accredito/{idNotaAccredito}")
     @CrossOrigin
     public ResponseEntity<Resource> printNotaAccredito(@PathVariable final Long idNotaAccredito) throws Exception{
-        LOGGER.info("Creating pdf for 'nota accredito' with id '{}'", idNotaAccredito);
+        log.info("Creating pdf for 'nota accredito' with id '{}'", idNotaAccredito);
 
         // create report
         byte[] reportBytes = stampaService.generateNotaAccredito(idNotaAccredito);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'nota accredito' with id '{}'", idNotaAccredito);
+        log.info("Successfully create pdf for 'nota accredito' with id '{}'", idNotaAccredito);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("nota-accredito-"+idNotaAccredito+".pdf"))
@@ -409,8 +412,8 @@ public class StampaController {
                                                  @RequestParam(name = "articolo", required = false) Integer idArticolo,
                                                  @RequestParam(name = "stato", required = false) Integer idStato,
                                                  @RequestParam(name = "tipo", required = false) Integer idTipo) throws Exception{
-        LOGGER.info("Creating pdf for list of 'fatture'");
-        LOGGER.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
+        log.info("Creating pdf for list of 'fatture'");
+        log.info("Request params: dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
                 dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
         // retrieve the list of Fatture
@@ -446,7 +449,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'fatture'");
+        log.info("Successfully create pdf for 'fatture'");
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("elenco_fatture.pdf"))
@@ -458,13 +461,13 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/fatture/{idFattura}")
     @CrossOrigin
     public ResponseEntity<Resource> printFattura(@PathVariable final Long idFattura) throws Exception{
-        LOGGER.info("Creating pdf for 'fattura' with id '{}'", idFattura);
+        log.info("Creating pdf for 'fattura' with id '{}'", idFattura);
 
         byte[] reportBytes = stampaService.generateFattura(idFattura);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'fattura' with id '{}'", idFattura);
+        log.info("Successfully create pdf for 'fattura' with id '{}'", idFattura);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("fattura-"+idFattura+".pdf"))
@@ -476,13 +479,13 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/fatture-accompagnatorie/{idFatturaAccompagnatoria}")
     @CrossOrigin
     public ResponseEntity<Resource> printFatturaAccompagnatoria(@PathVariable final Long idFatturaAccompagnatoria) throws Exception{
-        LOGGER.info("Creating pdf for 'fattura accompagnatoria' with id '{}'", idFatturaAccompagnatoria);
+        log.info("Creating pdf for 'fattura accompagnatoria' with id '{}'", idFatturaAccompagnatoria);
 
         byte[] reportBytes = stampaService.generateFatturaAccompagnatoria(idFatturaAccompagnatoria);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'fattura accompagnatoria' with id '{}'", idFatturaAccompagnatoria);
+        log.info("Successfully create pdf for 'fattura accompagnatoria' with id '{}'", idFatturaAccompagnatoria);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("fattura-accompagnatoria-"+idFatturaAccompagnatoria+".pdf"))
@@ -494,13 +497,13 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/fatture-acquisto/{idFatturaAcquisto}")
     @CrossOrigin
     public ResponseEntity<Resource> printFatturaAcquisto(@PathVariable final Long idFatturaAcquisto) throws Exception{
-        LOGGER.info("Creating pdf for 'fattura acquisto' with id '{}'", idFatturaAcquisto);
+        log.info("Creating pdf for 'fattura acquisto' with id '{}'", idFatturaAcquisto);
 
         byte[] reportBytes = stampaService.generateFatturaAcquisto(idFatturaAcquisto);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'fattura acquisto' with id '{}'", idFatturaAcquisto);
+        log.info("Successfully create pdf for 'fattura acquisto' with id '{}'", idFatturaAcquisto);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("fattura-acquisto"+idFatturaAcquisto+".pdf"))
@@ -509,10 +512,28 @@ public class StampaController {
                 .body(resource);
     }
 
+    @RequestMapping(method = GET, path = "/fatture-accompagnatorie-acquisto/{idFatturaAccompagnatoriaAcquisto}")
+    @CrossOrigin
+    public ResponseEntity<Resource> printFatturaAccompagnatoriaAcquisto(@PathVariable final Long idFatturaAccompagnatoriaAcquisto) throws Exception{
+        log.info("Creating pdf for 'fattura accompagnatoria acquisto' with id '{}'", idFatturaAccompagnatoriaAcquisto);
+
+        byte[] reportBytes = stampaService.generateFatturaAccompagnatoriaAcquisto(idFatturaAccompagnatoriaAcquisto);
+
+        ByteArrayResource resource = new ByteArrayResource(reportBytes);
+
+        log.info("Successfully create pdf for 'fattura accompagnatoria acquisto' with id '{}'", idFatturaAccompagnatoriaAcquisto);
+
+        return ResponseEntity.ok()
+                .headers(StampaService.createHttpHeaders("fattura-accompagnatoria-acquisto-"+idFatturaAccompagnatoriaAcquisto+".pdf"))
+                .contentLength(reportBytes.length)
+                .contentType(MediaType.parseMediaType(Constants.MEDIA_TYPE_APPLICATION_PDF))
+                .body(resource);
+    }
+
     @RequestMapping(method = GET, path = "/note-reso/{idNotaReso}")
     @CrossOrigin
     public ResponseEntity<Resource> printNotaReso(@PathVariable final Long idNotaReso) throws Exception{
-        LOGGER.info("Creating pdf for 'nota reso' with id '{}'", idNotaReso);
+        log.info("Creating pdf for 'nota reso' with id '{}'", idNotaReso);
 
         // retrieve the NotaReso
         NotaReso notaReso = stampaService.getNotaReso(idNotaReso);
@@ -593,7 +614,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'nota reso' with id '{}'", idNotaReso);
+        log.info("Successfully create pdf for 'nota reso' with id '{}'", idNotaReso);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("nota-reso-"+idNotaReso+".pdf"))
@@ -605,7 +626,7 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/ricevute-privati")
     @CrossOrigin
     public ResponseEntity<Resource> printRicevutePrivati(@RequestParam(name = "ids") String ids) throws Exception{
-        LOGGER.info("Creating pdf for 'ricevute privati' with ids {}", ids);
+        log.info("Creating pdf for 'ricevute privati' with ids {}", ids);
 
         // retrieve the list of RicevutePrivato
         List<RicevutaPrivatoDataSource> ricevutePrivato = stampaService.getRicevutaPrivatoDataSources(ids);
@@ -640,7 +661,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ricevute privati'");
+        log.info("Successfully create pdf for 'ricevute privati'");
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("elenco_ricevute_privati.pdf"))
@@ -652,7 +673,7 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/ricevute-privati/{idRicevutaPrivato}")
     @CrossOrigin
     public ResponseEntity<Resource> printRicevutaPrivato(@PathVariable final Long idRicevutaPrivato) throws Exception{
-        LOGGER.info("Creating pdf for 'ricevuta privato' with id '{}'", idRicevutaPrivato);
+        log.info("Creating pdf for 'ricevuta privato' with id '{}'", idRicevutaPrivato);
 
         // retrieve the RicevutaPrivato
         RicevutaPrivato ricevutaPrivato = stampaService.getRicevutaPrivato(idRicevutaPrivato);
@@ -760,7 +781,7 @@ public class StampaController {
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ricevuta privato' with id '{}'", idRicevutaPrivato);
+        log.info("Successfully create pdf for 'ricevuta privato' with id '{}'", idRicevutaPrivato);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("ricevuta-privato-"+idRicevutaPrivato+".pdf"))
@@ -772,14 +793,14 @@ public class StampaController {
     @RequestMapping(method = GET, path = "/ordini-fornitori/{idOrdineFornitore}")
     @CrossOrigin
     public ResponseEntity<Resource> printOrdineFornitore(@PathVariable final Long idOrdineFornitore) throws Exception{
-        LOGGER.info("Creating pdf for 'ordine-fornitore' with id '{}'", idOrdineFornitore);
+        log.info("Creating pdf for 'ordine-fornitore' with id '{}'", idOrdineFornitore);
 
         // create report
         byte[] reportBytes = stampaService.generateOrdineFornitore(idOrdineFornitore);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'ordine-fornitore' with id '{}'", idOrdineFornitore);
+        log.info("Successfully create pdf for 'ordine-fornitore' with id '{}'", idOrdineFornitore);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("ordine-fornitore-"+idOrdineFornitore+".pdf"))
@@ -794,14 +815,14 @@ public class StampaController {
                                                  @RequestParam(name = "fornitore", required = false) Long idFornitore,
                                                  @RequestParam(name = "categoriaArticolo", required = false) Long idCategoriaArticolo,
                                                  @RequestParam(name = "orderBy", required = false) String orderBy) throws Exception{
-        LOGGER.info("Creating pdf for 'listino' with id '{}', filtered by fornitore '{}' and categoria articolo '{}', order by '{}'", idListino, idFornitore, idCategoriaArticolo, orderBy);
+        log.info("Creating pdf for 'listino' with id '{}', filtered by fornitore '{}' and categoria articolo '{}', order by '{}'", idListino, idFornitore, idCategoriaArticolo, orderBy);
 
         // create report
         byte[] reportBytes = stampaService.generateListino(idListino, idFornitore, idCategoriaArticolo, orderBy);
 
         ByteArrayResource resource = new ByteArrayResource(reportBytes);
 
-        LOGGER.info("Successfully create pdf for 'listino' with id '{}' order by '{}'", idListino, orderBy);
+        log.info("Successfully create pdf for 'listino' with id '{}' order by '{}'", idListino, orderBy);
 
         return ResponseEntity.ok()
                 .headers(StampaService.createHttpHeaders("listino-"+idListino+".pdf"))

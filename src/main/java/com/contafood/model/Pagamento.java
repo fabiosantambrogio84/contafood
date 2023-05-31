@@ -62,6 +62,10 @@ public class Pagamento {
     @JoinColumn(name="id_fattura_acquisto")
     private FatturaAcquisto fatturaAcquisto;
 
+    @ManyToOne
+    @JoinColumn(name="id_fattura_accom_acquisto")
+    private FatturaAccompagnatoriaAcquisto fatturaAccompagnatoriaAcquisto;
+
     @Column(name = "descrizione")
     private String descrizione;
 

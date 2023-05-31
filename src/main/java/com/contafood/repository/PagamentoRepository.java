@@ -26,6 +26,8 @@ public interface PagamentoRepository extends CrudRepository<Pagamento, Long> {
 
     Set<Pagamento> findByFatturaAcquistoIdOrderByDataDesc(Long fatturaAcquistoId);
 
+    Set<Pagamento> findByFatturaAccompagnatoriaAcquistoIdOrderByDataDesc(Long fatturaAccompagnatoriaAcquistoId);
+
     void deleteByDdtId(Long ddtId);
 
     void deleteByNotaAccreditoId(Long notaAccreditoId);
@@ -38,4 +40,5 @@ public interface PagamentoRepository extends CrudRepository<Pagamento, Long> {
 
     void deleteByRicevutaPrivatoId(Long ricevutaPrivatoId);
 
+    void deleteByFatturaAccompagnatoriaAcquistoId(Long fatturaAccompagnatoriaAcquistoId);
 }

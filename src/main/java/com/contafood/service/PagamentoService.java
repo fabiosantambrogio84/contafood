@@ -34,6 +34,7 @@ public class PagamentoService {
     private final FatturaRepository fatturaRepository;
     private final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository;
     private final FatturaAcquistoRepository fatturaAcquistoRepository;
+    private final FatturaAccompagnatoriaAcquistoRepository fatturaAccompagnatoriaAcquistoRepository;
     private final StatoDdtService statoDdtService;
     private final StatoNotaAccreditoService statoNotaAccreditoService;
     private final StatoNotaResoService statoNotaResoService;
@@ -51,6 +52,7 @@ public class PagamentoService {
                             final FatturaRepository fatturaRepository,
                             final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository,
                             final FatturaAcquistoRepository fatturaAcquistoRepository,
+                            final FatturaAccompagnatoriaAcquistoRepository fatturaAccompagnatoriaAcquistoRepository,
                             final StatoDdtService statoDdtService,
                             final StatoNotaAccreditoService statoNotaAccreditoService,
                             final StatoNotaResoService statoNotaResoService,
@@ -66,6 +68,7 @@ public class PagamentoService {
         this.fatturaRepository = fatturaRepository;
         this.fatturaAccompagnatoriaRepository = fatturaAccompagnatoriaRepository;
         this.fatturaAcquistoRepository = fatturaAcquistoRepository;
+        this.fatturaAccompagnatoriaAcquistoRepository = fatturaAccompagnatoriaAcquistoRepository;
         this.statoDdtService = statoDdtService;
         this.statoNotaAccreditoService = statoNotaAccreditoService;
         this.statoNotaResoService = statoNotaResoService;
@@ -144,6 +147,13 @@ public class PagamentoService {
         return pagamenti;
     }
 
+    public Set<Pagamento> getFatturaAccompagnatoriaAcquistoPagamentiByIdFatturaAccompagnatoriaAcquisto(Long fatturaAccompagnatoriaAcquistoId){
+        log.info("Retrieving 'pagamenti' of 'fatturaAccompagnatoriaAcquisto' '{}'", fatturaAccompagnatoriaAcquistoId);
+        Set<Pagamento> pagamenti = pagamentoRepository.findByFatturaAccompagnatoriaAcquistoIdOrderByDataDesc(fatturaAccompagnatoriaAcquistoId);
+        log.info("Retrieved {} 'pagamenti' of 'fatturaAccompagnatoriaAcquisto' '{}'", pagamenti.size(), fatturaAccompagnatoriaAcquistoId);
+        return pagamenti;
+    }
+
     public Pagamento getPagamento(Long pagamentoId){
         log.info("Retrieving 'pagamento' '{}'", pagamentoId);
         Pagamento pagamento = pagamentoRepository.findById(pagamentoId).orElseThrow(ResourceNotFoundException::new);
@@ -175,6 +185,8 @@ public class PagamentoService {
         Fattura fattura = null;
         FatturaAccompagnatoria fatturaAccompagnatoria = null;
         FatturaAcquisto fatturaAcquisto = null;
+        FatturaAccompagnatoriaAcquisto fatturaAccompagnatoriaAcquisto = null;
+
         if(pagamento.getDdt() != null && pagamento.getDdt().getId() != null){
             ddt = ddtRepository.findById(pagamento.getDdt().getId()).orElseThrow(ResourceNotFoundException::new);
             totaleAcconto = ddt.getTotaleAcconto();
@@ -187,6 +199,7 @@ public class PagamentoService {
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
             pagamento.setFatturaAcquisto(null);
+            pagamento.setFatturaAccompagnatoriaAcquisto(null);
 
             resource = Resource.DDT;
 
@@ -202,6 +215,7 @@ public class PagamentoService {
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
             pagamento.setFatturaAcquisto(null);
+            pagamento.setFatturaAccompagnatoriaAcquisto(null);
 
             resource = Resource.DDT_ACQUISTO;
 
@@ -217,6 +231,7 @@ public class PagamentoService {
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
             pagamento.setFatturaAcquisto(null);
+            pagamento.setFatturaAccompagnatoriaAcquisto(null);
 
             resource= Resource.NOTA_ACCREDITO;
 
@@ -232,6 +247,7 @@ public class PagamentoService {
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
             pagamento.setFatturaAcquisto(null);
+            pagamento.setFatturaAccompagnatoriaAcquisto(null);
 
             resource= Resource.NOTA_RESO;
 
@@ -247,6 +263,7 @@ public class PagamentoService {
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
             pagamento.setFatturaAcquisto(null);
+            pagamento.setFatturaAccompagnatoriaAcquisto(null);
 
             resource= Resource.RICEVUTA_PRIVATO;
 
@@ -262,6 +279,7 @@ public class PagamentoService {
             pagamento.setRicevutaPrivato(null);
             pagamento.setFatturaAccompagnatoria(null);
             pagamento.setFatturaAcquisto(null);
+            pagamento.setFatturaAccompagnatoriaAcquisto(null);
 
             resource= Resource.FATTURA;
 
@@ -277,6 +295,7 @@ public class PagamentoService {
             pagamento.setRicevutaPrivato(null);
             pagamento.setFattura(null);
             pagamento.setFatturaAcquisto(null);
+            pagamento.setFatturaAccompagnatoriaAcquisto(null);
 
             resource= Resource.FATTURA_ACCOMPAGNATORIA;
             
@@ -292,8 +311,26 @@ public class PagamentoService {
             pagamento.setRicevutaPrivato(null);
             pagamento.setFattura(null);
             pagamento.setFatturaAccompagnatoria(null);
+            pagamento.setFatturaAccompagnatoriaAcquisto(null);
 
             resource= Resource.FATTURA_ACQUISTO;
+
+        } else if(pagamento.getFatturaAccompagnatoriaAcquisto() != null && pagamento.getFatturaAccompagnatoriaAcquisto().getId() != null){
+            fatturaAccompagnatoriaAcquisto = fatturaAccompagnatoriaAcquistoRepository.findById(pagamento.getFatturaAccompagnatoriaAcquisto().getId()).orElseThrow(ResourceNotFoundException::new);
+            totaleAcconto = fatturaAccompagnatoriaAcquisto.getTotaleAcconto();
+            totale = fatturaAccompagnatoriaAcquisto.getTotale();
+
+            pagamento.setDdt(null);
+            pagamento.setDdtAcquisto(null);
+            pagamento.setNotaAccredito(null);
+            pagamento.setNotaReso(null);
+            pagamento.setRicevutaPrivato(null);
+            pagamento.setFattura(null);
+            pagamento.setFatturaAcquisto(null);
+            pagamento.setFatturaAccompagnatoria(null);
+
+            resource= Resource.FATTURA_ACCOMPAGNATORIA_ACQUISTO;
+
         }
 
         log.info("Resource {}", resource);
@@ -377,8 +414,15 @@ public class PagamentoService {
                 fatturaAcquistoRepository.save(fatturaAcquisto);
                 log.info("Updated 'totaleAcconto' of 'fattura' '{}'", fatturaAcquisto.getId());
                 break;
+            case FATTURA_ACCOMPAGNATORIA_ACQUISTO:
+                log.info("Updating 'totaleAcconto' of 'fatturaAccompagnatoriaAcquisto' '{}'", fatturaAccompagnatoriaAcquisto.getId());
+                fatturaAccompagnatoriaAcquisto.setTotaleAcconto(newTotaleAcconto);
+                computeStato(fatturaAccompagnatoriaAcquisto);
+                fatturaAccompagnatoriaAcquistoRepository.save(fatturaAccompagnatoriaAcquisto);
+                log.info("Updated 'totaleAcconto' of 'fatturaAccompagnatoriaAcquisto' '{}'", fatturaAccompagnatoriaAcquisto.getId());
+                break;
             default:
-                log.info("No case found for updating 'totaleAcconto' on ddt or notaAccredito");
+                log.info("No case found for updating 'totaleAcconto'");
         }
         return createdPagamento;
     }
@@ -408,6 +452,7 @@ public class PagamentoService {
         Fattura fattura = null;
         FatturaAccompagnatoria fatturaAccompagnatoria = null;
         FatturaAcquisto fatturaAcquisto = null;
+        FatturaAccompagnatoriaAcquisto fatturaAccompagnatoriaAcquisto = null;
 
         if(pagamento.getDdt() != null){
             ddt = pagamento.getDdt();
@@ -465,6 +510,13 @@ public class PagamentoService {
                 totaleAcconto = fatturaAcquisto.getTotaleAcconto();
 
                 resource = Resource.FATTURA_ACQUISTO;
+            }
+        } else if(pagamento.getFatturaAccompagnatoriaAcquisto() != null){
+            fatturaAccompagnatoriaAcquisto = pagamento.getFatturaAccompagnatoriaAcquisto();
+            if(fatturaAccompagnatoriaAcquisto.getId() != null){
+                totaleAcconto = fatturaAccompagnatoriaAcquisto.getTotaleAcconto();
+
+                resource = Resource.FATTURA_ACCOMPAGNATORIA_ACQUISTO;
             }
         }
 
@@ -529,6 +581,13 @@ public class PagamentoService {
                 computeStato(fatturaAcquisto, true, importo, "DELETE_PAGAMENTO");
                 fatturaAcquistoRepository.save(fatturaAcquisto);
                 log.info("Updated 'totaleAcconto' of 'fattura acquisto' '{}'", fatturaAcquisto.getId());
+                break;
+            case FATTURA_ACCOMPAGNATORIA_ACQUISTO:
+                log.info("Updating 'totaleAcconto' of 'fatturaAccompagnatoriaAcquisto' '{}'", fatturaAccompagnatoriaAcquisto.getId());
+                fatturaAccompagnatoriaAcquisto.setTotaleAcconto(newTotaleAcconto);
+                computeStato(fatturaAccompagnatoriaAcquisto);
+                fatturaAccompagnatoriaAcquistoRepository.save(fatturaAccompagnatoriaAcquisto);
+                log.info("Updated 'totaleAcconto' of 'fatturaAccompagnatoriaAcquisto' '{}'", fatturaAccompagnatoriaAcquisto.getId());
                 break;
             default:
                 log.info("No case found for updating 'totaleAcconto' on ddt or notaAccredito");
@@ -1011,7 +1070,7 @@ public class PagamentoService {
                         DdtAcquisto ddtAcquisto = fatturaDdtAcquisto.getDdtAcquisto();
                         if(ddtAcquisto != null){
                             log.info("Updating 'totaleAcconto' for ddt acquisto '{}' associated to fattura acquisto '{}'", ddtAcquisto.getId(), fatturaAcquisto.getId());
-                            BigDecimal ddtAcquistoTotaleAcconto = ddtAcquisto.getTotaleAcconto();
+                            BigDecimal ddtAcquistoTotaleAcconto = ddtAcquisto.getTotaleAcconto() != null ? ddtAcquisto.getTotaleAcconto() : BigDecimal.ZERO;
                             BigDecimal ddtAcquistoTotale = ddtAcquisto.getTotale();
                             BigDecimal accontoPlusPagamento = ddtAcquistoTotaleAcconto.add(newImportoPagamento);
                             if(accontoPlusPagamento.compareTo(ddtAcquistoTotale) > 0){
@@ -1074,6 +1133,27 @@ public class PagamentoService {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private void computeStato(FatturaAccompagnatoriaAcquisto fatturaAccompagnatoriaAcquisto){
+        BigDecimal totaleAcconto = fatturaAccompagnatoriaAcquisto.getTotaleAcconto();
+        if(totaleAcconto == null){
+            totaleAcconto = new BigDecimal(0);
+        }
+        if(totaleAcconto.compareTo(BigDecimal.ZERO) == 0){
+            fatturaAccompagnatoriaAcquisto.setStatoFattura(statoFatturaService.getDaPagare());
+        } else {
+            BigDecimal totale = fatturaAccompagnatoriaAcquisto.getTotale();
+            if(totale == null){
+                totale = new BigDecimal(0);
+            }
+            BigDecimal result = totale.subtract(totaleAcconto);
+            if(result.compareTo(BigDecimal.ZERO) <= 0){
+                fatturaAccompagnatoriaAcquisto.setStatoFattura(statoFatturaService.getPagata());
+            } else {
+                fatturaAccompagnatoriaAcquisto.setStatoFattura(statoFatturaService.getParzialmentePagata());
             }
         }
     }
