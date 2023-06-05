@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -28,6 +30,7 @@ public class FatturaAccompagnatoriaAcquistoService {
     private final TipoFatturaService tipoFatturaService;
     private final GiacenzaArticoloService giacenzaArticoloService;
     private final PagamentoRepository pagamentoRepository;
+    private final SimpleDateFormat simpleDateFormat;
 
     @Autowired
     public FatturaAccompagnatoriaAcquistoService(final FatturaAccompagnatoriaAcquistoRepository fatturaAccompagnatoriaAcquistoRepository,
@@ -44,6 +47,7 @@ public class FatturaAccompagnatoriaAcquistoService {
         this.tipoFatturaService = tipoFatturaService;
         this.giacenzaArticoloService = giacenzaArticoloService;
         this.pagamentoRepository = pagamentoRepository;
+        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public Set<FatturaAccompagnatoriaAcquisto> getAll(){
@@ -100,6 +104,37 @@ public class FatturaAccompagnatoriaAcquistoService {
         log.info("Created 'fattura accompagnatoria acquisto' '{}'", createdFatturaAccompagnatoriaAcquisto);
 
         return createdFatturaAccompagnatoriaAcquisto;
+    }
+
+    @Transactional
+    public FatturaAccompagnatoriaAcquisto patch(Map<String,Object> patchFatturaAccompagnatoriaAcquisto) throws Exception{
+        log.info("Patching 'fattura accompagnatoria acquisto'");
+
+        Long id = Long.valueOf((Integer) patchFatturaAccompagnatoriaAcquisto.get("id"));
+        FatturaAccompagnatoriaAcquisto fatturaAccompagnatoriaAcquisto = fatturaAccompagnatoriaAcquistoRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
+        for(String key : patchFatturaAccompagnatoriaAcquisto.keySet()){
+            Object value = patchFatturaAccompagnatoriaAcquisto.get(key);
+            switch (key) {
+                case "id":
+                    fatturaAccompagnatoriaAcquisto.setId(Long.valueOf((Integer) value));
+                    break;
+                case "numero":
+                    fatturaAccompagnatoriaAcquisto.setNumero((String) value);
+                    break;
+                case "data":
+                    fatturaAccompagnatoriaAcquisto.setData(new Date(simpleDateFormat.parse((String) value).getTime()));
+                    break;
+                case "note":
+                    fatturaAccompagnatoriaAcquisto.setNote((String) value);
+                    break;
+            }
+        }
+        checkExistsByFornitoreAndNumeroAndIdNot(fatturaAccompagnatoriaAcquisto.getFornitore(),fatturaAccompagnatoriaAcquisto.getNumero(), fatturaAccompagnatoriaAcquisto.getId());
+
+        FatturaAccompagnatoriaAcquisto patchedFatturaAccompagnatoriaAcquisto = fatturaAccompagnatoriaAcquistoRepository.save(fatturaAccompagnatoriaAcquisto);
+
+        log.info("Patched 'fattura accompagnatoria acquisto' '{}'", patchedFatturaAccompagnatoriaAcquisto);
+        return patchedFatturaAccompagnatoriaAcquisto;
     }
 
     @Transactional
