@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"fatturaAccompagnatoriaAcquistoArticoli", "fatturaAccompagnatoriaAcquistoTotali", "fatturaAccompagnatoriaAcquistoPagamenti"})
+@EqualsAndHashCode(exclude = {"fatturaAccompagnatoriaAcquistoArticoli", "fatturaAccompagnatoriaAcquistoIngredienti", "fatturaAccompagnatoriaAcquistoTotali", "fatturaAccompagnatoriaAcquistoPagamenti"})
 @Entity
 @Table(name = "fattura_accom_acquisto")
 public class FatturaAccompagnatoriaAcquisto {
@@ -97,6 +97,10 @@ public class FatturaAccompagnatoriaAcquisto {
     @OneToMany(mappedBy = "fatturaAccompagnatoriaAcquisto")
     @JsonIgnoreProperties("fatturaAccompagnatoriaAcquisto")
     private Set<FatturaAccompagnatoriaAcquistoArticolo> fatturaAccompagnatoriaAcquistoArticoli = new HashSet<>();
+
+    @OneToMany(mappedBy = "fatturaAccompagnatoriaAcquisto")
+    @JsonIgnoreProperties("fatturaAccompagnatoriaAcquisto")
+    private Set<FatturaAccompagnatoriaAcquistoIngrediente> fatturaAccompagnatoriaAcquistoIngredienti = new HashSet<>();
 
     @OneToMany(mappedBy = "fatturaAccompagnatoriaAcquisto")
     @JsonIgnoreProperties("fatturaAccompagnatoriaAcquisto")

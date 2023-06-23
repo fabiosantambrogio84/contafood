@@ -18,8 +18,6 @@ public interface FatturaAccompagnatoriaAcquistoArticoloRepository extends CrudRe
 
     Set<FatturaAccompagnatoriaAcquistoArticolo> findByArticoloId(Long articoloId);
 
-    Set<FatturaAccompagnatoriaAcquistoArticolo> findByArticoloIdAndLotto(Long articoloId, String lotto);
-
     void deleteByFatturaAccompagnatoriaAcquistoId(Long fatturaAccompagnatoriaAcquistoId);
 
     void deleteByArticoloId(Long articoloId);

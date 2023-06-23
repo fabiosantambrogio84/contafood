@@ -82,19 +82,6 @@ public class FatturaAccompagnatoriaAcquistoArticoloService {
         return articoloService.getOne(articoloId);
     }
 
-    public Set<FatturaAccompagnatoriaAcquistoArticolo> getByArticoloIdAndLottoAndScadenza(Long idArticolo, String lotto, Date scadenza){
-        log.info("Retrieving 'fattura accompagnatoria acquisto articoli' by 'idArticolo' '{}', 'lotto' '{}' and 'scadenza' '{}'", idArticolo, lotto, scadenza);
-        Set<FatturaAccompagnatoriaAcquistoArticolo> fatturaAccompagnatoriaAcquistoArticoli = fatturaAccompagnatoriaAcquistoArticoloRepository.findByArticoloIdAndLotto(idArticolo, lotto);
-        if(fatturaAccompagnatoriaAcquistoArticoli != null && !fatturaAccompagnatoriaAcquistoArticoli.isEmpty()){
-            if(scadenza != null){
-                fatturaAccompagnatoriaAcquistoArticoli = fatturaAccompagnatoriaAcquistoArticoli.stream()
-                        .filter(faa -> (faa.getScadenza() != null && faa.getScadenza().toLocalDate().compareTo(scadenza.toLocalDate())==0)).collect(Collectors.toSet());
-            }
-        }
-        log.info("Retrieved '{}' 'fattura accompagnatoria acquisto articoli'", fatturaAccompagnatoriaAcquistoArticoli.size());
-        return fatturaAccompagnatoriaAcquistoArticoli;
-    }
-
     private BigDecimal computeImponibile(FatturaAccompagnatoriaAcquistoArticolo fatturaAccompagnatoriaAcquistoArticolo){
 
         return AccountingUtils.computeImponibile(fatturaAccompagnatoriaAcquistoArticolo.getQuantita(), fatturaAccompagnatoriaAcquistoArticolo.getPrezzo(), fatturaAccompagnatoriaAcquistoArticolo.getSconto());

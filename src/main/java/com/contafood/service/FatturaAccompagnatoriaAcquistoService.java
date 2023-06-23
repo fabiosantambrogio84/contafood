@@ -25,27 +25,33 @@ public class FatturaAccompagnatoriaAcquistoService {
 
     private final FatturaAccompagnatoriaAcquistoRepository fatturaAccompagnatoriaAcquistoRepository;
     private final FatturaAccompagnatoriaAcquistoArticoloService fatturaAccompagnatoriaAcquistoArticoloService;
+    private final FatturaAccompagnatoriaAcquistoIngredienteService fatturaAccompagnatoriaAcquistoIngredienteService;
     private final FatturaAccompagnatoriaAcquistoTotaleService fatturaAccompagnatoriaAcquistoTotaleService;
     private final StatoFatturaService statoFatturaService;
     private final TipoFatturaService tipoFatturaService;
     private final GiacenzaArticoloService giacenzaArticoloService;
+    private final GiacenzaIngredienteService giacenzaIngredienteService;
     private final PagamentoRepository pagamentoRepository;
     private final SimpleDateFormat simpleDateFormat;
 
     @Autowired
     public FatturaAccompagnatoriaAcquistoService(final FatturaAccompagnatoriaAcquistoRepository fatturaAccompagnatoriaAcquistoRepository,
                                                  final FatturaAccompagnatoriaAcquistoArticoloService fatturaAccompagnatoriaAcquistoArticoloService,
+                                                 final FatturaAccompagnatoriaAcquistoIngredienteService fatturaAccompagnatoriaAcquistoIngredienteService,
                                                  final FatturaAccompagnatoriaAcquistoTotaleService fatturaAccompagnatoriaAcquistoTotaleService,
                                                  final StatoFatturaService statoFatturaService,
                                                  final TipoFatturaService tipoFatturaService,
                                                  final GiacenzaArticoloService giacenzaArticoloService,
+                                                 final GiacenzaIngredienteService giacenzaIngredienteService,
                                                  final PagamentoRepository pagamentoRepository){
         this.fatturaAccompagnatoriaAcquistoRepository = fatturaAccompagnatoriaAcquistoRepository;
         this.fatturaAccompagnatoriaAcquistoArticoloService = fatturaAccompagnatoriaAcquistoArticoloService;
+        this.fatturaAccompagnatoriaAcquistoIngredienteService = fatturaAccompagnatoriaAcquistoIngredienteService;
         this.fatturaAccompagnatoriaAcquistoTotaleService = fatturaAccompagnatoriaAcquistoTotaleService;
         this.statoFatturaService = statoFatturaService;
         this.tipoFatturaService = tipoFatturaService;
         this.giacenzaArticoloService = giacenzaArticoloService;
+        this.giacenzaIngredienteService = giacenzaIngredienteService;
         this.pagamentoRepository = pagamentoRepository;
         simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     }
@@ -92,13 +98,26 @@ public class FatturaAccompagnatoriaAcquistoService {
             }
         });
 
+        createdFatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoIngredienti().stream().forEach(fai -> {
+            if(fai.getQuantita() != null && fai.getQuantita() != 0 && fai.getPrezzo() != null){
+                fai.getId().setFatturaAccompagnatoriaAcquistoId(createdFatturaAccompagnatoriaAcquisto.getId());
+                fai.getId().setUuid(UUID.randomUUID().toString());
+                fatturaAccompagnatoriaAcquistoIngredienteService.create(fai);
+
+                // compute 'giacenza ingrediente'
+                giacenzaIngredienteService.computeGiacenza(fai.getId().getIngredienteId(), fai.getLotto(), fai.getScadenza(), fai.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA_ACQUISTO);
+            } else {
+                log.info("FatturaAccompagnatoriaAcquistoArticolo not saved because quantity null or zero ({}) or prezzo zero ({})", fai.getQuantita(), fai.getPrezzo());
+            }
+        });
+
         createdFatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoTotali().stream().forEach(fat -> {
             fat.getId().setFatturaAccompagnatoriaAcquistoId(createdFatturaAccompagnatoriaAcquisto.getId());
             fat.getId().setUuid(UUID.randomUUID().toString());
             fatturaAccompagnatoriaAcquistoTotaleService.create(fat);
         });
 
-        computeTotali(createdFatturaAccompagnatoriaAcquisto, createdFatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoArticoli(), createdFatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoTotali());
+        computeTotali(createdFatturaAccompagnatoriaAcquisto, createdFatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoArticoli(), createdFatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoIngredienti(), createdFatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoTotali());
 
         fatturaAccompagnatoriaAcquistoRepository.save(createdFatturaAccompagnatoriaAcquisto);
         log.info("Created 'fattura accompagnatoria acquisto' '{}'", createdFatturaAccompagnatoriaAcquisto);
@@ -142,15 +161,21 @@ public class FatturaAccompagnatoriaAcquistoService {
         log.info("Deleting 'fattura accompagnatoria acquisto' '{}'", fatturaAccompagnatoriaAcquistoId);
 
         Set<FatturaAccompagnatoriaAcquistoArticolo> fatturaAccompagnatoriaAcquistoArticoli = fatturaAccompagnatoriaAcquistoArticoloService.findByFatturaAccompagnatoriaAcquistoId(fatturaAccompagnatoriaAcquistoId);
+        Set<FatturaAccompagnatoriaAcquistoIngrediente> fatturaAccompagnatoriaAcquistoIngredienti = fatturaAccompagnatoriaAcquistoIngredienteService.findByFatturaAccompagnatoriaAcquistoId(fatturaAccompagnatoriaAcquistoId);
 
         pagamentoRepository.deleteByFatturaAccompagnatoriaAcquistoId(fatturaAccompagnatoriaAcquistoId);
         fatturaAccompagnatoriaAcquistoArticoloService.deleteByFatturaAccompagnatoriaAcquistoId(fatturaAccompagnatoriaAcquistoId);
+        fatturaAccompagnatoriaAcquistoIngredienteService.deleteByFatturaAccompagnatoriaAcquistoId(fatturaAccompagnatoriaAcquistoId);
         fatturaAccompagnatoriaAcquistoTotaleService.deleteByFatturaAccompagnatoriaAcquistoId(fatturaAccompagnatoriaAcquistoId);
         fatturaAccompagnatoriaAcquistoRepository.deleteById(fatturaAccompagnatoriaAcquistoId);
 
         for (FatturaAccompagnatoriaAcquistoArticolo fatturaAccompagnatoriaAcquistoArticolo:fatturaAccompagnatoriaAcquistoArticoli) {
             // compute 'giacenza articolo'
             giacenzaArticoloService.computeGiacenza(fatturaAccompagnatoriaAcquistoArticolo.getId().getArticoloId(), fatturaAccompagnatoriaAcquistoArticolo.getLotto(), fatturaAccompagnatoriaAcquistoArticolo.getScadenza(), fatturaAccompagnatoriaAcquistoArticolo.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA_ACQUISTO);
+        }
+        for (FatturaAccompagnatoriaAcquistoIngrediente fatturaAccompagnatoriaAcquistoIngrediente:fatturaAccompagnatoriaAcquistoIngredienti) {
+            // compute 'giacenza ingrediente'
+            giacenzaIngredienteService.computeGiacenza(fatturaAccompagnatoriaAcquistoIngrediente.getId().getIngredienteId(), fatturaAccompagnatoriaAcquistoIngrediente.getLotto(), fatturaAccompagnatoriaAcquistoIngrediente.getScadenza(), fatturaAccompagnatoriaAcquistoIngrediente.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA_ACQUISTO);
         }
 
         log.info("Deleted 'fattura accompagnatoria acquisto' '{}'", fatturaAccompagnatoriaAcquistoId);
@@ -165,7 +190,7 @@ public class FatturaAccompagnatoriaAcquistoService {
         }
     }
 
-    private void computeTotali(FatturaAccompagnatoriaAcquisto fatturaAccompagnatoriaAcquisto, Set<FatturaAccompagnatoriaAcquistoArticolo> fatturaAccompagnatoriaAcquistoArticoli, Set<FatturaAccompagnatoriaAcquistoTotale> fatturaAccompagnatoriaAcquistoTotali){
+    private void computeTotali(FatturaAccompagnatoriaAcquisto fatturaAccompagnatoriaAcquisto, Set<FatturaAccompagnatoriaAcquistoArticolo> fatturaAccompagnatoriaAcquistoArticoli, Set<FatturaAccompagnatoriaAcquistoIngrediente> fatturaAccompagnatoriaAcquistoIngredienti, Set<FatturaAccompagnatoriaAcquistoTotale> fatturaAccompagnatoriaAcquistoTotali){
         Map<AliquotaIva, Set<FatturaAccompagnatoriaAcquistoArticolo>> ivaFatturaAccompagnatoriaAcquistoArticoliMap = new HashMap<>();
         fatturaAccompagnatoriaAcquistoArticoli.stream().forEach(faa -> {
             Articolo articolo = fatturaAccompagnatoriaAcquistoArticoloService.getArticolo(faa);
@@ -180,8 +205,23 @@ public class FatturaAccompagnatoriaAcquistoService {
             ivaFatturaAccompagnatoriaAcquistoArticoliMap.put(iva, fatturaAccompagnatoriaAcquistoArticoliByIva);
         });
 
+        Map<AliquotaIva, Set<FatturaAccompagnatoriaAcquistoIngrediente>> ivaFatturaAccompagnatoriaAcquistoIngredientiMap = new HashMap<>();
+        fatturaAccompagnatoriaAcquistoIngredienti.stream().forEach(fai -> {
+            Ingrediente ingrediente = fatturaAccompagnatoriaAcquistoIngredienteService.getIngrediente(fai);
+            AliquotaIva iva = ingrediente.getAliquotaIva();
+            Set<FatturaAccompagnatoriaAcquistoIngrediente> fatturaAccompagnatoriaAcquistoIngredientiByIva;
+            if(ivaFatturaAccompagnatoriaAcquistoIngredientiMap.containsKey(iva)){
+                fatturaAccompagnatoriaAcquistoIngredientiByIva = ivaFatturaAccompagnatoriaAcquistoIngredientiMap.get(iva);
+            } else {
+                fatturaAccompagnatoriaAcquistoIngredientiByIva = new HashSet<>();
+            }
+            fatturaAccompagnatoriaAcquistoIngredientiByIva.add(fai);
+            ivaFatturaAccompagnatoriaAcquistoIngredientiMap.put(iva, fatturaAccompagnatoriaAcquistoIngredientiByIva);
+        });
+
         float totaleQuantita = 0f;
         BigDecimal totale = new BigDecimal(0);
+
         for (Map.Entry<AliquotaIva, Set<FatturaAccompagnatoriaAcquistoArticolo>> entry : ivaFatturaAccompagnatoriaAcquistoArticoliMap.entrySet()) {
             BigDecimal iva = entry.getKey().getValore();
             BigDecimal totaleByIva = new BigDecimal(0);
@@ -193,6 +233,18 @@ public class FatturaAccompagnatoriaAcquistoService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
+        for (Map.Entry<AliquotaIva, Set<FatturaAccompagnatoriaAcquistoIngrediente>> entry : ivaFatturaAccompagnatoriaAcquistoIngredientiMap.entrySet()) {
+            BigDecimal iva = entry.getKey().getValore();
+            BigDecimal totaleByIva = new BigDecimal(0);
+            Set<FatturaAccompagnatoriaAcquistoIngrediente> fatturaAccompagnatoriaAcquistoIngredientiByIva = entry.getValue();
+            for(FatturaAccompagnatoriaAcquistoIngrediente fatturaAccompagnatoriaAcquistoIngrediente: fatturaAccompagnatoriaAcquistoIngredientiByIva){
+                BigDecimal imponibile = fatturaAccompagnatoriaAcquistoIngrediente.getImponibile() != null ? fatturaAccompagnatoriaAcquistoIngrediente.getImponibile() : BigDecimal.ZERO;
+                totaleByIva = totaleByIva.add(imponibile);
+                totaleQuantita = totaleQuantita + (fatturaAccompagnatoriaAcquistoIngrediente.getQuantita() != null ? fatturaAccompagnatoriaAcquistoIngrediente.getQuantita() : 0f);
+            }
+            totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
+        }
+
         BigDecimal totaleIva;
         BigDecimal totaleImponibile;
 

@@ -2,8 +2,8 @@ package com.contafood.util;
 
 import com.contafood.model.*;
 import com.contafood.service.ArticoloService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.contafood.service.IngredienteService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -11,9 +11,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 public class AccountingUtils {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountingUtils.class);
 
     public static BigDecimal computeImponibile(Float quantita, BigDecimal prezzo, BigDecimal sconto){
         BigDecimal imponibile = new BigDecimal(0);
@@ -44,14 +43,48 @@ public class AccountingUtils {
         BigDecimal prezzoAcquisto = new BigDecimal(0);
         if(idArticolo != null){
             Articolo articolo = articoloService.getOne(idArticolo);
-            LOGGER.info("Compute costo for 'articolo' {}", articolo);
+            log.info("Compute costo for 'articolo' {}", articolo);
             if(articolo != null){
                 prezzoAcquisto = articolo.getPrezzoAcquisto();
             }
         }
-        LOGGER.info("Prezzo acquisto '{}'", prezzoAcquisto);
+        log.info("Prezzo acquisto '{}'", prezzoAcquisto);
         costo = Utils.roundPrice(prezzoAcquisto.multiply(BigDecimal.valueOf(quantita)));
         return costo;
+    }
+
+    public static BigDecimal computeCosto(Float quantita, Long idIngrediente, IngredienteService ingredienteService){
+        BigDecimal costo = new BigDecimal(0);
+
+        if(quantita == null){
+            quantita = 0F;
+        }
+        BigDecimal prezzoAcquisto = new BigDecimal(0);
+        if(idIngrediente != null){
+            Ingrediente ingrediente = ingredienteService.getOne(idIngrediente);
+            log.info("Compute costo for 'ingrediente' {}", ingrediente);
+            if(ingrediente != null){
+                prezzoAcquisto = ingrediente.getPrezzo();
+            }
+        }
+        log.info("Prezzo acquisto '{}'", prezzoAcquisto);
+        costo = Utils.roundPrice(prezzoAcquisto.multiply(BigDecimal.valueOf(quantita)));
+        return costo;
+    }
+
+    public static BigDecimal computeTotale(Float quantita, BigDecimal prezzo, BigDecimal sconto, AliquotaIva aliquotaIva){
+        BigDecimal totale = new BigDecimal(0);
+
+        BigDecimal imponibile = computeImponibile(quantita, prezzo, sconto);
+
+        BigDecimal aliquotaIvaValore = new BigDecimal(0);
+        if(aliquotaIva != null){
+            aliquotaIvaValore = aliquotaIva.getValore();
+        }
+        BigDecimal ivaValue = aliquotaIvaValore.divide(BigDecimal.valueOf(100)).multiply(imponibile);
+        totale = Utils.roundPrice(imponibile.add(ivaValue));
+
+        return totale;
     }
 
     public static BigDecimal computeTotale(Float quantita, BigDecimal prezzo, BigDecimal sconto, AliquotaIva aliquotaIva, Long idArticolo, ArticoloService articoloService){
@@ -65,11 +98,38 @@ public class AccountingUtils {
         } else {
             if (idArticolo != null) {
                 Articolo articolo = articoloService.getOne(idArticolo);
-                LOGGER.info("Compute costo for 'articolo' {}", articolo);
+                log.info("Compute costo for 'articolo' {}", articolo);
                 if (articolo != null) {
                     AliquotaIva aliquotaIVa = articolo.getAliquotaIva();
                     if (aliquotaIVa != null) {
                         aliquotaIvaValore = articolo.getAliquotaIva().getValore();
+                    }
+                }
+            }
+        }
+
+        BigDecimal ivaValue = aliquotaIvaValore.divide(BigDecimal.valueOf(100)).multiply(imponibile);
+        totale = Utils.roundPrice(imponibile.add(ivaValue));
+
+        return totale;
+    }
+
+    public static BigDecimal computeTotale(Float quantita, BigDecimal prezzo, BigDecimal sconto, AliquotaIva aliquotaIva, Long idIngrediente, IngredienteService ingredienteService){
+        BigDecimal totale = new BigDecimal(0);
+
+        BigDecimal imponibile = computeImponibile(quantita, prezzo, sconto);
+
+        BigDecimal aliquotaIvaValore = new BigDecimal(0);
+        if(aliquotaIva != null){
+            aliquotaIvaValore = aliquotaIva.getValore();
+        } else {
+            if (idIngrediente != null) {
+                Ingrediente ingrediente = ingredienteService.getOne(idIngrediente);
+                log.info("Compute costo for 'articolo' {}", ingrediente);
+                if (ingrediente != null) {
+                    AliquotaIva aliquotaIVa = ingrediente.getAliquotaIva();
+                    if (aliquotaIVa != null) {
+                        aliquotaIvaValore = ingrediente.getAliquotaIva().getValore();
                     }
                 }
             }

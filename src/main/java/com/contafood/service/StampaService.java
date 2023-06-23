@@ -328,19 +328,36 @@ public class StampaService {
         List<DdtAcquistoArticoloDataSource> ddtAcquistoArticoloDataSources = new ArrayList<>();
         if(ddtAcquisto.getDdtAcquistoArticoli() != null && !ddtAcquisto.getDdtAcquistoArticoli().isEmpty()){
             ddtAcquisto.getDdtAcquistoArticoli().forEach(da -> {
-                DdtAcquistoArticoloDataSource ddtAquistoArticoloDataSource = new DdtAcquistoArticoloDataSource();
-                ddtAquistoArticoloDataSource.setCodiceArticolo(da.getArticolo().getCodice());
-                ddtAquistoArticoloDataSource.setDescrizioneArticolo(da.getArticolo().getDescrizione());
-                ddtAquistoArticoloDataSource.setLotto(da.getLotto());
-                ddtAquistoArticoloDataSource.setDataScadenza(da.getDataScadenza() != null ? simpleDateFormat.format(da.getDataScadenza()) : "");
-                ddtAquistoArticoloDataSource.setUdm(da.getArticolo().getUnitaMisura().getEtichetta());
-                ddtAquistoArticoloDataSource.setQuantita(da.getQuantita());
-                ddtAquistoArticoloDataSource.setPrezzo(da.getPrezzo() != null ? Utils.roundPrice(da.getPrezzo()) : Utils.roundPrice(new BigDecimal(0)));
-                ddtAquistoArticoloDataSource.setSconto(da.getSconto() != null ? Utils.roundPrice(da.getSconto()) : Utils.roundPrice(new BigDecimal(0)));
-                ddtAquistoArticoloDataSource.setImponibile(da.getImponibile() != null ? Utils.roundPrice(da.getImponibile()): Utils.roundPrice(new BigDecimal(0)));
-                ddtAquistoArticoloDataSource.setIva(da.getArticolo().getAliquotaIva().getValore().intValue());
+                DdtAcquistoArticoloDataSource ddtAcquistoArticoloDataSource = new DdtAcquistoArticoloDataSource();
+                ddtAcquistoArticoloDataSource.setCodiceArticolo(da.getArticolo().getCodice());
+                ddtAcquistoArticoloDataSource.setDescrizioneArticolo(da.getArticolo().getDescrizione());
+                ddtAcquistoArticoloDataSource.setLotto(da.getLotto());
+                ddtAcquistoArticoloDataSource.setDataScadenza(da.getDataScadenza() != null ? simpleDateFormat.format(da.getDataScadenza()) : "");
+                ddtAcquistoArticoloDataSource.setUdm(da.getArticolo().getUnitaMisura().getEtichetta());
+                ddtAcquistoArticoloDataSource.setQuantita(da.getQuantita());
+                ddtAcquistoArticoloDataSource.setPrezzo(da.getPrezzo() != null ? Utils.roundPrice(da.getPrezzo()) : Utils.roundPrice(new BigDecimal(0)));
+                ddtAcquistoArticoloDataSource.setSconto(da.getSconto() != null ? Utils.roundPrice(da.getSconto()) : Utils.roundPrice(new BigDecimal(0)));
+                ddtAcquistoArticoloDataSource.setImponibile(da.getImponibile() != null ? Utils.roundPrice(da.getImponibile()): Utils.roundPrice(new BigDecimal(0)));
+                ddtAcquistoArticoloDataSource.setIva(da.getArticolo().getAliquotaIva().getValore().intValue());
 
-                ddtAcquistoArticoloDataSources.add(ddtAquistoArticoloDataSource);
+                ddtAcquistoArticoloDataSources.add(ddtAcquistoArticoloDataSource);
+            });
+        }
+        if(ddtAcquisto.getDdtAcquistoIngredienti() != null && !ddtAcquisto.getDdtAcquistoIngredienti().isEmpty()){
+            ddtAcquisto.getDdtAcquistoIngredienti().forEach(da -> {
+                DdtAcquistoArticoloDataSource ddtAcquistoArticoloDataSource = new DdtAcquistoArticoloDataSource();
+                ddtAcquistoArticoloDataSource.setCodiceArticolo(da.getIngrediente().getCodice());
+                ddtAcquistoArticoloDataSource.setDescrizioneArticolo(da.getIngrediente().getDescrizione());
+                ddtAcquistoArticoloDataSource.setLotto(da.getLotto());
+                ddtAcquistoArticoloDataSource.setDataScadenza(da.getDataScadenza() != null ? simpleDateFormat.format(da.getDataScadenza()) : "");
+                ddtAcquistoArticoloDataSource.setUdm(da.getIngrediente().getUnitaMisura().getEtichetta());
+                ddtAcquistoArticoloDataSource.setQuantita(da.getQuantita());
+                ddtAcquistoArticoloDataSource.setPrezzo(da.getPrezzo() != null ? Utils.roundPrice(da.getPrezzo()) : Utils.roundPrice(new BigDecimal(0)));
+                ddtAcquistoArticoloDataSource.setSconto(da.getSconto() != null ? Utils.roundPrice(da.getSconto()) : Utils.roundPrice(new BigDecimal(0)));
+                ddtAcquistoArticoloDataSource.setImponibile(da.getImponibile() != null ? Utils.roundPrice(da.getImponibile()): Utils.roundPrice(new BigDecimal(0)));
+                ddtAcquistoArticoloDataSource.setIva(da.getIngrediente().getAliquotaIva().getValore().intValue());
+
+                ddtAcquistoArticoloDataSources.add(ddtAcquistoArticoloDataSource);
             });
         }
         ddtAcquistoArticoloDataSources.sort(Comparator.comparing(DdtAcquistoArticoloDataSource::getCodiceArticolo).thenComparing(DdtAcquistoArticoloDataSource::getDescrizioneArticolo));
@@ -993,6 +1010,24 @@ public class StampaService {
                 fatturaAccompagnatoriaAcquistoRigaDataSource.setSconto(faa.getSconto() != null ? Utils.roundPrice(faa.getSconto()) : new BigDecimal(0));
                 fatturaAccompagnatoriaAcquistoRigaDataSource.setImponibile(faa.getImponibile() != null ? Utils.roundPrice(faa.getImponibile()) : new BigDecimal(0));
                 fatturaAccompagnatoriaAcquistoRigaDataSource.setIva(articolo != null ? (articolo.getAliquotaIva() != null ? articolo.getAliquotaIva().getValore().intValue() : null) : null);
+
+                fatturaAccompagnatoriaAcquistoRigaDataSources.add(fatturaAccompagnatoriaAcquistoRigaDataSource);
+            });
+        }
+        if(fatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoIngredienti() != null && !fatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoIngredienti().isEmpty()){
+            fatturaAccompagnatoriaAcquisto.getFatturaAccompagnatoriaAcquistoIngredienti().forEach(fai -> {
+                Ingrediente ingrediente = fai.getIngrediente();
+                FatturaAccompagnatoriaAcquistoRigaDataSource fatturaAccompagnatoriaAcquistoRigaDataSource = new FatturaAccompagnatoriaAcquistoRigaDataSource();
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setCodiceArticolo(ingrediente != null ? ingrediente.getCodice() : "");
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setDescrizioneArticolo(ingrediente != null ? ingrediente.getDescrizione() : "");
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setScadenza(fai.getScadenza() != null ? simpleDateFormat.format(fai.getScadenza()) : "");
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setLotto(fai.getLotto());
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setUdm(ingrediente != null ? (ingrediente.getUnitaMisura() != null ? ingrediente.getUnitaMisura().getEtichetta() : "") : "");
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setQuantita(fai.getQuantita());
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setPrezzo(fai.getPrezzo() != null ? Utils.roundPrice(fai.getPrezzo()) : new BigDecimal(0));
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setSconto(fai.getSconto() != null ? Utils.roundPrice(fai.getSconto()) : new BigDecimal(0));
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setImponibile(fai.getImponibile() != null ? Utils.roundPrice(fai.getImponibile()) : new BigDecimal(0));
+                fatturaAccompagnatoriaAcquistoRigaDataSource.setIva(ingrediente != null ? (ingrediente.getAliquotaIva() != null ? ingrediente.getAliquotaIva().getValore().intValue() : null) : null);
 
                 fatturaAccompagnatoriaAcquistoRigaDataSources.add(fatturaAccompagnatoriaAcquistoRigaDataSource);
             });

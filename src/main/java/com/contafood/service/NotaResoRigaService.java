@@ -63,7 +63,7 @@ public class NotaResoRigaService {
 
     private BigDecimal computeTotale(NotaResoRiga notaResoRiga){
         AliquotaIva aliquotaIva = getAliquotaIva(notaResoRiga);
-        return AccountingUtils.computeTotale(notaResoRiga.getQuantita(), notaResoRiga.getPrezzo(), notaResoRiga.getSconto(), aliquotaIva, null, null);
+        return AccountingUtils.computeTotale(notaResoRiga.getQuantita(), notaResoRiga.getPrezzo(), notaResoRiga.getSconto(), aliquotaIva);
     }
 
 }
