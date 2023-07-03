@@ -243,9 +243,22 @@ public class StampaController {
         // create report datasource
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(documentiAcquisto);
 
+        BigDecimal totale = new BigDecimal(0);
+        BigDecimal totaleImponibile = new BigDecimal(0);
+        BigDecimal totaleIva = new BigDecimal(0);
+
+        for(DocumentoAcquistoDataSource documentoAcquisto: documentiAcquisto){
+            totale = totale.add(documentoAcquisto.getTotale());
+            totaleImponibile = totaleImponibile.add(documentoAcquisto.getTotaleImponibile());
+            totaleIva = totaleIva.add(documentoAcquisto.getTotaleIva());
+        }
+
         // create report parameters
         Map<String, Object> parameters = stampaService.createParameters();
         parameters.put("documentiAcquistoCollection", dataSource);
+        parameters.put("totale", totale);
+        parameters.put("totaleImponibile", totaleImponibile);
+        parameters.put("totaleIva", totaleIva);
 
         // create report
         byte[] reportBytes = JasperRunManager.runReportToPdf(stream, parameters, new JREmptyDataSource());

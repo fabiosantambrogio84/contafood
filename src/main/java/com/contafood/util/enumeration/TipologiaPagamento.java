@@ -9,7 +9,8 @@ public enum TipologiaPagamento {
     FATTURA("Fattura"),
     FATTURA_ACCOMPAGNATORIA("Fattura accompagnatoria"),
     FATTURA_ACQUISTO("Fattura acquisto"),
-    RICEVUTA_PRIVATO("Ricevuta a privato");
+    RICEVUTA_PRIVATO("Ricevuta a privato"),
+    FATTURA_ACCOMPAGNATORIA_ACQUISTO("Fattura accompagnatoria acquisto");
 
     private String label;
 
