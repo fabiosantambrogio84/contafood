@@ -3,14 +3,11 @@ package com.contafood.service;
 import com.contafood.exception.ResourceAlreadyExistingException;
 import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
-import com.contafood.model.views.VFattura;
 import com.contafood.repository.FatturaAccompagnatoriaRepository;
 import com.contafood.repository.PagamentoRepository;
-import com.contafood.repository.views.VFatturaRepository;
 import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,17 +20,15 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FatturaAccompagnatoriaService {
-
-    private static Logger LOGGER = LoggerFactory.getLogger(FatturaAccompagnatoriaService.class);
 
     private final FatturaAccompagnatoriaRepository fatturaAccompagnatoriaRepository;
     private final FatturaAccompagnatoriaArticoloService fatturaAccompagnatoriaArticoloService;
     private final FatturaAccompagnatoriaTotaleService fatturaAccompagnatoriaTotaleService;
     private final StatoFatturaService statoFatturaService;
     private final TipoFatturaService tipoFatturaService;
-    private final VFatturaRepository vFatturaRepository;
     private final GiacenzaArticoloService giacenzaArticoloService;
     private final PagamentoRepository pagamentoRepository;
 
@@ -43,7 +38,6 @@ public class FatturaAccompagnatoriaService {
                                          final FatturaAccompagnatoriaTotaleService fatturaAccompagnatoriaTotaleService,
                                          final StatoFatturaService statoFatturaService,
                                          final TipoFatturaService tipoFatturaService,
-                                         final VFatturaRepository vFatturaRepository,
                                          final GiacenzaArticoloService giacenzaArticoloService,
                                          final PagamentoRepository pagamentoRepository){
         this.fatturaAccompagnatoriaRepository = fatturaAccompagnatoriaRepository;
@@ -51,22 +45,21 @@ public class FatturaAccompagnatoriaService {
         this.fatturaAccompagnatoriaTotaleService = fatturaAccompagnatoriaTotaleService;
         this.statoFatturaService = statoFatturaService;
         this.tipoFatturaService = tipoFatturaService;
-        this.vFatturaRepository = vFatturaRepository;
         this.giacenzaArticoloService = giacenzaArticoloService;
         this.pagamentoRepository = pagamentoRepository;
     }
 
     public Set<FatturaAccompagnatoria> getAll(){
-        LOGGER.info("Retrieving the list of 'fatture accompagnatorie'");
+        log.info("Retrieving the list of 'fatture accompagnatorie'");
         Set<FatturaAccompagnatoria> fattureAccompagnatorie = fatturaAccompagnatoriaRepository.findAllByOrderByAnnoDescProgressivoDesc();
-        LOGGER.info("Retrieved {} 'fatture accompagnatorie'", fattureAccompagnatorie.size());
+        log.info("Retrieved {} 'fatture accompagnatorie'", fattureAccompagnatorie.size());
         return fattureAccompagnatorie;
     }
 
     public FatturaAccompagnatoria getOne(Long fatturaAccompagnatoriaId){
-        LOGGER.info("Retrieving 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
+        log.info("Retrieving 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
         FatturaAccompagnatoria fatturaAccompagnatoria = fatturaAccompagnatoriaRepository.findById(fatturaAccompagnatoriaId).orElseThrow(ResourceNotFoundException::new);
-        LOGGER.info("Retrieved 'fattura accompagnatoria' '{}'", fatturaAccompagnatoria);
+        log.info("Retrieved 'fattura accompagnatoria' '{}'", fatturaAccompagnatoria);
         return fatturaAccompagnatoria;
     }
 
@@ -90,14 +83,14 @@ public class FatturaAccompagnatoriaService {
     }
 
     public List<FatturaAccompagnatoria> getByDataGreaterThanEqual(Date data){
-        LOGGER.info("Retrieving 'fattureAccompagnatorie' with 'data' greater or equals to '{}'", data);
+        log.info("Retrieving 'fattureAccompagnatorie' with 'data' greater or equals to '{}'", data);
         List<FatturaAccompagnatoria> fattureAccompagnatorie = fatturaAccompagnatoriaRepository.findByDataGreaterThanEqualOrderByProgressivoDesc(data);
-        LOGGER.info("Retrieved {} 'fattureAccompagnatorie' with 'data' greater or equals to '{}'", fattureAccompagnatorie.size(), data);
+        log.info("Retrieved {} 'fattureAccompagnatorie' with 'data' greater or equals to '{}'", fattureAccompagnatorie.size(), data);
         return fattureAccompagnatorie;
     }
 
     public Map<Cliente, List<FatturaAccompagnatoria>> getFattureAccompagnatorieByCliente(Date dateFrom, Date dateTo){
-        LOGGER.info("Retrieving the list of fatture_acompagnatorie, grouped by cliente, with speditoAde 'false', dateFrom '{}' and dateTo '{}'", dateFrom, dateTo);
+        log.info("Retrieving the list of fatture_acompagnatorie, grouped by cliente, with speditoAde 'false', dateFrom '{}' and dateTo '{}'", dateFrom, dateTo);
 
         Map<Cliente, List<FatturaAccompagnatoria>> fattureAccompagnatorieByCliente = new HashMap<>();
 
@@ -131,14 +124,14 @@ public class FatturaAccompagnatoriaService {
             }
         }
 
-        LOGGER.info("Successfully retrieved the list of fatture_acompagnatorie grouped by cliente");
+        log.info("Successfully retrieved the list of fatture_acompagnatorie grouped by cliente");
 
         return fattureAccompagnatorieByCliente;
     }
 
     @Transactional
     public FatturaAccompagnatoria create(FatturaAccompagnatoria fatturaAccompagnatoria){
-        LOGGER.info("Creating 'fattura accompagnatoria'");
+        log.info("Creating 'fattura accompagnatoria'");
 
         Integer progressivo = fatturaAccompagnatoria.getProgressivo();
         if(progressivo == null){
@@ -153,7 +146,7 @@ public class FatturaAccompagnatoriaService {
         fatturaAccompagnatoria.setSpeditoAde(false);
         fatturaAccompagnatoria.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
-        LOGGER.info(fatturaAccompagnatoria.getScannerLog());
+        log.info(fatturaAccompagnatoria.getScannerLog());
 
         FatturaAccompagnatoria createdFatturaAccompagnatoria = fatturaAccompagnatoriaRepository.save(fatturaAccompagnatoria);
 
@@ -166,7 +159,7 @@ public class FatturaAccompagnatoriaService {
                 // compute 'giacenza articolo'
                 giacenzaArticoloService.computeGiacenza(faa.getId().getArticoloId(), faa.getLotto(), faa.getScadenza(), faa.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA);
             } else {
-                LOGGER.info("FatturaAccompagnatoriaArticolo not saved because quantity null or zero ({}) or prezzo zero ({})", faa.getQuantita(), faa.getPrezzo());
+                log.info("FatturaAccompagnatoriaArticolo not saved because quantity null or zero ({}) or prezzo zero ({})", faa.getQuantita(), faa.getPrezzo());
             }
         });
 
@@ -176,17 +169,17 @@ public class FatturaAccompagnatoriaService {
             fatturaAccompagnatoriaTotaleService.create(fat);
         });
 
-        computeTotali(createdFatturaAccompagnatoria, createdFatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli());
+        computeTotali(createdFatturaAccompagnatoria, createdFatturaAccompagnatoria.getFatturaAccompagnatoriaArticoli(), createdFatturaAccompagnatoria.getFatturaAccompagnatoriaTotali());
 
         fatturaAccompagnatoriaRepository.save(createdFatturaAccompagnatoria);
-        LOGGER.info("Created 'fattura accompagnatoria' '{}'", createdFatturaAccompagnatoria);
+        log.info("Created 'fattura accompagnatoria' '{}'", createdFatturaAccompagnatoria);
 
         return createdFatturaAccompagnatoria;
     }
 
     @Transactional
     public FatturaAccompagnatoria patch(Map<String,Object> patchFatturaAccompagnatoria){
-        LOGGER.info("Patching 'fatturaAccompagnatoria'");
+        log.info("Patching 'fatturaAccompagnatoria'");
 
         Long id = Long.valueOf((Integer) patchFatturaAccompagnatoria.get("id"));
         FatturaAccompagnatoria fatturaAccompagnatoria = fatturaAccompagnatoriaRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
@@ -203,13 +196,13 @@ public class FatturaAccompagnatoriaService {
         });
         FatturaAccompagnatoria patchedFatturaAccompagnatoria = fatturaAccompagnatoriaRepository.save(fatturaAccompagnatoria);
 
-        LOGGER.info("Patched 'fatturaAccompagnatoria' '{}'", patchedFatturaAccompagnatoria);
+        log.info("Patched 'fatturaAccompagnatoria' '{}'", patchedFatturaAccompagnatoria);
         return patchedFatturaAccompagnatoria;
     }
 
     @Transactional
     public void patchSpeditoAdeFattureAccompagnatorieByCliente(Map<Cliente, List<FatturaAccompagnatoria>> fattureAccompagnatorieByCliente, boolean speditoAde){
-        LOGGER.info("Updating fatture accompagnatorie setting speditoAde='{}'", speditoAde);
+        log.info("Updating fatture accompagnatorie setting speditoAde='{}'", speditoAde);
 
         if(fattureAccompagnatorieByCliente != null && !fattureAccompagnatorieByCliente.isEmpty()){
             for(Cliente cliente : fattureAccompagnatorieByCliente.keySet()){
@@ -223,12 +216,12 @@ public class FatturaAccompagnatoriaService {
             }
         }
 
-        LOGGER.info("Successfully updated fatture accompagnatorie setting speditoAde={}", speditoAde);
+        log.info("Successfully updated fatture accompagnatorie setting speditoAde={}", speditoAde);
     }
 
     @Transactional
     public void delete(Long fatturaAccompagnatoriaId){
-        LOGGER.info("Deleting 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
+        log.info("Deleting 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
 
         Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli = fatturaAccompagnatoriaArticoloService.findByFatturaAccompagnatoriaId(fatturaAccompagnatoriaId);
 
@@ -242,7 +235,7 @@ public class FatturaAccompagnatoriaService {
             giacenzaArticoloService.computeGiacenza(fatturaAccompagnatoriaArticolo.getId().getArticoloId(), fatturaAccompagnatoriaArticolo.getLotto(), fatturaAccompagnatoriaArticolo.getScadenza(), fatturaAccompagnatoriaArticolo.getQuantita(), Resource.FATTURA_ACCOMPAGNATORIA);
         }
 
-        LOGGER.info("Deleted 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
+        log.info("Deleted 'fattura accompagnatoria' '{}'", fatturaAccompagnatoriaId);
     }
 
     private void checkExistsByAnnoAndProgressivoAndIdNot(Integer anno, Integer progressivo, Long idFattura){
@@ -252,7 +245,7 @@ public class FatturaAccompagnatoriaService {
         }
     }
 
-    private void computeTotali(FatturaAccompagnatoria fatturaAccompagnatoria, Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli){
+    private void computeTotali(FatturaAccompagnatoria fatturaAccompagnatoria, Set<FatturaAccompagnatoriaArticolo> fatturaAccompagnatoriaArticoli, Set<FatturaAccompagnatoriaTotale> fatturaAccompagnatoriaTotali){
         Map<AliquotaIva, Set<FatturaAccompagnatoriaArticolo>> ivaFatturaAccompagnatoriaArticoliMap = new HashMap<>();
         fatturaAccompagnatoriaArticoli.stream().forEach(faa -> {
             Articolo articolo = fatturaAccompagnatoriaArticoloService.getArticolo(faa);
@@ -279,8 +272,17 @@ public class FatturaAccompagnatoriaService {
             }
             totale = totale.add(totaleByIva.add(totaleByIva.multiply(iva.divide(new BigDecimal(100)))));
         }
+
+        BigDecimal totaleIva;
+        BigDecimal totaleImponibile;
+
+        totaleIva = fatturaAccompagnatoriaTotali.stream().map(FatturaAccompagnatoriaTotale::getTotaleIva).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+        totaleImponibile = fatturaAccompagnatoriaTotali.stream().map(FatturaAccompagnatoriaTotale::getTotaleImponibile).filter(Objects::nonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+
         fatturaAccompagnatoria.setTotale(Utils.roundPrice(totale));
         fatturaAccompagnatoria.setTotaleAcconto(new BigDecimal(0));
         fatturaAccompagnatoria.setTotaleQuantita(Utils.roundQuantity(new BigDecimal(totaleQuantita)));
+        fatturaAccompagnatoria.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
+        fatturaAccompagnatoria.setTotaleImponibile(Utils.roundPrice(totaleIva));
     }
 }

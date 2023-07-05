@@ -63,6 +63,12 @@ public class VFattura {
     @Column(name = "spedito_ade")
     private Boolean speditoAde;
 
+    @Column(name = "totale_imponibile")
+    private BigDecimal totaleImponibile;
+
+    @Column(name = "totale_iva")
+    private BigDecimal totaleIva;
+
     @Column(name = "totale_acconto")
     private BigDecimal totaleAcconto;
 
@@ -101,6 +107,8 @@ public class VFattura {
         result.append(", stato: " + idStato);
         result.append(", statoCodice: " + statoCodice);
         result.append(", speditoAde: " + speditoAde);
+        result.append(", totaleImponibile: " + totaleImponibile);
+        result.append(", totaleIva: " + totaleIva);
         result.append(", totaleAcconto: " + totaleAcconto);
         result.append(", totale: " + totale);
         result.append(", note: " + note);

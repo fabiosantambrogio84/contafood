@@ -33,6 +33,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.PUT, "/configurazione/parametri/**").hasRole("ADMIN")
             .antMatchers(HttpMethod.GET, "/configurazione/proprieta/**").hasRole("ADMIN")
             .antMatchers(HttpMethod.PUT, "/configurazione/proprieta/**").hasRole("ADMIN")
+            .antMatchers(HttpMethod.GET, "/configurazione/cleanup/**").hasRole("ADMIN")
             .and()
             .csrf().disable()
             .formLogin().disable();

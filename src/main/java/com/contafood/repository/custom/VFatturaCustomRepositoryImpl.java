@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class VFatturaCustomRepositoryImpl implements VFatturaCustomRepository{
@@ -94,22 +95,28 @@ public class VFatturaCustomRepositoryImpl implements VFatturaCustomRepository{
                     vFattura.setSpeditoAde((Boolean)queryResult[14]);
                 }
                 if(queryResult[15] != null){
-                    vFattura.setTotaleAcconto((BigDecimal)queryResult[15]);
+                    vFattura.setTotaleImponibile((BigDecimal)queryResult[15]);
                 }
                 if(queryResult[16] != null){
-                    vFattura.setTotale((BigDecimal)queryResult[16]);
+                    vFattura.setTotaleIva((BigDecimal)queryResult[16]);
                 }
                 if(queryResult[17] != null){
-                    vFattura.setNote((String)queryResult[17]);
+                    vFattura.setTotaleAcconto((BigDecimal)queryResult[17]);
                 }
                 if(queryResult[18] != null){
-                    vFattura.setDataInserimento((Timestamp)queryResult[18]);
+                    vFattura.setTotale((BigDecimal)queryResult[18]);
                 }
                 if(queryResult[19] != null){
-                    vFattura.setDataAggiornamento((Timestamp)queryResult[19]);
+                    vFattura.setNote((String)queryResult[19]);
                 }
                 if(queryResult[20] != null){
-                    vFattura.setIdArticoli((String)queryResult[20]);
+                    vFattura.setDataInserimento((Timestamp)queryResult[20]);
+                }
+                if(queryResult[21] != null){
+                    vFattura.setDataAggiornamento((Timestamp)queryResult[21]);
+                }
+                if(queryResult[22] != null){
+                    vFattura.setIdArticoli((String)queryResult[22]);
                 }
                 result.add(vFattura);
             }
@@ -151,7 +158,7 @@ public class VFatturaCustomRepositoryImpl implements VFatturaCustomRepository{
             sb.append(" AND totale = :importo ");
         }
         if(idTipoPagamento != null) {
-            sb.append(" AND id_tipo_pagamento = :idTipoPagamento ");
+            sb.append(" AND id_tipo_pagamento in (:idTipoPagamento) ");
         }
         if(cliente != null) {
             sb.append(" AND lower(cliente) LIKE concat('%',:cliente,'%') ");
@@ -187,7 +194,8 @@ public class VFatturaCustomRepositoryImpl implements VFatturaCustomRepository{
             query.setParameter("importo", importo);
         }
         if(idTipoPagamento != null) {
-            query.setParameter("idTipoPagamento", idTipoPagamento);
+            List<String> idTipiPagamento = Arrays.asList(idTipoPagamento.split(","));
+            query.setParameter("idTipoPagamento", idTipiPagamento);
         }
         if(cliente != null) {
             query.setParameter("cliente", cliente.toLowerCase());

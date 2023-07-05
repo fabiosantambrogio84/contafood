@@ -47,7 +47,7 @@ public class ScheduleService {
     @Scheduled(cron = "0 30 23 * * ?")
     public void deleteEvasiAndExpiredOrdiniClienti(){
         LOGGER.info("Executing remove of expired and evasi Ordini Clienti");
-        Set<OrdineCliente> expiredAndEvasiOrdiniClienti = ordineClienteService.getOrdiniClientiEvasiAndExpired();
+        Set<OrdineCliente> expiredAndEvasiOrdiniClienti = ordineClienteService.getOrdiniClientiEvasiAndExpired(1);
         expiredAndEvasiOrdiniClienti.forEach(oc -> ordineClienteService.delete(oc.getId()));
         LOGGER.info("Executed remove of expired and evasi Ordini Clienti");
     }

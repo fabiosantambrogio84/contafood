@@ -114,10 +114,11 @@ public class OrdineClienteService {
         return ordineClienteRepository.findByTelefonataId(idTelefonata);
     }
 
-    public Set<OrdineCliente> getOrdiniClientiEvasiAndExpired(){
-        LOGGER.info("Retrieving the list of 'ordini clienti' with stato 'EVASO' and expired (dataConsegna <= now-1)");
+    public Set<OrdineCliente> getOrdiniClientiEvasiAndExpired(Integer days){
+        Integer finalDays = days != null ? days : 1;
+        LOGGER.info("Retrieving the list of 'ordini clienti' with stato 'EVASO' and expired (dataConsegna <= now-{})", days);
         Set<OrdineCliente> ordiniClienti = ordineClienteRepository.findByStatoOrdineId(statoOrdineService.getEvaso().getId());
-        ordiniClienti = ordiniClienti.stream().filter(oc -> oc.getDataConsegna().compareTo(Date.valueOf(LocalDate.now().minusDays(1)))<=0).collect(Collectors.toSet());
+        ordiniClienti = ordiniClienti.stream().filter(oc -> oc.getDataConsegna().compareTo(Date.valueOf(LocalDate.now().minusDays(finalDays)))<=0).collect(Collectors.toSet());
         LOGGER.info("Retrieved {} 'ordini clienti'", ordiniClienti.size());
         return ordiniClienti;
     }

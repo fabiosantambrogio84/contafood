@@ -67,8 +67,14 @@ public class FatturaAccompagnatoria {
     @Column(name = "trasportatore")
     private String trasportatore;
 
+    @Column(name = "totale_imponibile")
+    private BigDecimal totaleImponibile;
+
     @Column(name = "totale_acconto")
     private BigDecimal totaleAcconto;
+
+    @Column(name = "totale_iva")
+    private BigDecimal totaleIva;
 
     @Column(name = "totale")
     private BigDecimal totale;
@@ -236,6 +242,22 @@ public class FatturaAccompagnatoria {
         this.totaleAcconto = totaleAcconto;
     }
 
+    public BigDecimal getTotaleImponibile() {
+        return totaleImponibile;
+    }
+
+    public void setTotaleImponibile(BigDecimal totaleImponibile) {
+        this.totaleImponibile = totaleImponibile;
+    }
+
+    public BigDecimal getTotaleIva() {
+        return totaleIva;
+    }
+
+    public void setTotaleIva(BigDecimal totaleIva) {
+        this.totaleIva = totaleIva;
+    }
+
     public BigDecimal getTotaleQuantita() {
         return totaleQuantita;
     }
@@ -320,7 +342,9 @@ public class FatturaAccompagnatoria {
         result.append(", dataTrasporto: " + dataTrasporto);
         result.append(", oraTrasporto: " + oraTrasporto);
         result.append(", trasportatore: " + trasportatore);
+        result.append(", totaleImponibile: " + totaleImponibile);
         result.append(", totaleAcconto: " + totaleAcconto);
+        result.append(", totaleIva: " + totaleIva);
         result.append(", totale: " + totale);
         result.append(", totaleQuantita: " + totaleQuantita);
         result.append(", note: " + note);

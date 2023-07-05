@@ -394,11 +394,19 @@ public class StampaService {
             }
             return true;
         };
+        Predicate<OrdineCliente> isOrdineClienteStatoNotEquals = ordineCliente -> {
+            StatoOrdine statoOrdine = ordineCliente.getStatoOrdine();
+            if(statoOrdine != null){
+                return !statoOrdine.getId().equals(2L);
+            }
+            return false;
+        };
 
         List<OrdineCliente> ordiniClienti = ordineClienteService.getAll().stream()
                 .filter(isOrdineClienteDataConsegnaGreaterOrEquals
                         .and(isOrdineClienteDataConsegnaLessOrEquals)
-                        .and(isOrdineClienteAutistaEquals))
+                        .and(isOrdineClienteAutistaEquals)
+                        .and(isOrdineClienteStatoNotEquals))
                 .collect(Collectors.toList());
 
         List<OrdineAutistaDataSource> ordiniAutistaDataSource = new ArrayList<>();

@@ -377,7 +377,6 @@ public class FatturaService {
             Long idCliente = entry.getKey();
             List<Ddt> ddtsCliente = entry.getValue();
 
-
             Fattura fattura = new Fattura();
             Set<FatturaDdt> fatturaDdts = new HashSet<>();
 
@@ -389,12 +388,18 @@ public class FatturaService {
 
             BigDecimal totale = new BigDecimal(0);
             BigDecimal totaleAcconto = new BigDecimal(0);
+            BigDecimal totaleImponibile = new BigDecimal(0);
+            BigDecimal totaleIva = new BigDecimal(0);
             for(Ddt ddt:ddtsCliente){
-                totale = totale.add(ddt.getTotale());
-                totaleAcconto = totaleAcconto.add(ddt.getTotaleAcconto());
+                totale = totale.add(ddt.getTotale() != null ? ddt.getTotale() : BigDecimal.ZERO);
+                totaleAcconto = totaleAcconto.add(ddt.getTotaleAcconto() != null ? ddt.getTotaleAcconto() : BigDecimal.ZERO);
+                totaleImponibile = totaleImponibile.add(ddt.getTotaleImponibile() != null ? ddt.getTotaleImponibile() : BigDecimal.ZERO);
+                totaleIva = totaleIva.add(ddt.getTotaleIva() != null ? ddt.getTotaleIva() : BigDecimal.ZERO);
             }
             fattura.setTotale(Utils.roundPrice(totale));
             fattura.setTotaleAcconto(Utils.roundPrice(totaleAcconto));
+            fattura.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
+            fattura.setTotaleIva(Utils.roundPrice(totaleIva));
 
             ddtsCliente.forEach(ddt -> {
                 FatturaDdt fatturaDdt = new FatturaDdt();
@@ -584,6 +589,8 @@ public class FatturaService {
         LOGGER.info("Computing totaleAcconto...");
 
         BigDecimal totaleAcconto = BigDecimal.ZERO;
+        BigDecimal totaleImponibile = BigDecimal.ZERO;
+        BigDecimal totaleIva = BigDecimal.ZERO;
 
         Set<Ddt> ddts = new HashSet<>();
         fattura.getFatturaDdts().forEach(fd -> {
@@ -593,13 +600,13 @@ public class FatturaService {
         LOGGER.info("Fattura ddts size {}", ddts.size());
 
         for(Ddt ddt: ddts){
-            BigDecimal ddtTotaleAcconto = ddt.getTotaleAcconto();
-            if(ddtTotaleAcconto == null){
-                ddtTotaleAcconto = BigDecimal.ZERO;
-            }
-            totaleAcconto = totaleAcconto.add(ddtTotaleAcconto);
+            totaleAcconto = totaleAcconto.add(ddt.getTotaleAcconto() != null ? ddt.getTotaleAcconto() : BigDecimal.ZERO);
+            totaleImponibile = totaleImponibile.add(ddt.getTotaleImponibile() != null ? ddt.getTotaleImponibile() : BigDecimal.ZERO);
+            totaleIva = totaleIva.add(ddt.getTotaleIva() != null ? ddt.getTotaleIva() : BigDecimal.ZERO);
         }
         fattura.setTotaleAcconto(Utils.roundPrice(totaleAcconto));
+        fattura.setTotaleImponibile(Utils.roundPrice(totaleImponibile));
+        fattura.setTotaleIva(Utils.roundPrice(totaleIva));
     }
 
     private void setFatturaDdtsFatturato(Fattura fattura, boolean fatturato){

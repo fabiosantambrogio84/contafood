@@ -6,8 +6,7 @@ import com.contafood.model.views.VOrdineClienteArticoloDaEvadere;
 import com.contafood.model.views.VOrdineFornitoreArticolo;
 import com.contafood.service.OrdineClienteService;
 import com.contafood.service.jpa.NativeQueryService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +19,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+@Slf4j
 @RestController
 @RequestMapping(path="/ordini-clienti")
 @SuppressWarnings("unused")
 public class OrdineClienteController {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(OrdineClienteController.class);
 
     private final OrdineClienteService ordineClienteService;
 
@@ -49,8 +47,8 @@ public class OrdineClienteController {
                                       @RequestParam(name = "idStatoNot", required = false) Integer idStatoNot,
                                       @RequestParam(name = "dataConsegnaDa", required = false) Date dataConsegnaDa,
                                       @RequestParam(name = "dataConsegnaA", required = false) Date dataConsegnaA) {
-        LOGGER.info("Performing GET request for retrieving list of 'ordini-clienti'");
-        LOGGER.info("Request params: cliente {}, dataConsegna {}, idAutista {}, idStato {}, idCliente {}, idPuntoConsegna {}, dataConsegnaLessOrEqual {}, idStatoNot {}, dataConsegnaDa {}, dataConsegnaA {}",
+        log.info("Performing GET request for retrieving list of 'ordini-clienti'");
+        log.info("Request params: cliente {}, dataConsegna {}, idAutista {}, idStato {}, idCliente {}, idPuntoConsegna {}, dataConsegnaLessOrEqual {}, idStatoNot {}, dataConsegnaDa {}, dataConsegnaA {}",
                 cliente, dataConsegna, idAutista, idStato, idCliente, idPuntoConsegna, dataConsegnaLessOrEqual, idStatoNot, dataConsegnaDa, dataConsegnaA);
 
         Predicate<OrdineCliente> isOrdineClienteClienteContains = ordineCliente -> {
@@ -124,14 +122,63 @@ public class OrdineClienteController {
         }
     }
 
+    @RequestMapping(method = GET, path = "/autisti")
+    @CrossOrigin
+    public List<OrdineCliente> getOrdiniClientiAutisti(@RequestParam(name = "idAutista", required = false) Integer idAutista,
+                                      @RequestParam(name = "dataConsegnaDa", required = false) Date dataConsegnaDa,
+                                      @RequestParam(name = "dataConsegnaA", required = false) Date dataConsegnaA) {
+        log.info("Performing GET request for retrieving list of 'ordini-clienti' for autisti");
+        log.info("Request params: idAutista {}, dataConsegnaDa {}, dataConsegnaA {}", idAutista, dataConsegnaDa, dataConsegnaA);
+
+
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaGreaterOrEquals = ordineCliente -> {
+            if(dataConsegnaDa != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegnaDa) >= 0;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteDataConsegnaLessOrEquals = ordineCliente -> {
+            if(dataConsegnaA != null){
+                return ordineCliente.getDataConsegna().compareTo(dataConsegnaA) <= 0;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteAutistaEquals = ordineCliente -> {
+            if(idAutista != null){
+                Autista autista = ordineCliente.getAutista();
+                if(autista != null){
+                    return autista.getId().equals(Long.valueOf(idAutista));
+                }
+                return false;
+            }
+            return true;
+        };
+        Predicate<OrdineCliente> isOrdineClienteStatoNotEquals = ordineCliente -> {
+            StatoOrdine statoOrdine = ordineCliente.getStatoOrdine();
+            if(statoOrdine != null){
+                return !statoOrdine.getId().equals(2L);
+            }
+            return false;
+        };
+
+        Comparator<OrdineCliente> compare = Comparator.comparing((OrdineCliente ordineCliente) -> ordineCliente.getStatoOrdine().getId())
+                .thenComparing(OrdineCliente::getProgressivo).reversed()
+                .thenComparing(OrdineCliente::getAnnoContabile).reversed();
+
+        return ordineClienteService.getAll().stream().filter(isOrdineClienteAutistaEquals
+                    .and(isOrdineClienteDataConsegnaGreaterOrEquals)
+                    .and(isOrdineClienteDataConsegnaLessOrEquals)
+                    .and(isOrdineClienteStatoNotEquals)).sorted(compare).collect(Collectors.toList());
+    }
+
     @RequestMapping(method = GET, path = "/aggregate")
     @CrossOrigin
     public List<OrdineClienteAggregate> getAllAggregate(@RequestParam(name = "idCliente", required = false) Integer idCliente,
                                                         @RequestParam(name = "idPuntoConsegna", required = false) Integer idPuntoConsegna,
                                                         @RequestParam(name = "dataConsegnaLessOrEqual", required = false) Date dataConsegnaLessOrEqual,
                                                         @RequestParam(name = "idStatoNot", required = false) Integer idStatoNot) {
-        LOGGER.info("Performing GET request for retrieving list of 'ordini-clienti aggregate'");
-        LOGGER.info("Request params: idCliente {}, idPuntoConsegna {}, dataConsegnaLessOrEqual {}, idStatoNot {}",
+        log.info("Performing GET request for retrieving list of 'ordini-clienti aggregate'");
+        log.info("Request params: idCliente {}, idPuntoConsegna {}, dataConsegnaLessOrEqual {}, idStatoNot {}",
                 idCliente, idPuntoConsegna, dataConsegnaLessOrEqual, idStatoNot);
 
         return nativeQueryService.getOrdiniClientiAggregate(idCliente, idPuntoConsegna, dataConsegnaLessOrEqual, idStatoNot);
@@ -140,14 +187,14 @@ public class OrdineClienteController {
     @RequestMapping(method = GET, path = "/{ordineClienteId}")
     @CrossOrigin
     public OrdineCliente getOne(@PathVariable final Long ordineClienteId) {
-        LOGGER.info("Performing GET request for retrieving 'ordineCliente' '{}'", ordineClienteId);
+        log.info("Performing GET request for retrieving 'ordineCliente' '{}'", ordineClienteId);
         return ordineClienteService.getOne(ordineClienteId);
     }
 
     @RequestMapping(method = GET, path = "/progressivo")
     @CrossOrigin
     public Map<String, Integer> getAnnoContabileAndProgressivo() {
-        LOGGER.info("Performing GET request for retrieving 'annoContabile' and 'progressivo' for a new ordine-cliente");
+        log.info("Performing GET request for retrieving 'annoContabile' and 'progressivo' for a new ordine-cliente");
         return ordineClienteService.getAnnoContabileAndProgressivo();
     }
 
@@ -156,14 +203,14 @@ public class OrdineClienteController {
     public List<VOrdineFornitoreArticolo> getArticoliForOrdineFornitore(@RequestParam(name = "idFornitore") Integer idFornitore,
                                                                         @RequestParam(name = "dataFrom") Date dataFrom,
                                                                         @RequestParam(name = "dataTo") Date dataTo) {
-        LOGGER.info("Performing GET request for retrieving 'articoli-for-ordine-fornitore' for fornitore '{}', dataFrom '{}' and dataTo '{}'", idFornitore, dataFrom, dataTo);
+        log.info("Performing GET request for retrieving 'articoli-for-ordine-fornitore' for fornitore '{}', dataFrom '{}' and dataTo '{}'", idFornitore, dataFrom, dataTo);
         return ordineClienteService.getArticoliForOrdineFornitore(idFornitore.longValue(), dataFrom, dataTo);
     }
 
     @RequestMapping(method = GET, path = "/ordini-articoli-da-evadere")
     @CrossOrigin
     public Set<VOrdineClienteArticoloDaEvadere> getOrdiniArticoliDaEvadereByIdCliente(@RequestParam(name = "idCliente") Integer idCliente) {
-        LOGGER.info("Performing GET request for retrieving 'ordini-articoli-da-evadere' for cliente '{}'", idCliente);
+        log.info("Performing GET request for retrieving 'ordini-articoli-da-evadere' for cliente '{}'", idCliente);
         return ordineClienteService.getOrdiniArticoliDaEvadereByIdCliente(idCliente);
     }
 
@@ -171,14 +218,14 @@ public class OrdineClienteController {
     @ResponseStatus(CREATED)
     @CrossOrigin
     public OrdineCliente create(@RequestBody final OrdineCliente ordineCliente){
-        LOGGER.info("Performing POST request for creating 'ordineCliente'");
+        log.info("Performing POST request for creating 'ordineCliente'");
         return ordineClienteService.create(ordineCliente);
     }
 
     @RequestMapping(method = PUT, path = "/{ordineClienteId}")
     @CrossOrigin
     public OrdineCliente update(@PathVariable final Long ordineClienteId, @RequestBody final OrdineCliente ordineCliente){
-        LOGGER.info("Performing PUT request for updating 'ordineCliente' '{}'", ordineClienteId);
+        log.info("Performing PUT request for updating 'ordineCliente' '{}'", ordineClienteId);
         if (!Objects.equals(ordineClienteId, ordineCliente.getId())) {
             throw new CannotChangeResourceIdException();
         }
@@ -188,7 +235,7 @@ public class OrdineClienteController {
     @RequestMapping(method = PATCH, path = "/{ordineClienteId}")
     @CrossOrigin
     public OrdineCliente patch(@PathVariable final Long ordineClienteId, @RequestBody final Map<String,Object> patchOrdineCliente){
-        LOGGER.info("Performing PATCH request for updating 'ordineCliente' '{}'", ordineClienteId);
+        log.info("Performing PATCH request for updating 'ordineCliente' '{}'", ordineClienteId);
         Long id = Long.valueOf((Integer) patchOrdineCliente.get("id"));
         if (!Objects.equals(ordineClienteId, id)) {
             throw new CannotChangeResourceIdException();
@@ -200,8 +247,8 @@ public class OrdineClienteController {
     @ResponseStatus(CREATED)
     @CrossOrigin
     public List<OrdineClienteAggregate> updateAggregate(@RequestBody final List<OrdineClienteAggregate> ordiniClientiAggregati) {
-        LOGGER.info("Performing POST request for updating list of 'ordini-clienti aggregate'");
-        LOGGER.info("Updating {} 'ordini-clienti aggregate'", ordiniClientiAggregati.size());
+        log.info("Performing POST request for updating list of 'ordini-clienti aggregate'");
+        log.info("Updating {} 'ordini-clienti aggregate'", ordiniClientiAggregati.size());
 
         return ordineClienteService.updateAggregate(ordiniClientiAggregati);
     }
@@ -210,7 +257,7 @@ public class OrdineClienteController {
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
     public void delete(@PathVariable final Long ordineClienteId){
-        LOGGER.info("Performing DELETE request for deleting 'ordineCliente' '{}'", ordineClienteId);
+        log.info("Performing DELETE request for deleting 'ordineCliente' '{}'", ordineClienteId);
         ordineClienteService.delete(ordineClienteId);
     }
 }
