@@ -23,21 +23,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20230703.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/CleanupController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/CleanupService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/CleanupAction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/configuration/SecurityConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/configuration/SecurityConfiguration.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/OrdineClienteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/FatturaAccompagnatoria.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/FatturaAccompagnatoria.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VFattura.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VFattura.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VFatturaCustomRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VFatturaCustomRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/DdtRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/DdtRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/DdtService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/OrdineClienteService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/documenti_acquisto.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/documenti_acquisto.jasper" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fattura.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fattura.jasper" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fattura.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fattura.jrxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -678,14 +671,10 @@
       <workItem from="1686225676926" duration="4608000" />
       <workItem from="1687505295970" duration="3031000" />
       <workItem from="1688368708205" duration="15754000" />
-      <workItem from="1688561569106" duration="3287000" />
-    </task>
-    <task id="LOCAL-00086" summary="OrdiniAutisti date range. Save email sent for OrdineFornitore">
-      <created>1634721425998</created>
-      <option name="number" value="00086" />
-      <option name="presentableId" value="LOCAL-00086" />
-      <option name="project" value="LOCAL" />
-      <updated>1634721426000</updated>
+      <workItem from="1688561569106" duration="3916000" />
+      <workItem from="1689595740068" duration="2756000" />
+      <workItem from="1689666538061" duration="1569000" />
+      <workItem from="1689752016283" duration="4304000" />
     </task>
     <task id="LOCAL-00087" summary="Fix step 25">
       <created>1635251874159</created>
@@ -1023,7 +1012,14 @@
       <option name="project" value="LOCAL" />
       <updated>1688374657317</updated>
     </task>
-    <option name="localTasksCounter" value="135" />
+    <task id="LOCAL-00135" summary="Step 41 - phase 1">
+      <created>1688568216388</created>
+      <option name="number" value="00135" />
+      <option name="presentableId" value="LOCAL-00135" />
+      <option name="project" value="LOCAL" />
+      <updated>1688568216388</updated>
+    </task>
+    <option name="localTasksCounter" value="136" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1088,7 +1084,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Step 36 and step 37" />
     <MESSAGE value="Fix step 36 and step 37" />
     <MESSAGE value="Fix movimentazioni ingredienti for produzione scorta" />
     <MESSAGE value="Fix produzione scorta and print selected ddts" />
@@ -1113,7 +1108,8 @@
     <MESSAGE value="Step Step 40 - phase 6" />
     <MESSAGE value="Step 40 - phase 7" />
     <MESSAGE value="Step 40 - phase 8" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 40 - phase 8" />
+    <MESSAGE value="Step 41 - phase 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step 41 - phase 1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1246,12 +1242,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java</url>
-          <line>1799</line>
+          <line>1798</line>
           <option name="timeStamp" value="72" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/StampaService.java</url>
-          <line>1867</line>
+          <line>1866</line>
           <option name="timeStamp" value="73" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -1263,16 +1259,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAcquistoDdtAcquistoService.java</url>
           <line>27</line>
           <option name="timeStamp" value="76" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaDdtService.java</url>
-          <line>37</line>
-          <option name="timeStamp" value="77" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/util/AccountingUtils.java</url>
-          <line>145</line>
-          <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaAccompagnatoriaAcquistoService.java</url>
@@ -1295,9 +1281,9 @@
           <option name="timeStamp" value="86" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VFatturaCustomRepositoryImpl.java</url>
-          <line>48</line>
-          <option name="timeStamp" value="88" />
+          <url>file://$PROJECT_DIR$/src/main/java/com/contafood/service/FatturaService.java</url>
+          <line>339</line>
+          <option name="timeStamp" value="93" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

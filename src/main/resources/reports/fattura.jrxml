@@ -430,7 +430,7 @@
 								<textElement textAlignment="Left" verticalAlignment="Top">
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{quantita}.intValue() != 0 ? $F{quantita} : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{quantita}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

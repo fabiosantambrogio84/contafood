@@ -21,6 +21,11 @@ public interface DdtRepository extends CrudRepository<Ddt, Long> {
     List<Ddt> findByDataGreaterThanEqualOrderByProgressivoDesc(Date data);
 
     @Query(nativeQuery = true,
+            value = "select d.* from ddt d where d.data <= ?1 and d.fatturato = 0"
+    )
+    List<Ddt> findByDataLessOrEqualAndNotFatturato(Date data);
+
+    @Query(nativeQuery = true,
             value = "select d.* from ddt d where d.anno_contabile = ?1 and d.progressivo = ?2 and d.id <> ?3 for update"
     )
     Optional<Ddt> findByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt);

@@ -12,9 +12,8 @@ import com.contafood.repository.TipoPagamentoRepository;
 import com.contafood.repository.views.VFatturaRepository;
 import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +28,9 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class FatturaService {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(FatturaService.class);
 
     private final FatturaRepository fatturaRepository;
     private final FatturaDdtService fatturaDdtService;
@@ -68,16 +66,16 @@ public class FatturaService {
     }
 
     public List<VFattura> getAllByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders, Date dataDa, Date dataA, Integer progressivo, Float importo, String idTipoPagamento, String cliente, Integer idAgente, Integer idArticolo, Integer idStato, Integer idTipo){
-        LOGGER.info("Retrieving the list of 'fatture' filtered by request parameters");
+        log.info("Retrieving the list of 'fatture' filtered by request parameters");
         List<VFattura> fatture = vFatturaRepository.findByFilters(draw, start, length, sortOrders, dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
-        LOGGER.info("Retrieved {} 'fatture'", fatture.size());
+        log.info("Retrieved {} 'fatture'", fatture.size());
         return fatture;
     }
 
     public Integer getCountByFilters(Date dataDa, Date dataA, Integer progressivo, Float importo, String idTipoPagamento, String cliente, Integer idAgente, Integer idArticolo, Integer idStato, Integer idTipo){
-        LOGGER.info("Retrieving the count of 'fatture' filtered by request parameters");
+        log.info("Retrieving the count of 'fatture' filtered by request parameters");
         Integer count = vFatturaRepository.countByFilters(dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
-        LOGGER.info("Retrieved {} 'fatture'", count);
+        log.info("Retrieved {} 'fatture'", count);
         return count;
     }
 
@@ -110,20 +108,20 @@ public class FatturaService {
         };
         Predicate<VFattura> isFatturaImportoEquals = fattura -> {
             if(importo != null){
-                LOGGER.info("Importo {} - Fattura totale {} - Fattura totale float {}", importo, fattura.getTotale(), fattura.getTotale().floatValue());
+                log.info("Importo {} - Fattura totale {} - Fattura totale float {}", importo, fattura.getTotale(), fattura.getTotale().floatValue());
                 return importo.equals(fattura.getTotale().floatValue());
                 //return fattura.getTotale().compareTo(new BigDecimal(importo).setScale(2, BigDecimal.ROUND_DOWN))==0;
             }
             return true;
         };
         Predicate<VFattura> isFatturaTipoPagamentoEquals = fattura -> {
-            LOGGER.info("Filter by idTipoPagamento '{}'", idTipiPagamento);
+            log.info("Filter by idTipoPagamento '{}'", idTipiPagamento);
             if(idTipiPagamento != null && !idTipiPagamento.isEmpty()){
                 Cliente fatturaCliente = fattura.getCliente();
                 if(fatturaCliente != null){
                     TipoPagamento tipoPagamento = fatturaCliente.getTipoPagamento();
                     if(tipoPagamento != null){
-                        LOGGER.info("Cliente id '{}', TipoPagamento id '{}'", fatturaCliente.getId(), tipoPagamento.getId());
+                        log.info("Cliente id '{}', TipoPagamento id '{}'", fatturaCliente.getId(), tipoPagamento.getId());
                         return idTipiPagamento.contains(tipoPagamento.getId());
                     }
                 }
@@ -198,9 +196,9 @@ public class FatturaService {
     }
 
     public Set<VFattura> getAll(){
-        LOGGER.info("Retrieving the list of 'fatture vendita and fatture accompagnatorie'");
+        log.info("Retrieving the list of 'fatture vendita and fatture accompagnatorie'");
         Set<VFattura> fatture = vFatturaRepository.findAllByOrderByAnnoDescProgressivoDesc();
-        LOGGER.info("Retrieved {} 'fatture vendita and fatture accompagnatorie'", fatture.size());
+        log.info("Retrieved {} 'fatture vendita and fatture accompagnatorie'", fatture.size());
         return fatture;
     }
 
@@ -209,9 +207,9 @@ public class FatturaService {
     }
 
     public Fattura getOne(Long fatturaId){
-        LOGGER.info("Retrieving 'fattura' '{}'", fatturaId);
+        log.info("Retrieving 'fattura' '{}'", fatturaId);
         Fattura fattura = fatturaRepository.findById(fatturaId).orElseThrow(ResourceNotFoundException::new);
-        LOGGER.info("Retrieved 'fattura' '{}'", fattura);
+        log.info("Retrieved 'fattura' '{}'", fattura);
         return fattura;
     }
 
@@ -259,7 +257,7 @@ public class FatturaService {
     }
 
     public Map<Cliente, List<Fattura>> getFattureByCliente(Date dateFrom, Date dateTo){
-        LOGGER.info("Retrieving the list of fatture, grouped by cliente, with speditoAde 'false', dateFrom '{}' and dateTo '{}'", dateFrom, dateTo);
+        log.info("Retrieving the list of fatture, grouped by cliente, with speditoAde 'false', dateFrom '{}' and dateTo '{}'", dateFrom, dateTo);
 
         Map<Cliente, List<Fattura>> fattureByCliente = new HashMap<>();
 
@@ -293,14 +291,14 @@ public class FatturaService {
             }
         }
 
-        LOGGER.info("Successfully retrieved the list of fatture grouped by cliente");
+        log.info("Successfully retrieved the list of fatture grouped by cliente");
 
         return fattureByCliente;
     }
 
     @Transactional
     public Fattura create(Fattura fattura){
-        LOGGER.info("Creating 'fattura'");
+        log.info("Creating 'fattura'");
 
         checkExistsByAnnoAndProgressivoAndIdNot(fattura.getAnno(),fattura.getProgressivo(), -1L);
 
@@ -324,7 +322,7 @@ public class FatturaService {
         computeStato(createdFattura);
 
         fatturaRepository.save(createdFattura);
-        LOGGER.info("Created 'fattura' '{}'", createdFattura);
+        log.info("Created 'fattura' '{}'", createdFattura);
 
         setFatturaDdtsFatturato(createdFattura, true);
         return createdFattura;
@@ -332,27 +330,16 @@ public class FatturaService {
 
     @Transactional
     public List<Fattura> createBulk(Map<String, Object> body){
-        LOGGER.info("Creating bulk 'fatture'...");
+        log.info("Creating bulk 'fatture'...");
         List<Fattura> fattureToCreate = new ArrayList<>();
         List<Fattura> createdFatture = new ArrayList<>();
 
         Date data = Date.valueOf((String)body.get("data"));
-        LOGGER.info("Retrieving 'ddt' with 'data' less or equal to '{}'", data);
+        log.info("Retrieving 'ddt' with 'data' less or equal to '{}'", data);
 
-        List<Ddt> ddts = ddtService.getAll().stream().filter(ddt -> {
-            Boolean fatturato = ddt.getFatturato();
-            if(data != null){
-                if(ddt.getData().compareTo(data)<=0){
-                    return fatturato == Boolean.FALSE;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        }).collect(Collectors.toList());
+        List<Ddt> ddts = ddtService.getByDataLessOrEqualAndNotFatturato(data);
 
-        LOGGER.info("Retrieved {} 'ddt' with fatturato=false and data less or equal to {}", ddts.size(), data);
+        log.info("Retrieved {} 'ddt' with fatturato=false and data less or equal to {}", ddts.size(), data);
 
         Map<Long, Cliente> clientiMap = new HashMap<>();
         Map<Long, List<Ddt>> clientiDdtsMap = new HashMap<>();
@@ -369,10 +356,7 @@ public class FatturaService {
             }
         });
 
-        LOGGER.info("Iterating on map with key=idCliente and value=List<Ddt>...");
-        Map<String, Integer> annoProgressivoMap = getAnnoAndProgressivo();
-        int anno = annoProgressivoMap.get("anno");
-        int progressivo = annoProgressivoMap.get("progressivo");
+        log.info("Iterating on map with key=idCliente and value=List<Ddt>...");
         for (Map.Entry<Long, List<Ddt>> entry : clientiDdtsMap.entrySet()) {
             Long idCliente = entry.getKey();
             List<Ddt> ddtsCliente = entry.getValue();
@@ -380,8 +364,6 @@ public class FatturaService {
             Fattura fattura = new Fattura();
             Set<FatturaDdt> fatturaDdts = new HashSet<>();
 
-            fattura.setProgressivo(progressivo);
-            fattura.setAnno(anno);
             Cliente cliente = clientiMap.get(idCliente);
             fattura.setCliente(cliente);
             fattura.setData(Date.valueOf(LocalDate.now()));
@@ -412,12 +394,10 @@ public class FatturaService {
             fattura.setFatturaDdts(fatturaDdts);
 
             fattureToCreate.add(fattura);
-
-            progressivo = progressivo + 1;
         }
-        LOGGER.info("End of iteration on map with key=idCliente and value=List<Ddt>");
+        log.info("End of iteration on map with key=idCliente and value=List<Ddt>");
 
-        LOGGER.info("Creating fatture...");
+        log.info("Creating fatture...");
         Comparator<Fattura> comparator = Comparator.comparing(f -> {
             if(f.getCliente() != null){
                 Cliente cliente = f.getCliente();
@@ -429,21 +409,34 @@ public class FatturaService {
             }
             return "";
         });
-        fattureToCreate.stream().sorted(comparator).forEach(f -> {
-            create(f);
-            createdFatture.add(f);
+
+        fattureToCreate = fattureToCreate.stream().sorted(comparator).collect(Collectors.toList());
+
+        Map<String, Integer> annoProgressivoMap = getAnnoAndProgressivo();
+        int anno = annoProgressivoMap.get("anno");
+        int progressivo = annoProgressivoMap.get("progressivo");
+        for(Fattura fattura : fattureToCreate){
+            fattura.setAnno(anno);
+            fattura.setProgressivo(progressivo);
+
+            progressivo = progressivo + 1;
+        }
+
+        fattureToCreate.forEach(f -> {
+            Fattura createdFattura = create(f);
+            createdFatture.add(createdFattura);
         });
 
-        LOGGER.info("Fatture successfully created");
+        log.info("Fatture successfully created");
 
-        LOGGER.info("Created {} bulk 'fatture'", createdFatture.size());
+        log.info("Created {} bulk 'fatture'", createdFatture.size());
         return createdFatture;
     }
 
     /*
     @Transactional
     public Fattura update(Fattura fattura){
-        LOGGER.info("Updating 'fattura'");
+        log.info("Updating 'fattura'");
         checkExistsByAnnoAndProgressivoAndIdNot(fattura.getAnno(), fattura.getProgressivo(), fattura.getId());
 
         Set<FatturaDdt> fatturaDdts = fattura.getFatturaDdts();
@@ -463,14 +456,14 @@ public class FatturaService {
         });
 
         fatturaRepository.save(updatedFattura);
-        LOGGER.info("Updated 'fattura' '{}'", updatedFattura);
+        log.info("Updated 'fattura' '{}'", updatedFattura);
         return updatedFattura;
     }
     */
 
     @Transactional
     public Fattura patch(Map<String,Object> patchFattura) throws Exception{
-        LOGGER.info("Patching 'fattura'");
+        log.info("Patching 'fattura'");
 
         Long id = Long.valueOf((Integer) patchFattura.get("id"));
         Fattura fattura = fatturaRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
@@ -504,13 +497,13 @@ public class FatturaService {
         checkExistsByAnnoAndProgressivoAndIdNot(fattura.getAnno(), fattura.getProgressivo(), fattura.getId());
         Fattura patchedFattura = fatturaRepository.save(fattura);
 
-        LOGGER.info("Patched 'fattura' '{}'", patchedFattura);
+        log.info("Patched 'fattura' '{}'", patchedFattura);
         return patchedFattura;
     }
 
     @Transactional
     public void patchSpeditoAdeFattureByCliente(Map<Cliente, List<Fattura>> fattureByCliente, boolean speditoAde) throws Exception{
-        LOGGER.info("Updating fatture setting speditoAde='{}'", speditoAde);
+        log.info("Updating fatture setting speditoAde='{}'", speditoAde);
 
         if(fattureByCliente != null && !fattureByCliente.isEmpty()){
             for(Cliente cliente : fattureByCliente.keySet()){
@@ -523,12 +516,12 @@ public class FatturaService {
                 }
             }
         }
-        LOGGER.info("Successfully updated fatture setting speditoAde={}", speditoAde);
+        log.info("Successfully updated fatture setting speditoAde={}", speditoAde);
     }
 
     @Transactional
     public void delete(Long fatturaId){
-        LOGGER.info("Deleting 'fattura' '{}'", fatturaId);
+        log.info("Deleting 'fattura' '{}'", fatturaId);
 
         Fattura fattura = fatturaRepository.findById(fatturaId).orElseThrow(ResourceNotFoundException::new);
         setFatturaDdtsFatturato(fattura, false);
@@ -536,7 +529,7 @@ public class FatturaService {
         pagamentoRepository.deleteByFatturaId(fatturaId);
         fatturaDdtService.deleteByFatturaId(fatturaId);
         fatturaRepository.deleteById(fatturaId);
-        LOGGER.info("Deleted 'fattura' '{}'", fatturaId);
+        log.info("Deleted 'fattura' '{}'", fatturaId);
     }
 
     public void checkStatoFatturaDaPagare(Integer idStato){
@@ -570,7 +563,7 @@ public class FatturaService {
             Long idDdt = fd.getId().getDdtId();
             ddts.add(ddtService.getOne(idDdt));
         });
-        LOGGER.info("Fattura ddts size {}", ddts.size());
+        log.info("Fattura ddts size {}", ddts.size());
         int ddtsSize = ddts.size();
         Set<Ddt> ddtsPagati = ddts.stream().filter(d -> d.getStatoDdt().equals(ddtStatoPagato)).collect(Collectors.toSet());
         if(ddtsSize == ddtsPagati.size()){
@@ -586,7 +579,7 @@ public class FatturaService {
     }
 
     private void computeTotaleAcconto(Fattura fattura){
-        LOGGER.info("Computing totaleAcconto...");
+        log.info("Computing totaleAcconto...");
 
         BigDecimal totaleAcconto = BigDecimal.ZERO;
         BigDecimal totaleImponibile = BigDecimal.ZERO;
@@ -597,7 +590,7 @@ public class FatturaService {
             Long idDdt = fd.getId().getDdtId();
             ddts.add(ddtService.getOne(idDdt));
         });
-        LOGGER.info("Fattura ddts size {}", ddts.size());
+        log.info("Fattura ddts size {}", ddts.size());
 
         for(Ddt ddt: ddts){
             totaleAcconto = totaleAcconto.add(ddt.getTotaleAcconto() != null ? ddt.getTotaleAcconto() : BigDecimal.ZERO);
@@ -610,7 +603,7 @@ public class FatturaService {
     }
 
     private void setFatturaDdtsFatturato(Fattura fattura, boolean fatturato){
-        LOGGER.info("Setting 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
+        log.info("Setting 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
         fattura.getFatturaDdts().forEach(fd -> {
             Long idDdt = fd.getId().getDdtId();
             Map<String,Object> patchDdt = new HashMap<>();
@@ -618,6 +611,6 @@ public class FatturaService {
             patchDdt.put("fatturato", fatturato);
             ddtService.patch(patchDdt);
         });
-        LOGGER.info("Successfully set 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
+        log.info("Successfully set 'fatturato'={} on all ddts of 'fattura' '{}'", fatturato, fattura.getId());
     }
 }

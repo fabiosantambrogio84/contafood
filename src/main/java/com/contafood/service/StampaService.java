@@ -1652,7 +1652,6 @@ public class StampaService {
         totaleImponibile = Utils.roundPrice(totaleImponibile);
         totaleIva = Utils.roundPrice(totaleIva);
 
-
         // fetching the .jrxml file from the resources folder.
         final InputStream stream = this.getClass().getResourceAsStream(Constants.JASPER_REPORT_FATTURA);
 

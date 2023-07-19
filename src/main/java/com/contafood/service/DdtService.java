@@ -11,8 +11,7 @@ import com.contafood.repository.PagamentoRepository;
 import com.contafood.repository.views.VDdtRepository;
 import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +25,9 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class DdtService {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(DdtService.class);
 
     private final DdtRepository ddtRepository;
     private final DdtArticoloService ddtArticoloService;
@@ -52,48 +50,55 @@ public class DdtService {
     }
 
     public Set<Ddt> getAll(){
-        LOGGER.info("Retrieving the list of 'ddts'");
+        log.info("Retrieving the list of 'ddts'");
         Set<Ddt> ddts = ddtRepository.findAllByOrderByAnnoContabileDescProgressivoDesc();
-        LOGGER.info("Retrieved {} 'ddts'", ddts.size());
+        log.info("Retrieved {} 'ddts'", ddts.size());
         return ddts;
     }
 
     public Set<DdtRicercaLotto> getAllByLotto(String lotto){
-        LOGGER.info("Retrieving the list of 'ddts' filtered by 'lotto' '{}'", lotto);
+        log.info("Retrieving the list of 'ddts' filtered by 'lotto' '{}'", lotto);
         Set<DdtRicercaLotto> ddts = ddtRepository.findAllByLotto(lotto);
-        LOGGER.info("Retrieved {} 'ddts'", ddts.size());
+        log.info("Retrieved {} 'ddts'", ddts.size());
         return ddts;
     }
 
     public List<VDdt> getAllByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders, Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
-        LOGGER.info("Retrieving the list of 'ddts' filtered by request parameters");
+        log.info("Retrieving the list of 'ddts' filtered by request parameters");
         List<VDdt> ddts = vDdtRepository.findByFilters(draw, start, length, sortOrders, dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
-        LOGGER.info("Retrieved {} 'ddts'", ddts.size());
+        log.info("Retrieved {} 'ddts'", ddts.size());
         return ddts;
     }
 
     public Integer getCountByFilters(Date dataDa, Date dataA, Integer progressivo, Integer idCliente, String cliente, Integer idAgente, Integer idAutista, Integer idStato, Boolean pagato, Boolean fatturato, Float importo, Integer idTipoPagamento, Integer idArticolo){
-        LOGGER.info("Retrieving the count of 'ddts' filtered by request parameters");
+        log.info("Retrieving the count of 'ddts' filtered by request parameters");
         Integer count = vDdtRepository.countByFilters(dataDa, dataA, progressivo, idCliente, cliente, idAgente, idAutista, idStato, pagato, fatturato, importo, idTipoPagamento, idArticolo);
-        LOGGER.info("Retrieved {} 'ddts'", count);
+        log.info("Retrieved {} 'ddts'", count);
         return count;
     }
 
     public Ddt getOne(Long ddtId){
-        LOGGER.info("Retrieving 'ddt' '{}'", ddtId);
+        log.info("Retrieving 'ddt' '{}'", ddtId);
         Ddt ddt = ddtRepository.findById(ddtId).orElseThrow(ResourceNotFoundException::new);
 
         // filter DdtArticoli with quantity not null and prezzo not null
         ddt = filterDdtArticoli(ddt);
 
-        LOGGER.info("Retrieved 'ddt' '{}'", ddt);
+        log.info("Retrieved 'ddt' '{}'", ddt);
         return ddt;
     }
 
     public List<Ddt> getByDataGreaterThanEqual(Date data){
-        LOGGER.info("Retrieving 'ddt' with 'data' greater or equals to '{}'", data);
+        log.info("Retrieving 'ddt' with 'data' greater or equals to '{}'", data);
         List<Ddt> ddts = ddtRepository.findByDataGreaterThanEqualOrderByProgressivoDesc(data);
-        LOGGER.info("Retrieved {} 'ddt' with 'data' greater or equals to '{}'", ddts.size(), data);
+        log.info("Retrieved {} 'ddt' with 'data' greater or equals to '{}'", ddts.size(), data);
+        return ddts;
+    }
+
+    public List<Ddt> getByDataLessOrEqualAndNotFatturato(Date data){
+        log.info("Retrieving 'ddt' with 'data' less or equals to '{}' and not fatturato", data);
+        List<Ddt> ddts = ddtRepository.findByDataLessOrEqualAndNotFatturato(data);
+        log.info("Retrieved {} 'ddt' with 'data' less or equals to '{}' and not fatturato", ddts.size(), data);
         return ddts;
     }
 
@@ -129,7 +134,7 @@ public class DdtService {
 
     @Transactional
     public Ddt create(Ddt ddt){
-        LOGGER.info("Creating 'ddt'");
+        log.info("Creating 'ddt'");
 
         Integer progressivo = ddt.getProgressivo();
         if(progressivo == null){
@@ -151,7 +156,7 @@ public class DdtService {
         ddt.setStatoDdt(statoDdtService.getDaPagare());
         ddt.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
-        LOGGER.info(ddt.getScannerLog());
+        log.info(ddt.getScannerLog());
 
         Ddt createdDdt = ddtRepository.save(ddt);
 
@@ -172,13 +177,13 @@ public class DdtService {
         computeTotali(createdDdt, createdDdt.getDdtArticoli());
 
         ddtRepository.save(createdDdt);
-        LOGGER.info("Created 'ddt' '{}'", createdDdt);
+        log.info("Created 'ddt' '{}'", createdDdt);
         return createdDdt;
     }
 
     @Transactional
     public Ddt update(Ddt ddt){
-        LOGGER.info("Updating 'ddt'");
+        log.info("Updating 'ddt'");
 
         Integer progressivo = ddt.getProgressivo();
         if(progressivo == null){
@@ -210,7 +215,7 @@ public class DdtService {
         ddt.setDataInserimento(ddtCurrent.getDataInserimento());
         ddt.setDataAggiornamento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
-        LOGGER.info(ddt.getScannerLog());
+        log.info(ddt.getScannerLog());
 
         Ddt updatedDdt = ddtRepository.save(ddt);
         ddtArticoli.stream().forEach(da -> {
@@ -227,13 +232,13 @@ public class DdtService {
         computeTotali(updatedDdt, ddtArticoli);
 
         ddtRepository.save(updatedDdt);
-        LOGGER.info("Updated 'ddt' '{}'", updatedDdt);
+        log.info("Updated 'ddt' '{}'", updatedDdt);
         return updatedDdt;
     }
 
     @Transactional
     public Ddt patch(Map<String,Object> patchDdt){
-        LOGGER.info("Patching 'ddt'");
+        log.info("Patching 'ddt'");
 
         Long id = Long.valueOf((Integer) patchDdt.get("id"));
         Ddt ddt = ddtRepository.findById(id).orElseThrow(ResourceNotFoundException::new);
@@ -256,13 +261,13 @@ public class DdtService {
         });
         Ddt patchedDdt = ddtRepository.save(ddt);
 
-        LOGGER.info("Patched 'ddt' '{}'", patchedDdt);
+        log.info("Patched 'ddt' '{}'", patchedDdt);
         return patchedDdt;
     }
 
     @Transactional
     public void delete(Long ddtId, Boolean modificaGiacenze){
-        LOGGER.info("Deleting 'ddt' '{}' ('modificaGiacenze={}')", ddtId, modificaGiacenze);
+        log.info("Deleting 'ddt' '{}' ('modificaGiacenze={}')", ddtId, modificaGiacenze);
 
         Set<DdtArticolo> ddtArticoli = ddtArticoloService.findByDdtId(ddtId);
 
@@ -279,7 +284,7 @@ public class DdtService {
                 giacenzaArticoloService.computeGiacenza(ddtArticolo.getId().getArticoloId(), ddtArticolo.getLotto(), ddtArticolo.getScadenza(), ddtArticolo.getQuantita(), Resource.DDT);
             }
         }
-        LOGGER.info("Deleted 'ddt' '{}'", ddtId);
+        log.info("Deleted 'ddt' '{}'", ddtId);
     }
 
     private void checkExistsByAnnoContabileAndProgressivoAndIdNot(Integer annoContabile, Integer progressivo, Long idDdt){
@@ -343,9 +348,9 @@ public class DdtService {
 
     // PAGAMENTI
     public Set<Pagamento> getDdtPagamentiByIdDdt(Long ddtId){
-        LOGGER.info("Retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
+        log.info("Retrieving 'pagamenti' of 'ddt' '{}'", ddtId);
         Set<Pagamento> pagamenti = pagamentoRepository.findByDdtIdOrderByDataDesc(ddtId);
-        LOGGER.info("Retrieved {} 'pagamenti' of 'ddt' '{}'", pagamenti.size(), ddtId);
+        log.info("Retrieved {} 'pagamenti' of 'ddt' '{}'", pagamenti.size(), ddtId);
         return pagamenti;
     }
 
