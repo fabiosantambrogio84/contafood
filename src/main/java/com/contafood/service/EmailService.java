@@ -4,8 +4,7 @@ import com.contafood.model.*;
 import com.contafood.util.Constants;
 import com.contafood.util.EmailConstants;
 import com.contafood.util.EmailPecConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +19,9 @@ import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Properties;
 
+@Slf4j
 @Service
 public class EmailService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     private final ProprietaService proprietaService;
     private final OrdineFornitoreService ordineFornitoreService;
@@ -53,7 +51,7 @@ public class EmailService {
     }
 
     public Session createSession(){
-        LOGGER.info("Creating session for connecting to SMTPs server...");
+        log.info("Creating session for connecting to SMTPs server...");
 
         username = proprietaService.findByNome(EmailConstants.SMTP_USER_PROPERTY_NAME).getValore();
         password = proprietaService.findByNome(EmailConstants.SMTP_PASSWORD_PROPERTY_NAME).getValore();
@@ -67,17 +65,17 @@ public class EmailService {
             }
         });
 
-        LOGGER.info("Successfully created session for connecting to SMTPs server");
+        log.info("Successfully created session for connecting to SMTPs server");
         return session;
     }
 
     public Transport connect(Session session) throws Exception{
-        LOGGER.info("Connecting to SMTPs server...");
+        log.info("Connecting to SMTPs server...");
 
         Transport transport = session.getTransport(EmailPecConstants.PROTOCOL);
         transport.connect(username, password);
 
-        LOGGER.info("Successfully connected to SMTPs server");
+        log.info("Successfully connected to SMTPs server");
 
         return transport;
     }
@@ -93,10 +91,11 @@ public class EmailService {
     }
 
     private Message createMessage(Session session, String emailTo, String emailSubject, String emailBody, String attachmentName,  byte[] reportBytes) throws Exception{
+
         Message message;
         try{
             message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(EmailConstants.FROM_ADDRESS));
+            message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo));
             message.setSubject(emailSubject);
 
@@ -174,10 +173,9 @@ public class EmailService {
 
         String emailTo = Constants.DEFAULT_EMAIL;
         String emailSubject = "Riepilogo spedizione fatture: file "+txtFileName;
-        String attachmentName = txtFileName;
         String emailBody = "In allegato il file txt contenente il riepilogo dell'invio email delle fatture.<br/>Cordiali saluti";
 
-        return createMessage(session, emailTo, emailSubject, emailBody, attachmentName, reportBytes);
+        return createMessage(session, emailTo, emailSubject, emailBody, txtFileName, reportBytes);
     }
 
     private void sendMessage(Transport transport, Message message) throws Exception{
@@ -272,6 +270,4 @@ public class EmailService {
         transport.sendMessage(message, message.getRecipients(Message.RecipientType.TO));
 
     }*/
-
-
 }
