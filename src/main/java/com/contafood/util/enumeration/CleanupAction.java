@@ -4,7 +4,8 @@ import java.util.*;
 
 public enum CleanupAction {
 
-    DELETE_ORDINI_CLIENTI("Elimina ordini clienti evasi");
+    DELETE_ORDINI_CLIENTI("Elimina ordini clienti evasi"),
+    DELETE_ETICHETTE("Elimina etichette");
 
     private final String label;
 

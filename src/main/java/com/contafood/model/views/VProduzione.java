@@ -68,6 +68,12 @@ public class VProduzione {
     @Column(name = "ricetta")
     private String ricetta;
 
+    @Column(name = "barcode_ean_13")
+    private String barcodeEan13;
+
+    @Column(name = "barcode_ean_128")
+    private String barcodeEan128;
+
     @Override
     public String toString() {
 
@@ -89,6 +95,8 @@ public class VProduzione {
                 ", numConfezioniProdotte: " + numConfezioniProdotte +
                 ", quantita: " + quantita +
                 ", ricetta: " + ricetta +
+                ", barcodeEan13: " + barcodeEan13 +
+                ", barcodeEan128: " + barcodeEan128 +
                 "}";
     }
 }

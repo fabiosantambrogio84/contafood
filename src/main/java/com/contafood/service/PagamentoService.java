@@ -1076,7 +1076,7 @@ public class PagamentoService {
                             if(accontoPlusPagamento.compareTo(ddtAcquistoTotale) > 0){
                                 newDdtAcquistoTotaleAcconto = ddtAcquistoTotale.subtract(ddtAcquistoTotaleAcconto);
                                 newImportoPagamento = newImportoPagamento.subtract(newDdtAcquistoTotaleAcconto);
-                                newDdtAcquistoTotaleAcconto = ddtAcquistoTotaleAcconto.add(ddtAcquistoTotaleAcconto);
+                                newDdtAcquistoTotaleAcconto = ddtAcquistoTotaleAcconto.add(newDdtAcquistoTotaleAcconto);
                             } else {
                                 newDdtAcquistoTotaleAcconto = ddtAcquistoTotaleAcconto.add(newImportoPagamento);
                                 newImportoPagamento = BigDecimal.ZERO;

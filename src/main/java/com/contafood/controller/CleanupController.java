@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Slf4j
@@ -31,11 +32,18 @@ public class CleanupController {
         return CleanupAction.getActions();
     }
 
-    @RequestMapping(method = GET, path = "ordini-clienti/evasi-expired")
+    @RequestMapping(method = DELETE, path = "ordini-clienti/evasi-expired")
     @CrossOrigin
     public void deleteEvasiAndExpiredOrdiniClienti(@RequestParam(name = "days", required = false) Integer days) {
-        log.info("Performing GET request for deleting expired and evasi Ordini Clienti");
+        log.info("Performing DELETE request for deleting expired and evasi Ordini Clienti");
         cleanupService.deleteEvasiAndExpiredOrdiniClienti(days);
+    }
+
+    @RequestMapping(method = DELETE, path = "etichette")
+    @CrossOrigin
+    public void deleteEtichette(@RequestParam(name = "days", required = false) Integer days) {
+        log.info("Performing DELETE request for deleting Etichette");
+        cleanupService.deleteEtichette(days);
     }
 
 }

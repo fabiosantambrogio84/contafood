@@ -4,16 +4,17 @@ import com.contafood.exception.ResourceNotFoundException;
 import com.contafood.model.*;
 import com.contafood.model.beans.SortOrder;
 import com.contafood.model.views.VProduzione;
+import com.contafood.model.views.VProduzioneEtichetta;
 import com.contafood.repository.ProduzioneRepository;
 import com.contafood.repository.RicettaRepository;
+import com.contafood.repository.views.VProduzioneEtichettaRepository;
 import com.contafood.repository.views.VProduzioneRepository;
 import com.contafood.util.Constants;
 import com.contafood.util.LottoUtils;
 import com.contafood.util.Utils;
 import com.contafood.util.enumeration.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +29,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ProduzioneService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(ProduzioneService.class);
-
     private final ProduzioneRepository produzioneRepository;
     private final VProduzioneRepository vProduzioneRepository;
+    private final VProduzioneEtichettaRepository vProduzioneEtichettaRepository;
     private final ProduzioneIngredienteService produzioneIngredienteService;
     private final ProduzioneConfezioneService produzioneConfezioneService;
     private final GiacenzaArticoloService giacenzaArticoloService;
@@ -52,6 +52,7 @@ public class ProduzioneService {
     @Autowired
     public ProduzioneService(final ProduzioneRepository produzioneRepository,
                              final VProduzioneRepository vProduzioneRepository,
+                             final VProduzioneEtichettaRepository vProduzioneEtichettaRepository,
                              final ProduzioneIngredienteService produzioneIngredienteService,
                              final ProduzioneConfezioneService produzioneConfezioneService,
                              final GiacenzaArticoloService giacenzaArticoloService,
@@ -65,6 +66,7 @@ public class ProduzioneService {
                              final RicettaRepository ricettaRepository){
         this.produzioneRepository = produzioneRepository;
         this.vProduzioneRepository = vProduzioneRepository;
+        this.vProduzioneEtichettaRepository = vProduzioneEtichettaRepository;
         this.produzioneIngredienteService = produzioneIngredienteService;
         this.produzioneConfezioneService = produzioneConfezioneService;
         this.giacenzaArticoloService = giacenzaArticoloService;
@@ -78,37 +80,37 @@ public class ProduzioneService {
         this.ricettaRepository = ricettaRepository;
     }
 
-    public List<VProduzione> getAllByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders){
-        LOGGER.info("Retrieving the list of 'produzioni' filtered by request parameters");
-        List<VProduzione> produzioni = vProduzioneRepository.findByFilters(draw, start, length, sortOrders);
-        LOGGER.info("Retrieved {} 'produzioni'", produzioni.size());
+    public List<VProduzione> getAllByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders, Integer codice, String ricetta, String barcodeEan13, String barcodeEan128){
+        log.info("Retrieving the list of 'produzioni' filtered by request parameters");
+        List<VProduzione> produzioni = vProduzioneRepository.findByFilters(draw, start, length, sortOrders, codice, ricetta, barcodeEan13, barcodeEan128);
+        log.info("Retrieved {} 'produzioni'", produzioni.size());
         return produzioni;
     }
 
-    public Integer getCountByFilters(){
-        LOGGER.info("Retrieving the count of 'produzioni' filtered by request parameters");
-        Integer count = vProduzioneRepository.countByFilters();
-        LOGGER.info("Retrieved {} 'ddts'", count);
+    public Integer getCountByFilters(Integer codice, String ricetta, String barcodeEan13, String barcodeEan128){
+        log.info("Retrieving the count of 'produzioni' filtered by request parameters");
+        Integer count = vProduzioneRepository.countByFilters(codice, ricetta, barcodeEan13, barcodeEan128);
+        log.info("Retrieved {} 'ddts'", count);
         return count;
     }
 
     public Set<VProduzione> getAllByLotto(String lotto){
-        LOGGER.info("Retrieving the list of 'produzioni' filtered by 'lotto' '{}'", lotto);
+        log.info("Retrieving the list of 'produzioni' filtered by 'lotto' '{}'", lotto);
         Set<VProduzione> produzioni = vProduzioneRepository.findAllByLotto(lotto);
-        LOGGER.info("Retrieved {} 'produzioni'", produzioni.size());
+        log.info("Retrieved {} 'produzioni'", produzioni.size());
         return produzioni;
     }
 
     public Produzione getOne(Long produzioneId){
-        LOGGER.info("Retrieving 'produzione' '{}'", produzioneId);
+        log.info("Retrieving 'produzione' '{}'", produzioneId);
         Produzione produzione = produzioneRepository.findById(produzioneId).orElseThrow(ResourceNotFoundException::new);
-        LOGGER.info("Retrieved 'produzione' '{}'", produzione);
+        log.info("Retrieved 'produzione' '{}'", produzione);
         return produzione;
     }
 
     @Transactional
     public Produzione create(Produzione produzione){
-        LOGGER.info("Creating 'produzione'");
+        log.info("Creating 'produzione'");
 
         produzione.setDataInserimento(Timestamp.from(ZonedDateTime.now().toInstant()));
 
@@ -128,7 +130,7 @@ public class ProduzioneService {
             Integer codice = produzioneRepository.findNextCodiceByLottoAnno(anno).orElse(1);
             String lotto = LottoUtils.createLottoProduzione(yearTwoDigits, codice);
 
-            LOGGER.info("Anno {}, codice {}, lotto {}", anno, codice, lotto);
+            log.info("Anno {}, codice {}, lotto {}", anno, codice, lotto);
 
             createdProduzione.setCodice(codice);
             createdProduzione.setLottoAnno(anno);
@@ -147,6 +149,7 @@ public class ProduzioneService {
 
             produzioneIngredienteService.create(pi);
         });
+
         createdProduzione.getProduzioneConfezioni().stream().forEach(pc -> {
             pc.getId().setProduzioneId(produzioneId);
             pc.setLottoProduzione(createdLotto);
@@ -179,19 +182,19 @@ public class ProduzioneService {
             }
             produzioneConfezioneService.create(pc);
         });
-        Integer numeroConfezioni = createdProduzione.getProduzioneConfezioni().stream().collect(Collectors.summingInt(ProduzioneConfezione::getNumConfezioni));
+        Integer numeroConfezioni = createdProduzione.getProduzioneConfezioni().stream().mapToInt(ProduzioneConfezione::getNumConfezioni).sum();
 
         createdProduzione.setNumeroConfezioni(numeroConfezioni);
         createdProduzione = produzioneRepository.save(produzione);
 
-        LOGGER.info("Created 'produzione' '{}'", createdProduzione);
+        log.info("Created 'produzione' '{}'", createdProduzione);
         return createdProduzione;
     }
 
     /*
     @Transactional
     public Produzione update(Produzione produzione){
-        LOGGER.info("Updating 'produzione'");
+        log.info("Updating 'produzione'");
         Set<ProduzioneIngrediente> produzioneIngredienti = produzione.getProduzioneIngredienti();
         produzione.setProduzioneIngredienti(new HashSet<>());
         produzioneIngredienteService.deleteByProduzioneId(produzione.getId());
@@ -226,7 +229,7 @@ public class ProduzioneService {
         updatedProduzione = produzioneRepository.save(produzione);
 
         // create 'articolo', if not exists
-        LOGGER.info("Creating 'articolo' if not already exists...");
+        log.info("Creating 'articolo' if not already exists...");
         Fornitore fornitore = fornitoreService.getByRagioneSociale(Constants.DEFAULT_FORNITORE);
         String codiceArticolo = Constants.DEFAULT_FORNITORE_INITIALS + updatedProduzione.getRicetta().getCodice();
         Optional<Articolo> optionalArticolo = articoloService.getByCodice(codiceArticolo);
@@ -241,23 +244,23 @@ public class ProduzioneService {
             articolo.setSitoWeb(Boolean.FALSE);
             articolo.setAttivo(Boolean.TRUE);
             articolo = articoloService.create(articolo);
-            LOGGER.info("Created 'articolo' '{}' from produzione", articolo);
+            log.info("Created 'articolo' '{}' from produzione", articolo);
         } else {
-            LOGGER.info("The 'articolo' with 'codice' '{}' already exists", codiceArticolo);
+            log.info("The 'articolo' with 'codice' '{}' already exists", codiceArticolo);
             articolo = optionalArticolo.get();
         }
 
         // compute 'giacenza articolo'
         giacenzaArticoloService.computeGiacenza(articolo.getId(), updatedProduzione.getLotto(), updatedProduzione.getScadenza(), updatedProduzione.getQuantitaTotale(), Resource.PRODUZIONE);
 
-        LOGGER.info("Updated 'produzione' '{}'", updatedProduzione);
+        log.info("Updated 'produzione' '{}'", updatedProduzione);
         return updatedProduzione;
     }
      */
 
     @Transactional
     public void delete(Long produzioneId){
-        LOGGER.info("Deleting 'produzione' '{}'", produzioneId);
+        log.info("Deleting 'produzione' '{}'", produzioneId);
         Produzione produzione = produzioneRepository.findById(produzioneId).orElseThrow(ResourceNotFoundException::new);
         String tipologia = produzione.getTipologia();
 
@@ -307,26 +310,33 @@ public class ProduzioneService {
         produzioneIngredienteService.deleteByProduzioneId(produzioneId);
         produzioneConfezioneService.deleteByProduzioneId(produzioneId);
         produzioneRepository.deleteById(produzioneId);
-        LOGGER.info("Deleted 'produzione' '{}'", produzioneId);
+        log.info("Deleted 'produzione' '{}'", produzioneId);
     }
 
     @Transactional
     public void deleteByRicettaId(Long idRicetta){
-        LOGGER.info("Deleting 'produzioni' of 'ricetta' '{}'", idRicetta);
+        log.info("Deleting 'produzioni' of 'ricetta' '{}'", idRicetta);
         List<Produzione> produzioniToDelete = produzioneRepository.findByRicettaId(idRicetta);
         produzioniToDelete.forEach(p -> delete(p.getId()));
-        LOGGER.info("Deleted 'produzioni' of 'ricetta' '{}'", idRicetta);
+        log.info("Deleted 'produzioni' of 'ricetta' '{}'", idRicetta);
     }
 
     public Set<ProduzioneConfezione> getProduzioneConfezioni(Long produzioneId){
-        LOGGER.info("Retrieving 'produzioneConfezioni' for produzione '{}'", produzioneId);
+        log.info("Retrieving 'produzioneConfezioni' for produzione '{}'", produzioneId);
         Set<ProduzioneConfezione> produzioneConfezioni = produzioneConfezioneService.findByProduzioneId(produzioneId);
-        LOGGER.info("Retrieved {} 'produzioneConfezioni'", produzioneConfezioni.size());
+        log.info("Retrieved {} 'produzioneConfezioni'", produzioneConfezioni.size());
         return produzioneConfezioni;
     }
 
+    public VProduzioneEtichetta getProduzioneEtichetta(Long produzioneId){
+        log.info("Retrieving data for 'etichetta' of 'produzione' '{}'", produzioneId);
+        VProduzioneEtichetta vProduzioneEtichetta = vProduzioneEtichettaRepository.findById(produzioneId).orElseThrow(ResourceNotFoundException::new);
+        log.info("Retrieved data for 'etichetta' of 'produzione' '{}'", vProduzioneEtichetta);
+        return vProduzioneEtichetta;
+    }
+
     private Articolo getOrCreateArticolo(ProduzioneConfezione produzioneConfezione, Long idRicetta, Date dataProduzione){
-        LOGGER.info("Creating or retrieving associated 'articolo'...");
+        log.info("Creating or retrieving associated 'articolo'...");
 
         // retrieve Ricetta
         Ricetta ricetta = ricettaRepository.findById(idRicetta).orElse(null);
@@ -352,9 +362,9 @@ public class ProduzioneService {
             articolo.setSitoWeb(Boolean.FALSE);
             articolo.setAttivo(Boolean.TRUE);
             articolo = articoloService.create(articolo);
-            LOGGER.info("Created 'articolo' '{}' from produzione", articolo);
+            log.info("Created 'articolo' '{}' from produzione", articolo);
         } else {
-            LOGGER.info("Retrieved 'articolo' with 'codice' '{}'", codiceArticolo);
+            log.info("Retrieved 'articolo' with 'codice' '{}'", codiceArticolo);
             articolo = optionalArticolo.get();
         }
 
@@ -362,7 +372,7 @@ public class ProduzioneService {
     }
 
     private Ingrediente getOrCreateIngrediente(Confezione confezione, Long idRicetta){
-        LOGGER.info("Creating or retrieving associated 'ingrediente'...");
+        log.info("Creating or retrieving associated 'ingrediente'...");
 
         // retrieve Ricetta
         Ricetta ricetta = ricettaRepository.findById(idRicetta).orElse(null);
@@ -385,9 +395,9 @@ public class ProduzioneService {
             ingrediente.setAliquotaIva(aliquotaIvaService.getOne(2L)); // 10%
             ingrediente.setAttivo(Boolean.TRUE);
             ingrediente = ingredienteService.create(ingrediente);
-            LOGGER.info("Created 'ingrediente' '{}' from produzione", ingrediente);
+            log.info("Created 'ingrediente' '{}' from produzione", ingrediente);
         } else {
-            LOGGER.info("Retrieved 'ingrediente' with 'codice' '{}'", codiceIngrediente);
+            log.info("Retrieved 'ingrediente' with 'codice' '{}'", codiceIngrediente);
             ingrediente = optionalIngrediente.get();
         }
 

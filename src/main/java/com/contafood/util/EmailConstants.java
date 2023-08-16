@@ -20,6 +20,5 @@ public interface EmailConstants {
 
     String BODY_TYPE = "text/html";
 
-    String FROM_ADDRESS = "info@urbanialimentari.com";
-
+    //String FROM_ADDRESS = "info@urbanialimentari.com";
 }

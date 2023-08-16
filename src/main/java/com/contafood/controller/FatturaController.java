@@ -7,8 +7,7 @@ import com.contafood.model.views.VFattura;
 import com.contafood.service.FatturaService;
 import com.contafood.util.ResponseUtils;
 import com.contafood.util.Utils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,17 +15,15 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+@Slf4j
 @RestController
 @RequestMapping(path="/fatture")
 public class FatturaController {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(FatturaController.class);
 
     private final FatturaService fatturaService;
 
@@ -51,8 +48,8 @@ public class FatturaController {
                                @RequestParam(name = "stato", required = false) Integer idStato,
                                @RequestParam(name = "tipo", required = false) Integer idTipo,
                                @RequestParam Map<String,String> allRequestParams) {
-        LOGGER.info("Performing GET request for retrieving list of 'fatture vendita and fatture accompagnatorie'");
-        LOGGER.info("Request params: draw {}, start {}, length {}, dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
+        log.info("Performing GET request for retrieving list of 'fatture vendita and fatture accompagnatorie'");
+        log.info("Request params: draw {}, start {}, length {}, dataDa {}, dataA {}, progressivo {}, importo {}, tipoPagamento {}, cliente {}, agente {}, articolo {}, stato {}, tipo {}",
                 draw, start, length, dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
 
         List<VFattura> data = fatturaService.getAllByFilters(draw, start, length, Utils.getSortOrders(allRequestParams), dataDa, dataA, progressivo, importo, idTipoPagamento, cliente, idAgente, idArticolo, idStato, idTipo);
@@ -64,14 +61,14 @@ public class FatturaController {
     @RequestMapping(method = GET, path = "/{fatturaId}")
     @CrossOrigin
     public Fattura getOne(@PathVariable final Long fatturaId) {
-        LOGGER.info("Performing GET request for retrieving 'fattura' '{}'", fatturaId);
+        log.info("Performing GET request for retrieving 'fattura' '{}'", fatturaId);
         return fatturaService.getOne(fatturaId);
     }
 
     @RequestMapping(method = GET, path = "/progressivo")
     @CrossOrigin
     public Map<String, Integer> getAnnoAndProgressivo() {
-        LOGGER.info("Performing GET request for retrieving 'anno' and 'progressivo' for a new fattura");
+        log.info("Performing GET request for retrieving 'anno' and 'progressivo' for a new fattura");
         return fatturaService.getAnnoAndProgressivo();
     }
 
@@ -79,7 +76,7 @@ public class FatturaController {
     @ResponseStatus(CREATED)
     @CrossOrigin
     public Fattura create(@RequestBody final Fattura fattura){
-        LOGGER.info("Performing POST request for creating 'fattura'");
+        log.info("Performing POST request for creating 'fattura'");
         return fatturaService.create(fattura);
     }
 
@@ -87,7 +84,7 @@ public class FatturaController {
     @ResponseStatus(CREATED)
     @CrossOrigin
     public List<Fattura> createBulk(@RequestBody(required = false) final Map<String, Object> body){
-        LOGGER.info("Performing POST request for creating bulk 'fatture'");
+        log.info("Performing POST request for creating bulk 'fatture'");
         return fatturaService.createBulk(body);
     }
 
@@ -95,7 +92,7 @@ public class FatturaController {
     @RequestMapping(method = PUT, path = "/{fatturaId}")
     @CrossOrigin
     public Fattura update(@PathVariable final Long fatturaId, @RequestBody final Fattura fattura){
-        LOGGER.info("Performing PUT request for updating 'fattura' '{}'", fatturaId);
+        log.info("Performing PUT request for updating 'fattura' '{}'", fatturaId);
         if (!Objects.equals(fatturaId, fattura.getId())) {
             throw new CannotChangeResourceIdException();
         }
@@ -106,7 +103,7 @@ public class FatturaController {
     @RequestMapping(method = PATCH, path = "/{fatturaId}")
     @CrossOrigin
     public Fattura patch(@PathVariable final Long fatturaId, @RequestBody final Map<String,Object> patchFattura) throws Exception{
-        LOGGER.info("Performing PATCH request for updating 'fattura' '{}'", fatturaId);
+        log.info("Performing PATCH request for updating 'fattura' '{}'", fatturaId);
         Long id = Long.valueOf((Integer) patchFattura.get("id"));
         if (!Objects.equals(fatturaId, id)) {
             throw new CannotChangeResourceIdException();
@@ -118,7 +115,7 @@ public class FatturaController {
     @ResponseStatus(NO_CONTENT)
     @CrossOrigin
     public void delete(@PathVariable final Long fatturaId){
-        LOGGER.info("Performing DELETE request for deleting 'fattura' '{}'", fatturaId);
+        log.info("Performing DELETE request for deleting 'fattura' '{}'", fatturaId);
         fatturaService.delete(fatturaId);
     }
 

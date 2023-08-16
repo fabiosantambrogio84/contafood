@@ -4,7 +4,9 @@ import com.contafood.model.beans.SortOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.nio.file.Path;
@@ -76,6 +78,15 @@ public class Utils {
             }
         }
         return sortOrders;
+    }
+
+    public static String convertInputStream(InputStream inputStream) throws Exception{
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        for (int length; (length = inputStream.read(buffer)) != -1; ) {
+            result.write(buffer, 0, length);
+        }
+        return result.toString("UTF-8");
     }
 
     /*

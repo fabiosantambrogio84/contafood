@@ -18,8 +18,8 @@ public class VProduzioneCustomRepositoryImpl implements VProduzioneCustomReposit
     private EntityManager entityManager;
 
     @Override
-    public List<VProduzione> findByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders) {
-        StringBuilder sb = createQueryAsString("*");
+    public List<VProduzione> findByFilters(Integer draw, Integer start, Integer length, List<SortOrder> sortOrders, Integer codice, String ricetta, String barcodeEan13, String barcodeEan128) {
+        StringBuilder sb = createQueryAsString("*", codice, ricetta, barcodeEan13, barcodeEan128);
 
         if(draw != null && draw != -1){
             int limit = length != null ? length : 20;
@@ -42,7 +42,7 @@ public class VProduzioneCustomRepositoryImpl implements VProduzioneCustomReposit
             sb.append(" ORDER BY data_produzione DESC, codice_produzione DESC");
         }
 
-        Query query = createQuery(sb.toString());
+        Query query = createQuery(sb.toString(), codice, ricetta, barcodeEan13, barcodeEan128);
 
         List<Object[]> queryResults = query.getResultList();
         List<VProduzione> result = new ArrayList<>();
@@ -98,6 +98,12 @@ public class VProduzioneCustomRepositoryImpl implements VProduzioneCustomReposit
                 if(queryResult[16] != null){
                     vProduzione.setRicetta((String)queryResult[16]);
                 }
+                if(queryResult[17] != null){
+                    vProduzione.setBarcodeEan13((String)queryResult[17]);
+                }
+                if(queryResult[18] != null){
+                    vProduzione.setBarcodeEan128((String)queryResult[18]);
+                }
                 result.add(vProduzione);
             }
         }
@@ -106,12 +112,12 @@ public class VProduzioneCustomRepositoryImpl implements VProduzioneCustomReposit
     }
 
     @Override
-    public Integer countByFilters() {
+    public Integer countByFilters(Integer codice, String ricetta, String barcodeEan13, String barcodeEan128) {
         Integer count = 0;
 
-        StringBuilder sb = createQueryAsString("count(1)");
+        StringBuilder sb = createQueryAsString("count(1)", codice, ricetta, barcodeEan13, barcodeEan128);
 
-        Query query = createQuery(sb.toString());
+        Query query = createQuery(sb.toString(), codice, ricetta, barcodeEan13, barcodeEan128);
 
         Object result = query.getSingleResult();
         if(result != null){
@@ -120,16 +126,40 @@ public class VProduzioneCustomRepositoryImpl implements VProduzioneCustomReposit
         return count;
     }
 
-    private StringBuilder createQueryAsString(String select){
+    private StringBuilder createQueryAsString(String select, Integer codice, String ricetta, String barcodeEan13, String barcodeEan128){
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ").append(select);
         sb.append(" FROM contafood.v_produzione WHERE 1=1 ");
 
+        if(codice != null) {
+            sb.append(" AND codice_produzione = :codice ");
+        }
+        if(ricetta != null) {
+            sb.append(" AND lower(ricetta) LIKE concat('%',:ricetta,'%') ");
+        }
+        if(barcodeEan13 != null) {
+            sb.append(" AND lower(barcodeEan13) LIKE concat('%',:barcodeEan13,'%') ");
+        }
+        if(barcodeEan128 != null) {
+            sb.append(" AND lower(barcodeEan128) LIKE concat('%',:barcodeEan128,'%') ");
+        }
         return sb;
     }
 
-    private Query createQuery(String queryAsString) {
+    private Query createQuery(String queryAsString, Integer codice, String ricetta, String barcodeEan13, String barcodeEan128) {
         Query query = entityManager.createNativeQuery(queryAsString);
+        if(codice != null) {
+            query.setParameter("codice", codice);
+        }
+        if(ricetta != null) {
+            query.setParameter("ricetta", ricetta);
+        }
+        if(barcodeEan13 != null) {
+            query.setParameter("barcodeEan13", barcodeEan13);
+        }
+        if(barcodeEan128 != null){
+            query.setParameter("barcodeEan128", barcodeEan128);
+        }
         return query;
     }
 }

@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.Message;
 import javax.mail.Session;
@@ -26,6 +27,7 @@ public class AsyncExecutor {
     private static final String NEW_LINE = "\n";
 
     @Async("threadPoolTaskExecutorReport")
+    @Transactional
     public CompletableFuture<ReportService.FatturaFile> executeAsyncCreateFatturaReport(StampaService stampaService, Fattura fattura) throws Exception{
         long start = System.currentTimeMillis();
         String threadName = Thread.currentThread().getName();
