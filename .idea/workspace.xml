@@ -23,40 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
-      <change afterPath="$PROJECT_DIR$/sql-scripts/20230724.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/EtichettaController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Etichetta.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VProduzioneEtichetta.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/EtichettaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/views/VProduzioneEtichettaRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/EtichettaService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/LabelPlaceholder.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/label_generation/template.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/component/AsyncExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/component/AsyncExecutor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ArticoloImmagineController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ArticoloImmagineController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/CleanupController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/CleanupController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FatturaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/FatturaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ProduzioneController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/controller/ProduzioneController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/controller/TestController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/Produzione.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/Produzione.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VProduzione.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/model/views/VProduzione.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VProduzioneCustomRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VProduzioneCustomRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VProduzioneCustomRepositoryImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/repository/custom/VProduzioneCustomRepositoryImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/CleanupService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/CleanupService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/PagamentoService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ProduzioneService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/ScheduleService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Constants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/EmailConstants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/EmailConstants.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/CleanupAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/util/enumeration/CleanupAction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/documenti_acquisto.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/documenti_acquisto.jasper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fattura_acquisto.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fattura_acquisto.jasper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fattura_acquisto.jrxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fattura_acquisto.jrxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/reports/fatture_commercianti.jasper" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/EtichettaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/EtichettaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/label_generation/template.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/label_generation/template.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -708,14 +677,8 @@
       <workItem from="1691500513790" duration="4228000" />
       <workItem from="1691565613548" duration="10216000" />
       <workItem from="1691660148082" duration="2423000" />
-      <workItem from="1692172929073" duration="4733000" />
-    </task>
-    <task id="LOCAL-00089" summary="Fix barcode scanner in ddt">
-      <created>1638551799921</created>
-      <option name="number" value="00089" />
-      <option name="presentableId" value="LOCAL-00089" />
-      <option name="project" value="LOCAL" />
-      <updated>1638551799924</updated>
+      <workItem from="1692172929073" duration="5527000" />
+      <workItem from="1692257671115" duration="1425000" />
     </task>
     <task id="LOCAL-00090" summary="Fix ddt pdf">
       <created>1638806784005</created>
@@ -1053,7 +1016,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689939773596</updated>
     </task>
-    <option name="localTasksCounter" value="138" />
+    <task id="LOCAL-00138" summary="Step 43 - phase 3">
+      <created>1692188429276</created>
+      <option name="number" value="00138" />
+      <option name="presentableId" value="LOCAL-00138" />
+      <option name="project" value="LOCAL" />
+      <updated>1692188429276</updated>
+    </task>
+    <option name="localTasksCounter" value="139" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1118,7 +1088,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix produzione scorta and print selected ddts" />
     <MESSAGE value="Fix create bulk fatture" />
     <MESSAGE value="Fix set progressivo and ordering" />
     <MESSAGE value="Step 38 phase 1" />
@@ -1143,7 +1112,8 @@
     <MESSAGE value="Step 41 - phase 1" />
     <MESSAGE value="Step 43 - phase 1" />
     <MESSAGE value="Step 43 phase 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 43 phase 2" />
+    <MESSAGE value="Step 43 - phase 3" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step 43 - phase 3" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

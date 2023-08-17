@@ -51,8 +51,8 @@ public class EtichettaService {
         template = template.replace(LabelPlaceholder.CONSERVAZIONE.getPlaceholder(), conservazione);
         template = template.replace(LabelPlaceholder.VALORI_NUTRIZIONALI.getPlaceholder(), valoriNutrizionali);
         template = template.replace(LabelPlaceholder.CONSUMAZIONE.getPlaceholder(), createConsumazione(dataConsumazione, lotto, peso));
-        template = template.replace(LabelPlaceholder.BARCODE_EAN_13.getPlaceholder(), createBarcodeImgSrc(barcodeEan13File));
-        template = template.replace(LabelPlaceholder.BARCODE_EAN_128.getPlaceholder(), createBarcodeImgSrc(barcodeEan128File));
+        template = template.replace(LabelPlaceholder.BARCODE_EAN_13.getPlaceholder(), createBarcodeImgSrc(barcodeEan13File, 90, 40));
+        template = template.replace(LabelPlaceholder.BARCODE_EAN_128.getPlaceholder(), createBarcodeImgSrc(barcodeEan128File, 150, 50));
         template = template.replace(LabelPlaceholder.DISPOSIZIONI_COMUNE.getPlaceholder(), disposizioniComune);
         template = template.replace(LabelPlaceholder.FOOTER.getPlaceholder(), footer);
 
@@ -110,16 +110,14 @@ public class EtichettaService {
                 "g";
     }
 
-    private String createBarcodeImgSrc(MultipartFile file) throws Exception{
-        final int resizeWidthPixels = 90;
-        final int resizeHeightPixels = 50;
+    private String createBarcodeImgSrc(MultipartFile file, int widthPixels, int heightPixels) throws Exception{
 
         String imgSrc = "data:image/jpeg;base64,";
 
         BufferedImage originalImage = ImageIO.read(file.getInputStream());
 
-        Image resultingImage = originalImage.getScaledInstance(resizeWidthPixels, resizeHeightPixels, Image.SCALE_DEFAULT);
-        BufferedImage outputImage = new BufferedImage(resizeWidthPixels, resizeHeightPixels, BufferedImage.TYPE_INT_RGB);
+        Image resultingImage = originalImage.getScaledInstance(widthPixels, heightPixels, Image.SCALE_DEFAULT);
+        BufferedImage outputImage = new BufferedImage(widthPixels, heightPixels, BufferedImage.TYPE_INT_RGB);
         outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
