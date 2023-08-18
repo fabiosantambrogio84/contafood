@@ -52,7 +52,7 @@ public class EtichettaService {
         template = template.replace(LabelPlaceholder.VALORI_NUTRIZIONALI.getPlaceholder(), valoriNutrizionali);
         template = template.replace(LabelPlaceholder.CONSUMAZIONE.getPlaceholder(), createConsumazione(dataConsumazione, lotto, peso));
         template = template.replace(LabelPlaceholder.BARCODE_EAN_13.getPlaceholder(), createBarcodeImgSrc(barcodeEan13File, 90, 40));
-        template = template.replace(LabelPlaceholder.BARCODE_EAN_128.getPlaceholder(), createBarcodeImgSrc(barcodeEan128File, 150, 50));
+        template = template.replace(LabelPlaceholder.BARCODE_EAN_128.getPlaceholder(), createBarcodeImgSrc(barcodeEan128File, 180, 50));
         template = template.replace(LabelPlaceholder.DISPOSIZIONI_COMUNE.getPlaceholder(), disposizioniComune);
         template = template.replace(LabelPlaceholder.FOOTER.getPlaceholder(), footer);
 

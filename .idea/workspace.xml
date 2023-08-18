@@ -678,14 +678,8 @@
       <workItem from="1691565613548" duration="10216000" />
       <workItem from="1691660148082" duration="2423000" />
       <workItem from="1692172929073" duration="5527000" />
-      <workItem from="1692257671115" duration="1425000" />
-    </task>
-    <task id="LOCAL-00090" summary="Fix ddt pdf">
-      <created>1638806784005</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1638806784006</updated>
+      <workItem from="1692257671115" duration="2785000" />
+      <workItem from="1692343537210" duration="3295000" />
     </task>
     <task id="LOCAL-00091" summary="Fix ddt acquisto">
       <created>1639663129611</created>
@@ -1023,7 +1017,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692188429276</updated>
     </task>
-    <option name="localTasksCounter" value="139" />
+    <task id="LOCAL-00139" summary="Step 43 - phase 4">
+      <created>1692262916262</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1692262916262</updated>
+    </task>
+    <option name="localTasksCounter" value="140" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1088,7 +1089,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix create bulk fatture" />
     <MESSAGE value="Fix set progressivo and ordering" />
     <MESSAGE value="Step 38 phase 1" />
     <MESSAGE value="Fix getProgressivo DDT" />
@@ -1113,7 +1113,8 @@
     <MESSAGE value="Step 43 - phase 1" />
     <MESSAGE value="Step 43 phase 2" />
     <MESSAGE value="Step 43 - phase 3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 43 - phase 3" />
+    <MESSAGE value="Step 43 - phase 4" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step 43 - phase 4" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
