@@ -24,8 +24,12 @@
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/contafood/service/EtichettaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/contafood/service/EtichettaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/label_generation/template.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/label_generation/template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-docker-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-docker-test.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-prod.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application-docker-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application-docker-test.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application-prod.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,19 +121,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
-    <configuration name="EtichettaService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.contafood.service.EtichettaService" />
-      <module name="contafood" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.contafood.service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="contafood [clean,install,-U]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -223,17 +214,11 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Application.EtichettaService" />
       <item itemvalue="Maven.contafood [clean,package]" />
       <item itemvalue="Maven.contafood [clean,install,-U]" />
       <item itemvalue="Remote JVM Debug.Contafood-remote" />
       <item itemvalue="Spring Boot.Application" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Application.EtichettaService" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -679,14 +664,10 @@
       <workItem from="1691660148082" duration="2423000" />
       <workItem from="1692172929073" duration="5527000" />
       <workItem from="1692257671115" duration="2785000" />
-      <workItem from="1692343537210" duration="3295000" />
-    </task>
-    <task id="LOCAL-00091" summary="Fix ddt acquisto">
-      <created>1639663129611</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1639663129612</updated>
+      <workItem from="1692343537210" duration="3907000" />
+      <workItem from="1692689384061" duration="1550000" />
+      <workItem from="1695631565798" duration="1412000" />
+      <workItem from="1695890449617" duration="699000" />
     </task>
     <task id="LOCAL-00092" summary="Step 27 fix">
       <created>1642436109977</created>
@@ -1024,7 +1005,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692262916262</updated>
     </task>
-    <option name="localTasksCounter" value="140" />
+    <task id="LOCAL-00140" summary="Step 43 - phase 5">
+      <created>1692353054689</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1692353054694</updated>
+    </task>
+    <option name="localTasksCounter" value="141" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1089,7 +1077,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Fix set progressivo and ordering" />
     <MESSAGE value="Step 38 phase 1" />
     <MESSAGE value="Fix getProgressivo DDT" />
     <MESSAGE value="Step 38 phase 2" />
@@ -1114,7 +1101,8 @@
     <MESSAGE value="Step 43 phase 2" />
     <MESSAGE value="Step 43 - phase 3" />
     <MESSAGE value="Step 43 - phase 4" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 43 - phase 4" />
+    <MESSAGE value="Step 43 - phase 5" />
+    <option name="LAST_COMMIT_MESSAGE" value="Step 43 - phase 5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
