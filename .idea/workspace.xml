@@ -23,13 +23,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5430a75b-92b1-4c3d-be1c-8cdd6295a2d6" name="Default Changelist" comment="Fix step 30">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application-test.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-docker-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-docker-test.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-prod.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application-docker-test.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application-docker-test.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application-prod.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application-prod.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +85,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/label_generation" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Problems" />
     <property name="project.structure.proportion" value="0.0" />
@@ -99,11 +94,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Overdata\IdeaProjects\contafood\src\main\resources" />
       <recent name="C:\Users\Overdata\IdeaProjects\contafood\src\main\resources\label_generation" />
       <recent name="C:\Users\Overdata\IdeaProjects\contafood\sql-scripts" />
       <recent name="C:\Users\Overdata\IdeaProjects\contafood\src\main\java\com\contafood\xTemp" />
       <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\sql-scripts" />
-      <recent name="C:\Users\FabioAndreaSantambro\IdeaProjects\contafood\src\main\resources\reports" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.contafood.util" />
@@ -121,6 +116,17 @@
     </key>
   </component>
   <component name="RunManager" selected="Maven.contafood [clean,package]">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="contafood [clean,install,-U]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -667,14 +673,7 @@
       <workItem from="1692343537210" duration="3907000" />
       <workItem from="1692689384061" duration="1550000" />
       <workItem from="1695631565798" duration="1412000" />
-      <workItem from="1695890449617" duration="699000" />
-    </task>
-    <task id="LOCAL-00092" summary="Step 27 fix">
-      <created>1642436109977</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1642436109978</updated>
+      <workItem from="1695890449617" duration="2740000" />
     </task>
     <task id="LOCAL-00093" summary="Fix step 29">
       <created>1646643905965</created>
@@ -1012,7 +1011,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692353054694</updated>
     </task>
-    <option name="localTasksCounter" value="141" />
+    <task id="LOCAL-00141" summary="Add spring.jmx.default-domain=contafood">
+      <created>1695892344731</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1695892344731</updated>
+    </task>
+    <option name="localTasksCounter" value="142" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1077,7 +1083,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Step 38 phase 1" />
     <MESSAGE value="Fix getProgressivo DDT" />
     <MESSAGE value="Step 38 phase 2" />
     <MESSAGE value="Add defaults on ddt dataTrasporto,oraTrasporto,numColli" />
@@ -1102,7 +1107,8 @@
     <MESSAGE value="Step 43 - phase 3" />
     <MESSAGE value="Step 43 - phase 4" />
     <MESSAGE value="Step 43 - phase 5" />
-    <option name="LAST_COMMIT_MESSAGE" value="Step 43 - phase 5" />
+    <MESSAGE value="Add spring.jmx.default-domain=contafood" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add spring.jmx.default-domain=contafood" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
